@@ -19,6 +19,7 @@ package client
 import (
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 // FusionAuthClient describes the Go Client for interacting with FusionAuth's RESTful API
@@ -41,7 +42,6 @@ func (c *FusionAuthClient) ActionUser(actioneeUserId string, request interface{}
 	uri = URIWithSegment(uri, actioneeUserId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -58,7 +58,6 @@ func (c *FusionAuthClient) CancelAction(actionId string, request interface{}) (i
 	uri = URIWithSegment(uri, actionId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -76,7 +75,6 @@ func (c *FusionAuthClient) ChangePassword(changePasswordId string, request inter
 	uri = URIWithSegment(uri, changePasswordId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -93,7 +91,6 @@ func (c *FusionAuthClient) ChangePasswordByIdentity(request interface{}) (interf
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -108,7 +105,6 @@ func (c *FusionAuthClient) CommentOnUser(request interface{}) (interface{}, erro
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -125,7 +121,6 @@ func (c *FusionAuthClient) CreateApplication(applicationId string, request inter
 	uri = URIWithSegment(uri, applicationId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -146,7 +141,6 @@ func (c *FusionAuthClient) CreateApplicationRole(applicationId string, roleId st
 	uri = URIWithSegment(uri, roleId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -163,7 +157,6 @@ func (c *FusionAuthClient) CreateAuditLog(request interface{}) (interface{}, err
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -180,7 +173,6 @@ func (c *FusionAuthClient) CreateEmailTemplate(emailTemplateId string, request i
 	uri = URIWithSegment(uri, emailTemplateId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -197,7 +189,6 @@ func (c *FusionAuthClient) CreateGroup(groupId string, request interface{}) (int
 	uri = URIWithSegment(uri, groupId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -212,7 +203,6 @@ func (c *FusionAuthClient) CreateGroupMembers(request interface{}) (interface{},
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -229,7 +219,6 @@ func (c *FusionAuthClient) CreateIdentityProvider(identityProviderId string, req
 	uri = URIWithSegment(uri, identityProviderId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -246,7 +235,6 @@ func (c *FusionAuthClient) CreateTenant(tenantId string, request interface{}) (i
 	uri = URIWithSegment(uri, tenantId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -263,7 +251,6 @@ func (c *FusionAuthClient) CreateUser(userId string, request interface{}) (inter
 	uri = URIWithSegment(uri, userId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -281,7 +268,6 @@ func (c *FusionAuthClient) CreateUserAction(userActionId string, request interfa
 	uri = URIWithSegment(uri, userActionId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -299,7 +285,6 @@ func (c *FusionAuthClient) CreateUserActionReason(userActionReasonId string, req
 	uri = URIWithSegment(uri, userActionReasonId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -316,7 +301,6 @@ func (c *FusionAuthClient) CreateWebhook(webhookId string, request interface{}) 
 	uri = URIWithSegment(uri, webhookId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -331,7 +315,6 @@ func (c *FusionAuthClient) DeactivateApplication(applicationId string) (interfac
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, applicationId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -345,7 +328,6 @@ func (c *FusionAuthClient) DeactivateUser(userId string) (interface{}, error) {
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, userId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -359,7 +341,6 @@ func (c *FusionAuthClient) DeactivateUserAction(userActionId string) (interface{
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, userActionId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -373,7 +354,9 @@ func (c *FusionAuthClient) DeactivateUsers(userIds []string) (interface{}, error
 	method := http.MethodDelete
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("userId", string(userIds))
+	for _, userId := range userIds {
+		q.Add("userId", string(userId))
+	}
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -391,7 +374,7 @@ func (c *FusionAuthClient) DeleteApplication(applicationId string) (interface{},
 	uri = URIWithSegment(uri, applicationId)
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("hardDelete", string(true))
+	q.Add("hardDelete", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -409,7 +392,6 @@ func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId st
 	uri = URIWithSegment(uri, "role")
 	uri = URIWithSegment(uri, roleId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -423,7 +405,6 @@ func (c *FusionAuthClient) DeleteEmailTemplate(emailTemplateId string) (interfac
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, emailTemplateId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -437,7 +418,6 @@ func (c *FusionAuthClient) DeleteGroup(groupId string) (interface{}, error) {
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, groupId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -451,7 +431,6 @@ func (c *FusionAuthClient) DeleteGroupMembers(request interface{}) (interface{},
 	method := http.MethodDelete
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -466,7 +445,6 @@ func (c *FusionAuthClient) DeleteIdentityProvider(identityProviderId string) (in
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, identityProviderId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -482,7 +460,6 @@ func (c *FusionAuthClient) DeleteRegistration(userId string, applicationId strin
 	uri = URIWithSegment(uri, userId)
 	uri = URIWithSegment(uri, applicationId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -496,7 +473,6 @@ func (c *FusionAuthClient) DeleteTenant(tenantId string) (interface{}, error) {
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, tenantId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -512,7 +488,7 @@ func (c *FusionAuthClient) DeleteUser(userId string) (interface{}, error) {
 	uri = URIWithSegment(uri, userId)
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("hardDelete", string(true))
+	q.Add("hardDelete", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -528,7 +504,7 @@ func (c *FusionAuthClient) DeleteUserAction(userActionId string) (interface{}, e
 	uri = URIWithSegment(uri, userActionId)
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("hardDelete", string(true))
+	q.Add("hardDelete", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -542,7 +518,6 @@ func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (in
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, userActionReasonId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -556,7 +531,6 @@ func (c *FusionAuthClient) DeleteUsers(request interface{}) (interface{}, error)
 	method := http.MethodDelete
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -571,7 +545,6 @@ func (c *FusionAuthClient) DeleteWebhook(webhookId string) (interface{}, error) 
 	method := http.MethodDelete
 	uri = URIWithSegment(uri, webhookId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -603,7 +576,6 @@ func (c *FusionAuthClient) EnableTwoFactor(userId string, request interface{}) (
 	uri = URIWithSegment(uri, userId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -618,7 +590,6 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForJWT(request interface{}) (inte
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -633,7 +604,6 @@ func (c *FusionAuthClient) ForgotPassword(request interface{}) (interface{}, err
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -650,7 +620,7 @@ func (c *FusionAuthClient) GenerateEmailVerificationId(email string) (interface{
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("email", string(email))
-	q.Add("sendVerifyPasswordEmail", string(false))
+	q.Add("sendVerifyPasswordEmail", strconv.FormatBool(false))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -667,7 +637,7 @@ func (c *FusionAuthClient) GenerateRegistrationVerificationId(email string, appl
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("email", string(email))
-	q.Add("sendVerifyPasswordEmail", string(false))
+	q.Add("sendVerifyPasswordEmail", strconv.FormatBool(false))
 	q.Add("applicationId", string(applicationId))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -682,7 +652,6 @@ func (c *FusionAuthClient) GenerateTwoFactorSecret() (interface{}, error) {
 	uri := "/api/two-factor/secret"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -697,7 +666,6 @@ func (c *FusionAuthClient) GenerateTwoFactorSecretUsingJWT(encodedJWT string) (i
 	uri := "/api/two-factor/secret"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Authorization", c.APIKey)
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -714,7 +682,6 @@ func (c *FusionAuthClient) IdentityProviderLogin(request interface{}) (interface
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -731,7 +698,6 @@ func (c *FusionAuthClient) ImportUsers(request interface{}) (interface{}, error)
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -766,7 +732,6 @@ func (c *FusionAuthClient) Login(request interface{}) (interface{}, error) {
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -808,7 +773,7 @@ func (c *FusionAuthClient) Logout(global bool, refreshToken string) (interface{}
 	method := http.MethodPost
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("global", string(global))
+	q.Add("global", strconv.FormatBool(global))
 	q.Add("refreshToken", string(refreshToken))
 	req.Header.Set("Content-Type", "text/plain")
 	var resp interface{}
@@ -842,7 +807,6 @@ func (c *FusionAuthClient) ModifyAction(actionId string, request interface{}) (i
 	uri = URIWithSegment(uri, actionId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -858,7 +822,7 @@ func (c *FusionAuthClient) ReactivateApplication(applicationId string) (interfac
 	uri = URIWithSegment(uri, applicationId)
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("reactivate", string(true))
+	q.Add("reactivate", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -873,7 +837,7 @@ func (c *FusionAuthClient) ReactivateUser(userId string) (interface{}, error) {
 	uri = URIWithSegment(uri, userId)
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("reactivate", string(true))
+	q.Add("reactivate", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -888,7 +852,7 @@ func (c *FusionAuthClient) ReactivateUserAction(userActionId string) (interface{
 	uri = URIWithSegment(uri, userActionId)
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("reactivate", string(true))
+	q.Add("reactivate", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -902,7 +866,6 @@ func (c *FusionAuthClient) ReconcileJWT(request interface{}) (interface{}, error
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -923,7 +886,6 @@ func (c *FusionAuthClient) Register(userId string, request interface{}) (interfa
 	uri = URIWithSegment(uri, userId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -968,7 +930,6 @@ func (c *FusionAuthClient) RetrieveAction(actionId string) (interface{}, error) 
 	method := http.MethodGet
 	uri = URIWithSegment(uri, actionId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -998,7 +959,7 @@ func (c *FusionAuthClient) RetrieveActionsPreventingLogin(userId string) (interf
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("userId", string(userId))
-	q.Add("preventingLogin", string(true))
+	q.Add("preventingLogin", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1014,7 +975,7 @@ func (c *FusionAuthClient) RetrieveActiveActions(userId string) (interface{}, er
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("userId", string(userId))
-	q.Add("active", string(true))
+	q.Add("active", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1028,7 +989,6 @@ func (c *FusionAuthClient) RetrieveApplication(applicationId string) (interface{
 	method := http.MethodGet
 	uri = URIWithSegment(uri, applicationId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1040,7 +1000,6 @@ func (c *FusionAuthClient) RetrieveApplications() (interface{}, error) {
 	uri := "/api/application"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1052,9 +1011,8 @@ func (c *FusionAuthClient) RetrieveAuditLog(auditLogId int) (interface{}, error)
 	var body interface{}
 	uri := "/api/system/audit-log"
 	method := http.MethodGet
-	uri = URIWithSegment(uri, auditLogId)
+	uri = URIWithSegment(uri, string(auditLogId))
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1072,8 +1030,8 @@ func (c *FusionAuthClient) RetrieveDailyActiveReport(applicationId string, start
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("applicationId", string(applicationId))
-	q.Add("start", string(start))
-	q.Add("end", string(end))
+	q.Add("start", start.(string))
+	q.Add("end", start.(string))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1087,7 +1045,6 @@ func (c *FusionAuthClient) RetrieveEmailTemplate(emailTemplateId string) (interf
 	method := http.MethodGet
 	uri = URIWithSegment(uri, emailTemplateId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1103,7 +1060,6 @@ func (c *FusionAuthClient) RetrieveEmailTemplatePreview(request interface{}) (in
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1116,7 +1072,6 @@ func (c *FusionAuthClient) RetrieveEmailTemplates() (interface{}, error) {
 	uri := "/api/email/template"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1130,7 +1085,6 @@ func (c *FusionAuthClient) RetrieveGroup(groupId string) (interface{}, error) {
 	method := http.MethodGet
 	uri = URIWithSegment(uri, groupId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1142,7 +1096,6 @@ func (c *FusionAuthClient) RetrieveGroups() (interface{}, error) {
 	uri := "/api/group"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1156,7 +1109,6 @@ func (c *FusionAuthClient) RetrieveIdentityProvider(identityProviderId string) (
 	method := http.MethodGet
 	uri = URIWithSegment(uri, identityProviderId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1168,7 +1120,6 @@ func (c *FusionAuthClient) RetrieveIdentityProviders() (interface{}, error) {
 	uri := "/api/identity-provider"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1184,7 +1135,7 @@ func (c *FusionAuthClient) RetrieveInactiveActions(userId string) (interface{}, 
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("userId", string(userId))
-	q.Add("active", string(false))
+	q.Add("active", strconv.FormatBool(false))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1197,7 +1148,7 @@ func (c *FusionAuthClient) RetrieveInactiveApplications() (interface{}, error) {
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("inactive", string(true))
+	q.Add("inactive", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1210,7 +1161,7 @@ func (c *FusionAuthClient) RetrieveInactiveUserActions() (interface{}, error) {
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("inactive", string(true))
+	q.Add("inactive", strconv.FormatBool(true))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1222,7 +1173,6 @@ func (c *FusionAuthClient) RetrieveIntegration() (interface{}, error) {
 	uri := "/api/integration"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1238,7 +1188,6 @@ func (c *FusionAuthClient) RetrieveJWTPublicKey(keyId string) (interface{}, erro
 	method := http.MethodGet
 	uri = URIWithSegment(uri, keyId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1250,7 +1199,6 @@ func (c *FusionAuthClient) RetrieveJWTPublicKeys() (interface{}, error) {
 	uri := "/api/jwt/public-key"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1268,8 +1216,8 @@ func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start inter
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("applicationId", string(applicationId))
-	q.Add("start", string(start))
-	q.Add("end", string(end))
+	q.Add("start", start.(string))
+	q.Add("end", end.(string))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1287,8 +1235,8 @@ func (c *FusionAuthClient) RetrieveMonthlyActiveReport(applicationId string, sta
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("applicationId", string(applicationId))
-	q.Add("start", string(start))
-	q.Add("end", string(end))
+	q.Add("start", start.(string))
+	q.Add("end", end.(string))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1303,7 +1251,6 @@ func (c *FusionAuthClient) RetrieveOauthConfiguration(applicationId string) (int
 	uri = URIWithSegment(uri, applicationId)
 	uri = URIWithSegment(uri, "oauth-configuration")
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1315,7 +1262,6 @@ func (c *FusionAuthClient) RetrievePasswordValidationRules() (interface{}, error
 	uri := "/api/system-configuration/password-validation-rules"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1330,7 +1276,7 @@ func (c *FusionAuthClient) RetrieveRecentLogins(offset interface{}, limit int) (
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("offset", string(offset))
+	q.Add("offset", offset.(string))
 	q.Add("limit", string(limit))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1361,7 +1307,6 @@ func (c *FusionAuthClient) RetrieveRegistration(userId string, applicationId str
 	uri = URIWithSegment(uri, userId)
 	uri = URIWithSegment(uri, applicationId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1379,8 +1324,8 @@ func (c *FusionAuthClient) RetrieveRegistrationReport(applicationId string, star
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("applicationId", string(applicationId))
-	q.Add("start", string(start))
-	q.Add("end", string(end))
+	q.Add("start", start.(string))
+	q.Add("end", end.(string))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1392,7 +1337,6 @@ func (c *FusionAuthClient) RetrieveSystemConfiguration() (interface{}, error) {
 	uri := "/api/system-configuration"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1406,7 +1350,6 @@ func (c *FusionAuthClient) RetrieveTenant(tenantId string) (interface{}, error) 
 	method := http.MethodGet
 	uri = URIWithSegment(uri, tenantId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1418,7 +1361,6 @@ func (c *FusionAuthClient) RetrieveTenants() (interface{}, error) {
 	uri := "/api/tenant"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1431,7 +1373,6 @@ func (c *FusionAuthClient) RetrieveTotalReport() (interface{}, error) {
 	uri := "/api/report/totals"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1445,7 +1386,6 @@ func (c *FusionAuthClient) RetrieveUser(userId string) (interface{}, error) {
 	method := http.MethodGet
 	uri = URIWithSegment(uri, userId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1460,7 +1400,6 @@ func (c *FusionAuthClient) RetrieveUserAction(userActionId string) (interface{},
 	method := http.MethodGet
 	uri = URIWithSegment(uri, userActionId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1475,7 +1414,6 @@ func (c *FusionAuthClient) RetrieveUserActionReason(userActionReasonId string) (
 	method := http.MethodGet
 	uri = URIWithSegment(uri, userActionReasonId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1487,7 +1425,6 @@ func (c *FusionAuthClient) RetrieveUserActionReasons() (interface{}, error) {
 	uri := "/api/user-action-reason"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1499,7 +1436,6 @@ func (c *FusionAuthClient) RetrieveUserActions() (interface{}, error) {
 	uri := "/api/user-action"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1585,7 +1521,6 @@ func (c *FusionAuthClient) RetrieveUserComments(userId string) (interface{}, err
 	method := http.MethodGet
 	uri = URIWithSegment(uri, userId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1605,8 +1540,8 @@ func (c *FusionAuthClient) RetrieveUserLoginReport(applicationId string, userId 
 	q := req.URL.Query()
 	q.Add("applicationId", string(applicationId))
 	q.Add("userId", string(userId))
-	q.Add("start", string(start))
-	q.Add("end", string(end))
+	q.Add("start", start.(string))
+	q.Add("end", end.(string))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1626,8 +1561,8 @@ func (c *FusionAuthClient) RetrieveUserLoginReportByLoginId(applicationId string
 	q := req.URL.Query()
 	q.Add("applicationId", string(applicationId))
 	q.Add("loginId", string(loginId))
-	q.Add("start", string(start))
-	q.Add("end", string(end))
+	q.Add("start", start.(string))
+	q.Add("end", end.(string))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1644,7 +1579,7 @@ func (c *FusionAuthClient) RetrieveUserRecentLogins(userId string, offset interf
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
 	q.Add("userId", string(userId))
-	q.Add("offset", string(offset))
+	q.Add("offset", offset.(string))
 	q.Add("limit", string(limit))
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1658,7 +1593,6 @@ func (c *FusionAuthClient) RetrieveUserUsingJWT(encodedJWT string) (interface{},
 	uri := "/api/user"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Authorization", c.APIKey)
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1673,7 +1607,6 @@ func (c *FusionAuthClient) RetrieveWebhook(webhookId string) (interface{}, error
 	method := http.MethodGet
 	uri = URIWithSegment(uri, webhookId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1685,7 +1618,6 @@ func (c *FusionAuthClient) RetrieveWebhooks() (interface{}, error) {
 	uri := "/api/webhook"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1718,7 +1650,6 @@ func (c *FusionAuthClient) SearchAuditLogs(request interface{}) (interface{}, er
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1733,7 +1664,9 @@ func (c *FusionAuthClient) SearchUsers(ids []string) (interface{}, error) {
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
 	q := req.URL.Query()
-	q.Add("ids", string(ids))
+	for _, id := range ids {
+		q.Add("ids", id)
+	}
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
@@ -1748,7 +1681,6 @@ func (c *FusionAuthClient) SearchUsersByQueryString(request interface{}) (interf
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1766,7 +1698,6 @@ func (c *FusionAuthClient) SendEmail(emailTemplateId string, request interface{}
 	uri = URIWithSegment(uri, emailTemplateId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1781,7 +1712,6 @@ func (c *FusionAuthClient) SendTwoFactorCode(request interface{}) (interface{}, 
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1796,7 +1726,6 @@ func (c *FusionAuthClient) SendTwoFactorCodeForLogin(twoFactorId string) (interf
 	method := http.MethodPost
 	uri = URIWithSegment(uri, twoFactorId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "text/plain")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1811,7 +1740,6 @@ func (c *FusionAuthClient) TwoFactorLogin(request interface{}) (interface{}, err
 	method := http.MethodPost
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1828,7 +1756,6 @@ func (c *FusionAuthClient) UpdateApplication(applicationId string, request inter
 	uri = URIWithSegment(uri, applicationId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1848,7 +1775,6 @@ func (c *FusionAuthClient) UpdateApplicationRole(applicationId string, roleId st
 	uri = URIWithSegment(uri, roleId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1865,7 +1791,6 @@ func (c *FusionAuthClient) UpdateEmailTemplate(emailTemplateId string, request i
 	uri = URIWithSegment(uri, emailTemplateId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1882,7 +1807,6 @@ func (c *FusionAuthClient) UpdateGroup(groupId string, request interface{}) (int
 	uri = URIWithSegment(uri, groupId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1899,7 +1823,6 @@ func (c *FusionAuthClient) UpdateIdentityProvider(identityProviderId string, req
 	uri = URIWithSegment(uri, identityProviderId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1914,7 +1837,6 @@ func (c *FusionAuthClient) UpdateIntegrations(request interface{}) (interface{},
 	method := http.MethodPut
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1931,7 +1853,6 @@ func (c *FusionAuthClient) UpdateRegistration(userId string, request interface{}
 	uri = URIWithSegment(uri, userId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1946,7 +1867,6 @@ func (c *FusionAuthClient) UpdateSystemConfiguration(request interface{}) (inter
 	method := http.MethodPut
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1963,7 +1883,6 @@ func (c *FusionAuthClient) UpdateTenant(tenantId string, request interface{}) (i
 	uri = URIWithSegment(uri, tenantId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1980,7 +1899,6 @@ func (c *FusionAuthClient) UpdateUser(userId string, request interface{}) (inter
 	uri = URIWithSegment(uri, userId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -1997,7 +1915,6 @@ func (c *FusionAuthClient) UpdateUserAction(userActionId string, request interfa
 	uri = URIWithSegment(uri, userActionId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -2014,7 +1931,6 @@ func (c *FusionAuthClient) UpdateUserActionReason(userActionReasonId string, req
 	uri = URIWithSegment(uri, userActionReasonId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -2031,7 +1947,6 @@ func (c *FusionAuthClient) UpdateWebhook(webhookId string, request interface{}) 
 	uri = URIWithSegment(uri, webhookId)
 	body = request
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "application/json")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -2048,7 +1963,6 @@ func (c *FusionAuthClient) ValidateJWT(encodedJWT string) (interface{}, error) {
 	uri := "/api/jwt/validate"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Authorization", c.APIKey)
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -2063,7 +1977,6 @@ func (c *FusionAuthClient) VerifyEmail(verificationId string) (interface{}, erro
 	method := http.MethodPost
 	uri = URIWithSegment(uri, verificationId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "text/plain")
 	var resp interface{}
 	_, err = c.Do(req, &resp)
@@ -2078,7 +1991,6 @@ func (c *FusionAuthClient) VerifyRegistration(verificationId string) (interface{
 	method := http.MethodPost
 	uri = URIWithSegment(uri, verificationId)
 	req, err := c.NewRequest(method, uri, body)
-	q := req.URL.Query()
 	req.Header.Set("Content-Type", "text/plain")
 	var resp interface{}
 	_, err = c.Do(req, &resp)

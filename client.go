@@ -15,7 +15,7 @@ func URIWithSegment(uri, segment string) string {
 
 // NewRequest creates a new request for the FusionAuth API call
 func (c *FusionAuthClient) NewRequest(method, endpoint string, body interface{}) (*http.Request, error) {
-	rel := &url.URL{Path: path}
+	rel := &url.URL{Path: endpoint}
 	u := c.BaseURL.ResolveReference(rel)
 
 	var buf io.ReadWriter
