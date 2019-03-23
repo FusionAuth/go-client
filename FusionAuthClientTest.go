@@ -26,7 +26,7 @@ import (
 type FusionAuthClient struct {
 	BaseURL    *url.URL
 	APIKey     string
-	httpClient *http.Client
+	HTTPClient *http.Client
 }
 
 // ActionUser Takes an action on a user. The user being actioned is called the "actionee" and the user taking the action is called the

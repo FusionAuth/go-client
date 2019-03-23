@@ -3,8 +3,10 @@ package client
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 )
 
@@ -28,22 +30,21 @@ func (c *FusionAuthClient) NewRequest(method, endpoint string, body interface{})
 	}
 
 	req, err := http.NewRequest(method, u.String(), buf)
+	reqDump, _ := httputil.DumpRequest(req, true)
+	fmt.Println(string(reqDump))
 	if err != nil {
 		return nil, err
 	}
-	// if body != nil {
-	// 	req.Header.Set("Content-Type", "application/json")
-	// }
 
-	// req.Header.Set("Accept", "application/json")
-	// req.Header.Set("Authorization", c.APIKey)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", c.APIKey)
 
 	return req, nil
 }
 
 // Do makes the request to the FusionAuth API endpoint and decodes the response
 func (c *FusionAuthClient) Do(req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
