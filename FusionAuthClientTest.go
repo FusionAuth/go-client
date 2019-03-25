@@ -1963,7 +1963,7 @@ func (c *FusionAuthClient) ValidateJWT(encodedJWT string) (interface{}, error) {
 	uri := "/api/jwt/validate"
 	method := http.MethodGet
 	req, err := c.NewRequest(method, uri, body)
-	req.Header.Set("Authorization", c.APIKey)
+	req.Header.Set("Authorization", encodedJWT)
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err

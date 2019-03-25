@@ -49,7 +49,8 @@ func (c *FusionAuthClient) Do(req *http.Request, v interface{}) (*http.Response,
 		return nil, err
 	}
 	defer resp.Body.Close()
-
+	responseDump, _ := httputil.DumpResponse(resp, true)
+	fmt.Println(string(responseDump))
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
 }
