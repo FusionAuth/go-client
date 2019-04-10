@@ -19,7 +19,6 @@ func URIWithSegment(uri, segment string) string {
 func (c *FusionAuthClient) NewRequest(method, endpoint string, body interface{}) (*http.Request, error) {
 	rel := &url.URL{Path: endpoint}
 	u := c.BaseURL.ResolveReference(rel)
-
 	var buf io.ReadWriter
 	if body != nil {
 		buf = new(bytes.Buffer)
@@ -28,17 +27,11 @@ func (c *FusionAuthClient) NewRequest(method, endpoint string, body interface{})
 			return nil, err
 		}
 	}
-
 	req, err := http.NewRequest(method, u.String(), buf)
-	reqDump, _ := httputil.DumpRequest(req, true)
-	fmt.Println(string(reqDump))
 	if err != nil {
 		return nil, err
 	}
-
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Authorization", c.APIKey)
-
 	return req, nil
 }
 
