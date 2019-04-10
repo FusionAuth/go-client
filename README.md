@@ -20,6 +20,10 @@ TODO
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/FusionAuth/fusionauth-go-client.
 
+If you find an issue with syntax, etc - this is likely a bug in the template. Feel free to submit a PR against the Client Builder project.
+https://github.com/FusionAuth/fusionauth-client-builder
+https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/go.client.ftl
+
 
 ## License
 
