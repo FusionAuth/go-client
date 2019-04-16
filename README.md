@@ -9,15 +9,70 @@ Use this client to access the FusionAuth APIs in your Go application. For additi
 
 ## Installation
 
-TODO
-
-## Building
-
-TODO ? Is this a thing?
+```
+go get github.com/FusionAuth/fusionauth-go-client/pkg/fusionauth
+```
 
 ## Example Usage
 
-TODO
+The following example uses the FusionAuth Go client to create a request handling function that logs in a user: 
+```go
+package example
+
+import (
+	"encoding/json"
+	"net/http"
+	"net/url"
+	"time"
+
+	client "github.com/FusionAuth/fusionauth-go-client/pkg/fusionauth"
+)
+
+const host = "http://localhost:9011"
+
+var apiKey = "YOUR_FUSIONAUTH_API_KEY"
+var httpClient = &http.Client{
+	Timeout: time.Second * 10}
+
+var baseURL, _ = url.Parse(host)
+
+// Construct a new FusionAuth Client
+var auth = &client.FusionAuthClient{
+	BaseURL:    baseURL,
+	APIKey:     apiKey,
+	HTTPClient: httpClient}
+
+// Credentials describes the JSON request for a user login
+type Credentials struct {
+	LoginID  string `json:"loginId"`
+	Password string `json:"password"`
+}
+
+// Login logs in the user using the FusionAuth Go client library
+func Login() http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Read response body
+		var credentials Credentials
+		defer r.Body.Close()
+		json.NewDecoder(r.Body).Decode(&credentials)
+		// Use FusionAuth Go client to log in the user
+		authResponse, err := auth.Login(credentials)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		// Write the response from the FusionAuth client as JSON
+		responseJSON, err := json.Marshal(authResponse)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(responseJSON)
+	})
+}
+```
 
 ## Contributing
 
