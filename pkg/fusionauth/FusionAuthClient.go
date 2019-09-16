@@ -18,6 +18,7 @@ package client
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -25,6 +26,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 // URIWithSegment returns a string with a "/" delimiter between the uri and segment
@@ -2285,6 +2287,38 @@ func (c *FusionAuthClient) VerifyRegistration(verificationId string) (interface{
 	uri = URIWithSegment(uri, verificationId)
 	req, err := c.NewRequest(method, uri, body)
 	req.Header.Set("Content-Type", "text/plain")
+	var resp interface{}
+	_, err = c.Do(req, &resp)
+	return resp, err
+}
+
+// ExchangeOAuthCodeForAccessToken
+// Exchanges an OAuth authorization code for an access token.
+//   string code The OAuth authorization code.
+//   string clientID The OAuth client_id.
+//   string clientSecret (Optional: use "" to disregard this parameter) The OAuth client_secret used for Basic Auth.
+//   string redirectURI The OAuth redirect_uri.
+func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientID string, clientSecret string, redirectURI string) (interface{}, error) {
+	// URL
+	rel := &url.URL{Path: "/oauth2/token"}
+	u := c.BaseURL.ResolveReference(rel)
+	// Body
+	body := url.Values{}
+	body.Set("code", code)
+	body.Set("grant_type", "authorization_code")
+	body.Set("client_id", clientID)
+	body.Set("redirect_uri", redirectURI)
+	encodedBody := strings.NewReader(body.Encode())
+	// Request
+	method := http.MethodPost
+	req, err := http.NewRequest(method, u.String(), encodedBody)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	// Basic Auth (optional)
+	if clientSecret != "" {
+		credentials := clientID + ":" + clientSecret
+		encoded := base64.StdEncoding.EncodeToString([]byte(credentials))
+		req.Header.Set("Authorization", "Basic "+encoded)
+	}
 	var resp interface{}
 	_, err = c.Do(req, &resp)
 	return resp, err
