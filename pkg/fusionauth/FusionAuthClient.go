@@ -2445,6 +2445,22 @@ func (c *FusionAuthClient) SendTwoFactorCodeForLogin(twoFactorId string) (interf
     return resp, err
 }
 
+// StartPasswordlessLogin
+// Start a passwordless login request by generating a passwordless code. This code can be sent to the User using the Send
+// Passwordless Code API or using a mechanism outside of FusionAuth. The passwordless login is completed by using the Passwordless Login API with this code.
+//   interface{} request The passwordless start request that contains all of the information used to begin the passwordless login request.
+func (c *FusionAuthClient) StartPasswordlessLogin(request interface{}) (interface{}, error) {
+    var body interface{}
+    uri := "/api/passwordless/start"
+    method := http.MethodPost
+    body = request
+    req, err := c.NewRequest(method, uri, body)
+    req.Header.Set("Content-Type", "application/json")
+    var resp interface{}
+    _, err = c.Do(req, &resp)
+    return resp, err
+}
+
 // TwoFactorLogin
 // Complete login using a 2FA challenge
 //   interface{} request The login request that contains the user credentials used to log them in.
