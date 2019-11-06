@@ -20,12 +20,12 @@ The following example uses the FusionAuth Go client to create a request handling
 package example
 
 import (
-	"encoding/json"
-	"net/http"
-	"net/url"
-	"time"
-
-	client "github.com/FusionAuth/fusionauth-go-client/pkg/fusionauth"
+    "encoding/json"
+    "net/http"
+    "net/url"
+    "time"
+    
+    client "github.com/FusionAuth/fusionauth-go-client/pkg/fusionauth"
 )
 
 const host = "http://localhost:9011"
@@ -37,40 +37,36 @@ var httpClient = &http.Client{
 var baseURL, _ = url.Parse(host)
 
 // Construct a new FusionAuth Client
-var auth = &client.FusionAuthClient{
-	BaseURL:    baseURL,
-	APIKey:     apiKey,
-	HTTPClient: httpClient}
-
-// Credentials describes the JSON request for a user login
-type Credentials struct {
-	LoginID  string `json:"loginId"`
-	Password string `json:"password"`
-}
+var auth = client.NewFusionAuthClient{httpClient, baseURL, apiKey}
 
 // Login logs in the user using the FusionAuth Go client library
 func Login() http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Read response body
-		var credentials Credentials
-		defer r.Body.Close()
-		json.NewDecoder(r.Body).Decode(&credentials)
-		// Use FusionAuth Go client to log in the user
-		authResponse, err := auth.Login(credentials)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		// Write the response from the FusionAuth client as JSON
-		responseJSON, err := json.Marshal(authResponse)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(responseJSON)
-	})
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Read response body
+        var credentials client.LoginRequest
+        defer r.Body.Close()
+        json.NewDecoder(r.Body).Decode(&credentials)
+        // Use FusionAuth Go client to log in the user
+        authResponse, errors, err := auth.Login(credentials)
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusBadRequest)
+            return
+        }
+        // Write the response from the FusionAuth client as JSON
+        var responseJSON []byte
+        if errors != nil {
+            responseJSON, err = json.Marshal(errors)
+        } else {
+            responseJSON, err = json.Marshal(authResponse)
+        }
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        w.Write(responseJSON)
+    })
 }
 ```
 
