@@ -5,6 +5,7 @@ Use this client to access the FusionAuth APIs in your Go application. For additi
 
 ## Credits
 - [@medhir](https://github.com/medhir) Thank you for the initial commit and initial implementation of the Go client!
+- [@markschmid](https://github.com/markschmid) Thank you for your PRs, feedback and suggestions! 
 - The FusionAuth team - couldn't have done it without you!
 
 ## Installation
@@ -77,6 +78,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Fusion
 If you find an issue with syntax, etc - this is likely a bug in the template. Feel free to submit a PR against the Client Builder project.
 https://github.com/FusionAuth/fusionauth-client-builder
 https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/go.client.ftl
+https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/go.domain.ftl
 
 
 ## License
