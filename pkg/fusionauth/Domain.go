@@ -1052,6 +1052,13 @@ const (
   HTTPMethod_OPTIONS              HTTPMethod           = "OPTIONS"
 )
 
+type IdentityProviderDetails struct {
+  Id                        string                    `json:"id,omitempty"`
+  Name                      string                    `json:"name,omitempty"`
+  Oauth2                    IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+  Type                      IdentityProviderType      `json:"type,omitempty"`
+}
+
 /**
  * Login API request object used for login to third-party systems (i.e. Login with Facebook).
  *
@@ -1502,7 +1509,7 @@ const (
  */
 type LookupResponse struct {
   BaseHTTPResponse
-  IdentityProvider          BaseIdentityProvider      `json:"identityProvider,omitempty"`
+  IdentityProvider          IdentityProviderDetails   `json:"identityProvider,omitempty"`
 }
 
 /**
