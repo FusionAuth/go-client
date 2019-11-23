@@ -1631,6 +1631,7 @@ const (
   OAuthErrorReason_InvalidUserCredentials OAuthErrorReason     = "invalid_user_credentials"
   OAuthErrorReason_InvalidGrantType     OAuthErrorReason     = "invalid_grant_type"
   OAuthErrorReason_InvalidOrigin        OAuthErrorReason     = "invalid_origin"
+  OAuthErrorReason_InvalidOriginOpaque  OAuthErrorReason     = "invalid_origin_opaque"
   OAuthErrorReason_InvalidPkceCodeVerifier OAuthErrorReason     = "invalid_pkce_code_verifier"
   OAuthErrorReason_InvalidPkceCodeChallenge OAuthErrorReason     = "invalid_pkce_code_challenge"
   OAuthErrorReason_InvalidPkceCodeChallengeMethod OAuthErrorReason     = "invalid_pkce_code_challenge_method"
