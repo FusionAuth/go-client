@@ -136,7 +136,7 @@ func (rc *restClient) WithHeader(key string, value string) *restClient {
 }
 
 func (rc *restClient) WithJSONBody(body interface{}) *restClient {
-	rc.WithHeader("Content-Type", "application/json'")
+	rc.WithHeader("Content-Type", "application/json")
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(body)
 	rc.Body = buf
