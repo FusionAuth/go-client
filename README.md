@@ -11,7 +11,7 @@ Use this client to access the FusionAuth APIs in your Go application. For additi
 ## Installation
 
 ```
-go get github.com/FusionAuth/fusionauth-go-client/pkg/fusionauth
+go get github.com/FusionAuth/go-client/pkg/fusionauth
 ```
 
 ## Example Usage
