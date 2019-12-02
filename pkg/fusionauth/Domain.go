@@ -14,7 +14,7 @@
 * language governing permissions and limitations under the License.
  */
 
-package client
+package fusionauth
 
 type StatusAble interface {
 	SetStatus(status int)

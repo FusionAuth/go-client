@@ -26,7 +26,7 @@ import (
     "net/url"
     "time"
     
-    client "github.com/FusionAuth/fusionauth-go-client/pkg/fusionauth"
+    "github.com/FusionAuth/go-client/pkg/fusionauth"
 )
 
 const host = "http://localhost:9011"
@@ -38,13 +38,13 @@ var httpClient = &http.Client{
 var baseURL, _ = url.Parse(host)
 
 // Construct a new FusionAuth Client
-var auth = client.NewFusionAuthClient{httpClient, baseURL, apiKey}
+var auth = fusionauth.NewClient{httpClient, baseURL, apiKey}
 
 // Login logs in the user using the FusionAuth Go client library
 func Login() http.HandlerFunc {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         // Read response body
-        var credentials client.LoginRequest
+        var credentials fusionauth.LoginRequest
         defer r.Body.Close()
         json.NewDecoder(r.Body).Decode(&credentials)
         // Use FusionAuth Go client to log in the user

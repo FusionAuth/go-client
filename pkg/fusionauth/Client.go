@@ -14,7 +14,7 @@
 * language governing permissions and limitations under the License.
  */
 
-package client
+package fusionauth
 
 import (
 	"bytes"
@@ -29,9 +29,9 @@ import (
 	"strings"
 )
 
-// NewFusionAuthClient creates a new FusionAuthClient
+// NewClient creates a new FusionAuthClient
 // if httpClient is nil then a DefaultClient is used
-func NewFusionAuthClient(httpClient *http.Client, baseURL *url.URL, apiKey string) *FusionAuthClient {
+func NewClient(httpClient *http.Client, baseURL *url.URL, apiKey string) *FusionAuthClient {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
