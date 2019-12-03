@@ -33,7 +33,8 @@ const host = "http://localhost:9011"
 
 var apiKey = "YOUR_FUSIONAUTH_API_KEY"
 var httpClient = &http.Client{
-	Timeout: time.Second * 10}
+	Timeout: time.Second * 10,
+}
 
 var baseURL, _ = url.Parse(host)
 
