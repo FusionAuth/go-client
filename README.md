@@ -38,7 +38,7 @@ var httpClient = &http.Client{
 var baseURL, _ = url.Parse(host)
 
 // Construct a new FusionAuth Client
-var auth = fusionauth.NewClient{httpClient, baseURL, apiKey}
+var auth = fusionauth.NewClient(httpClient, baseURL, apiKey)
 
 // Login logs in the user using the FusionAuth Go client library
 func Login() http.HandlerFunc {
