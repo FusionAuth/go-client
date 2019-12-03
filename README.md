@@ -33,12 +33,13 @@ const host = "http://localhost:9011"
 
 var apiKey = "YOUR_FUSIONAUTH_API_KEY"
 var httpClient = &http.Client{
-	Timeout: time.Second * 10}
+	Timeout: time.Second * 10,
+}
 
 var baseURL, _ = url.Parse(host)
 
 // Construct a new FusionAuth Client
-var auth = fusionauth.NewClient{httpClient, baseURL, apiKey}
+var auth = fusionauth.NewClient(httpClient, baseURL, apiKey)
 
 // Login logs in the user using the FusionAuth Go client library
 func Login() http.HandlerFunc {
