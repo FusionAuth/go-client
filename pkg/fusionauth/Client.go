@@ -680,36 +680,13 @@ func (c *FusionAuthClient) DeactivateUserAction(userActionId string) (*BaseHTTPR
 // DeactivateUsers
 // Deactivates the users with the given ids.
 //   []string userIds The ids of the users to deactivate.
-func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*UserDeleteResponse, *Errors, error) {
-	var resp UserDeleteResponse
+func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/bulk").
 		WithParameter("userId", userIds).
-		WithParameter("dryRun", strconv.FormatBool(false)).
-		WithParameter("hardDelete", strconv.FormatBool(false)).
-		WithMethod(http.MethodDelete).
-		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
-// DeactivateUsersByQuery
-// Deactivates the users found with the given search query string.
-//   string queryString The search query string.
-//   bool dryRun Whether to preview or deactivate the users found by the queryString
-func (c *FusionAuthClient) DeactivateUsersByQuery(queryString string, dryRun bool) (*UserDeleteResponse, *Errors, error) {
-	var resp UserDeleteResponse
-	var errors Errors
-
-	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/user/bulk").
-		WithParameter("queryString", queryString).
-		WithParameter("dryRun", strconv.FormatBool(dryRun)).
-		WithParameter("hardDelete", strconv.FormatBool(false)).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1003,38 +980,15 @@ func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (*B
 }
 
 // DeleteUsers
-// Deletes the users with the given ids, or users matching the provided queryString.
-// If you provide both userIds and queryString, the userIds will be honored.  This can be used to deactivate or hard-delete
-// a user based on the hardDelete request body parameter.
-//   UserDeleteRequest request The UserDeleteRequest.
-func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteResponse, *Errors, error) {
-	var resp UserDeleteResponse
+// Deletes the users with the given ids.
+//   UserDeleteRequest request The ids of the users to delete.
+func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/bulk").
 		WithJSONBody(request).
-		WithMethod(http.MethodDelete).
-		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
-// DeleteUsersByQuery
-// Delete the users found with the given search query string.
-//   string queryString The search query string.
-//   bool dryRun Whether to preview or delete the users found by the queryString
-func (c *FusionAuthClient) DeleteUsersByQuery(queryString string, dryRun bool) (*UserDeleteResponse, *Errors, error) {
-	var resp UserDeleteResponse
-	var errors Errors
-
-	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/user/bulk").
-		WithParameter("queryString", queryString).
-		WithParameter("dryRun", strconv.FormatBool(dryRun)).
-		WithParameter("hardDelete", strconv.FormatBool(true)).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1998,7 +1952,7 @@ func (c *FusionAuthClient) ResendRegistrationVerification(email string, applicat
 	var resp VerifyRegistrationResponse
 	var errors Errors
 
-	restClient := c.StartAnonymous(&resp, &errors)
+	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/verify-registration").
 		WithParameter("email", email).
 		WithParameter("applicationId", applicationId).

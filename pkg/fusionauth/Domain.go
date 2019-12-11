@@ -113,33 +113,23 @@ const (
  * @author Seth Musselman
  */
 type Application struct {
-	Active                           bool                                `json:"active,omitempty"`
-	AuthenticationTokenConfiguration AuthenticationTokenConfiguration    `json:"authenticationTokenConfiguration,omitempty"`
-	CleanSpeakConfiguration          CleanSpeakConfiguration             `json:"cleanSpeakConfiguration,omitempty"`
-	Data                             map[string]interface{}              `json:"data,omitempty"`
-	Id                               string                              `json:"id,omitempty"`
-	JwtConfiguration                 JWTConfiguration                    `json:"jwtConfiguration,omitempty"`
-	LambdaConfiguration              LambdaConfiguration                 `json:"lambdaConfiguration,omitempty"`
-	LoginConfiguration               LoginConfiguration                  `json:"loginConfiguration,omitempty"`
-	Name                             string                              `json:"name,omitempty"`
-	OauthConfiguration               OAuth2Configuration                 `json:"oauthConfiguration,omitempty"`
-	PasswordlessConfiguration        PasswordlessConfiguration           `json:"passwordlessConfiguration,omitempty"`
-	RegistrationConfiguration        RegistrationConfiguration           `json:"registrationConfiguration,omitempty"`
-	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy `json:"registrationDeletePolicy,omitempty"`
-	Roles                            []ApplicationRole                   `json:"roles,omitempty"`
-	Samlv2Configuration              SAMLv2Configuration                 `json:"samlv2Configuration,omitempty"`
-	TenantId                         string                              `json:"tenantId,omitempty"`
-	VerificationEmailTemplateId      string                              `json:"verificationEmailTemplateId,omitempty"`
-	VerifyRegistration               bool                                `json:"verifyRegistration,omitempty"`
-}
-
-/**
- * A Application-level policy for deleting Users.
- *
- * @author Trevor Smith
- */
-type ApplicationRegistrationDeletePolicy struct {
-	Unverified TimeBasedDeletePolicy `json:"unverified,omitempty"`
+	Active                           bool                             `json:"active,omitempty"`
+	AuthenticationTokenConfiguration AuthenticationTokenConfiguration `json:"authenticationTokenConfiguration,omitempty"`
+	CleanSpeakConfiguration          CleanSpeakConfiguration          `json:"cleanSpeakConfiguration,omitempty"`
+	Data                             map[string]interface{}           `json:"data,omitempty"`
+	Id                               string                           `json:"id,omitempty"`
+	JwtConfiguration                 JWTConfiguration                 `json:"jwtConfiguration,omitempty"`
+	LambdaConfiguration              LambdaConfiguration              `json:"lambdaConfiguration,omitempty"`
+	LoginConfiguration               LoginConfiguration               `json:"loginConfiguration,omitempty"`
+	Name                             string                           `json:"name,omitempty"`
+	OauthConfiguration               OAuth2Configuration              `json:"oauthConfiguration,omitempty"`
+	PasswordlessConfiguration        PasswordlessConfiguration        `json:"passwordlessConfiguration,omitempty"`
+	RegistrationConfiguration        RegistrationConfiguration        `json:"registrationConfiguration,omitempty"`
+	Roles                            []ApplicationRole                `json:"roles,omitempty"`
+	Samlv2Configuration              SAMLv2Configuration              `json:"samlv2Configuration,omitempty"`
+	TenantId                         string                           `json:"tenantId,omitempty"`
+	VerificationEmailTemplateId      string                           `json:"verificationEmailTemplateId,omitempty"`
+	VerifyRegistration               bool                             `json:"verifyRegistration,omitempty"`
 }
 
 /**
@@ -2506,7 +2496,6 @@ type Tenant struct {
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
-	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
 }
 
 /**
@@ -2533,15 +2522,6 @@ type TenantResponse struct {
 
 func (b *TenantResponse) SetStatus(status int) {
 	b.StatusCode = status
-}
-
-/**
- * A Tenant-level policy for deleting Users.
- *
- * @author Trevor Smith
- */
-type TenantUserDeletePolicy struct {
-	Unverified TimeBasedDeletePolicy `json:"unverified,omitempty"`
 }
 
 /**
@@ -2590,16 +2570,6 @@ type ThemeResponse struct {
 
 func (b *ThemeResponse) SetStatus(status int) {
 	b.StatusCode = status
-}
-
-/**
- * A policy for deleting Users.
- *
- * @author Trevor Smith
- */
-type TimeBasedDeletePolicy struct {
-	Enableable
-	NumberOfDaysToRetain int `json:"numberOfDaysToRetain,omitempty"`
 }
 
 /**
@@ -3059,28 +3029,8 @@ type UserDeleteEvent struct {
  * @author Daniel DeGroff
  */
 type UserDeleteRequest struct {
-	DryRun      bool     `json:"dryRun,omitempty"`
-	HardDelete  bool     `json:"hardDelete,omitempty"`
-	Query       string   `json:"query,omitempty"`
-	QueryString string   `json:"queryString,omitempty"`
-	UserIds     []string `json:"userIds,omitempty"`
-}
-
-/**
- * User API bulk response object.
- *
- * @author Trevor Smith
- */
-type UserDeleteResponse struct {
-	BaseHTTPResponse
-	DryRun     bool     `json:"dryRun,omitempty"`
 	HardDelete bool     `json:"hardDelete,omitempty"`
-	Total      int      `json:"total,omitempty"`
 	UserIds    []string `json:"userIds,omitempty"`
-}
-
-func (b *UserDeleteResponse) SetStatus(status int) {
-	b.StatusCode = status
 }
 
 /**
@@ -3241,7 +3191,6 @@ type UserSearchCriteria struct {
 	FullName    string      `json:"fullName,omitempty"`
 	Id          string      `json:"id,omitempty"`
 	Ids         []string    `json:"ids,omitempty"`
-	Query       string      `json:"query,omitempty"`
 	QueryString string      `json:"queryString,omitempty"`
 	SortFields  []SortField `json:"sortFields,omitempty"`
 	Username    string      `json:"username,omitempty"`
