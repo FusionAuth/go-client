@@ -1107,6 +1107,9 @@ type HistoryItem struct {
   Expiry                    int64                     `json:"expiry,omitempty"`
 }
 
+/**
+ * @author Daniel DeGroff
+ */
 type HTTPMethod string
 const (
   HTTPMethod_GET                  HTTPMethod           = "GET"
@@ -1115,6 +1118,7 @@ const (
   HTTPMethod_DELETE               HTTPMethod           = "DELETE"
   HTTPMethod_HEAD                 HTTPMethod           = "HEAD"
   HTTPMethod_OPTIONS              HTTPMethod           = "OPTIONS"
+  HTTPMethod_PATCH                HTTPMethod           = "PATCH"
 )
 
 /**
