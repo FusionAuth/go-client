@@ -3335,8 +3335,8 @@ func (c *FusionAuthClient) StartIdentityProviderLogin(request IdentityProviderSt
 // Start a passwordless login request by generating a passwordless code. This code can be sent to the User using the Send
 // Passwordless Code API or using a mechanism outside of FusionAuth. The passwordless login is completed by using the Passwordless Login API with this code.
 //   PasswordlessStartRequest request The passwordless start request that contains all of the information used to begin the passwordless login request.
-func (c *FusionAuthClient) StartPasswordlessLogin(request PasswordlessStartRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
+func (c *FusionAuthClient) StartPasswordlessLogin(request PasswordlessStartRequest) (*PasswordlessStartResponse, *Errors, error) {
+    var resp PasswordlessStartResponse
     var errors Errors
 
     restClient := c.Start(&resp, &errors)
