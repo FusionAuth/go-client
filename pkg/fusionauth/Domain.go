@@ -3162,14 +3162,10 @@ func (b *UserResponse) SetStatus(status int) {
  */
 type UserSearchCriteria struct {
   BaseSearchCriteria
-  Email                     string                    `json:"email,omitempty"`
-  FullName                  string                    `json:"fullName,omitempty"`
-  Id                        string                    `json:"id,omitempty"`
   Ids                       []string                  `json:"ids,omitempty"`
   Query                     string                    `json:"query,omitempty"`
   QueryString               string                    `json:"queryString,omitempty"`
   SortFields                []SortField               `json:"sortFields,omitempty"`
-  Username                  string                    `json:"username,omitempty"`
 }
 
 /**

@@ -680,6 +680,8 @@ func (c *FusionAuthClient) DeactivateUserAction(userActionId string) (*BaseHTTPR
 // DeactivateUsers
 // Deactivates the users with the given ids.
 //   []string userIds The ids of the users to deactivate.
+//
+// Deprecated: This method has been renamed to DeactivateUsersByIds, use this method instead.
 func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*UserDeleteResponse, *Errors, error) {
     var resp UserDeleteResponse
     var errors Errors
@@ -697,18 +699,17 @@ func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*UserDeleteRespons
     return &resp, &errors, err
 }
 
-// DeactivateUsersByQuery
-// Deactivates the users found with the given search query string.
-//   string queryString The search query string.
-//   bool dryRun Whether to preview or deactivate the users found by the queryString
-func (c *FusionAuthClient) DeactivateUsersByQuery(queryString string, dryRun bool) (*UserDeleteResponse, *Errors, error) {
+// DeactivateUsersByIds
+// Deactivates the users with the given ids.
+//   []string userIds The ids of the users to deactivate.
+func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteResponse, *Errors, error) {
     var resp UserDeleteResponse
     var errors Errors
 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/user/bulk").
-             WithParameter("queryString", queryString).
-             WithParameter("dryRun", strconv.FormatBool(dryRun)).
+             WithParameter("userId", userIds).
+             WithParameter("dryRun", strconv.FormatBool(false)).
              WithParameter("hardDelete", strconv.FormatBool(false)).
              WithMethod(http.MethodDelete).
              Do()
@@ -1003,10 +1004,14 @@ func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (*B
 }
 
 // DeleteUsers
-// Deletes the users with the given ids, or users matching the provided queryString.
-// If you provide both userIds and queryString, the userIds will be honored.  This can be used to deactivate or hard-delete 
-// a user based on the hardDelete request body parameter.
+// Deletes the users with the given ids, or users matching the provided JSON query or queryString.
+// The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+// 
+// This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
+// Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
 //   UserDeleteRequest request The UserDeleteRequest.
+//
+// Deprecated: This method has been renamed to DeleteUsersByQuery, use this method instead.
 func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteResponse, *Errors, error) {
     var resp UserDeleteResponse
     var errors Errors
@@ -1023,18 +1028,19 @@ func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteRe
 }
 
 // DeleteUsersByQuery
-// Delete the users found with the given search query string.
-//   string queryString The search query string.
-//   bool dryRun Whether to preview or delete the users found by the queryString
-func (c *FusionAuthClient) DeleteUsersByQuery(queryString string, dryRun bool) (*UserDeleteResponse, *Errors, error) {
+// Deletes the users with the given ids, or users matching the provided JSON query or queryString.
+// The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+// 
+// This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
+// Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
+//   UserDeleteRequest request The UserDeleteRequest.
+func (c *FusionAuthClient) DeleteUsersByQuery(request UserDeleteRequest) (*UserDeleteResponse, *Errors, error) {
     var resp UserDeleteResponse
     var errors Errors
 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/user/bulk").
-             WithParameter("queryString", queryString).
-             WithParameter("dryRun", strconv.FormatBool(dryRun)).
-             WithParameter("hardDelete", strconv.FormatBool(true)).
+             WithJSONBody(request).
              WithMethod(http.MethodDelete).
              Do()
     if restClient.ErrorRef == nil {
@@ -3185,6 +3191,8 @@ func (c *FusionAuthClient) SearchLoginRecords(request LoginRecordSearchRequest) 
 // SearchUsers
 // Retrieves the users for the given ids. If any id is invalid, it is ignored.
 //   []string ids The user ids to search for.
+//
+// Deprecated: This method has been renamed to SearchUsersByIds, use this method instead.
 func (c *FusionAuthClient) SearchUsers(ids []string) (*SearchResponse, *Errors, error) {
     var resp SearchResponse
     var errors Errors
@@ -3200,10 +3208,49 @@ func (c *FusionAuthClient) SearchUsers(ids []string) (*SearchResponse, *Errors, 
     return &resp, &errors, err
 }
 
+// SearchUsersByIds
+// Retrieves the users for the given ids. If any id is invalid, it is ignored.
+//   []string ids The user ids to search for.
+func (c *FusionAuthClient) SearchUsersByIds(ids []string) (*SearchResponse, *Errors, error) {
+    var resp SearchResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/user/search").
+             WithParameter("ids", ids).
+             WithMethod(http.MethodGet).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// SearchUsersByQuery
+// Retrieves the users for the given search criteria and pagination.
+//   SearchRequest request The search criteria and pagination constraints. Fields used: ids, query, queryString, numberOfResults, orderBy, startRow,
+//   and sortFields.
+func (c *FusionAuthClient) SearchUsersByQuery(request SearchRequest) (*SearchResponse, *Errors, error) {
+    var resp SearchResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/user/search").
+             WithJSONBody(request).
+             WithMethod(http.MethodPost).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // SearchUsersByQueryString
 // Retrieves the users for the given search criteria and pagination.
-//   SearchRequest request The search criteria and pagination constraints. Fields used: queryString, numberOfResults, startRow,
-//   and sort fields.
+//   SearchRequest request The search criteria and pagination constraints. Fields used: ids, query, queryString, numberOfResults, orderBy, startRow,
+//   and sortFields.
+//
+// Deprecated: This method has been renamed to SearchUsersByQuery, use this method instead.
 func (c *FusionAuthClient) SearchUsersByQueryString(request SearchRequest) (*SearchResponse, *Errors, error) {
     var resp SearchResponse
     var errors Errors
