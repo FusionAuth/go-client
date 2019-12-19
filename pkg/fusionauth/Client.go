@@ -681,7 +681,7 @@ func (c *FusionAuthClient) DeactivateUserAction(userActionId string) (*BaseHTTPR
 // Deactivates the users with the given ids.
 //   []string userIds The ids of the users to deactivate.
 //
-// Deprecated: This method has been renamed to DeactivateUsersByIds, use this method instead.
+// Deprecated: This method has been renamed to DeactivateUsersByIds, use that method instead.
 func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*UserDeleteResponse, *Errors, error) {
     var resp UserDeleteResponse
     var errors Errors
@@ -1011,7 +1011,7 @@ func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (*B
 // Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
 //   UserDeleteRequest request The UserDeleteRequest.
 //
-// Deprecated: This method has been renamed to DeleteUsersByQuery, use this method instead.
+// Deprecated: This method has been renamed to DeleteUsersByQuery, use that method instead.
 func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteResponse, *Errors, error) {
     var resp UserDeleteResponse
     var errors Errors
@@ -3192,7 +3192,7 @@ func (c *FusionAuthClient) SearchLoginRecords(request LoginRecordSearchRequest) 
 // Retrieves the users for the given ids. If any id is invalid, it is ignored.
 //   []string ids The user ids to search for.
 //
-// Deprecated: This method has been renamed to SearchUsersByIds, use this method instead.
+// Deprecated: This method has been renamed to SearchUsersByIds, use that method instead.
 func (c *FusionAuthClient) SearchUsers(ids []string) (*SearchResponse, *Errors, error) {
     var resp SearchResponse
     var errors Errors
@@ -3250,7 +3250,7 @@ func (c *FusionAuthClient) SearchUsersByQuery(request SearchRequest) (*SearchRes
 //   SearchRequest request The search criteria and pagination constraints. Fields used: ids, query, queryString, numberOfResults, orderBy, startRow,
 //   and sortFields.
 //
-// Deprecated: This method has been renamed to SearchUsersByQuery, use this method instead.
+// Deprecated: This method has been renamed to SearchUsersByQuery, use that method instead.
 func (c *FusionAuthClient) SearchUsersByQueryString(request SearchRequest) (*SearchResponse, *Errors, error) {
     var resp SearchResponse
     var errors Errors
