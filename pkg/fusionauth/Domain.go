@@ -332,6 +332,33 @@ type BaseSearchCriteria struct {
   StartRow                  int                       `json:"startRow,omitempty"`
 }
 
+type BreachAction string
+const (
+  BreachAction_Off                  BreachAction         = "Off"
+  BreachAction_RecordOnly           BreachAction         = "RecordOnly"
+  BreachAction_NotifyUser           BreachAction         = "NotifyUser"
+  BreachAction_RequireChange        BreachAction         = "RequireChange"
+)
+
+/**
+ * @author Daniel DeGroff
+ */
+type BreachedPasswordStatus string
+const (
+  BreachedPasswordStatus_None                 BreachedPasswordStatus = "None"
+  BreachedPasswordStatus_ExactMatch           BreachedPasswordStatus = "ExactMatch"
+  BreachedPasswordStatus_SubAddressMatch      BreachedPasswordStatus = "SubAddressMatch"
+  BreachedPasswordStatus_PasswordOnly         BreachedPasswordStatus = "PasswordOnly"
+  BreachedPasswordStatus_CommonPassword       BreachedPasswordStatus = "CommonPassword"
+)
+
+type BreachMatchMode string
+const (
+  BreachMatchMode_Low                  BreachMatchMode      = "Low"
+  BreachMatchMode_Medium               BreachMatchMode      = "Medium"
+  BreachMatchMode_High                 BreachMatchMode      = "High"
+)
+
 type CanonicalizationMethod string
 const (
   CanonicalizationMethod_Exclusive            CanonicalizationMethod = "exclusive"
@@ -352,6 +379,17 @@ type CertificateInformation struct {
   ValidFrom                 int64                     `json:"validFrom,omitempty"`
   ValidTo                   int64                     `json:"validTo,omitempty"`
 }
+
+/**
+ * @author Trevor Smith
+ */
+type ChangePasswordReason string
+const (
+  ChangePasswordReason_Administrative       ChangePasswordReason = "Administrative"
+  ChangePasswordReason_Breached             ChangePasswordReason = "Breached"
+  ChangePasswordReason_Expired              ChangePasswordReason = "Expired"
+  ChangePasswordReason_Validation           ChangePasswordReason = "Validation"
+)
 
 /**
  * Change password request object.
@@ -803,6 +841,7 @@ const (
   EventType_UserRegistrationDelete EventType            = "UserRegistrationDelete"
   EventType_UserRegistrationVerified EventType            = "UserRegistrationVerified"
   EventType_UserEmailVerified    EventType            = "UserEmailVerified"
+  EventType_UserPasswordBreach   EventType            = "UserPasswordBreach"
   EventType_Test                 EventType            = "Test"
 )
 
@@ -1664,6 +1703,7 @@ type LoginResponse struct {
   BaseHTTPResponse
   Actions                   []LoginPreventedResponse  `json:"actions,omitempty"`
   ChangePasswordId          string                    `json:"changePasswordId,omitempty"`
+  ChangePasswordReason      ChangePasswordReason      `json:"changePasswordReason,omitempty"`
   RefreshToken              string                    `json:"refreshToken,omitempty"`
   State                     map[string]interface{}    `json:"state,omitempty"`
   Token                     string                    `json:"token,omitempty"`
@@ -1855,6 +1895,10 @@ const (
   OAuthErrorReason_InvalidClientAuthenticationScheme OAuthErrorReason     = "invalid_client_authentication_scheme"
   OAuthErrorReason_InvalidClientAuthentication OAuthErrorReason     = "invalid_client_authentication"
   OAuthErrorReason_ClientIdMismatch     OAuthErrorReason     = "client_id_mismatch"
+  OAuthErrorReason_ChangePasswordAdministrative OAuthErrorReason     = "change_password_administrative"
+  OAuthErrorReason_ChangePasswordBreached OAuthErrorReason     = "change_password_breached"
+  OAuthErrorReason_ChangePasswordExpired OAuthErrorReason     = "change_password_expired"
+  OAuthErrorReason_ChangePasswordValidation OAuthErrorReason     = "change_password_validation"
   OAuthErrorReason_Unknown              OAuthErrorReason     = "unknown"
 )
 
@@ -1939,6 +1983,16 @@ type OpenIdConnectIdentityProvider struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type PasswordBreachDetection struct {
+  Enableable
+  MatchMode                 BreachMatchMode           `json:"matchMode,omitempty"`
+  NotifyUserEmailTemplateId string                    `json:"notifyUserEmailTemplateId,omitempty"`
+  OnLogin                   BreachAction              `json:"onLogin,omitempty"`
+}
+
+/**
  * Password Encryption Scheme Configuration
  *
  * @author Daniel DeGroff
@@ -2002,12 +2056,14 @@ func (b *PasswordlessStartResponse) SetStatus(status int) {
  * @author Derek Klatt
  */
 type PasswordValidationRules struct {
+  BreachDetection           PasswordBreachDetection   `json:"breachDetection,omitempty"`
   MaxLength                 int                       `json:"maxLength,omitempty"`
   MinLength                 int                       `json:"minLength,omitempty"`
   RememberPreviousPasswords RememberPreviousPasswords `json:"rememberPreviousPasswords,omitempty"`
   RequireMixedCase          bool                      `json:"requireMixedCase,omitempty"`
   RequireNonAlpha           bool                      `json:"requireNonAlpha,omitempty"`
   RequireNumber             bool                      `json:"requireNumber,omitempty"`
+  ValidateOnLogin           bool                      `json:"validateOnLogin,omitempty"`
 }
 
 /**
@@ -2310,10 +2366,13 @@ const (
  * @author Daniel DeGroff
  */
 type SecureIdentity struct {
+  BreachedPasswordLastCheckedInstant int64                     `json:"breachedPasswordLastCheckedInstant,omitempty"`
+  BreachedPasswordStatus    BreachedPasswordStatus    `json:"breachedPasswordStatus,omitempty"`
   EncryptionScheme          string                    `json:"encryptionScheme,omitempty"`
   Factor                    int                       `json:"factor,omitempty"`
   Id                        string                    `json:"id,omitempty"`
   Password                  string                    `json:"password,omitempty"`
+  PasswordChangeReason      ChangePasswordReason      `json:"passwordChangeReason,omitempty"`
   PasswordChangeRequired    bool                      `json:"passwordChangeRequired,omitempty"`
   PasswordLastUpdateInstant int64                     `json:"passwordLastUpdateInstant,omitempty"`
   Salt                      string                    `json:"salt,omitempty"`
@@ -3052,6 +3111,16 @@ type UsernameModeration struct {
 }
 
 /**
+ * Models the User Password Breach Event.
+ *
+ * @author Matthew Altman
+ */
+type UserPasswordBreachEvent struct {
+  BaseEvent
+  User                      User                      `json:"user,omitempty"`
+}
+
+/**
  * Models the User Reactivate Event (and can be converted to JSON).
  *
  * @author Brian Pontarelli
@@ -3230,8 +3299,9 @@ func (b *VerifyRegistrationResponse) SetStatus(status int) {
 type Webhook struct {
   ApplicationIds            []string                  `json:"applicationIds,omitempty"`
   ConnectTimeout            int                       `json:"connectTimeout,omitempty"`
-  Data                      WebhookData               `json:"data,omitempty"`
+  Data                      map[string]interface{}    `json:"data,omitempty"`
   Description               string                    `json:"description,omitempty"`
+  EventsEnabled             map[EventType]bool        `json:"eventsEnabled,omitempty"`
   Global                    bool                      `json:"global,omitempty"`
   Headers                   map[string]string         `json:"headers,omitempty"`
   HttpAuthenticationPassword string                    `json:"httpAuthenticationPassword,omitempty"`
@@ -3240,10 +3310,6 @@ type Webhook struct {
   ReadTimeout               int                       `json:"readTimeout,omitempty"`
   SslCertificate            string                    `json:"sslCertificate,omitempty"`
   Url                       string                    `json:"url,omitempty"`
-}
-
-type WebhookData struct {
-  EventsEnabled             map[EventType]bool        `json:"eventsEnabled,omitempty"`
 }
 
 /**
