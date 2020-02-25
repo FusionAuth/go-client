@@ -430,6 +430,10 @@ type CleanSpeakConfiguration struct {
   UsernameModeration        UsernameModeration        `json:"usernameModeration,omitempty"`
 }
 
+type ClientAuthenticationMethod struct {
+  ClientSecretPost          bool                      `json:"clientSecretPost,omitempty"`
+}
+
 /**
  * Models a consent.
  *
@@ -1209,6 +1213,7 @@ type IdentityProviderOauth2Configuration struct {
   AuthorizationEndpoint     string                    `json:"authorization_endpoint,omitempty"`
   ClientId                  string                    `json:"client_id,omitempty"`
   ClientSecret              string                    `json:"client_secret,omitempty"`
+  ClientAuthenticationMethod ClientAuthenticationMethod `json:"clientAuthenticationMethod,omitempty"`
   Issuer                    string                    `json:"issuer,omitempty"`
   Scope                     string                    `json:"scope,omitempty"`
   TokenEndpoint             string                    `json:"token_endpoint,omitempty"`
