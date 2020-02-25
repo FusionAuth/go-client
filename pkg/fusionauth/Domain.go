@@ -431,7 +431,7 @@ type CleanSpeakConfiguration struct {
 }
 
 type ClientAuthenticationMethod struct {
-  ClientSecretPost          bool                      `json:"clientSecretPost,omitempty"`
+  ClientSecretPost          bool                      `json:"client_secret_post,omitempty"`
 }
 
 /**
