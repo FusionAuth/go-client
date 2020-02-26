@@ -894,7 +894,6 @@ type ExternalJWTIdentityProvider struct {
   DefaultKeyId              string                    `json:"defaultKeyId,omitempty"`
   Domains                   []string                  `json:"domains,omitempty"`
   HeaderKeyParameter        string                    `json:"headerKeyParameter,omitempty"`
-  KeyIds                    []string                  `json:"keyIds,omitempty"`
   Oauth2                    IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
   UniqueIdentityClaim       string                    `json:"uniqueIdentityClaim,omitempty"`
 }
