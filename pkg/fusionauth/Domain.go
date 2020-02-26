@@ -430,9 +430,11 @@ type CleanSpeakConfiguration struct {
   UsernameModeration        UsernameModeration        `json:"usernameModeration,omitempty"`
 }
 
-type ClientAuthenticationMethod struct {
-  ClientSecretPost          bool                      `json:"client_secret_post,omitempty"`
-}
+type ClientAuthenticationMethod string
+const (
+  ClientAuthenticationMethod_ClientSecretBasic    ClientAuthenticationMethod = "client_secret_basic"
+  ClientAuthenticationMethod_ClientSecretPost     ClientAuthenticationMethod = "client_secret_post"
+)
 
 /**
  * Models a consent.
