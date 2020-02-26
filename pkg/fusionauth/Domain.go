@@ -432,6 +432,7 @@ type CleanSpeakConfiguration struct {
 
 type ClientAuthenticationMethod string
 const (
+  ClientAuthenticationMethod_None                 ClientAuthenticationMethod = "none"
   ClientAuthenticationMethod_ClientSecretBasic    ClientAuthenticationMethod = "client_secret_basic"
   ClientAuthenticationMethod_ClientSecretPost     ClientAuthenticationMethod = "client_secret_post"
 )
