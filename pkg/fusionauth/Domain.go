@@ -625,6 +625,8 @@ type EmailAddress struct {
  * @author Brian Pontarelli
  */
 type EmailConfiguration struct {
+  DefaultFromEmail          string                    `json:"defaultFromEmail,omitempty"`
+  DefaultFromName           string                    `json:"defaultFromName,omitempty"`
   ForgotPasswordEmailTemplateId string                    `json:"forgotPasswordEmailTemplateId,omitempty"`
   Host                      string                    `json:"host,omitempty"`
   Password                  string                    `json:"password,omitempty"`
@@ -840,6 +842,7 @@ const (
   EventType_UserReactivate       EventType            = "UserReactivate"
   EventType_UserAction           EventType            = "UserAction"
   EventType_JWTRefreshTokenRevoke EventType            = "JWTRefreshTokenRevoke"
+  EventType_JWTRefresh           EventType            = "JWTRefresh"
   EventType_JWTPublicKeyUpdate   EventType            = "JWTPublicKeyUpdate"
   EventType_UserLoginSuccess     EventType            = "UserLoginSuccess"
   EventType_UserLoginFailed      EventType            = "UserLoginFailed"
@@ -1437,6 +1440,20 @@ type JWTConfiguration struct {
 type JWTPublicKeyUpdateEvent struct {
   BaseEvent
   ApplicationIds            []string                  `json:"applicationIds,omitempty"`
+}
+
+/**
+ * Models the JWT Refresh Event. This event will be fired when a JWT is "refreshed" (generated) using a Refresh Token.
+ *
+ * @author Daniel DeGroff
+ */
+type JWTRefreshEvent struct {
+  BaseEvent
+  ApplicationId             string                    `json:"applicationId,omitempty"`
+  Original                  string                    `json:"original,omitempty"`
+  RefreshToken              string                    `json:"refreshToken,omitempty"`
+  Token                     string                    `json:"token,omitempty"`
+  UserId                    string                    `json:"userId,omitempty"`
 }
 
 /**
@@ -2160,6 +2177,7 @@ func (b *RecentLoginResponse) SetStatus(status int) {
  */
 type RefreshRequest struct {
   RefreshToken              string                    `json:"refreshToken,omitempty"`
+  Token                     string                    `json:"token,omitempty"`
 }
 
 /**
@@ -2236,6 +2254,7 @@ type RegistrationRequest struct {
 type RegistrationResponse struct {
   BaseHTTPResponse
   Registration              UserRegistration          `json:"registration,omitempty"`
+  Token                     string                    `json:"token,omitempty"`
   User                      User                      `json:"user,omitempty"`
 }
 func (b *RegistrationResponse) SetStatus(status int) {
@@ -2461,6 +2480,14 @@ type SystemConfigurationResponse struct {
 }
 func (b *SystemConfigurationResponse) SetStatus(status int) {
   b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type SystemLogsExportRequest struct {
+  BaseExportRequest
+  LastNBytes                int                       `json:"lastNBytes,omitempty"`
 }
 
 type Templates struct {
@@ -3227,6 +3254,7 @@ type UserRequest struct {
  */
 type UserResponse struct {
   BaseHTTPResponse
+  Token                     string                    `json:"token,omitempty"`
   User                      User                      `json:"user,omitempty"`
 }
 func (b *UserResponse) SetStatus(status int) {
