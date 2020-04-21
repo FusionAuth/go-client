@@ -1175,9 +1175,6 @@ const (
  */
 type HYPRApplicationConfiguration struct {
   BaseIdentityProviderApplicationConfiguration
-  LicensingEnabled          bool                      `json:"licensingEnabled,omitempty"`
-  LicensingEnabledOverride  bool                      `json:"licensingEnabledOverride,omitempty"`
-  LicensingURL              string                    `json:"licensingURL,omitempty"`
   RelyingPartyApplicationId string                    `json:"relyingPartyApplicationId,omitempty"`
   RelyingPartyURL           string                    `json:"relyingPartyURL,omitempty"`
 }
@@ -1187,8 +1184,6 @@ type HYPRApplicationConfiguration struct {
  */
 type HYPRIdentityProvider struct {
   BaseIdentityProvider
-  LicensingEnabled          bool                      `json:"licensingEnabled,omitempty"`
-  LicensingURL              string                    `json:"licensingURL,omitempty"`
   RelyingPartyApplicationId string                    `json:"relyingPartyApplicationId,omitempty"`
   RelyingPartyURL           string                    `json:"relyingPartyURL,omitempty"`
 }
