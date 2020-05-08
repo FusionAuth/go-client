@@ -1189,7 +1189,9 @@ type HYPRIdentityProvider struct {
 }
 
 type IdentityProviderDetails struct {
+  ApplicationIds            []string                  `json:"applicationIds,omitempty"`
   Id                        string                    `json:"id,omitempty"`
+  IdpEndpoint               string                    `json:"idpEndpoint,omitempty"`
   Name                      string                    `json:"name,omitempty"`
   Oauth2                    IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
   Type                      IdentityProviderType      `json:"type,omitempty"`
