@@ -1,4 +1,4 @@
-## FusionAuth Go Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
+## FusionAuth Go Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![Documentation](https://godoc.org/github.com/FusionAuth/go-client?status.svg)](http://godoc.org/github.com/FusionAuth/go-client/pkg/fusionauth)
 
 
 Use this client to access the FusionAuth APIs in your Go application. For additional information and documentation on FusionAuth refer to [https://fusionauth.io](https://fusionauth.io).
