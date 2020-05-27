@@ -108,6 +108,30 @@ const (
 )
 
 /**
+ * @author Daniel DeGroff
+ */
+type AppleApplicationConfiguration struct {
+  BaseIdentityProviderApplicationConfiguration
+  ButtonText                string                    `json:"buttonText,omitempty"`
+  KeyId                     string                    `json:"keyId,omitempty"`
+  Scope                     string                    `json:"scope,omitempty"`
+  ServicesId                string                    `json:"servicesId,omitempty"`
+  TeamId                    string                    `json:"teamId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type AppleIdentityProvider struct {
+  BaseIdentityProvider
+  ButtonText                string                    `json:"buttonText,omitempty"`
+  KeyId                     string                    `json:"keyId,omitempty"`
+  Scope                     string                    `json:"scope,omitempty"`
+  ServicesId                string                    `json:"servicesId,omitempty"`
+  TeamId                    string                    `json:"teamId,omitempty"`
+}
+
+/**
  * @author Seth Musselman
  */
 type Application struct {
@@ -300,6 +324,7 @@ type BaseIdentityProvider struct {
   Data                      map[string]interface{}    `json:"data,omitempty"`
   Debug                     bool                      `json:"debug,omitempty"`
   Id                        string                    `json:"id,omitempty"`
+  LambdaConfiguration       ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
   Name                      string                    `json:"name,omitempty"`
   Type                      IdentityProviderType      `json:"type,omitempty"`
 }
@@ -500,6 +525,9 @@ const (
   ContentStatus_REJECTED             ContentStatus        = "REJECTED"
 )
 
+/**
+ * @author Trevor Smith
+ */
 type CORSConfiguration struct {
   Enableable
   AllowCredentials          bool                      `json:"allowCredentials,omitempty"`
@@ -1272,6 +1300,7 @@ const (
   IdentityProviderType_Twitter              IdentityProviderType = "Twitter"
   IdentityProviderType_SAMLv2               IdentityProviderType = "SAMLv2"
   IdentityProviderType_HYPR                 IdentityProviderType = "HYPR"
+  IdentityProviderType_Apple                IdentityProviderType = "Apple"
 )
 
 /**
@@ -1383,6 +1412,12 @@ type JSONWebKey struct {
 }
 
 /**
+ * Interface for any object that can provide JSON Web key Information.
+ */
+type JSONWebKeyInfoProvider struct {
+}
+
+/**
  * @author Daniel DeGroff
  */
 type JWKSResponse struct {
@@ -1424,7 +1459,10 @@ type JWTConfiguration struct {
   Enableable
   AccessTokenKeyId          string                    `json:"accessTokenKeyId,omitempty"`
   IdTokenKeyId              string                    `json:"idTokenKeyId,omitempty"`
+  RefreshTokenExpirationPolicy RefreshTokenExpirationPolicy `json:"refreshTokenExpirationPolicy,omitempty"`
+  RefreshTokenRevocationPolicy RefreshTokenRevocationPolicy `json:"refreshTokenRevocationPolicy,omitempty"`
   RefreshTokenTimeToLiveInMinutes int                       `json:"refreshTokenTimeToLiveInMinutes,omitempty"`
+  RefreshTokenUsagePolicy   RefreshTokenUsagePolicy   `json:"refreshTokenUsagePolicy,omitempty"`
   TimeToLiveInSeconds       int                       `json:"timeToLiveInSeconds,omitempty"`
 }
 
@@ -1486,13 +1524,13 @@ type Key struct {
   Certificate               string                    `json:"certificate,omitempty"`
   CertificateInformation    CertificateInformation    `json:"certificateInformation,omitempty"`
   ExpirationInstant         int64                     `json:"expirationInstant,omitempty"`
+  HasPrivateKey             bool                      `json:"hasPrivateKey,omitempty"`
   Id                        string                    `json:"id,omitempty"`
   InsertInstant             int64                     `json:"insertInstant,omitempty"`
   Issuer                    string                    `json:"issuer,omitempty"`
   Kid                       string                    `json:"kid,omitempty"`
   Length                    int                       `json:"length,omitempty"`
   Name                      string                    `json:"name,omitempty"`
-  Pair                      bool                      `json:"pair,omitempty"`
   PrivateKey                string                    `json:"privateKey,omitempty"`
   PublicKey                 string                    `json:"publicKey,omitempty"`
   Secret                    string                    `json:"secret,omitempty"`
@@ -1601,6 +1639,7 @@ const (
   LambdaType_OpenIDReconcile      LambdaType           = "OpenIDReconcile"
   LambdaType_SAMLv2Reconcile      LambdaType           = "SAMLv2Reconcile"
   LambdaType_SAMLv2Populate       LambdaType           = "SAMLv2Populate"
+  LambdaType_GenericIdpReconcile  LambdaType           = "GenericIdpReconcile"
 )
 
 /**
@@ -2000,7 +2039,6 @@ type OpenIdConnectIdentityProvider struct {
   ButtonImageURL            string                    `json:"buttonImageURL,omitempty"`
   ButtonText                string                    `json:"buttonText,omitempty"`
   Domains                   []string                  `json:"domains,omitempty"`
-  LambdaConfiguration       ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
   Oauth2                    IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
 }
 
@@ -2182,6 +2220,7 @@ type RefreshRequest struct {
  */
 type RefreshResponse struct {
   BaseHTTPResponse
+  RefreshToken              string                    `json:"refreshToken,omitempty"`
   RefreshTokens             []RefreshToken            `json:"refreshTokens,omitempty"`
   Token                     string                    `json:"token,omitempty"`
 }
@@ -2202,6 +2241,32 @@ type RefreshToken struct {
   Token                     string                    `json:"token,omitempty"`
   UserId                    string                    `json:"userId,omitempty"`
 }
+
+/**
+ * @author Daniel DeGroff
+ */
+type RefreshTokenExpirationPolicy string
+const (
+  RefreshTokenExpirationPolicy_Fixed                RefreshTokenExpirationPolicy = "Fixed"
+  RefreshTokenExpirationPolicy_SlidingWindow        RefreshTokenExpirationPolicy = "SlidingWindow"
+)
+
+/**
+ * @author Daniel DeGroff
+ */
+type RefreshTokenRevocationPolicy struct {
+  OnLoginPrevented          bool                      `json:"onLoginPrevented,omitempty"`
+  OnPasswordChanged         bool                      `json:"onPasswordChanged,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type RefreshTokenUsagePolicy string
+const (
+  RefreshTokenUsagePolicy_Reusable             RefreshTokenUsagePolicy = "Reusable"
+  RefreshTokenUsagePolicy_OneTimeUse           RefreshTokenUsagePolicy = "OneTimeUse"
+)
 
 type RegistrationConfiguration struct {
   Enableable
@@ -2250,6 +2315,7 @@ type RegistrationRequest struct {
  */
 type RegistrationResponse struct {
   BaseHTTPResponse
+  RefreshToken              string                    `json:"refreshToken,omitempty"`
   Registration              UserRegistration          `json:"registration,omitempty"`
   Token                     string                    `json:"token,omitempty"`
   User                      User                      `json:"user,omitempty"`
@@ -2282,6 +2348,14 @@ type RememberPreviousPasswords struct {
 type Requirable struct {
   Enableable
   Required                  bool                      `json:"required,omitempty"`
+}
+
+/**
+ * Interface describing the need for CORS configuration.
+ *
+ * @author Daniel DeGroff
+ */
+type RequiresCORSConfiguration struct {
 }
 
 /**
@@ -2318,7 +2392,6 @@ type SAMLv2IdentityProvider struct {
   IdpEndpoint               string                    `json:"idpEndpoint,omitempty"`
   Issuer                    string                    `json:"issuer,omitempty"`
   KeyId                     string                    `json:"keyId,omitempty"`
-  LambdaConfiguration       ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
   UseNameIdForEmail         bool                      `json:"useNameIdForEmail,omitempty"`
 }
 
