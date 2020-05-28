@@ -1639,7 +1639,12 @@ const (
   LambdaType_OpenIDReconcile      LambdaType           = "OpenIDReconcile"
   LambdaType_SAMLv2Reconcile      LambdaType           = "SAMLv2Reconcile"
   LambdaType_SAMLv2Populate       LambdaType           = "SAMLv2Populate"
-  LambdaType_GenericIdpReconcile  LambdaType           = "GenericIdpReconcile"
+  LambdaType_AppleReconcile       LambdaType           = "AppleReconcile"
+  LambdaType_ExternalJWTReconcile LambdaType           = "ExternalJWTReconcile"
+  LambdaType_FacebookReconcile    LambdaType           = "FacebookReconcile"
+  LambdaType_GoogleReconcile      LambdaType           = "GoogleReconcile"
+  LambdaType_HYPRReconcile        LambdaType           = "HYPRReconcile"
+  LambdaType_TwitterReconcile     LambdaType           = "TwitterReconcile"
 )
 
 /**
