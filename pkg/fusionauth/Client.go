@@ -856,14 +856,14 @@ func (c *FusionAuthClient) DeleteIdentityProvider(identityProviderId string) (*B
 
 // DeleteKey
 // Deletes the key for the given Id.
-//   string keyOd The Id of the key to delete.
-func (c *FusionAuthClient) DeleteKey(keyOd string) (*BaseHTTPResponse, *Errors, error) {
+//   string keyId The Id of the key to delete.
+func (c *FusionAuthClient) DeleteKey(keyId string) (*BaseHTTPResponse, *Errors, error) {
     var resp BaseHTTPResponse
     var errors Errors
 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/key").
-             WithUriSegment(keyOd).
+             WithUriSegment(keyId).
              WithMethod(http.MethodDelete).
              Do()
     if restClient.ErrorRef == nil {
