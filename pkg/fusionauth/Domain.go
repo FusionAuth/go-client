@@ -56,9 +56,9 @@ type ActionData struct {
   ActionerUserId            string                    `json:"actionerUserId,omitempty"`
   ApplicationIds            []string                  `json:"applicationIds,omitempty"`
   Comment                   string                    `json:"comment,omitempty"`
-  EmailUser                 bool                      `json:"emailUser,omitempty"`
+  EmailUser                 bool                      `json:"emailUser"`
   Expiry                    int64                     `json:"expiry,omitempty"`
-  NotifyUser                bool                      `json:"notifyUser,omitempty"`
+  NotifyUser                bool                      `json:"notifyUser"`
   Option                    string                    `json:"option,omitempty"`
   ReasonId                  string                    `json:"reasonId,omitempty"`
   UserActionId              string                    `json:"userActionId,omitempty"`
@@ -71,7 +71,7 @@ type ActionData struct {
  */
 type ActionRequest struct {
   Action                    ActionData                `json:"action,omitempty"`
-  Broadcast                 bool                      `json:"broadcast,omitempty"`
+  Broadcast                 bool                      `json:"broadcast"`
 }
 
 /**
@@ -135,7 +135,7 @@ type AppleIdentityProvider struct {
  * @author Seth Musselman
  */
 type Application struct {
-  Active                    bool                      `json:"active,omitempty"`
+  Active                    bool                      `json:"active"`
   AuthenticationTokenConfiguration AuthenticationTokenConfiguration `json:"authenticationTokenConfiguration,omitempty"`
   CleanSpeakConfiguration   CleanSpeakConfiguration   `json:"cleanSpeakConfiguration,omitempty"`
   Data                      map[string]interface{}    `json:"data,omitempty"`
@@ -152,7 +152,7 @@ type Application struct {
   Samlv2Configuration       SAMLv2Configuration       `json:"samlv2Configuration,omitempty"`
   TenantId                  string                    `json:"tenantId,omitempty"`
   VerificationEmailTemplateId string                    `json:"verificationEmailTemplateId,omitempty"`
-  VerifyRegistration        bool                      `json:"verifyRegistration,omitempty"`
+  VerifyRegistration        bool                      `json:"verifyRegistration"`
 }
 
 /**
@@ -198,8 +198,8 @@ func (b *ApplicationResponse) SetStatus(status int) {
 type ApplicationRole struct {
   Description               string                    `json:"description,omitempty"`
   Id                        string                    `json:"id,omitempty"`
-  IsDefault                 bool                      `json:"isDefault,omitempty"`
-  IsSuperRole               bool                      `json:"isSuperRole,omitempty"`
+  IsDefault                 bool                      `json:"isDefault"`
+  IsSuperRole               bool                      `json:"isSuperRole"`
   Name                      string                    `json:"name,omitempty"`
 }
 
@@ -298,6 +298,16 @@ type AuthenticationTokenConfiguration struct {
   Enableable
 }
 
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+type BaseConnector struct {
+  Data                      map[string]interface{}    `json:"data,omitempty"`
+  Debug                     bool                      `json:"debug"`
+  Id                        string                    `json:"id,omitempty"`
+  InsertInstant             int64                     `json:"insertInstant,omitempty"`
+  Name                      string                    `json:"name,omitempty"`
+  Type                      ConnectorType             `json:"type,omitempty"`
+}
+
 /**
  * Base-class for all FusionAuth events.
  *
@@ -322,7 +332,7 @@ type BaseIdentityProvider struct {
   Enableable
   ApplicationConfiguration  map[string]interface{}    `json:"applicationConfiguration,omitempty"`
   Data                      map[string]interface{}    `json:"data,omitempty"`
-  Debug                     bool                      `json:"debug,omitempty"`
+  Debug                     bool                      `json:"debug"`
   Id                        string                    `json:"id,omitempty"`
   LambdaConfiguration       ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
   Name                      string                    `json:"name,omitempty"`
@@ -334,7 +344,7 @@ type BaseIdentityProvider struct {
  */
 type BaseIdentityProviderApplicationConfiguration struct {
   Enableable
-  CreateRegistration        bool                      `json:"createRegistration,omitempty"`
+  CreateRegistration        bool                      `json:"createRegistration"`
   Data                      map[string]interface{}    `json:"data,omitempty"`
 }
 
@@ -345,7 +355,7 @@ type BaseLoginRequest struct {
   ApplicationId             string                    `json:"applicationId,omitempty"`
   IpAddress                 string                    `json:"ipAddress,omitempty"`
   MetaData                  MetaData                  `json:"metaData,omitempty"`
-  NoJWT                     bool                      `json:"noJWT,omitempty"`
+  NoJWT                     bool                      `json:"noJWT"`
 }
 
 /**
@@ -463,6 +473,57 @@ const (
 )
 
 /**
+ * @author Trevor Smith
+ */
+type ConnectorIdentityCount struct {
+  ConnectorId               string                    `json:"connectorId,omitempty"`
+  Count                     int                       `json:"count,omitempty"`
+  TenantId                  string                    `json:"tenantId,omitempty"`
+}
+
+/**
+ * @author Trevor Smith
+ */
+type ConnectorPolicy struct {
+  ConnectorId               string                    `json:"connectorId,omitempty"`
+  Data                      map[string]interface{}    `json:"data,omitempty"`
+  ExecutionTrigger          ExecutionTrigger          `json:"executionTrigger,omitempty"`
+  MigrationStrategy         MigrationStrategy         `json:"migrationStrategy,omitempty"`
+  Sequence                  int                       `json:"sequence,omitempty"`
+}
+
+/**
+ * @author Trevor Smith
+ */
+type ConnectorRequest struct {
+  Connector                 BaseConnector             `json:"connector,omitempty"`
+}
+
+/**
+ * @author Trevor Smith
+ */
+type ConnectorResponse struct {
+  BaseHTTPResponse
+  Connector                 BaseConnector             `json:"connector,omitempty"`
+  Connectors                []BaseConnector           `json:"connectors,omitempty"`
+}
+func (b *ConnectorResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
+/**
+ * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
+ *
+ * @author Trevor Smith
+ */
+type ConnectorType string
+const (
+  ConnectorType_FusionAuth           ConnectorType        = "FusionAuth"
+  ConnectorType_Generic              ConnectorType        = "Generic"
+  ConnectorType_LDAP                 ConnectorType        = "LDAP"
+)
+
+/**
  * Models a consent.
  *
  * @author Daniel DeGroff
@@ -474,7 +535,7 @@ type Consent struct {
   DefaultMinimumAgeForSelfConsent int                       `json:"defaultMinimumAgeForSelfConsent,omitempty"`
   EmailPlus                 EmailPlus                 `json:"emailPlus,omitempty"`
   Id                        string                    `json:"id,omitempty"`
-  MultipleValuesAllowed     bool                      `json:"multipleValuesAllowed,omitempty"`
+  MultipleValuesAllowed     bool                      `json:"multipleValuesAllowed"`
   Name                      string                    `json:"name,omitempty"`
   Values                    []string                  `json:"values,omitempty"`
 }
@@ -530,7 +591,7 @@ const (
  */
 type CORSConfiguration struct {
   Enableable
-  AllowCredentials          bool                      `json:"allowCredentials,omitempty"`
+  AllowCredentials          bool                      `json:"allowCredentials"`
   AllowedHeaders            []string                  `json:"allowedHeaders,omitempty"`
   AllowedMethods            []HTTPMethod              `json:"allowedMethods,omitempty"`
   AllowedOrigins            []string                  `json:"allowedOrigins,omitempty"`
@@ -665,8 +726,8 @@ type EmailConfiguration struct {
   SetPasswordEmailTemplateId string                    `json:"setPasswordEmailTemplateId,omitempty"`
   Username                  string                    `json:"username,omitempty"`
   VerificationEmailTemplateId string                    `json:"verificationEmailTemplateId,omitempty"`
-  VerifyEmail               bool                      `json:"verifyEmail,omitempty"`
-  VerifyEmailWhenChanged    bool                      `json:"verifyEmailWhenChanged,omitempty"`
+  VerifyEmail               bool                      `json:"verifyEmail"`
+  VerifyEmailWhenChanged    bool                      `json:"verifyEmailWhenChanged"`
 }
 
 type EmailPlus struct {
@@ -736,7 +797,7 @@ func (b *EmailTemplateResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type Enableable struct {
-  Enabled                   bool                      `json:"enabled,omitempty"`
+  Enabled                   bool                      `json:"enabled"`
 }
 
 /**
@@ -883,6 +944,18 @@ const (
   EventType_Test                 EventType            = "Test"
 )
 
+// TODO : Authenticators : Is this a trigger or just a policy?
+type ExecutionTrigger struct {
+  FilterDomains             []string                  `json:"filterDomains,omitempty"`
+  Type                      ExecutionTriggerType      `json:"type,omitempty"`
+}
+
+type ExecutionTriggerType string
+const (
+  ExecutionTriggerType_Always               ExecutionTriggerType = "Always"
+  ExecutionTriggerType_FilterByDomain       ExecutionTriggerType = "FilterByDomain"
+)
+
 /**
  * @author Brian Pontarelli
  */
@@ -895,6 +968,14 @@ const (
   ExpiryUnit_MONTHS               ExpiryUnit           = "MONTHS"
   ExpiryUnit_YEARS                ExpiryUnit           = "YEARS"
 )
+
+/**
+ * @author Trevor Smith
+ */
+type ExternalAuthenticationRequest struct {
+  LoginId                   string                    `json:"loginId,omitempty"`
+  Password                  string                    `json:"password,omitempty"`
+}
 
 /**
  * @author Daniel DeGroff
@@ -995,14 +1076,14 @@ type Family struct {
  */
 type FamilyConfiguration struct {
   Enableable
-  AllowChildRegistrations   bool                      `json:"allowChildRegistrations,omitempty"`
+  AllowChildRegistrations   bool                      `json:"allowChildRegistrations"`
   ConfirmChildEmailTemplateId string                    `json:"confirmChildEmailTemplateId,omitempty"`
-  DeleteOrphanedAccounts    bool                      `json:"deleteOrphanedAccounts,omitempty"`
+  DeleteOrphanedAccounts    bool                      `json:"deleteOrphanedAccounts"`
   DeleteOrphanedAccountsDays int                       `json:"deleteOrphanedAccountsDays,omitempty"`
   FamilyRequestEmailTemplateId string                    `json:"familyRequestEmailTemplateId,omitempty"`
   MaximumChildAge           int                       `json:"maximumChildAge,omitempty"`
   MinimumOwnerAge           int                       `json:"minimumOwnerAge,omitempty"`
-  ParentEmailRequired       bool                      `json:"parentEmailRequired,omitempty"`
+  ParentEmailRequired       bool                      `json:"parentEmailRequired"`
   ParentRegistrationEmailTemplateId string                    `json:"parentRegistrationEmailTemplateId,omitempty"`
 }
 
@@ -1023,7 +1104,7 @@ type FamilyEmailRequest struct {
 type FamilyMember struct {
   Data                      map[string]interface{}    `json:"data,omitempty"`
   InsertInstant             int64                     `json:"insertInstant,omitempty"`
-  Owner                     bool                      `json:"owner,omitempty"`
+  Owner                     bool                      `json:"owner"`
   Role                      FamilyRole                `json:"role,omitempty"`
   UserId                    string                    `json:"userId,omitempty"`
 }
@@ -1067,7 +1148,7 @@ type ForgotPasswordRequest struct {
   ChangePasswordId          string                    `json:"changePasswordId,omitempty"`
   Email                     string                    `json:"email,omitempty"`
   LoginId                   string                    `json:"loginId,omitempty"`
-  SendForgotPasswordEmail   bool                      `json:"sendForgotPasswordEmail,omitempty"`
+  SendForgotPasswordEmail   bool                      `json:"sendForgotPasswordEmail"`
   State                     map[string]interface{}    `json:"state,omitempty"`
   Username                  string                    `json:"username,omitempty"`
 }
@@ -1083,6 +1164,32 @@ type ForgotPasswordResponse struct {
 }
 func (b *ForgotPasswordResponse) SetStatus(status int) {
   b.StatusCode = status
+}
+
+/**
+ * Models the FusionAuth connector.
+ *
+ * @author Trevor Smith
+ */
+type FusionAuthConnector struct {
+  BaseConnector
+}
+
+/**
+ * Models a generic connector.
+ *
+ * @author Trevor Smith
+ */
+type GenericConnector struct {
+  BaseConnector
+  AuthenticationURL         string                    `json:"authenticationURL,omitempty"`
+  ConnectTimeout            int                       `json:"connectTimeout,omitempty"`
+  Headers                   map[string]string         `json:"headers,omitempty"`
+  HttpAuthenticationPassword string                    `json:"httpAuthenticationPassword,omitempty"`
+  HttpAuthenticationUsername string                    `json:"httpAuthenticationUsername,omitempty"`
+  ReadTimeout               int                       `json:"readTimeout,omitempty"`
+  RetrieveUserURL           string                    `json:"retrieveUserURL,omitempty"`
+  SslCertificateKeyId       string                    `json:"sslCertificateKeyId,omitempty"`
 }
 
 /**
@@ -1312,7 +1419,7 @@ type ImportRequest struct {
   EncryptionScheme          string                    `json:"encryptionScheme,omitempty"`
   Factor                    int                       `json:"factor,omitempty"`
   Users                     []User                    `json:"users,omitempty"`
-  ValidateDbConstraints     bool                      `json:"validateDbConstraints,omitempty"`
+  ValidateDbConstraints     bool                      `json:"validateDbConstraints"`
 }
 
 /**
@@ -1524,7 +1631,7 @@ type Key struct {
   Certificate               string                    `json:"certificate,omitempty"`
   CertificateInformation    CertificateInformation    `json:"certificateInformation,omitempty"`
   ExpirationInstant         int64                     `json:"expirationInstant,omitempty"`
-  HasPrivateKey             bool                      `json:"hasPrivateKey,omitempty"`
+  HasPrivateKey             bool                      `json:"hasPrivateKey"`
   Id                        string                    `json:"id,omitempty"`
   InsertInstant             int64                     `json:"insertInstant,omitempty"`
   Issuer                    string                    `json:"issuer,omitempty"`
@@ -1588,7 +1695,7 @@ const (
 type Lambda struct {
   Enableable
   Body                      string                    `json:"body,omitempty"`
-  Debug                     bool                      `json:"debug,omitempty"`
+  Debug                     bool                      `json:"debug"`
   Id                        string                    `json:"id,omitempty"`
   InsertInstant             int64                     `json:"insertInstant,omitempty"`
   Name                      string                    `json:"name,omitempty"`
@@ -1599,6 +1706,10 @@ type LambdaConfiguration struct {
   AccessTokenPopulateId     string                    `json:"accessTokenPopulateId,omitempty"`
   IdTokenPopulateId         string                    `json:"idTokenPopulateId,omitempty"`
   Samlv2PopulateId          string                    `json:"samlv2PopulateId,omitempty"`
+}
+
+type LambdaConfiguration struct {
+  ReconcileId               string                    `json:"reconcileId,omitempty"`
 }
 
 type ProviderLambdaConfiguration struct {
@@ -1645,6 +1756,34 @@ const (
   LambdaType_GoogleReconcile      LambdaType           = "GoogleReconcile"
   LambdaType_HYPRReconcile        LambdaType           = "HYPRReconcile"
   LambdaType_TwitterReconcile     LambdaType           = "TwitterReconcile"
+  LambdaType_LDAPConnectorReconcile LambdaType           = "LDAPConnectorReconcile"
+)
+
+/**
+ * Models an LDAP connector.
+ *
+ * @author Trevor Smith
+ */
+type LDAPConnector struct {
+  BaseConnector
+  AuthenticationURL         string                    `json:"authenticationURL,omitempty"`
+  BaseStructure             string                    `json:"baseStructure,omitempty"`
+  ConnectTimeout            int                       `json:"connectTimeout,omitempty"`
+  EmailAttribute            string                    `json:"emailAttribute,omitempty"`
+  IdentifyingAttribute      string                    `json:"identifyingAttribute,omitempty"`
+  LambdaConfiguration       LambdaConfiguration       `json:"lambdaConfiguration,omitempty"`
+  ReadTimeout               int                       `json:"readTimeout,omitempty"`
+  RequestedAttributes       []string                  `json:"requestedAttributes,omitempty"`
+  SecurityMethod            LDAPSecurityMethod        `json:"securityMethod,omitempty"`
+  SystemAccountDN           string                    `json:"systemAccountDN,omitempty"`
+  SystemAccountPassword     string                    `json:"systemAccountPassword,omitempty"`
+}
+
+type LDAPSecurityMethod string
+const (
+  LDAPSecurityMethod_None                 LDAPSecurityMethod   = "None"
+  LDAPSecurityMethod_LDAPS                LDAPSecurityMethod   = "LDAPS"
+  LDAPSecurityMethod_StartTLS             LDAPSecurityMethod   = "StartTLS"
 )
 
 /**
@@ -1657,9 +1796,9 @@ type LogHistory struct {
 }
 
 type LoginConfiguration struct {
-  AllowTokenRefresh         bool                      `json:"allowTokenRefresh,omitempty"`
-  GenerateRefreshTokens     bool                      `json:"generateRefreshTokens,omitempty"`
-  RequireAuthentication     bool                      `json:"requireAuthentication,omitempty"`
+  AllowTokenRefresh         bool                      `json:"allowTokenRefresh"`
+  GenerateRefreshTokens     bool                      `json:"generateRefreshTokens"`
+  RequireAuthentication     bool                      `json:"requireAuthentication"`
 }
 
 type LoginIdType string
@@ -1717,7 +1856,7 @@ type LoginRecordSearchCriteria struct {
  * @author Daniel DeGroff
  */
 type LoginRecordSearchRequest struct {
-  RetrieveTotal             bool                      `json:"retrieveTotal,omitempty"`
+  RetrieveTotal             bool                      `json:"retrieveTotal"`
   Search                    LoginRecordSearchCriteria `json:"search,omitempty"`
 }
 
@@ -1847,6 +1986,16 @@ type MetaData struct {
 }
 
 /**
+ * @author Trevor Smith
+ */
+type MigrationStrategy string
+const (
+  MigrationStrategy_ShellUser            MigrationStrategy    = "ShellUser"
+  MigrationStrategy_SynchronizeUser      MigrationStrategy    = "SynchronizeUser"
+  MigrationStrategy_MigrateIdentity      MigrationStrategy    = "MigrateIdentity"
+)
+
+/**
  * @author Daniel DeGroff
  */
 type MinimumPasswordAge struct {
@@ -1886,10 +2035,10 @@ type OAuth2Configuration struct {
   ClientSecret              string                    `json:"clientSecret,omitempty"`
   DeviceVerificationURL     string                    `json:"deviceVerificationURL,omitempty"`
   EnabledGrants             []GrantType               `json:"enabledGrants,omitempty"`
-  GenerateRefreshTokens     bool                      `json:"generateRefreshTokens,omitempty"`
+  GenerateRefreshTokens     bool                      `json:"generateRefreshTokens"`
   LogoutBehavior            LogoutBehavior            `json:"logoutBehavior,omitempty"`
   LogoutURL                 string                    `json:"logoutURL,omitempty"`
-  RequireClientAuthentication bool                      `json:"requireClientAuthentication,omitempty"`
+  RequireClientAuthentication bool                      `json:"requireClientAuthentication"`
 }
 
 /**
@@ -2004,11 +2153,11 @@ func (b *OAuthResponse) SetStatus(status int) {
 type OpenIdConfiguration struct {
   BaseHTTPResponse
   AuthorizationEndpoint     string                    `json:"authorization_endpoint,omitempty"`
-  BackchannelLogoutSupported bool                      `json:"backchannel_logout_supported,omitempty"`
+  BackchannelLogoutSupported bool                      `json:"backchannel_logout_supported"`
   ClaimsSupported           []string                  `json:"claims_supported,omitempty"`
   DeviceAuthorizationEndpoint string                    `json:"device_authorization_endpoint,omitempty"`
   EndSessionEndpoint        string                    `json:"end_session_endpoint,omitempty"`
-  FrontchannelLogoutSupported bool                      `json:"frontchannel_logout_supported,omitempty"`
+  FrontchannelLogoutSupported bool                      `json:"frontchannel_logout_supported"`
   GrantTypesSupported       []string                  `json:"grant_types_supported,omitempty"`
   IdTokenSigningAlgValuesSupported []string                  `json:"id_token_signing_alg_values_supported,omitempty"`
   Issuer                    string                    `json:"issuer,omitempty"`
@@ -2065,7 +2214,7 @@ type PasswordBreachDetection struct {
 type PasswordEncryptionConfiguration struct {
   EncryptionScheme          string                    `json:"encryptionScheme,omitempty"`
   EncryptionSchemeFactor    int                       `json:"encryptionSchemeFactor,omitempty"`
-  ModifyEncryptionSchemeOnLogin bool                      `json:"modifyEncryptionSchemeOnLogin,omitempty"`
+  ModifyEncryptionSchemeOnLogin bool                      `json:"modifyEncryptionSchemeOnLogin"`
 }
 
 type PasswordlessConfiguration struct {
@@ -2125,10 +2274,10 @@ type PasswordValidationRules struct {
   MaxLength                 int                       `json:"maxLength,omitempty"`
   MinLength                 int                       `json:"minLength,omitempty"`
   RememberPreviousPasswords RememberPreviousPasswords `json:"rememberPreviousPasswords,omitempty"`
-  RequireMixedCase          bool                      `json:"requireMixedCase,omitempty"`
-  RequireNonAlpha           bool                      `json:"requireNonAlpha,omitempty"`
-  RequireNumber             bool                      `json:"requireNumber,omitempty"`
-  ValidateOnLogin           bool                      `json:"validateOnLogin,omitempty"`
+  RequireMixedCase          bool                      `json:"requireMixedCase"`
+  RequireNonAlpha           bool                      `json:"requireNonAlpha"`
+  RequireNumber             bool                      `json:"requireNumber"`
+  ValidateOnLogin           bool                      `json:"validateOnLogin"`
 }
 
 /**
@@ -2260,8 +2409,8 @@ const (
  * @author Daniel DeGroff
  */
 type RefreshTokenRevocationPolicy struct {
-  OnLoginPrevented          bool                      `json:"onLoginPrevented,omitempty"`
-  OnPasswordChanged         bool                      `json:"onPasswordChanged,omitempty"`
+  OnLoginPrevented          bool                      `json:"onLoginPrevented"`
+  OnPasswordChanged         bool                      `json:"onPasswordChanged"`
 }
 
 /**
@@ -2276,7 +2425,7 @@ const (
 type RegistrationConfiguration struct {
   Enableable
   BirthDate                 Requirable                `json:"birthDate,omitempty"`
-  ConfirmPassword           bool                      `json:"confirmPassword,omitempty"`
+  ConfirmPassword           bool                      `json:"confirmPassword"`
   FirstName                 Requirable                `json:"firstName,omitempty"`
   FullName                  Requirable                `json:"fullName,omitempty"`
   LastName                  Requirable                `json:"lastName,omitempty"`
@@ -2305,11 +2454,11 @@ func (b *RegistrationReportResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type RegistrationRequest struct {
-  GenerateAuthenticationToken bool                      `json:"generateAuthenticationToken,omitempty"`
+  GenerateAuthenticationToken bool                      `json:"generateAuthenticationToken"`
   Registration              UserRegistration          `json:"registration,omitempty"`
-  SendSetPasswordEmail      bool                      `json:"sendSetPasswordEmail,omitempty"`
-  SkipRegistrationVerification bool                      `json:"skipRegistrationVerification,omitempty"`
-  SkipVerification          bool                      `json:"skipVerification,omitempty"`
+  SendSetPasswordEmail      bool                      `json:"sendSetPasswordEmail"`
+  SkipRegistrationVerification bool                      `json:"skipRegistrationVerification"`
+  SkipVerification          bool                      `json:"skipVerification"`
   User                      User                      `json:"user,omitempty"`
 }
 
@@ -2352,7 +2501,7 @@ type RememberPreviousPasswords struct {
  */
 type Requirable struct {
   Enableable
-  Required                  bool                      `json:"required,omitempty"`
+  Required                  bool                      `json:"required"`
 }
 
 /**
@@ -2376,7 +2525,7 @@ type SAMLv2Configuration struct {
   Enableable
   Audience                  string                    `json:"audience,omitempty"`
   CallbackURL               string                    `json:"callbackURL,omitempty"`
-  Debug                     bool                      `json:"debug,omitempty"`
+  Debug                     bool                      `json:"debug"`
   Issuer                    string                    `json:"issuer,omitempty"`
   KeyId                     string                    `json:"keyId,omitempty"`
   LogoutURL                 string                    `json:"logoutURL,omitempty"`
@@ -2397,7 +2546,7 @@ type SAMLv2IdentityProvider struct {
   IdpEndpoint               string                    `json:"idpEndpoint,omitempty"`
   Issuer                    string                    `json:"issuer,omitempty"`
   KeyId                     string                    `json:"keyId,omitempty"`
-  UseNameIdForEmail         bool                      `json:"useNameIdForEmail,omitempty"`
+  UseNameIdForEmail         bool                      `json:"useNameIdForEmail"`
 }
 
 /**
@@ -2475,10 +2624,10 @@ type SecureIdentity struct {
   Id                        string                    `json:"id,omitempty"`
   Password                  string                    `json:"password,omitempty"`
   PasswordChangeReason      ChangePasswordReason      `json:"passwordChangeReason,omitempty"`
-  PasswordChangeRequired    bool                      `json:"passwordChangeRequired,omitempty"`
+  PasswordChangeRequired    bool                      `json:"passwordChangeRequired"`
   PasswordLastUpdateInstant int64                     `json:"passwordLastUpdateInstant,omitempty"`
   Salt                      string                    `json:"salt,omitempty"`
-  Verified                  bool                      `json:"verified,omitempty"`
+  Verified                  bool                      `json:"verified"`
 }
 
 /**
@@ -2595,7 +2744,8 @@ type Templates struct {
  * @author Daniel DeGroff
  */
 type Tenant struct {
-  Configured                bool                      `json:"configured,omitempty"`
+  Configured                bool                      `json:"configured"`
+  ConnectorPolicies         []ConnectorPolicy         `json:"connectorPolicies,omitempty"`
   Data                      map[string]interface{}    `json:"data,omitempty"`
   EmailConfiguration        EmailConfiguration        `json:"emailConfiguration,omitempty"`
   EventConfiguration        EventConfiguration        `json:"eventConfiguration,omitempty"`
@@ -2811,7 +2961,7 @@ const (
 type TwoFactorLoginRequest struct {
   BaseLoginRequest
   Code                      string                    `json:"code,omitempty"`
-  TrustComputer             bool                      `json:"trustComputer,omitempty"`
+  TrustComputer             bool                      `json:"trustComputer"`
   TwoFactorId               string                    `json:"twoFactorId,omitempty"`
 }
 
@@ -2848,9 +2998,10 @@ type UIConfiguration struct {
  */
 type User struct {
   SecureIdentity
-  Active                    bool                      `json:"active,omitempty"`
+  Active                    bool                      `json:"active"`
   BirthDate                 string                    `json:"birthDate,omitempty"`
   CleanSpeakId              string                    `json:"cleanSpeakId,omitempty"`
+  ConnectorId               string                    `json:"connectorId,omitempty"`
   Data                      map[string]interface{}    `json:"data,omitempty"`
   Email                     string                    `json:"email,omitempty"`
   Expiry                    int64                     `json:"expiry,omitempty"`
@@ -2869,7 +3020,7 @@ type User struct {
   TenantId                  string                    `json:"tenantId,omitempty"`
   Timezone                  string                    `json:"timezone,omitempty"`
   TwoFactorDelivery         TwoFactorDelivery         `json:"twoFactorDelivery,omitempty"`
-  TwoFactorEnabled          bool                      `json:"twoFactorEnabled,omitempty"`
+  TwoFactorEnabled          bool                      `json:"twoFactorEnabled"`
   TwoFactorSecret           string                    `json:"twoFactorSecret,omitempty"`
   Username                  string                    `json:"username,omitempty"`
   UsernameStatus            ContentStatus             `json:"usernameStatus,omitempty"`
@@ -2881,22 +3032,22 @@ type User struct {
  * @author Brian Pontarelli
  */
 type UserAction struct {
-  Active                    bool                      `json:"active,omitempty"`
+  Active                    bool                      `json:"active"`
   CancelEmailTemplateId     string                    `json:"cancelEmailTemplateId,omitempty"`
   EndEmailTemplateId        string                    `json:"endEmailTemplateId,omitempty"`
   Id                        string                    `json:"id,omitempty"`
-  IncludeEmailInEventJSON   bool                      `json:"includeEmailInEventJSON,omitempty"`
+  IncludeEmailInEventJSON   bool                      `json:"includeEmailInEventJSON"`
   LocalizedNames            map[string]string         `json:"localizedNames,omitempty"`
   ModifyEmailTemplateId     string                    `json:"modifyEmailTemplateId,omitempty"`
   Name                      string                    `json:"name,omitempty"`
   Options                   []UserActionOption        `json:"options,omitempty"`
-  PreventLogin              bool                      `json:"preventLogin,omitempty"`
-  SendEndEvent              bool                      `json:"sendEndEvent,omitempty"`
+  PreventLogin              bool                      `json:"preventLogin"`
+  SendEndEvent              bool                      `json:"sendEndEvent"`
   StartEmailTemplateId      string                    `json:"startEmailTemplateId,omitempty"`
-  Temporal                  bool                      `json:"temporal,omitempty"`
+  Temporal                  bool                      `json:"temporal"`
   TransactionType           TransactionType           `json:"transactionType,omitempty"`
-  UserEmailingEnabled       bool                      `json:"userEmailingEnabled,omitempty"`
-  UserNotificationsEnabled  bool                      `json:"userNotificationsEnabled,omitempty"`
+  UserEmailingEnabled       bool                      `json:"userEmailingEnabled"`
+  UserNotificationsEnabled  bool                      `json:"userNotificationsEnabled"`
 }
 
 /**
@@ -2913,13 +3064,13 @@ type UserActionEvent struct {
   ApplicationIds            []string                  `json:"applicationIds,omitempty"`
   Comment                   string                    `json:"comment,omitempty"`
   Email                     Email                     `json:"email,omitempty"`
-  EmailedUser               bool                      `json:"emailedUser,omitempty"`
+  EmailedUser               bool                      `json:"emailedUser"`
   Expiry                    int64                     `json:"expiry,omitempty"`
   LocalizedAction           string                    `json:"localizedAction,omitempty"`
   LocalizedDuration         string                    `json:"localizedDuration,omitempty"`
   LocalizedOption           string                    `json:"localizedOption,omitempty"`
   LocalizedReason           string                    `json:"localizedReason,omitempty"`
-  NotifyUser                bool                      `json:"notifyUser,omitempty"`
+  NotifyUser                bool                      `json:"notifyUser"`
   Option                    string                    `json:"option,omitempty"`
   Phase                     UserActionPhase           `json:"phase,omitempty"`
   Reason                    string                    `json:"reason,omitempty"`
@@ -2937,8 +3088,8 @@ type UserActionLog struct {
   ApplicationIds            []string                  `json:"applicationIds,omitempty"`
   Comment                   string                    `json:"comment,omitempty"`
   CreateInstant             int64                     `json:"createInstant,omitempty"`
-  EmailUserOnEnd            bool                      `json:"emailUserOnEnd,omitempty"`
-  EndEventSent              bool                      `json:"endEventSent,omitempty"`
+  EmailUserOnEnd            bool                      `json:"emailUserOnEnd"`
+  EndEventSent              bool                      `json:"endEventSent"`
   Expiry                    int64                     `json:"expiry,omitempty"`
   History                   LogHistory                `json:"history,omitempty"`
   Id                        string                    `json:"id,omitempty"`
@@ -2946,7 +3097,7 @@ type UserActionLog struct {
   LocalizedOption           string                    `json:"localizedOption,omitempty"`
   LocalizedReason           string                    `json:"localizedReason,omitempty"`
   Name                      string                    `json:"name,omitempty"`
-  NotifyUserOnEnd           bool                      `json:"notifyUserOnEnd,omitempty"`
+  NotifyUserOnEnd           bool                      `json:"notifyUserOnEnd"`
   Option                    string                    `json:"option,omitempty"`
   Reason                    string                    `json:"reason,omitempty"`
   ReasonCode                string                    `json:"reasonCode,omitempty"`
@@ -3156,8 +3307,8 @@ type UserDeleteEvent struct {
  * @author Daniel DeGroff
  */
 type UserDeleteRequest struct {
-  DryRun                    bool                      `json:"dryRun,omitempty"`
-  HardDelete                bool                      `json:"hardDelete,omitempty"`
+  DryRun                    bool                      `json:"dryRun"`
+  HardDelete                bool                      `json:"hardDelete"`
   Query                     string                    `json:"query,omitempty"`
   QueryString               string                    `json:"queryString,omitempty"`
   UserIds                   []string                  `json:"userIds,omitempty"`
@@ -3170,8 +3321,8 @@ type UserDeleteRequest struct {
  */
 type UserDeleteResponse struct {
   BaseHTTPResponse
-  DryRun                    bool                      `json:"dryRun,omitempty"`
-  HardDelete                bool                      `json:"hardDelete,omitempty"`
+  DryRun                    bool                      `json:"dryRun"`
+  HardDelete                bool                      `json:"hardDelete"`
   Total                     int                       `json:"total,omitempty"`
   UserIds                   []string                  `json:"userIds,omitempty"`
 }
@@ -3259,7 +3410,7 @@ type UserRegistration struct {
   Tokens                    map[string]string         `json:"tokens,omitempty"`
   Username                  string                    `json:"username,omitempty"`
   UsernameStatus            ContentStatus             `json:"usernameStatus,omitempty"`
-  Verified                  bool                      `json:"verified,omitempty"`
+  Verified                  bool                      `json:"verified"`
 }
 
 /**
@@ -3317,8 +3468,8 @@ type UserRegistrationVerifiedEvent struct {
  * @author Brian Pontarelli
  */
 type UserRequest struct {
-  SendSetPasswordEmail      bool                      `json:"sendSetPasswordEmail,omitempty"`
-  SkipVerification          bool                      `json:"skipVerification,omitempty"`
+  SendSetPasswordEmail      bool                      `json:"sendSetPasswordEmail"`
+  SkipVerification          bool                      `json:"skipVerification"`
   User                      User                      `json:"user,omitempty"`
 }
 
@@ -3413,7 +3564,7 @@ type Webhook struct {
   Data                      map[string]interface{}    `json:"data,omitempty"`
   Description               string                    `json:"description,omitempty"`
   EventsEnabled             map[EventType]bool        `json:"eventsEnabled,omitempty"`
-  Global                    bool                      `json:"global,omitempty"`
+  Global                    bool                      `json:"global"`
   Headers                   map[string]string         `json:"headers,omitempty"`
   HttpAuthenticationPassword string                    `json:"httpAuthenticationPassword,omitempty"`
   HttpAuthenticationUsername string                    `json:"httpAuthenticationUsername,omitempty"`
