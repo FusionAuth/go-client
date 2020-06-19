@@ -1886,10 +1886,10 @@ type OAuth2Configuration struct {
   ClientSecret              string                    `json:"clientSecret,omitempty"`
   DeviceVerificationURL     string                    `json:"deviceVerificationURL,omitempty"`
   EnabledGrants             []GrantType               `json:"enabledGrants,omitempty"`
-  GenerateRefreshTokens     bool                      `json:"generateRefreshTokens,omitempty"`
+  GenerateRefreshTokens     bool                      `json:"generateRefreshTokens"`
   LogoutBehavior            LogoutBehavior            `json:"logoutBehavior,omitempty"`
   LogoutURL                 string                    `json:"logoutURL,omitempty"`
-  RequireClientAuthentication bool                      `json:"requireClientAuthentication,omitempty"`
+  RequireClientAuthentication bool                      `json:"requireClientAuthentication"`
 }
 
 /**
