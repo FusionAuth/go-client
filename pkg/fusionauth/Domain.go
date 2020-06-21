@@ -1706,11 +1706,9 @@ type LambdaConfiguration struct {
   AccessTokenPopulateId     string                    `json:"accessTokenPopulateId,omitempty"`
   IdTokenPopulateId         string                    `json:"idTokenPopulateId,omitempty"`
   Samlv2PopulateId          string                    `json:"samlv2PopulateId,omitempty"`
-}
-
-type LambdaConfiguration struct {
   ReconcileId               string                    `json:"reconcileId,omitempty"`
 }
+
 
 type ProviderLambdaConfiguration struct {
   ReconcileId               string                    `json:"reconcileId,omitempty"`
