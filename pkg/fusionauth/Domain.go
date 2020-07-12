@@ -862,25 +862,25 @@ type EventRequest struct {
  */
 type EventType string
 const (
-  EventType_UserDelete           EventType            = "UserDelete"
-  EventType_UserCreate           EventType            = "UserCreate"
-  EventType_UserUpdate           EventType            = "UserUpdate"
-  EventType_UserDeactivate       EventType            = "UserDeactivate"
-  EventType_UserBulkCreate       EventType            = "UserBulkCreate"
-  EventType_UserReactivate       EventType            = "UserReactivate"
-  EventType_UserAction           EventType            = "UserAction"
-  EventType_JWTRefreshTokenRevoke EventType            = "JWTRefreshTokenRevoke"
-  EventType_JWTRefresh           EventType            = "JWTRefresh"
-  EventType_JWTPublicKeyUpdate   EventType            = "JWTPublicKeyUpdate"
-  EventType_UserLoginSuccess     EventType            = "UserLoginSuccess"
-  EventType_UserLoginFailed      EventType            = "UserLoginFailed"
-  EventType_UserRegistrationCreate EventType            = "UserRegistrationCreate"
-  EventType_UserRegistrationUpdate EventType            = "UserRegistrationUpdate"
-  EventType_UserRegistrationDelete EventType            = "UserRegistrationDelete"
-  EventType_UserRegistrationVerified EventType            = "UserRegistrationVerified"
-  EventType_UserEmailVerified    EventType            = "UserEmailVerified"
-  EventType_UserPasswordBreach   EventType            = "UserPasswordBreach"
-  EventType_Test                 EventType            = "Test"
+  EventType_UserDelete           EventType            = "user.delete"
+  EventType_UserCreate           EventType            = "user.create"
+  EventType_UserUpdate           EventType            = "user.update"
+  EventType_UserDeactivate       EventType            = "user.deactivate"
+  EventType_UserBulkCreate       EventType            = "user.bulk.create"
+  EventType_UserReactivate       EventType            = "user.reactivate"
+  EventType_UserAction           EventType            = "user.action"
+  EventType_JWTRefreshTokenRevoke EventType            = "jwt.refresh-token.revoke"
+  EventType_JWTRefresh           EventType            = "jwt.refresh"
+  EventType_JWTPublicKeyUpdate   EventType            = "jwt.public-key.update"
+  EventType_UserLoginSuccess     EventType            = "user.login.success"
+  EventType_UserLoginFailed      EventType            = "user.login.failed"
+  EventType_UserRegistrationCreate EventType            = "user.registration.create"
+  EventType_UserRegistrationUpdate EventType            = "user.registration.update"
+  EventType_UserRegistrationDelete EventType            = "user.registration.delete"
+  EventType_UserRegistrationVerified EventType            = "user.registration.verified"
+  EventType_UserEmailVerified    EventType            = "user.email.verified"
+  EventType_UserPasswordBreach   EventType            = "user.password.breach"
+  EventType_Test                 EventType            = "test"
 )
 
 /**
@@ -1126,7 +1126,7 @@ const (
   GrantType_ClientCredentials    GrantType            = "client_credentials"
   GrantType_RefreshToken         GrantType            = "refresh_token"
   GrantType_Unknown              GrantType            = "unknown"
-  GrantType_DeviceCode           GrantType            = "device_code"
+  GrantType_DeviceCode           GrantType            = "urn:ietf:params:oauth:grant-type:device_code"
 )
 
 /**
