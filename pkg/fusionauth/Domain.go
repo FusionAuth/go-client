@@ -95,16 +95,16 @@ func (b *ActionResponse) SetStatus(status int) {
  */
 type Algorithm string
 const (
-  Algorithm_ES256                Algorithm            = "ES256"
-  Algorithm_ES384                Algorithm            = "ES384"
-  Algorithm_ES512                Algorithm            = "ES512"
-  Algorithm_HS256                Algorithm            = "HS256"
-  Algorithm_HS384                Algorithm            = "HS384"
-  Algorithm_HS512                Algorithm            = "HS512"
-  Algorithm_RS256                Algorithm            = "RS256"
-  Algorithm_RS384                Algorithm            = "RS384"
-  Algorithm_RS512                Algorithm            = "RS512"
-  Algorithm_None                 Algorithm            = "none"
+  Algorithm_ES256                      Algorithm                  = "ES256"
+  Algorithm_ES384                      Algorithm                  = "ES384"
+  Algorithm_ES512                      Algorithm                  = "ES512"
+  Algorithm_HS256                      Algorithm                  = "HS256"
+  Algorithm_HS384                      Algorithm                  = "HS384"
+  Algorithm_HS512                      Algorithm                  = "HS512"
+  Algorithm_RS256                      Algorithm                  = "RS256"
+  Algorithm_RS384                      Algorithm                  = "RS384"
+  Algorithm_RS512                      Algorithm                  = "RS512"
+  Algorithm_None                       Algorithm                  = "none"
 )
 
 /**
@@ -359,10 +359,10 @@ type BaseSearchCriteria struct {
 
 type BreachAction string
 const (
-  BreachAction_Off                  BreachAction         = "Off"
-  BreachAction_RecordOnly           BreachAction         = "RecordOnly"
-  BreachAction_NotifyUser           BreachAction         = "NotifyUser"
-  BreachAction_RequireChange        BreachAction         = "RequireChange"
+  BreachAction_Off                        BreachAction               = "Off"
+  BreachAction_RecordOnly                 BreachAction               = "RecordOnly"
+  BreachAction_NotifyUser                 BreachAction               = "NotifyUser"
+  BreachAction_RequireChange              BreachAction               = "RequireChange"
 )
 
 /**
@@ -370,26 +370,26 @@ const (
  */
 type BreachedPasswordStatus string
 const (
-  BreachedPasswordStatus_None                 BreachedPasswordStatus = "None"
-  BreachedPasswordStatus_ExactMatch           BreachedPasswordStatus = "ExactMatch"
-  BreachedPasswordStatus_SubAddressMatch      BreachedPasswordStatus = "SubAddressMatch"
-  BreachedPasswordStatus_PasswordOnly         BreachedPasswordStatus = "PasswordOnly"
-  BreachedPasswordStatus_CommonPassword       BreachedPasswordStatus = "CommonPassword"
+  BreachedPasswordStatus_None                       BreachedPasswordStatus     = "None"
+  BreachedPasswordStatus_ExactMatch                 BreachedPasswordStatus     = "ExactMatch"
+  BreachedPasswordStatus_SubAddressMatch            BreachedPasswordStatus     = "SubAddressMatch"
+  BreachedPasswordStatus_PasswordOnly               BreachedPasswordStatus     = "PasswordOnly"
+  BreachedPasswordStatus_CommonPassword             BreachedPasswordStatus     = "CommonPassword"
 )
 
 type BreachMatchMode string
 const (
-  BreachMatchMode_Low                  BreachMatchMode      = "Low"
-  BreachMatchMode_Medium               BreachMatchMode      = "Medium"
-  BreachMatchMode_High                 BreachMatchMode      = "High"
+  BreachMatchMode_Low                        BreachMatchMode            = "Low"
+  BreachMatchMode_Medium                     BreachMatchMode            = "Medium"
+  BreachMatchMode_High                       BreachMatchMode            = "High"
 )
 
 type CanonicalizationMethod string
 const (
-  CanonicalizationMethod_Exclusive            CanonicalizationMethod = "exclusive"
-  CanonicalizationMethod_ExclusiveWithComments CanonicalizationMethod = "exclusive_with_comments"
-  CanonicalizationMethod_Inclusive            CanonicalizationMethod = "inclusive"
-  CanonicalizationMethod_InclusiveWithComments CanonicalizationMethod = "inclusive_with_comments"
+  CanonicalizationMethod_Exclusive                  CanonicalizationMethod     = "exclusive"
+  CanonicalizationMethod_ExclusiveWithComments      CanonicalizationMethod     = "exclusive_with_comments"
+  CanonicalizationMethod_Inclusive                  CanonicalizationMethod     = "inclusive"
+  CanonicalizationMethod_InclusiveWithComments      CanonicalizationMethod     = "inclusive_with_comments"
 )
 
 type CertificateInformation struct {
@@ -410,10 +410,10 @@ type CertificateInformation struct {
  */
 type ChangePasswordReason string
 const (
-  ChangePasswordReason_Administrative       ChangePasswordReason = "Administrative"
-  ChangePasswordReason_Breached             ChangePasswordReason = "Breached"
-  ChangePasswordReason_Expired              ChangePasswordReason = "Expired"
-  ChangePasswordReason_Validation           ChangePasswordReason = "Validation"
+  ChangePasswordReason_Administrative             ChangePasswordReason       = "Administrative"
+  ChangePasswordReason_Breached                   ChangePasswordReason       = "Breached"
+  ChangePasswordReason_Expired                    ChangePasswordReason       = "Expired"
+  ChangePasswordReason_Validation                 ChangePasswordReason       = "Validation"
 )
 
 /**
@@ -457,9 +457,9 @@ type CleanSpeakConfiguration struct {
 
 type ClientAuthenticationMethod string
 const (
-  ClientAuthenticationMethod_None                 ClientAuthenticationMethod = "none"
-  ClientAuthenticationMethod_ClientSecretBasic    ClientAuthenticationMethod = "client_secret_basic"
-  ClientAuthenticationMethod_ClientSecretPost     ClientAuthenticationMethod = "client_secret_post"
+  ClientAuthenticationMethod_None                       ClientAuthenticationMethod = "none"
+  ClientAuthenticationMethod_ClientSecretBasic          ClientAuthenticationMethod = "client_secret_basic"
+  ClientAuthenticationMethod_ClientSecretPost           ClientAuthenticationMethod = "client_secret_post"
 )
 
 /**
@@ -509,8 +509,8 @@ func (b *ConsentResponse) SetStatus(status int) {
  */
 type ConsentStatus string
 const (
-  ConsentStatus_Active               ConsentStatus        = "Active"
-  ConsentStatus_Revoked              ConsentStatus        = "Revoked"
+  ConsentStatus_Active                     ConsentStatus              = "Active"
+  ConsentStatus_Revoked                    ConsentStatus              = "Revoked"
 )
 
 /**
@@ -520,9 +520,9 @@ const (
  */
 type ContentStatus string
 const (
-  ContentStatus_ACTIVE               ContentStatus        = "ACTIVE"
-  ContentStatus_PENDING              ContentStatus        = "PENDING"
-  ContentStatus_REJECTED             ContentStatus        = "REJECTED"
+  ContentStatus_ACTIVE                     ContentStatus              = "ACTIVE"
+  ContentStatus_PENDING                    ContentStatus              = "PENDING"
+  ContentStatus_REJECTED                   ContentStatus              = "REJECTED"
 )
 
 /**
@@ -594,15 +594,15 @@ func (b *DeviceResponse) SetStatus(status int) {
 
 type DeviceType string
 const (
-  DeviceType_BROWSER              DeviceType           = "BROWSER"
-  DeviceType_DESKTOP              DeviceType           = "DESKTOP"
-  DeviceType_LAPTOP               DeviceType           = "LAPTOP"
-  DeviceType_MOBILE               DeviceType           = "MOBILE"
-  DeviceType_OTHER                DeviceType           = "OTHER"
-  DeviceType_SERVER               DeviceType           = "SERVER"
-  DeviceType_TABLET               DeviceType           = "TABLET"
-  DeviceType_TV                   DeviceType           = "TV"
-  DeviceType_UNKNOWN              DeviceType           = "UNKNOWN"
+  DeviceType_BROWSER                    DeviceType                 = "BROWSER"
+  DeviceType_DESKTOP                    DeviceType                 = "DESKTOP"
+  DeviceType_LAPTOP                     DeviceType                 = "LAPTOP"
+  DeviceType_MOBILE                     DeviceType                 = "MOBILE"
+  DeviceType_OTHER                      DeviceType                 = "OTHER"
+  DeviceType_SERVER                     DeviceType                 = "SERVER"
+  DeviceType_TABLET                     DeviceType                 = "TABLET"
+  DeviceType_TV                         DeviceType                 = "TV"
+  DeviceType_UNKNOWN                    DeviceType                 = "UNKNOWN"
 )
 
 /**
@@ -678,9 +678,9 @@ type EmailPlus struct {
 
 type EmailSecurityType string
 const (
-  EmailSecurityType_NONE                 EmailSecurityType    = "NONE"
-  EmailSecurityType_SSL                  EmailSecurityType    = "SSL"
-  EmailSecurityType_TLS                  EmailSecurityType    = "TLS"
+  EmailSecurityType_NONE                       EmailSecurityType          = "NONE"
+  EmailSecurityType_SSL                        EmailSecurityType          = "SSL"
+  EmailSecurityType_TLS                        EmailSecurityType          = "TLS"
 )
 
 /**
@@ -841,9 +841,9 @@ func (b *EventLogSearchResponse) SetStatus(status int) {
  */
 type EventLogType string
 const (
-  EventLogType_Information          EventLogType         = "Information"
-  EventLogType_Debug                EventLogType         = "Debug"
-  EventLogType_Error                EventLogType         = "Error"
+  EventLogType_Information                EventLogType               = "Information"
+  EventLogType_Debug                      EventLogType               = "Debug"
+  EventLogType_Error                      EventLogType               = "Error"
 )
 
 /**
@@ -862,25 +862,25 @@ type EventRequest struct {
  */
 type EventType string
 const (
-  EventType_UserDelete           EventType            = "user.delete"
-  EventType_UserCreate           EventType            = "user.create"
-  EventType_UserUpdate           EventType            = "user.update"
-  EventType_UserDeactivate       EventType            = "user.deactivate"
-  EventType_UserBulkCreate       EventType            = "user.bulk.create"
-  EventType_UserReactivate       EventType            = "user.reactivate"
-  EventType_UserAction           EventType            = "user.action"
-  EventType_JWTRefreshTokenRevoke EventType            = "jwt.refresh-token.revoke"
-  EventType_JWTRefresh           EventType            = "jwt.refresh"
-  EventType_JWTPublicKeyUpdate   EventType            = "jwt.public-key.update"
-  EventType_UserLoginSuccess     EventType            = "user.login.success"
-  EventType_UserLoginFailed      EventType            = "user.login.failed"
-  EventType_UserRegistrationCreate EventType            = "user.registration.create"
-  EventType_UserRegistrationUpdate EventType            = "user.registration.update"
-  EventType_UserRegistrationDelete EventType            = "user.registration.delete"
-  EventType_UserRegistrationVerified EventType            = "user.registration.verified"
-  EventType_UserEmailVerified    EventType            = "user.email.verified"
-  EventType_UserPasswordBreach   EventType            = "user.password.breach"
-  EventType_Test                 EventType            = "test"
+  EventType_UserDelete                 EventType                  = "user.delete"
+  EventType_UserCreate                 EventType                  = "user.create"
+  EventType_UserUpdate                 EventType                  = "user.update"
+  EventType_UserDeactivate             EventType                  = "user.deactivate"
+  EventType_UserBulkCreate             EventType                  = "user.bulk.create"
+  EventType_UserReactivate             EventType                  = "user.reactivate"
+  EventType_UserAction                 EventType                  = "user.action"
+  EventType_JWTRefreshTokenRevoke      EventType                  = "jwt.refresh-token.revoke"
+  EventType_JWTRefresh                 EventType                  = "jwt.refresh"
+  EventType_JWTPublicKeyUpdate         EventType                  = "jwt.public-key.update"
+  EventType_UserLoginSuccess           EventType                  = "user.login.success"
+  EventType_UserLoginFailed            EventType                  = "user.login.failed"
+  EventType_UserRegistrationCreate     EventType                  = "user.registration.create"
+  EventType_UserRegistrationUpdate     EventType                  = "user.registration.update"
+  EventType_UserRegistrationDelete     EventType                  = "user.registration.delete"
+  EventType_UserRegistrationVerified   EventType                  = "user.registration.verified"
+  EventType_UserEmailVerified          EventType                  = "user.email.verified"
+  EventType_UserPasswordBreach         EventType                  = "user.password.breach"
+  EventType_Test                       EventType                  = "test"
 )
 
 /**
@@ -888,12 +888,12 @@ const (
  */
 type ExpiryUnit string
 const (
-  ExpiryUnit_MINUTES              ExpiryUnit           = "MINUTES"
-  ExpiryUnit_HOURS                ExpiryUnit           = "HOURS"
-  ExpiryUnit_DAYS                 ExpiryUnit           = "DAYS"
-  ExpiryUnit_WEEKS                ExpiryUnit           = "WEEKS"
-  ExpiryUnit_MONTHS               ExpiryUnit           = "MONTHS"
-  ExpiryUnit_YEARS                ExpiryUnit           = "YEARS"
+  ExpiryUnit_MINUTES                    ExpiryUnit                 = "MINUTES"
+  ExpiryUnit_HOURS                      ExpiryUnit                 = "HOURS"
+  ExpiryUnit_DAYS                       ExpiryUnit                 = "DAYS"
+  ExpiryUnit_WEEKS                      ExpiryUnit                 = "WEEKS"
+  ExpiryUnit_MONTHS                     ExpiryUnit                 = "MONTHS"
+  ExpiryUnit_YEARS                      ExpiryUnit                 = "YEARS"
 )
 
 /**
@@ -1053,9 +1053,9 @@ func (b *FamilyResponse) SetStatus(status int) {
 
 type FamilyRole string
 const (
-  FamilyRole_Child                FamilyRole           = "Child"
-  FamilyRole_Teen                 FamilyRole           = "Teen"
-  FamilyRole_Adult                FamilyRole           = "Adult"
+  FamilyRole_Child                      FamilyRole                 = "Child"
+  FamilyRole_Teen                       FamilyRole                 = "Teen"
+  FamilyRole_Adult                      FamilyRole                 = "Adult"
 )
 
 /**
@@ -1120,13 +1120,13 @@ type GoogleIdentityProvider struct {
  */
 type GrantType string
 const (
-  GrantType_AuthorizationCode    GrantType            = "authorization_code"
-  GrantType_Implicit             GrantType            = "implicit"
-  GrantType_Password             GrantType            = "password"
-  GrantType_ClientCredentials    GrantType            = "client_credentials"
-  GrantType_RefreshToken         GrantType            = "refresh_token"
-  GrantType_Unknown              GrantType            = "unknown"
-  GrantType_DeviceCode           GrantType            = "urn:ietf:params:oauth:grant-type:device_code"
+  GrantType_AuthorizationCode          GrantType                  = "authorization_code"
+  GrantType_Implicit                   GrantType                  = "implicit"
+  GrantType_Password                   GrantType                  = "password"
+  GrantType_ClientCredentials          GrantType                  = "client_credentials"
+  GrantType_RefreshToken               GrantType                  = "refresh_token"
+  GrantType_Unknown                    GrantType                  = "unknown"
+  GrantType_DeviceCode                 GrantType                  = "urn:ietf:params:oauth:grant-type:device_code"
 )
 
 /**
@@ -1189,13 +1189,13 @@ type HistoryItem struct {
  */
 type HTTPMethod string
 const (
-  HTTPMethod_GET                  HTTPMethod           = "GET"
-  HTTPMethod_POST                 HTTPMethod           = "POST"
-  HTTPMethod_PUT                  HTTPMethod           = "PUT"
-  HTTPMethod_DELETE               HTTPMethod           = "DELETE"
-  HTTPMethod_HEAD                 HTTPMethod           = "HEAD"
-  HTTPMethod_OPTIONS              HTTPMethod           = "OPTIONS"
-  HTTPMethod_PATCH                HTTPMethod           = "PATCH"
+  HTTPMethod_GET                        HTTPMethod                 = "GET"
+  HTTPMethod_POST                       HTTPMethod                 = "POST"
+  HTTPMethod_PUT                        HTTPMethod                 = "PUT"
+  HTTPMethod_DELETE                     HTTPMethod                 = "DELETE"
+  HTTPMethod_HEAD                       HTTPMethod                 = "HEAD"
+  HTTPMethod_OPTIONS                    HTTPMethod                 = "OPTIONS"
+  HTTPMethod_PATCH                      HTTPMethod                 = "PATCH"
 )
 
 /**
@@ -1294,14 +1294,14 @@ func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
 
 type IdentityProviderType string
 const (
-  IdentityProviderType_ExternalJWT          IdentityProviderType = "ExternalJWT"
-  IdentityProviderType_OpenIDConnect        IdentityProviderType = "OpenIDConnect"
-  IdentityProviderType_Facebook             IdentityProviderType = "Facebook"
-  IdentityProviderType_Google               IdentityProviderType = "Google"
-  IdentityProviderType_Twitter              IdentityProviderType = "Twitter"
-  IdentityProviderType_SAMLv2               IdentityProviderType = "SAMLv2"
-  IdentityProviderType_HYPR                 IdentityProviderType = "HYPR"
-  IdentityProviderType_Apple                IdentityProviderType = "Apple"
+  IdentityProviderType_ExternalJWT                IdentityProviderType       = "ExternalJWT"
+  IdentityProviderType_OpenIDConnect              IdentityProviderType       = "OpenIDConnect"
+  IdentityProviderType_Facebook                   IdentityProviderType       = "Facebook"
+  IdentityProviderType_Google                     IdentityProviderType       = "Google"
+  IdentityProviderType_Twitter                    IdentityProviderType       = "Twitter"
+  IdentityProviderType_SAMLv2                     IdentityProviderType       = "SAMLv2"
+  IdentityProviderType_HYPR                       IdentityProviderType       = "HYPR"
+  IdentityProviderType_Apple                      IdentityProviderType       = "Apple"
 )
 
 /**
@@ -1540,15 +1540,15 @@ type Key struct {
 
 type KeyAlgorithm string
 const (
-  KeyAlgorithm_ES256                KeyAlgorithm         = "ES256"
-  KeyAlgorithm_ES384                KeyAlgorithm         = "ES384"
-  KeyAlgorithm_ES512                KeyAlgorithm         = "ES512"
-  KeyAlgorithm_HS256                KeyAlgorithm         = "HS256"
-  KeyAlgorithm_HS384                KeyAlgorithm         = "HS384"
-  KeyAlgorithm_HS512                KeyAlgorithm         = "HS512"
-  KeyAlgorithm_RS256                KeyAlgorithm         = "RS256"
-  KeyAlgorithm_RS384                KeyAlgorithm         = "RS384"
-  KeyAlgorithm_RS512                KeyAlgorithm         = "RS512"
+  KeyAlgorithm_ES256                      KeyAlgorithm               = "ES256"
+  KeyAlgorithm_ES384                      KeyAlgorithm               = "ES384"
+  KeyAlgorithm_ES512                      KeyAlgorithm               = "ES512"
+  KeyAlgorithm_HS256                      KeyAlgorithm               = "HS256"
+  KeyAlgorithm_HS384                      KeyAlgorithm               = "HS384"
+  KeyAlgorithm_HS512                      KeyAlgorithm               = "HS512"
+  KeyAlgorithm_RS256                      KeyAlgorithm               = "RS256"
+  KeyAlgorithm_RS384                      KeyAlgorithm               = "RS384"
+  KeyAlgorithm_RS512                      KeyAlgorithm               = "RS512"
 )
 
 /**
@@ -1576,9 +1576,9 @@ func (b *KeyResponse) SetStatus(status int) {
 
 type KeyType string
 const (
-  KeyType_EC                   KeyType              = "EC"
-  KeyType_RSA                  KeyType              = "RSA"
-  KeyType_HMAC                 KeyType              = "HMAC"
+  KeyType_EC                         KeyType                    = "EC"
+  KeyType_RSA                        KeyType                    = "RSA"
+  KeyType_HMAC                       KeyType                    = "HMAC"
 )
 
 /**
@@ -1636,16 +1636,16 @@ func (b *LambdaResponse) SetStatus(status int) {
  */
 type LambdaType string
 const (
-  LambdaType_JWTPopulate          LambdaType           = "JWTPopulate"
-  LambdaType_OpenIDReconcile      LambdaType           = "OpenIDReconcile"
-  LambdaType_SAMLv2Reconcile      LambdaType           = "SAMLv2Reconcile"
-  LambdaType_SAMLv2Populate       LambdaType           = "SAMLv2Populate"
-  LambdaType_AppleReconcile       LambdaType           = "AppleReconcile"
-  LambdaType_ExternalJWTReconcile LambdaType           = "ExternalJWTReconcile"
-  LambdaType_FacebookReconcile    LambdaType           = "FacebookReconcile"
-  LambdaType_GoogleReconcile      LambdaType           = "GoogleReconcile"
-  LambdaType_HYPRReconcile        LambdaType           = "HYPRReconcile"
-  LambdaType_TwitterReconcile     LambdaType           = "TwitterReconcile"
+  LambdaType_JWTPopulate                LambdaType                 = "JWTPopulate"
+  LambdaType_OpenIDReconcile            LambdaType                 = "OpenIDReconcile"
+  LambdaType_SAMLv2Reconcile            LambdaType                 = "SAMLv2Reconcile"
+  LambdaType_SAMLv2Populate             LambdaType                 = "SAMLv2Populate"
+  LambdaType_AppleReconcile             LambdaType                 = "AppleReconcile"
+  LambdaType_ExternalJWTReconcile       LambdaType                 = "ExternalJWTReconcile"
+  LambdaType_FacebookReconcile          LambdaType                 = "FacebookReconcile"
+  LambdaType_GoogleReconcile            LambdaType                 = "GoogleReconcile"
+  LambdaType_HYPRReconcile              LambdaType                 = "HYPRReconcile"
+  LambdaType_TwitterReconcile           LambdaType                 = "TwitterReconcile"
 )
 
 /**
@@ -1665,8 +1665,8 @@ type LoginConfiguration struct {
 
 type LoginIdType string
 const (
-  LoginIdType_Email                LoginIdType          = "email"
-  LoginIdType_Username             LoginIdType          = "username"
+  LoginIdType_Email                      LoginIdType                = "email"
+  LoginIdType_Username                   LoginIdType                = "username"
 )
 
 /**
@@ -1787,8 +1787,8 @@ func (b *LoginResponse) SetStatus(status int) {
  */
 type LogoutBehavior string
 const (
-  LogoutBehavior_RedirectOnly         LogoutBehavior       = "RedirectOnly"
-  LogoutBehavior_AllApplications      LogoutBehavior       = "AllApplications"
+  LogoutBehavior_RedirectOnly               LogoutBehavior             = "RedirectOnly"
+  LogoutBehavior_AllApplications            LogoutBehavior             = "AllApplications"
 )
 
 /**
@@ -1920,70 +1920,70 @@ type OAuthError struct {
 
 type OAuthErrorReason string
 const (
-  OAuthErrorReason_AuthCodeNotFound     OAuthErrorReason     = "auth_code_not_found"
-  OAuthErrorReason_AccessTokenMalformed OAuthErrorReason     = "access_token_malformed"
-  OAuthErrorReason_AccessTokenExpired   OAuthErrorReason     = "access_token_expired"
-  OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason     = "access_token_unavailable_for_processing"
-  OAuthErrorReason_AccessTokenFailedProcessing OAuthErrorReason     = "access_token_failed_processing"
-  OAuthErrorReason_RefreshTokenNotFound OAuthErrorReason     = "refresh_token_not_found"
-  OAuthErrorReason_InvalidClientId      OAuthErrorReason     = "invalid_client_id"
-  OAuthErrorReason_InvalidUserCredentials OAuthErrorReason     = "invalid_user_credentials"
-  OAuthErrorReason_InvalidGrantType     OAuthErrorReason     = "invalid_grant_type"
-  OAuthErrorReason_InvalidOrigin        OAuthErrorReason     = "invalid_origin"
-  OAuthErrorReason_InvalidOriginOpaque  OAuthErrorReason     = "invalid_origin_opaque"
-  OAuthErrorReason_InvalidPkceCodeVerifier OAuthErrorReason     = "invalid_pkce_code_verifier"
-  OAuthErrorReason_InvalidPkceCodeChallenge OAuthErrorReason     = "invalid_pkce_code_challenge"
-  OAuthErrorReason_InvalidPkceCodeChallengeMethod OAuthErrorReason     = "invalid_pkce_code_challenge_method"
-  OAuthErrorReason_InvalidRedirectUri   OAuthErrorReason     = "invalid_redirect_uri"
-  OAuthErrorReason_InvalidResponseMode  OAuthErrorReason     = "invalid_response_mode"
-  OAuthErrorReason_InvalidResponseType  OAuthErrorReason     = "invalid_response_type"
-  OAuthErrorReason_InvalidIdTokenHint   OAuthErrorReason     = "invalid_id_token_hint"
-  OAuthErrorReason_InvalidPostLogoutRedirectUri OAuthErrorReason     = "invalid_post_logout_redirect_uri"
-  OAuthErrorReason_InvalidDeviceCode    OAuthErrorReason     = "invalid_device_code"
-  OAuthErrorReason_InvalidUserCode      OAuthErrorReason     = "invalid_user_code"
-  OAuthErrorReason_InvalidAdditionalClientId OAuthErrorReason     = "invalid_additional_client_id"
-  OAuthErrorReason_GrantTypeDisabled    OAuthErrorReason     = "grant_type_disabled"
-  OAuthErrorReason_MissingClientId      OAuthErrorReason     = "missing_client_id"
-  OAuthErrorReason_MissingCode          OAuthErrorReason     = "missing_code"
-  OAuthErrorReason_MissingDeviceCode    OAuthErrorReason     = "missing_device_code"
-  OAuthErrorReason_MissingGrantType     OAuthErrorReason     = "missing_grant_type"
-  OAuthErrorReason_MissingRedirectUri   OAuthErrorReason     = "missing_redirect_uri"
-  OAuthErrorReason_MissingRefreshToken  OAuthErrorReason     = "missing_refresh_token"
-  OAuthErrorReason_MissingResponseType  OAuthErrorReason     = "missing_response_type"
-  OAuthErrorReason_MissingToken         OAuthErrorReason     = "missing_token"
-  OAuthErrorReason_MissingUserCode      OAuthErrorReason     = "missing_user_code"
-  OAuthErrorReason_MissingVerificationUri OAuthErrorReason     = "missing_verification_uri"
-  OAuthErrorReason_LoginPrevented       OAuthErrorReason     = "login_prevented"
-  OAuthErrorReason_UserCodeExpired      OAuthErrorReason     = "user_code_expired"
-  OAuthErrorReason_UserExpired          OAuthErrorReason     = "user_expired"
-  OAuthErrorReason_UserLocked           OAuthErrorReason     = "user_locked"
-  OAuthErrorReason_UserNotFound         OAuthErrorReason     = "user_not_found"
-  OAuthErrorReason_ClientAuthenticationMissing OAuthErrorReason     = "client_authentication_missing"
-  OAuthErrorReason_InvalidClientAuthenticationScheme OAuthErrorReason     = "invalid_client_authentication_scheme"
-  OAuthErrorReason_InvalidClientAuthentication OAuthErrorReason     = "invalid_client_authentication"
-  OAuthErrorReason_ClientIdMismatch     OAuthErrorReason     = "client_id_mismatch"
-  OAuthErrorReason_ChangePasswordAdministrative OAuthErrorReason     = "change_password_administrative"
-  OAuthErrorReason_ChangePasswordBreached OAuthErrorReason     = "change_password_breached"
-  OAuthErrorReason_ChangePasswordExpired OAuthErrorReason     = "change_password_expired"
-  OAuthErrorReason_ChangePasswordValidation OAuthErrorReason     = "change_password_validation"
-  OAuthErrorReason_Unknown              OAuthErrorReason     = "unknown"
+  OAuthErrorReason_AuthCodeNotFound           OAuthErrorReason           = "auth_code_not_found"
+  OAuthErrorReason_AccessTokenMalformed       OAuthErrorReason           = "access_token_malformed"
+  OAuthErrorReason_AccessTokenExpired         OAuthErrorReason           = "access_token_expired"
+  OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason           = "access_token_unavailable_for_processing"
+  OAuthErrorReason_AccessTokenFailedProcessing OAuthErrorReason           = "access_token_failed_processing"
+  OAuthErrorReason_RefreshTokenNotFound       OAuthErrorReason           = "refresh_token_not_found"
+  OAuthErrorReason_InvalidClientId            OAuthErrorReason           = "invalid_client_id"
+  OAuthErrorReason_InvalidUserCredentials     OAuthErrorReason           = "invalid_user_credentials"
+  OAuthErrorReason_InvalidGrantType           OAuthErrorReason           = "invalid_grant_type"
+  OAuthErrorReason_InvalidOrigin              OAuthErrorReason           = "invalid_origin"
+  OAuthErrorReason_InvalidOriginOpaque        OAuthErrorReason           = "invalid_origin_opaque"
+  OAuthErrorReason_InvalidPkceCodeVerifier    OAuthErrorReason           = "invalid_pkce_code_verifier"
+  OAuthErrorReason_InvalidPkceCodeChallenge   OAuthErrorReason           = "invalid_pkce_code_challenge"
+  OAuthErrorReason_InvalidPkceCodeChallengeMethod OAuthErrorReason           = "invalid_pkce_code_challenge_method"
+  OAuthErrorReason_InvalidRedirectUri         OAuthErrorReason           = "invalid_redirect_uri"
+  OAuthErrorReason_InvalidResponseMode        OAuthErrorReason           = "invalid_response_mode"
+  OAuthErrorReason_InvalidResponseType        OAuthErrorReason           = "invalid_response_type"
+  OAuthErrorReason_InvalidIdTokenHint         OAuthErrorReason           = "invalid_id_token_hint"
+  OAuthErrorReason_InvalidPostLogoutRedirectUri OAuthErrorReason           = "invalid_post_logout_redirect_uri"
+  OAuthErrorReason_InvalidDeviceCode          OAuthErrorReason           = "invalid_device_code"
+  OAuthErrorReason_InvalidUserCode            OAuthErrorReason           = "invalid_user_code"
+  OAuthErrorReason_InvalidAdditionalClientId  OAuthErrorReason           = "invalid_additional_client_id"
+  OAuthErrorReason_GrantTypeDisabled          OAuthErrorReason           = "grant_type_disabled"
+  OAuthErrorReason_MissingClientId            OAuthErrorReason           = "missing_client_id"
+  OAuthErrorReason_MissingCode                OAuthErrorReason           = "missing_code"
+  OAuthErrorReason_MissingDeviceCode          OAuthErrorReason           = "missing_device_code"
+  OAuthErrorReason_MissingGrantType           OAuthErrorReason           = "missing_grant_type"
+  OAuthErrorReason_MissingRedirectUri         OAuthErrorReason           = "missing_redirect_uri"
+  OAuthErrorReason_MissingRefreshToken        OAuthErrorReason           = "missing_refresh_token"
+  OAuthErrorReason_MissingResponseType        OAuthErrorReason           = "missing_response_type"
+  OAuthErrorReason_MissingToken               OAuthErrorReason           = "missing_token"
+  OAuthErrorReason_MissingUserCode            OAuthErrorReason           = "missing_user_code"
+  OAuthErrorReason_MissingVerificationUri     OAuthErrorReason           = "missing_verification_uri"
+  OAuthErrorReason_LoginPrevented             OAuthErrorReason           = "login_prevented"
+  OAuthErrorReason_UserCodeExpired            OAuthErrorReason           = "user_code_expired"
+  OAuthErrorReason_UserExpired                OAuthErrorReason           = "user_expired"
+  OAuthErrorReason_UserLocked                 OAuthErrorReason           = "user_locked"
+  OAuthErrorReason_UserNotFound               OAuthErrorReason           = "user_not_found"
+  OAuthErrorReason_ClientAuthenticationMissing OAuthErrorReason           = "client_authentication_missing"
+  OAuthErrorReason_InvalidClientAuthenticationScheme OAuthErrorReason           = "invalid_client_authentication_scheme"
+  OAuthErrorReason_InvalidClientAuthentication OAuthErrorReason           = "invalid_client_authentication"
+  OAuthErrorReason_ClientIdMismatch           OAuthErrorReason           = "client_id_mismatch"
+  OAuthErrorReason_ChangePasswordAdministrative OAuthErrorReason           = "change_password_administrative"
+  OAuthErrorReason_ChangePasswordBreached     OAuthErrorReason           = "change_password_breached"
+  OAuthErrorReason_ChangePasswordExpired      OAuthErrorReason           = "change_password_expired"
+  OAuthErrorReason_ChangePasswordValidation   OAuthErrorReason           = "change_password_validation"
+  OAuthErrorReason_Unknown                    OAuthErrorReason           = "unknown"
 )
 
 type OAuthErrorType string
 const (
-  OAuthErrorType_InvalidRequest       OAuthErrorType       = "invalid_request"
-  OAuthErrorType_InvalidClient        OAuthErrorType       = "invalid_client"
-  OAuthErrorType_InvalidGrant         OAuthErrorType       = "invalid_grant"
-  OAuthErrorType_InvalidToken         OAuthErrorType       = "invalid_token"
-  OAuthErrorType_UnauthorizedClient   OAuthErrorType       = "unauthorized_client"
-  OAuthErrorType_InvalidScope         OAuthErrorType       = "invalid_scope"
-  OAuthErrorType_ServerError          OAuthErrorType       = "server_error"
-  OAuthErrorType_UnsupportedGrantType OAuthErrorType       = "unsupported_grant_type"
-  OAuthErrorType_UnsupportedResponseType OAuthErrorType       = "unsupported_response_type"
-  OAuthErrorType_ChangePasswordRequired OAuthErrorType       = "change_password_required"
-  OAuthErrorType_TwoFactorRequired    OAuthErrorType       = "two_factor_required"
-  OAuthErrorType_AuthorizationPending OAuthErrorType       = "authorization_pending"
-  OAuthErrorType_ExpiredToken         OAuthErrorType       = "expired_token"
+  OAuthErrorType_InvalidRequest             OAuthErrorType             = "invalid_request"
+  OAuthErrorType_InvalidClient              OAuthErrorType             = "invalid_client"
+  OAuthErrorType_InvalidGrant               OAuthErrorType             = "invalid_grant"
+  OAuthErrorType_InvalidToken               OAuthErrorType             = "invalid_token"
+  OAuthErrorType_UnauthorizedClient         OAuthErrorType             = "unauthorized_client"
+  OAuthErrorType_InvalidScope               OAuthErrorType             = "invalid_scope"
+  OAuthErrorType_ServerError                OAuthErrorType             = "server_error"
+  OAuthErrorType_UnsupportedGrantType       OAuthErrorType             = "unsupported_grant_type"
+  OAuthErrorType_UnsupportedResponseType    OAuthErrorType             = "unsupported_response_type"
+  OAuthErrorType_ChangePasswordRequired     OAuthErrorType             = "change_password_required"
+  OAuthErrorType_TwoFactorRequired          OAuthErrorType             = "two_factor_required"
+  OAuthErrorType_AuthorizationPending       OAuthErrorType             = "authorization_pending"
+  OAuthErrorType_ExpiredToken               OAuthErrorType             = "expired_token"
 )
 
 /**
@@ -2253,8 +2253,8 @@ type RefreshToken struct {
  */
 type RefreshTokenExpirationPolicy string
 const (
-  RefreshTokenExpirationPolicy_Fixed                RefreshTokenExpirationPolicy = "Fixed"
-  RefreshTokenExpirationPolicy_SlidingWindow        RefreshTokenExpirationPolicy = "SlidingWindow"
+  RefreshTokenExpirationPolicy_Fixed                      RefreshTokenExpirationPolicy = "Fixed"
+  RefreshTokenExpirationPolicy_SlidingWindow              RefreshTokenExpirationPolicy = "SlidingWindow"
 )
 
 /**
@@ -2270,8 +2270,8 @@ type RefreshTokenRevocationPolicy struct {
  */
 type RefreshTokenUsagePolicy string
 const (
-  RefreshTokenUsagePolicy_Reusable             RefreshTokenUsagePolicy = "Reusable"
-  RefreshTokenUsagePolicy_OneTimeUse           RefreshTokenUsagePolicy = "OneTimeUse"
+  RefreshTokenUsagePolicy_Reusable                   RefreshTokenUsagePolicy    = "Reusable"
+  RefreshTokenUsagePolicy_OneTimeUse                 RefreshTokenUsagePolicy    = "OneTimeUse"
 )
 
 type RegistrationConfiguration struct {
@@ -2459,10 +2459,10 @@ type SecureGeneratorConfiguration struct {
  */
 type SecureGeneratorType string
 const (
-  SecureGeneratorType_RandomDigits         SecureGeneratorType  = "randomDigits"
-  SecureGeneratorType_RandomBytes          SecureGeneratorType  = "randomBytes"
-  SecureGeneratorType_RandomAlpha          SecureGeneratorType  = "randomAlpha"
-  SecureGeneratorType_RandomAlphaNumeric   SecureGeneratorType  = "randomAlphaNumeric"
+  SecureGeneratorType_RandomDigits               SecureGeneratorType        = "randomDigits"
+  SecureGeneratorType_RandomBytes                SecureGeneratorType        = "randomBytes"
+  SecureGeneratorType_RandomAlpha                SecureGeneratorType        = "randomAlpha"
+  SecureGeneratorType_RandomAlphaNumeric         SecureGeneratorType        = "randomAlphaNumeric"
 )
 
 /**
@@ -2508,8 +2508,8 @@ func (b *SendResponse) SetStatus(status int) {
  */
 type Sort string
 const (
-  Sort_Asc                  Sort                 = "asc"
-  Sort_Desc                 Sort                 = "desc"
+  Sort_Asc                        Sort                       = "asc"
+  Sort_Desc                       Sort                       = "desc"
 )
 
 /**
@@ -2722,8 +2722,8 @@ type TimeBasedDeletePolicy struct {
  */
 type TokenType string
 const (
-  TokenType_Bearer               TokenType            = "Bearer"
-  TokenType_MAC                  TokenType            = "MAC"
+  TokenType_Bearer                     TokenType                  = "Bearer"
+  TokenType_MAC                        TokenType                  = "MAC"
 )
 
 type Totals struct {
@@ -2754,11 +2754,11 @@ func (b *TotalsReportResponse) SetStatus(status int) {
  */
 type TransactionType string
 const (
-  TransactionType_None                 TransactionType      = "None"
-  TransactionType_Any                  TransactionType      = "Any"
-  TransactionType_SimpleMajority       TransactionType      = "SimpleMajority"
-  TransactionType_SuperMajority        TransactionType      = "SuperMajority"
-  TransactionType_AbsoluteMajority     TransactionType      = "AbsoluteMajority"
+  TransactionType_None                       TransactionType            = "None"
+  TransactionType_Any                        TransactionType            = "Any"
+  TransactionType_SimpleMajority             TransactionType            = "SimpleMajority"
+  TransactionType_SuperMajority              TransactionType            = "SuperMajority"
+  TransactionType_AbsoluteMajority           TransactionType            = "AbsoluteMajority"
 )
 
 /**
@@ -2802,8 +2802,8 @@ type TwitterIdentityProvider struct {
  */
 type TwoFactorDelivery string
 const (
-  TwoFactorDelivery_None                 TwoFactorDelivery    = "None"
-  TwoFactorDelivery_TextMessage          TwoFactorDelivery    = "TextMessage"
+  TwoFactorDelivery_None                       TwoFactorDelivery          = "None"
+  TwoFactorDelivery_TextMessage                TwoFactorDelivery          = "TextMessage"
 )
 
 /**
@@ -2971,10 +2971,10 @@ type UserActionOption struct {
  */
 type UserActionPhase string
 const (
-  UserActionPhase_Start                UserActionPhase      = "start"
-  UserActionPhase_Modify               UserActionPhase      = "modify"
-  UserActionPhase_Cancel               UserActionPhase      = "cancel"
-  UserActionPhase_End                  UserActionPhase      = "end"
+  UserActionPhase_Start                      UserActionPhase            = "start"
+  UserActionPhase_Modify                     UserActionPhase            = "modify"
+  UserActionPhase_Cancel                     UserActionPhase            = "cancel"
+  UserActionPhase_End                        UserActionPhase            = "end"
 )
 
 /**
@@ -3355,8 +3355,8 @@ type UserSearchCriteria struct {
  */
 type UserState string
 const (
-  UserState_Authenticated        UserState            = "Authenticated"
-  UserState_AuthenticatedNotRegistered UserState            = "AuthenticatedNotRegistered"
+  UserState_Authenticated              UserState                  = "Authenticated"
+  UserState_AuthenticatedNotRegistered UserState                  = "AuthenticatedNotRegistered"
 )
 
 /**
