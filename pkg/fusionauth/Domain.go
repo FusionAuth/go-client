@@ -606,11 +606,6 @@ type Count struct {
   Interval                   int                        `json:"interval,omitempty"`
 }
 
-type CustomRegistration struct {
-  Enableable
-  FormId                     string                     `json:"formId,omitempty"`
-}
-
 /**
  * Response for the daily active user report.
  *
