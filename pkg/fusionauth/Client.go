@@ -363,6 +363,26 @@ func (c *FusionAuthClient) CreateAuditLog(request AuditLogRequest) (*AuditLogRes
     return &resp, &errors, err
 }
 
+// CreateConnector
+// Creates a connector.  You can optionally specify an Id for the connector, if not provided one will be generated.
+//   string connectorId (Optional) The Id for the connector. If not provided a secure random UUID will be generated.
+//   ConnectorRequest request The request object that contains all of the information used to create the connector.
+func (c *FusionAuthClient) CreateConnector(connectorId string, request ConnectorRequest) (*ConnectorResponse, *Errors, error) {
+    var resp ConnectorResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/connector").
+             WithUriSegment(connectorId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPost).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // CreateConsent
 // Creates a user consent type. You can optionally specify an Id for the consent type, if not provided one will be generated.
 //   string consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
@@ -415,6 +435,46 @@ func (c *FusionAuthClient) CreateFamily(familyId string, request FamilyRequest) 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/user/family").
              WithUriSegment(familyId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPost).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// CreateForm
+// Creates a form.  You can optionally specify an Id for the form, if not provided one will be generated.
+//   string formId (Optional) The Id for the form. If not provided a secure random UUID will be generated.
+//   FormRequest request The request object that contains all of the information used to create the form.
+func (c *FusionAuthClient) CreateForm(formId string, request FormRequest) (*FormResponse, *Errors, error) {
+    var resp FormResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/form").
+             WithUriSegment(formId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPost).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// CreateFormField
+// Creates a form field.  You can optionally specify an Id for the form, if not provided one will be generated.
+//   string fieldId (Optional) The Id for the form field. If not provided a secure random UUID will be generated.
+//   FormFieldRequest request The request object that contains all of the information used to create the form field.
+func (c *FusionAuthClient) CreateFormField(fieldId string, request FormFieldRequest) (*FormFieldResponse, *Errors, error) {
+    var resp FormFieldResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/form/field").
+             WithUriSegment(fieldId).
              WithJSONBody(request).
              WithMethod(http.MethodPost).
              Do()
@@ -764,6 +824,24 @@ func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId st
     return &resp, &errors, err
 }
 
+// DeleteConnector
+// Deletes the connector for the given Id.
+//   string connectorId The Id of the connector to delete.
+func (c *FusionAuthClient) DeleteConnector(connectorId string) (*BaseHTTPResponse, *Errors, error) {
+    var resp BaseHTTPResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/connector").
+             WithUriSegment(connectorId).
+             WithMethod(http.MethodDelete).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // DeleteConsent
 // Deletes the consent for the given Id.
 //   string consentId The Id of the consent to delete.
@@ -792,6 +870,42 @@ func (c *FusionAuthClient) DeleteEmailTemplate(emailTemplateId string) (*BaseHTT
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/email/template").
              WithUriSegment(emailTemplateId).
+             WithMethod(http.MethodDelete).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// DeleteForm
+// Deletes the form for the given Id.
+//   string formId The Id of the form to delete.
+func (c *FusionAuthClient) DeleteForm(formId string) (*BaseHTTPResponse, *Errors, error) {
+    var resp BaseHTTPResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/form").
+             WithUriSegment(formId).
+             WithMethod(http.MethodDelete).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// DeleteFormField
+// Deletes the form field for the given Id.
+//   string fieldId The Id of the form field to delete.
+func (c *FusionAuthClient) DeleteFormField(fieldId string) (*BaseHTTPResponse, *Errors, error) {
+    var resp BaseHTTPResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/form/field").
+             WithUriSegment(fieldId).
              WithMethod(http.MethodDelete).
              Do()
     if restClient.ErrorRef == nil {
@@ -1569,6 +1683,26 @@ func (c *FusionAuthClient) PatchApplicationRole(applicationId string, roleId str
     return &resp, &errors, err
 }
 
+// PatchConnector
+// Updates, via PATCH, the connector with the given Id.
+//   string connectorId The Id of the connector to update.
+//   ConnectorRequest request The request that contains just the new connector information.
+func (c *FusionAuthClient) PatchConnector(connectorId string, request map[string]interface{}) (*ConnectorResponse, *Errors, error) {
+    var resp ConnectorResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/connector").
+             WithUriSegment(connectorId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPatch).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // PatchConsent
 // Updates, via PATCH, the consent with the given Id.
 //   string consentId The Id of the consent to update.
@@ -2141,6 +2275,32 @@ func (c *FusionAuthClient) RetrieveAuditLog(auditLogId int) (*AuditLogResponse, 
     return &resp, &errors, err
 }
 
+// RetrieveConnector
+// Retrieves the connector with the given Id.
+//   string connectorId The Id of the connector.
+func (c *FusionAuthClient) RetrieveConnector(connectorId string) (*ConnectorResponse, error) {
+    var resp ConnectorResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/connector").
+             WithUriSegment(connectorId).
+             WithMethod(http.MethodGet).
+             Do()
+    return &resp, err
+}
+
+// RetrieveConnectors
+// Retrieves all of the connectors.
+func (c *FusionAuthClient) RetrieveConnectors() (*ConnectorResponse, error) {
+    var resp ConnectorResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/connector").
+             WithMethod(http.MethodGet).
+             Do()
+    return &resp, err
+}
+
 // RetrieveConsent
 // Retrieves the Consent for the given Id.
 //   string consentId The Id of the consent.
@@ -2277,6 +2437,58 @@ func (c *FusionAuthClient) RetrieveFamilyMembersByFamilyId(familyId string) (*Fa
     err := c.Start(&resp, nil).
              WithUri("/api/user/family").
              WithUriSegment(familyId).
+             WithMethod(http.MethodGet).
+             Do()
+    return &resp, err
+}
+
+// RetrieveForm
+// Retrieves the form with the given Id.
+//   string formId The Id of the form.
+func (c *FusionAuthClient) RetrieveForm(formId string) (*FormResponse, error) {
+    var resp FormResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/form").
+             WithUriSegment(formId).
+             WithMethod(http.MethodGet).
+             Do()
+    return &resp, err
+}
+
+// RetrieveFormField
+// Retrieves the form field with the given Id.
+//   string fieldId The Id of the form field.
+func (c *FusionAuthClient) RetrieveFormField(fieldId string) (*FormFieldResponse, error) {
+    var resp FormFieldResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/form/field").
+             WithUriSegment(fieldId).
+             WithMethod(http.MethodGet).
+             Do()
+    return &resp, err
+}
+
+// RetrieveFormFields
+// Retrieves all of the forms fields
+func (c *FusionAuthClient) RetrieveFormFields() (*FormFieldResponse, error) {
+    var resp FormFieldResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/form/field").
+             WithMethod(http.MethodGet).
+             Do()
+    return &resp, err
+}
+
+// RetrieveForms
+// Retrieves all of the forms.
+func (c *FusionAuthClient) RetrieveForms() (*FormResponse, error) {
+    var resp FormResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/form").
              WithMethod(http.MethodGet).
              Do()
     return &resp, err
@@ -3463,6 +3675,26 @@ func (c *FusionAuthClient) UpdateApplicationRole(applicationId string, roleId st
     return &resp, &errors, err
 }
 
+// UpdateConnector
+// Updates the connector with the given Id.
+//   string connectorId The Id of the connector to update.
+//   ConnectorRequest request The request object that contains all of the new connector information.
+func (c *FusionAuthClient) UpdateConnector(connectorId string, request ConnectorRequest) (*ConnectorResponse, *Errors, error) {
+    var resp ConnectorResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/connector").
+             WithUriSegment(connectorId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPut).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // UpdateConsent
 // Updates the consent with the given Id.
 //   string consentId The Id of the consent to update.
@@ -3494,6 +3726,46 @@ func (c *FusionAuthClient) UpdateEmailTemplate(emailTemplateId string, request E
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/email/template").
              WithUriSegment(emailTemplateId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPut).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// UpdateForm
+// Updates the form with the given Id.
+//   string formId The Id of the form to update.
+//   FormRequest request The request object that contains all of the new form information.
+func (c *FusionAuthClient) UpdateForm(formId string, request FormRequest) (*FormResponse, *Errors, error) {
+    var resp FormResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/form").
+             WithUriSegment(formId).
+             WithJSONBody(request).
+             WithMethod(http.MethodPut).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// UpdateFormField
+// Updates the form field with the given Id.
+//   string fieldId The Id of the form field to update.
+//   FormFieldRequest request The request object that contains all of the new form field information.
+func (c *FusionAuthClient) UpdateFormField(fieldId string, request FormFieldRequest) (*FormFieldResponse, *Errors, error) {
+    var resp FormFieldResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/form/field").
+             WithUriSegment(fieldId).
              WithJSONBody(request).
              WithMethod(http.MethodPut).
              Do()

@@ -140,8 +140,10 @@ type Application struct {
   CleanSpeakConfiguration    CleanSpeakConfiguration    `json:"cleanSpeakConfiguration,omitempty"`
   Data                       map[string]interface{}     `json:"data,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
   JwtConfiguration           JWTConfiguration           `json:"jwtConfiguration,omitempty"`
   LambdaConfiguration        LambdaConfiguration        `json:"lambdaConfiguration,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   LoginConfiguration         LoginConfiguration         `json:"loginConfiguration,omitempty"`
   Name                       string                     `json:"name,omitempty"`
   OauthConfiguration         OAuth2Configuration        `json:"oauthConfiguration,omitempty"`
@@ -198,8 +200,10 @@ func (b *ApplicationResponse) SetStatus(status int) {
 type ApplicationRole struct {
   Description                string                     `json:"description,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
   IsDefault                  bool                       `json:"isDefault"`
   IsSuperRole                bool                       `json:"isSuperRole"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Name                       string                     `json:"name,omitempty"`
 }
 
@@ -298,6 +302,17 @@ type AuthenticationTokenConfiguration struct {
   Enableable
 }
 
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+type BaseConnectorConfiguration struct {
+  Data                       map[string]interface{}     `json:"data,omitempty"`
+  Debug                      bool                       `json:"debug"`
+  Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
+  Name                       string                     `json:"name,omitempty"`
+  Type                       ConnectorType              `json:"type,omitempty"`
+}
+
 /**
  * Base-class for all FusionAuth events.
  *
@@ -324,7 +339,9 @@ type BaseIdentityProvider struct {
   Data                       map[string]interface{}     `json:"data,omitempty"`
   Debug                      bool                       `json:"debug"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
   LambdaConfiguration        ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Name                       string                     `json:"name,omitempty"`
   Type                       IdentityProviderType       `json:"type,omitempty"`
 }
@@ -463,6 +480,47 @@ const (
 )
 
 /**
+ * @author Trevor Smith
+ */
+type ConnectorPolicy struct {
+  ConnectorId                string                     `json:"connectorId,omitempty"`
+  Data                       map[string]interface{}     `json:"data,omitempty"`
+  Domains                    []string                   `json:"domains,omitempty"`
+  Migrate                    bool                       `json:"migrate"`
+}
+
+/**
+ * @author Trevor Smith
+ */
+type ConnectorRequest struct {
+  Connector                  BaseConnectorConfiguration `json:"connector,omitempty"`
+}
+
+/**
+ * @author Trevor Smith
+ */
+type ConnectorResponse struct {
+  BaseHTTPResponse
+  Connector                  BaseConnectorConfiguration `json:"connector,omitempty"`
+  Connectors                 []BaseConnectorConfiguration `json:"connectors,omitempty"`
+}
+func (b *ConnectorResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
+/**
+ * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
+ *
+ * @author Trevor Smith
+ */
+type ConnectorType string
+const (
+  ConnectorType_FusionAuth                 ConnectorType              = "FusionAuth"
+  ConnectorType_Generic                    ConnectorType              = "Generic"
+  ConnectorType_LDAP                       ConnectorType              = "LDAP"
+)
+
+/**
  * Models a consent.
  *
  * @author Daniel DeGroff
@@ -474,6 +532,8 @@ type Consent struct {
   DefaultMinimumAgeForSelfConsent int                        `json:"defaultMinimumAgeForSelfConsent,omitempty"`
   EmailPlus                  EmailPlus                  `json:"emailPlus,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   MultipleValuesAllowed      bool                       `json:"multipleValuesAllowed"`
   Name                       string                     `json:"name,omitempty"`
   Values                     []string                   `json:"values,omitempty"`
@@ -544,6 +604,11 @@ type CORSConfiguration struct {
 type Count struct {
   Count                      int                        `json:"count,omitempty"`
   Interval                   int                        `json:"interval,omitempty"`
+}
+
+type CustomRegistration struct {
+  Enableable
+  FormId                     string                     `json:"formId,omitempty"`
 }
 
 /**
@@ -695,6 +760,8 @@ type EmailTemplate struct {
   DefaultTextTemplate        string                     `json:"defaultTextTemplate,omitempty"`
   FromEmail                  string                     `json:"fromEmail,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   LocalizedFromNames         map[string]string          `json:"localizedFromNames,omitempty"`
   LocalizedHtmlTemplates     map[string]string          `json:"localizedHtmlTemplates,omitempty"`
   LocalizedSubjects          map[string]string          `json:"localizedSubjects,omitempty"`
@@ -987,6 +1054,8 @@ type FailedAuthenticationConfiguration struct {
  */
 type Family struct {
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Members                    []FamilyMember             `json:"members,omitempty"`
 }
 
@@ -1023,6 +1092,7 @@ type FamilyEmailRequest struct {
 type FamilyMember struct {
   Data                       map[string]interface{}     `json:"data,omitempty"`
   InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Owner                      bool                       `json:"owner"`
   Role                       FamilyRole                 `json:"role,omitempty"`
   UserId                     string                     `json:"userId,omitempty"`
@@ -1088,6 +1158,170 @@ func (b *ForgotPasswordResponse) SetStatus(status int) {
 /**
  * @author Daniel DeGroff
  */
+type Form struct {
+  Data                       map[string]interface{}     `json:"data,omitempty"`
+  Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
+  Name                       string                     `json:"name,omitempty"`
+  Steps                      []FormStep                 `json:"steps,omitempty"`
+  Type                       FormType                   `json:"type,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormControl string
+const (
+  FormControl_Checkbox                   FormControl                = "checkbox"
+  FormControl_Number                     FormControl                = "number"
+  FormControl_Password                   FormControl                = "password"
+  FormControl_Radio                      FormControl                = "radio"
+  FormControl_Select                     FormControl                = "select"
+  FormControl_Textarea                   FormControl                = "textarea"
+  FormControl_Text                       FormControl                = "text"
+)
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormDataType string
+const (
+  FormDataType_Bool                       FormDataType               = "bool"
+  FormDataType_Consent                    FormDataType               = "consent"
+  FormDataType_Date                       FormDataType               = "date"
+  FormDataType_Email                      FormDataType               = "email"
+  FormDataType_Number                     FormDataType               = "number"
+  FormDataType_String                     FormDataType               = "string"
+)
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormField struct {
+  Confirm                    bool                       `json:"confirm"`
+  ConsentId                  string                     `json:"consentId,omitempty"`
+  Control                    FormControl                `json:"control,omitempty"`
+  Data                       map[string]interface{}     `json:"data,omitempty"`
+  Description                string                     `json:"description,omitempty"`
+  Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  Key                        string                     `json:"key,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
+  Name                       string                     `json:"name,omitempty"`
+  Options                    []string                   `json:"options,omitempty"`
+  Required                   bool                       `json:"required"`
+  Type                       FormDataType               `json:"type,omitempty"`
+  Validator                  FormFieldValidator         `json:"validator,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormFieldAdminPolicy string
+const (
+  FormFieldAdminPolicy_Edit                       FormFieldAdminPolicy       = "Edit"
+  FormFieldAdminPolicy_View                       FormFieldAdminPolicy       = "View"
+)
+
+/**
+ * The FormField API request object.
+ *
+ * @author Brett Guy
+ */
+type FormFieldRequest struct {
+  Field                      FormField                  `json:"field,omitempty"`
+  Fields                     []FormField                `json:"fields,omitempty"`
+}
+
+/**
+ * Form field response.
+ *
+ * @author Brett Guy
+ */
+type FormFieldResponse struct {
+  BaseHTTPResponse
+  Field                      FormField                  `json:"field,omitempty"`
+  Fields                     []FormField                `json:"fields,omitempty"`
+}
+func (b *FormFieldResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormFieldValidator struct {
+  Enableable
+  Expression                 string                     `json:"expression,omitempty"`
+}
+
+/**
+ * Form response.
+ *
+ * @author Daniel DeGroff
+ */
+type FormRequest struct {
+  Form                       Form                       `json:"form,omitempty"`
+}
+
+/**
+ * Form response.
+ *
+ * @author Daniel DeGroff
+ */
+type FormResponse struct {
+  BaseHTTPResponse
+  Form                       Form                       `json:"form,omitempty"`
+  Forms                      []Form                     `json:"forms,omitempty"`
+}
+func (b *FormResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormStep struct {
+  Fields                     []string                   `json:"fields,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type FormType string
+const (
+  FormType_Registration               FormType                   = "registration"
+)
+
+/**
+ * Models the FusionAuth connector.
+ *
+ * @author Trevor Smith
+ */
+type FusionAuthConnectorConfiguration struct {
+  BaseConnectorConfiguration
+}
+
+/**
+ * Models a generic connector.
+ *
+ * @author Trevor Smith
+ */
+type GenericConnectorConfiguration struct {
+  BaseConnectorConfiguration
+  AuthenticationURL          string                     `json:"authenticationURL,omitempty"`
+  ConnectTimeout             int                        `json:"connectTimeout,omitempty"`
+  Headers                    map[string]string          `json:"headers,omitempty"`
+  HttpAuthenticationPassword string                     `json:"httpAuthenticationPassword,omitempty"`
+  HttpAuthenticationUsername string                     `json:"httpAuthenticationUsername,omitempty"`
+  ReadTimeout                int                        `json:"readTimeout,omitempty"`
+  SslCertificateKeyId        string                     `json:"sslCertificateKeyId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type GoogleApplicationConfiguration struct {
   BaseIdentityProviderApplicationConfiguration
   ButtonText                 string                     `json:"buttonText,omitempty"`
@@ -1135,6 +1369,8 @@ const (
 type Group struct {
   Data                       map[string]interface{}     `json:"data,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Name                       string                     `json:"name,omitempty"`
   Roles                      map[string][]ApplicationRole `json:"roles,omitempty"`
   TenantId                   string                     `json:"tenantId,omitempty"`
@@ -1530,6 +1766,7 @@ type Key struct {
   InsertInstant              int64                      `json:"insertInstant,omitempty"`
   Issuer                     string                     `json:"issuer,omitempty"`
   Kid                        string                     `json:"kid,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Length                     int                        `json:"length,omitempty"`
   Name                       string                     `json:"name,omitempty"`
   PrivateKey                 string                     `json:"privateKey,omitempty"`
@@ -1592,6 +1829,7 @@ type Lambda struct {
   Debug                      bool                       `json:"debug"`
   Id                         string                     `json:"id,omitempty"`
   InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Name                       string                     `json:"name,omitempty"`
   Type                       LambdaType                 `json:"type,omitempty"`
 }
@@ -1600,6 +1838,10 @@ type LambdaConfiguration struct {
   AccessTokenPopulateId      string                     `json:"accessTokenPopulateId,omitempty"`
   IdTokenPopulateId          string                     `json:"idTokenPopulateId,omitempty"`
   Samlv2PopulateId           string                     `json:"samlv2PopulateId,omitempty"`
+}
+
+type LambdaConfiguration struct {
+  ReconcileId                string                     `json:"reconcileId,omitempty"`
 }
 
 type ProviderLambdaConfiguration struct {
@@ -1646,6 +1888,34 @@ const (
   LambdaType_GoogleReconcile            LambdaType                 = "GoogleReconcile"
   LambdaType_HYPRReconcile              LambdaType                 = "HYPRReconcile"
   LambdaType_TwitterReconcile           LambdaType                 = "TwitterReconcile"
+  LambdaType_LDAPConnectorReconcile     LambdaType                 = "LDAPConnectorReconcile"
+)
+
+/**
+ * Models an LDAP connector.
+ *
+ * @author Trevor Smith
+ */
+type LDAPConnectorConfiguration struct {
+  BaseConnectorConfiguration
+  AuthenticationURL          string                     `json:"authenticationURL,omitempty"`
+  BaseStructure              string                     `json:"baseStructure,omitempty"`
+  ConnectTimeout             int                        `json:"connectTimeout,omitempty"`
+  IdentifyingAttribute       string                     `json:"identifyingAttribute,omitempty"`
+  LambdaConfiguration        LambdaConfiguration        `json:"lambdaConfiguration,omitempty"`
+  LoginIdAttribute           string                     `json:"loginIdAttribute,omitempty"`
+  ReadTimeout                int                        `json:"readTimeout,omitempty"`
+  RequestedAttributes        []string                   `json:"requestedAttributes,omitempty"`
+  SecurityMethod             LDAPSecurityMethod         `json:"securityMethod,omitempty"`
+  SystemAccountDN            string                     `json:"systemAccountDN,omitempty"`
+  SystemAccountPassword      string                     `json:"systemAccountPassword,omitempty"`
+}
+
+type LDAPSecurityMethod string
+const (
+  LDAPSecurityMethod_None                       LDAPSecurityMethod         = "None"
+  LDAPSecurityMethod_LDAPS                      LDAPSecurityMethod         = "LDAPS"
+  LDAPSecurityMethod_StartTLS                   LDAPSecurityMethod         = "StartTLS"
 )
 
 /**
@@ -2279,11 +2549,13 @@ type RegistrationConfiguration struct {
   BirthDate                  Requirable                 `json:"birthDate,omitempty"`
   ConfirmPassword            bool                       `json:"confirmPassword"`
   FirstName                  Requirable                 `json:"firstName,omitempty"`
+  FormId                     string                     `json:"formId,omitempty"`
   FullName                   Requirable                 `json:"fullName,omitempty"`
   LastName                   Requirable                 `json:"lastName,omitempty"`
   LoginIdType                LoginIdType                `json:"loginIdType,omitempty"`
   MiddleName                 Requirable                 `json:"middleName,omitempty"`
   MobilePhone                Requirable                 `json:"mobilePhone,omitempty"`
+  Type                       RegistrationType           `json:"type,omitempty"`
 }
 
 /**
@@ -2329,6 +2601,12 @@ type RegistrationResponse struct {
 func (b *RegistrationResponse) SetStatus(status int) {
   b.StatusCode = status
 }
+
+type RegistrationType string
+const (
+  RegistrationType_Basic                      RegistrationType           = "basic"
+  RegistrationType_Advanced                   RegistrationType           = "advanced"
+)
 
 /**
  * @author Daniel DeGroff
@@ -2471,14 +2749,21 @@ const (
 type SecureIdentity struct {
   BreachedPasswordLastCheckedInstant int64                      `json:"breachedPasswordLastCheckedInstant,omitempty"`
   BreachedPasswordStatus     BreachedPasswordStatus     `json:"breachedPasswordStatus,omitempty"`
+  ConnectorId                string                     `json:"connectorId,omitempty"`
   EncryptionScheme           string                     `json:"encryptionScheme,omitempty"`
   Factor                     int                        `json:"factor,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  LastLoginInstant           int64                      `json:"lastLoginInstant,omitempty"`
   Password                   string                     `json:"password,omitempty"`
   PasswordChangeReason       ChangePasswordReason       `json:"passwordChangeReason,omitempty"`
   PasswordChangeRequired     bool                       `json:"passwordChangeRequired"`
   PasswordLastUpdateInstant  int64                      `json:"passwordLastUpdateInstant,omitempty"`
   Salt                       string                     `json:"salt,omitempty"`
+  TwoFactorDelivery          TwoFactorDelivery          `json:"twoFactorDelivery,omitempty"`
+  TwoFactorEnabled           bool                       `json:"twoFactorEnabled"`
+  TwoFactorSecret            string                     `json:"twoFactorSecret,omitempty"`
+  Username                   string                     `json:"username,omitempty"`
+  UsernameStatus             ContentStatus              `json:"usernameStatus,omitempty"`
   Verified                   bool                       `json:"verified"`
 }
 
@@ -2531,6 +2816,8 @@ type SystemConfiguration struct {
   CorsConfiguration          CORSConfiguration          `json:"corsConfiguration,omitempty"`
   Data                       map[string]interface{}     `json:"data,omitempty"`
   EventLogConfiguration      EventLogConfiguration      `json:"eventLogConfiguration,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   LoginRecordConfiguration   LoginRecordConfiguration   `json:"loginRecordConfiguration,omitempty"`
   ReportTimezone             string                     `json:"reportTimezone,omitempty"`
   UiConfiguration            UIConfiguration            `json:"uiConfiguration,omitempty"`
@@ -2597,6 +2884,7 @@ type Templates struct {
  */
 type Tenant struct {
   Configured                 bool                       `json:"configured"`
+  ConnectorPolicies          []ConnectorPolicy          `json:"connectorPolicies,omitempty"`
   Data                       map[string]interface{}     `json:"data,omitempty"`
   EmailConfiguration         EmailConfiguration         `json:"emailConfiguration,omitempty"`
   EventConfiguration         EventConfiguration         `json:"eventConfiguration,omitempty"`
@@ -2605,8 +2893,10 @@ type Tenant struct {
   FamilyConfiguration        FamilyConfiguration        `json:"familyConfiguration,omitempty"`
   HttpSessionMaxInactiveInterval int                        `json:"httpSessionMaxInactiveInterval,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
   Issuer                     string                     `json:"issuer,omitempty"`
   JwtConfiguration           JWTConfiguration           `json:"jwtConfiguration,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   LogoutURL                  string                     `json:"logoutURL,omitempty"`
   MaximumPasswordAge         MaximumPasswordAge         `json:"maximumPasswordAge,omitempty"`
   MinimumPasswordAge         MinimumPasswordAge         `json:"minimumPasswordAge,omitempty"`
@@ -2859,8 +3149,8 @@ type User struct {
   FullName                   string                     `json:"fullName,omitempty"`
   ImageUrl                   string                     `json:"imageUrl,omitempty"`
   InsertInstant              int64                      `json:"insertInstant,omitempty"`
-  LastLoginInstant           int64                      `json:"lastLoginInstant,omitempty"`
   LastName                   string                     `json:"lastName,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   Memberships                []GroupMember              `json:"memberships,omitempty"`
   MiddleName                 string                     `json:"middleName,omitempty"`
   MobilePhone                string                     `json:"mobilePhone,omitempty"`
@@ -2869,11 +3159,6 @@ type User struct {
   Registrations              []UserRegistration         `json:"registrations,omitempty"`
   TenantId                   string                     `json:"tenantId,omitempty"`
   Timezone                   string                     `json:"timezone,omitempty"`
-  TwoFactorDelivery          TwoFactorDelivery          `json:"twoFactorDelivery,omitempty"`
-  TwoFactorEnabled           bool                       `json:"twoFactorEnabled"`
-  TwoFactorSecret            string                     `json:"twoFactorSecret,omitempty"`
-  Username                   string                     `json:"username,omitempty"`
-  UsernameStatus             ContentStatus              `json:"usernameStatus,omitempty"`
 }
 
 /**
@@ -2887,6 +3172,8 @@ type UserAction struct {
   EndEmailTemplateId         string                     `json:"endEmailTemplateId,omitempty"`
   Id                         string                     `json:"id,omitempty"`
   IncludeEmailInEventJSON    bool                       `json:"includeEmailInEventJSON"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   LocalizedNames             map[string]string          `json:"localizedNames,omitempty"`
   ModifyEmailTemplateId      string                     `json:"modifyEmailTemplateId,omitempty"`
   Name                       string                     `json:"name,omitempty"`
@@ -2937,12 +3224,12 @@ type UserActionLog struct {
   ActionerUserId             string                     `json:"actionerUserId,omitempty"`
   ApplicationIds             []string                   `json:"applicationIds,omitempty"`
   Comment                    string                     `json:"comment,omitempty"`
-  CreateInstant              int64                      `json:"createInstant,omitempty"`
   EmailUserOnEnd             bool                       `json:"emailUserOnEnd"`
   EndEventSent               bool                       `json:"endEventSent"`
   Expiry                     int64                      `json:"expiry,omitempty"`
   History                    LogHistory                 `json:"history,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
   LocalizedName              string                     `json:"localizedName,omitempty"`
   LocalizedOption            string                     `json:"localizedOption,omitempty"`
   LocalizedReason            string                     `json:"localizedReason,omitempty"`
@@ -2985,6 +3272,8 @@ const (
 type UserActionReason struct {
   Code                       string                     `json:"code,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   LocalizedTexts             map[string]string          `json:"localizedTexts,omitempty"`
   Text                       string                     `json:"text,omitempty"`
 }
@@ -3053,8 +3342,8 @@ type UserBulkCreateEvent struct {
 type UserComment struct {
   Comment                    string                     `json:"comment,omitempty"`
   CommenterId                string                     `json:"commenterId,omitempty"`
-  CreateInstant              int64                      `json:"createInstant,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
   UserId                     string                     `json:"userId,omitempty"`
 }
 
@@ -3211,6 +3500,7 @@ type UserLoginSuccessEvent struct {
   BaseEvent
   ApplicationId              string                     `json:"applicationId,omitempty"`
   AuthenticationType         string                     `json:"authenticationType,omitempty"`
+  ConnectorId                string                     `json:"connectorId,omitempty"`
   IdentityProviderId         string                     `json:"identityProviderId,omitempty"`
   IdentityProviderName       string                     `json:"identityProviderName,omitempty"`
   User                       User                       `json:"user,omitempty"`
@@ -3254,6 +3544,7 @@ type UserRegistration struct {
   Id                         string                     `json:"id,omitempty"`
   InsertInstant              int64                      `json:"insertInstant,omitempty"`
   LastLoginInstant           int64                      `json:"lastLoginInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   PreferredLanguages         []string                   `json:"preferredLanguages,omitempty"`
   Roles                      []string                   `json:"roles,omitempty"`
   Timezone                   string                     `json:"timezone,omitempty"`
@@ -3419,6 +3710,8 @@ type Webhook struct {
   HttpAuthenticationPassword string                     `json:"httpAuthenticationPassword,omitempty"`
   HttpAuthenticationUsername string                     `json:"httpAuthenticationUsername,omitempty"`
   Id                         string                     `json:"id,omitempty"`
+  InsertInstant              int64                      `json:"insertInstant,omitempty"`
+  LastUpdateInstant          int64                      `json:"lastUpdateInstant,omitempty"`
   ReadTimeout                int                        `json:"readTimeout,omitempty"`
   SslCertificate             string                     `json:"sslCertificate,omitempty"`
   Url                        string                     `json:"url,omitempty"`
