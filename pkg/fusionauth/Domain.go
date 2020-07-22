@@ -1835,7 +1835,7 @@ type LambdaConfiguration struct {
   Samlv2PopulateId           string                     `json:"samlv2PopulateId,omitempty"`
 }
 
-type LambdaConfiguration struct {
+type ConnectorLambdaConfiguration struct {
   ReconcileId                string                     `json:"reconcileId,omitempty"`
 }
 
@@ -1897,7 +1897,7 @@ type LDAPConnectorConfiguration struct {
   BaseStructure              string                     `json:"baseStructure,omitempty"`
   ConnectTimeout             int                        `json:"connectTimeout,omitempty"`
   IdentifyingAttribute       string                     `json:"identifyingAttribute,omitempty"`
-  LambdaConfiguration        LambdaConfiguration        `json:"lambdaConfiguration,omitempty"`
+  LambdaConfiguration        ConnectorLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
   LoginIdAttribute           string                     `json:"loginIdAttribute,omitempty"`
   ReadTimeout                int                        `json:"readTimeout,omitempty"`
   RequestedAttributes        []string                   `json:"requestedAttributes,omitempty"`
