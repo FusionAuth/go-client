@@ -1226,8 +1226,8 @@ func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorReque
 // Exchanges an OAuth authorization code for an access token.
 // If you will be using the Authorization Code grant, you will make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
 //   string code The authorization code returned on the /oauth2/authorize response.
-//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
-//   string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+//   string clientId The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate.
+//   string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //   string redirectUri The URI to redirect to upon a successful request.
 func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId string, clientSecret string, redirectUri string) (*AccessToken, *OAuthError, error) {
     var resp AccessToken
