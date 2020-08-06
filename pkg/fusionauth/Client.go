@@ -2266,7 +2266,7 @@ func (c *FusionAuthClient) RetrieveAuditLog(auditLogId int) (*AuditLogResponse, 
 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/system/audit-log").
-             WithUriSegment(string(auditLogId)).
+             WithUriSegment(strconv.Itoa(auditLogId)).
              WithMethod(http.MethodGet).
              Do()
     if restClient.ErrorRef == nil {
@@ -2405,7 +2405,7 @@ func (c *FusionAuthClient) RetrieveEventLog(eventLogId int) (*EventLogResponse, 
 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/system/event-log").
-             WithUriSegment(string(eventLogId)).
+             WithUriSegment(strconv.Itoa(eventLogId)).
              WithMethod(http.MethodGet).
              Do()
     if restClient.ErrorRef == nil {
