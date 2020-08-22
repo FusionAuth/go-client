@@ -2664,7 +2664,6 @@ type SAMLv2Configuration struct {
  */
 type SAMLv2IdentityProvider struct {
   BaseIdentityProvider
-  AllowResponseReplay              bool                               `json:"allowResponseReplay"`
   ButtonImageURL                   string                             `json:"buttonImageURL,omitempty"`
   ButtonText                       string                             `json:"buttonText,omitempty"`
   Domains                          []string                           `json:"domains,omitempty"`
