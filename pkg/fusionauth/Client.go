@@ -2264,15 +2264,17 @@ func (c *FusionAuthClient) RetrieveAuditLog(auditLogId int) (*AuditLogResponse, 
 	var resp AuditLogResponse
 	var errors Errors
 
-	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/system/audit-log").
-		WithUriSegment(strconv.Itoa(auditLogId)).
-		WithMethod(http.MethodGet).
-		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/system/audit-log").
+             WithUriSegment(strconv.Itoa(auditLogId)).
+             WithMethod(http.MethodGet).
+             Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+
 }
 
 // RetrieveConnector
@@ -2402,6 +2404,7 @@ func (c *FusionAuthClient) RetrieveEmailTemplates() (*EmailTemplateResponse, err
 func (c *FusionAuthClient) RetrieveEventLog(eventLogId int) (*EventLogResponse, *Errors, error) {
 	var resp EventLogResponse
 	var errors Errors
+
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/system/event-log").
