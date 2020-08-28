@@ -1501,7 +1501,7 @@ func (c *FusionAuthClient) ImportUsers(request ImportRequest) (*BaseHTTPResponse
 //   string applicationId The Application Id for which you are requesting a new access token be issued.
 //   string encodedJWT The encoded JWT (access token).
 //   string refreshToken (Optional) An existing refresh token used to request a refresh token in addition to a JWT in the response.
-//   <p>The target application represented by the applicationid request parameter must have refresh
+//   <p>The target application represented by the applicationId request parameter must have refresh
 //   tokens enabled in order to receive a refresh token in the response.</p>
 func (c *FusionAuthClient) IssueJWT(applicationId string, encodedJWT string, refreshToken string) (*IssueResponse, *Errors, error) {
 	var resp IssueResponse
@@ -2264,17 +2264,15 @@ func (c *FusionAuthClient) RetrieveAuditLog(auditLogId int) (*AuditLogResponse, 
 	var resp AuditLogResponse
 	var errors Errors
 
-
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/system/audit-log").
-             WithUriSegment(strconv.Itoa(auditLogId)).
-             WithMethod(http.MethodGet).
-             Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
-
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/audit-log").
+		WithUriSegment(strconv.Itoa(auditLogId)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveConnector
@@ -2404,7 +2402,6 @@ func (c *FusionAuthClient) RetrieveEmailTemplates() (*EmailTemplateResponse, err
 func (c *FusionAuthClient) RetrieveEventLog(eventLogId int) (*EventLogResponse, *Errors, error) {
 	var resp EventLogResponse
 	var errors Errors
-
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/system/event-log").
