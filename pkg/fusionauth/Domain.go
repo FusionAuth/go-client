@@ -139,6 +139,7 @@ type Application struct {
   AuthenticationTokenConfiguration AuthenticationTokenConfiguration   `json:"authenticationTokenConfiguration,omitempty"`
   CleanSpeakConfiguration          CleanSpeakConfiguration            `json:"cleanSpeakConfiguration,omitempty"`
   Data                             map[string]interface{}             `json:"data,omitempty"`
+  EmailConfiguration               ApplicationEmailConfiguration      `json:"emailConfiguration,omitempty"`
   Id                               string                             `json:"id,omitempty"`
   InsertInstant                    int64                              `json:"insertInstant,omitempty"`
   JwtConfiguration                 JWTConfiguration                   `json:"jwtConfiguration,omitempty"`
@@ -155,6 +156,13 @@ type Application struct {
   TenantId                         string                             `json:"tenantId,omitempty"`
   VerificationEmailTemplateId      string                             `json:"verificationEmailTemplateId,omitempty"`
   VerifyRegistration               bool                               `json:"verifyRegistration"`
+}
+
+type ApplicationEmailConfiguration struct {
+  EmailVerificationEmailTemplateId string                             `json:"emailVerificationEmailTemplateId,omitempty"`
+  ForgotPasswordEmailTemplateId    string                             `json:"forgotPasswordEmailTemplateId,omitempty"`
+  PasswordlessEmailTemplateId      string                             `json:"passwordlessEmailTemplateId,omitempty"`
+  SetPasswordEmailTemplateId       string                             `json:"setPasswordEmailTemplateId,omitempty"`
 }
 
 /**
@@ -1129,6 +1137,7 @@ const (
  * @author Brian Pontarelli
  */
 type ForgotPasswordRequest struct {
+  ApplicationId                    string                             `json:"applicationId,omitempty"`
   ChangePasswordId                 string                             `json:"changePasswordId,omitempty"`
   Email                            string                             `json:"email,omitempty"`
   LoginId                          string                             `json:"loginId,omitempty"`
@@ -2506,6 +2515,8 @@ func (b *RefreshResponse) SetStatus(status int) {
  */
 type RefreshToken struct {
   ApplicationId                    string                             `json:"applicationId,omitempty"`
+  Data                             map[string]interface{}             `json:"data,omitempty"`
+  Id                               string                             `json:"id,omitempty"`
   InsertInstant                    int64                              `json:"insertInstant,omitempty"`
   MetaData                         MetaData                           `json:"metaData,omitempty"`
   StartInstant                     int64                              `json:"startInstant,omitempty"`
@@ -2521,6 +2532,16 @@ const (
   RefreshTokenExpirationPolicy_Fixed                            RefreshTokenExpirationPolicy       = "Fixed"
   RefreshTokenExpirationPolicy_SlidingWindow                    RefreshTokenExpirationPolicy       = "SlidingWindow"
 )
+
+/**
+ * Refresh Token Import request.
+ *
+ * @author Brett Guy
+ */
+type RefreshTokenImportRequest struct {
+  RefreshTokens                    []RefreshToken                     `json:"refreshTokens,omitempty"`
+  ValidateDbConstraints            bool                               `json:"validateDbConstraints"`
+}
 
 /**
  * @author Daniel DeGroff
@@ -2806,7 +2827,6 @@ type SortField struct {
  */
 type SystemConfiguration struct {
   AuditLogConfiguration            AuditLogConfiguration              `json:"auditLogConfiguration,omitempty"`
-  CookieEncryptionIV               string                             `json:"cookieEncryptionIV,omitempty"`
   CookieEncryptionKey              string                             `json:"cookieEncryptionKey,omitempty"`
   CorsConfiguration                CORSConfiguration                  `json:"corsConfiguration,omitempty"`
   Data                             map[string]interface{}             `json:"data,omitempty"`
