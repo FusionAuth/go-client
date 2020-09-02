@@ -983,6 +983,7 @@ type ExternalIdentifierConfiguration struct {
   PasswordlessLoginTimeToLiveInSeconds int                                `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
   RegistrationVerificationIdGenerator SecureGeneratorConfiguration       `json:"registrationVerificationIdGenerator,omitempty"`
   RegistrationVerificationIdTimeToLiveInSeconds int                                `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
+  Samlv2AuthNRequestIdTimeToLiveInSeconds int                                `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
   SetupPasswordIdGenerator         SecureGeneratorConfiguration       `json:"setupPasswordIdGenerator,omitempty"`
   SetupPasswordIdTimeToLiveInSeconds int                                `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
   TwoFactorIdTimeToLiveInSeconds   int                                `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
@@ -1516,6 +1517,7 @@ func (b *IdentityProviderResponse) SetStatus(status int) {
  */
 type IdentityProviderStartLoginRequest struct {
   BaseLoginRequest
+  Data                             map[string]string                  `json:"data,omitempty"`
   IdentityProviderId               string                             `json:"identityProviderId,omitempty"`
   LoginId                          string                             `json:"loginId,omitempty"`
   State                            map[string]interface{}             `json:"state,omitempty"`

@@ -2165,6 +2165,27 @@ func (c *FusionAuthClient) ResendEmailVerification(email string) (*VerifyEmailRe
     return &resp, &errors, err
 }
 
+// ResendEmailVerificationWithApplicationTemplate
+// Re-sends the verification email to the user. If the Application has configured a specific email template this will be used
+// instead of the tenant configuration.
+//   string applicationId The unique Application Id to used to resolve an application specific email template.
+//   string email The email address of the user that needs a new verification email.
+func (c *FusionAuthClient) ResendEmailVerificationWithApplicationTemplate(applicationId string, email string) (*VerifyEmailResponse, *Errors, error) {
+    var resp VerifyEmailResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/user/verify-email").
+        WithParameter("applicationId", applicationId).
+        WithParameter("email", email).
+    WithMethod(http.MethodPut).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // ResendRegistrationVerification
 // Re-sends the application registration verification email to the user.
 //   string email The email address of the user that needs a new verification email.
