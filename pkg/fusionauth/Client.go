@@ -3261,6 +3261,24 @@ func (c *FusionAuthClient) RetrieveUserConsents(userId string) (*UserConsentResp
 	return &resp, err
 }
 
+// RetrieveUserInfoFromAccessToken
+// Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
+//   string encodedJWT The encoded JWT (access token).
+func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*UserResponse, *OAuthError, error) {
+	var resp UserResponse
+	var errors OAuthError
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/userinfo").
+		WithAuthorization("Bearer " + encodedJWT).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveUserLoginReport
 // Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
 // login counts for that application.
@@ -4075,24 +4093,6 @@ func (c *FusionAuthClient) UpdateWebhook(webhookId string, request WebhookReques
 		WithUriSegment(webhookId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
-		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
-// UserInfo
-// Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
-//   string encodedJWT The encoded JWT (access token).
-func (c *FusionAuthClient) UserInfo(encodedJWT string) (*UserResponse, *OAuthError, error) {
-	var resp UserResponse
-	var errors OAuthError
-
-	restClient := c.StartAnonymous(&resp, &errors)
-	err := restClient.WithUri("/oauth2/userinfo").
-		WithAuthorization("Bearer " + encodedJWT).
-		WithMethod(http.MethodPost).
 		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
