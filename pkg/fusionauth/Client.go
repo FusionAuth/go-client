@@ -94,34 +94,37 @@ func (c *FusionAuthClient) StartAnonymous(responseRef interface{}, errorRef inte
 }
 
 func (rc *restClient) Do() error {
-  req, err := http.NewRequest(rc.Method, rc.Uri.String(), rc.Body)
-  if err != nil {
-    return err
-  }
-  for key, val := range rc.Headers {
-    req.Header.Set(key, val)
-  }
-  resp, err := rc.HTTPClient.Do(req)
-  if err != nil {
-    return err
-  }
-  defer resp.Body.Close()
-  if rc.Debug {
-    responseDump, _ := httputil.DumpResponse(resp, true)
-    fmt.Println(string(responseDump))
-  }
-  if resp.StatusCode < 200 || resp.StatusCode > 299 {
-    if rc.ErrorRef != nil {
-      err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef)
-    }
-  } else {
-    rc.ErrorRef = nil
-    if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
-      err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
-    }
-  }
-  rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
-  return err
+	req, err := http.NewRequest(rc.Method, rc.Uri.String(), rc.Body)
+	if err != nil {
+		return err
+	}
+	for key, val := range rc.Headers {
+		req.Header.Set(key, val)
+	}
+	resp, err := rc.HTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if rc.Debug {
+		responseDump, _ := httputil.DumpResponse(resp, true)
+		fmt.Println(string(responseDump))
+	}
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		if rc.ErrorRef != nil {
+			err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef)
+			if err == io.EOF {
+				err = fmt.Errorf("unexpected status code: %d(%s)", resp.StatusCode, http.StatusText(resp.StatusCode))
+			}
+		}
+	} else {
+		rc.ErrorRef = nil
+		if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
+			err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
+		}
+	}
+	rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
+	return err
 }
 
 func (rc *restClient) WithAuthorization(key string) *restClient {
