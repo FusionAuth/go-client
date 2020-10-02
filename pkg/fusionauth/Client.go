@@ -111,15 +111,13 @@ func (rc *restClient) Do() error {
     fmt.Println(string(responseDump))
   }
   if resp.StatusCode < 200 || resp.StatusCode > 299 {
-    if rc.ErrorRef != nil {
-      err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef)
+    if err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef); err == io.EOF {
+      err = nil
     }
   } else {
     rc.ErrorRef = nil
     if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
-      if err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef); err == io.EOF {
-        err = nil
-      }
+      err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
     }
   }
   rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
@@ -1553,7 +1551,7 @@ func (c *FusionAuthClient) IssueJWT(applicationId string, encodedJWT string, ref
 }
 
 // Login
-// Authenticates a user to FusionAuth.
+// Authenticates a user to FusionAuth. 
 //
 // This API optionally requires an API key. See <code>Application.loginConfiguration.requireAuthentication</code>.
 //   LoginRequest request The login request that contains the user credentials used to log them in.
@@ -2088,7 +2086,7 @@ func (c *FusionAuthClient) ReconcileJWT(request IdentityProviderLoginRequest) (*
 
 // RefreshUserSearchIndex
 // Request a refresh of the User search index. This API is not generally necessary and the search index will become consistent in a
-// reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be
+// reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be 
 // if you are using the Search API or Delete Tenant API immediately following a User Create etc, you may wish to request a refresh to
 //  ensure the index immediately current before making a query request to the search index.
 func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, *Errors, error) {
@@ -2839,7 +2837,7 @@ func (c *FusionAuthClient) RetrieveOpenIdConfiguration() (*OpenIdConfiguration, 
 }
 
 // RetrievePasswordValidationRules
-// Retrieves the password validation rules for a specific tenant. This method requires a tenantId to be provided
+// Retrieves the password validation rules for a specific tenant. This method requires a tenantId to be provided 
 // through the use of a Tenant scoped API key or an HTTP header X-FusionAuth-TenantId to specify the Tenant Id.
 //
 // This API does not require an API key.
