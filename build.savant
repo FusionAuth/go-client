@@ -23,9 +23,17 @@ target(name: "compile", description: "Compiles the source code") {
 }
 
 target(name: "test", description: "Runs the project's unit tests", dependsOn: ["compile"]) {
+  ProcessBuilder pb = new ProcessBuilder(
+      "go", "test")
+      .inheritIO()
+      .directory(new File("./pkg/fusionauth/"))
+
+  def process = pb.start()
+  process.consumeProcessOutput(System.out, System.err)
+  process.waitFor()
 }
 
-target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["test"]) {
+target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["compile"]) {
 }
 
 target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
