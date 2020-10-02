@@ -117,7 +117,9 @@ func (rc *restClient) Do() error {
 	} else {
 		rc.ErrorRef = nil
 		if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
-			err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
+			if err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef); err == io.EOF {
+				err = nil
+			}
 		}
 	}
 	rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
