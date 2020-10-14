@@ -409,6 +409,11 @@ const (
   BreachMatchMode_High                             BreachMatchMode                    = "High"
 )
 
+/**
+ * XML canonicalization method enumeration. This is used for the IdP and SP side of FusionAuth SAML.
+ *
+ * @author Brian Pontarelli
+ */
 type CanonicalizationMethod string
 const (
   CanonicalizationMethod_Exclusive                        CanonicalizationMethod             = "exclusive"
@@ -2322,6 +2327,7 @@ type OpenIdConnectIdentityProvider struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   Domains                          []string                           `json:"domains,omitempty"`
   Oauth2                           IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+  PostRequest                      bool                               `json:"postRequest"`
 }
 
 /**
@@ -2672,11 +2678,14 @@ type SAMLv2ApplicationConfiguration struct {
 type SAMLv2Configuration struct {
   Enableable
   Audience                         string                             `json:"audience,omitempty"`
+  AuthorizedRedirectURLs           []string                           `json:"authorizedRedirectURLs,omitempty"`
   CallbackURL                      string                             `json:"callbackURL,omitempty"`
   Debug                            bool                               `json:"debug"`
+  DefaultVerificationKeyId         string                             `json:"defaultVerificationKeyId,omitempty"`
   Issuer                           string                             `json:"issuer,omitempty"`
   KeyId                            string                             `json:"keyId,omitempty"`
   LogoutURL                        string                             `json:"logoutURL,omitempty"`
+  RequireSignedRequests            bool                               `json:"requireSignedRequests"`
   XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
@@ -2694,7 +2703,11 @@ type SAMLv2IdentityProvider struct {
   IdpEndpoint                      string                             `json:"idpEndpoint,omitempty"`
   Issuer                           string                             `json:"issuer,omitempty"`
   KeyId                            string                             `json:"keyId,omitempty"`
+  PostRequest                      bool                               `json:"postRequest"`
+  RequestSigningKeyId              string                             `json:"requestSigningKeyId,omitempty"`
+  SignRequest                      bool                               `json:"signRequest"`
   UseNameIdForEmail                bool                               `json:"useNameIdForEmail"`
+  XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
 /**
@@ -2822,6 +2835,14 @@ type SortField struct {
   Missing                          string                             `json:"missing,omitempty"`
   Name                             string                             `json:"name,omitempty"`
   Order                            Sort                               `json:"order,omitempty"`
+}
+
+/**
+ * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
+ *
+ * @author Brian Pontarelli
+ */
+type SupportsPostBindings struct {
 }
 
 /**
