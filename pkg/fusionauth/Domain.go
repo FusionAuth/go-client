@@ -12,56 +12,56 @@
 * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 * either express or implied. See the License for the specific
 * language governing permissions and limitations under the License.
-*/
-
+ */
 
 package fusionauth
 
 type StatusAble interface {
-  SetStatus(status int)
+	SetStatus(status int)
 }
 
 /**
 * Base Response which contains the HTTP status code
 *
 * @author Matthew Altman
-*/
+ */
 type BaseHTTPResponse struct {
-  StatusCode int `json:"statusCode,omitempty"`
+	StatusCode int `json:"statusCode,omitempty"`
 }
 
 func (b *BaseHTTPResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type AccessToken struct {
-  BaseHTTPResponse
-  AccessToken                      string                             `json:"access_token,omitempty"`
-  ExpiresIn                        int                                `json:"expires_in,omitempty"`
-  IdToken                          string                             `json:"id_token,omitempty"`
-  RefreshToken                     string                             `json:"refresh_token,omitempty"`
-  Scope                            string                             `json:"scope,omitempty"`
-  TokenType                        TokenType                          `json:"token_type,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	BaseHTTPResponse
+	AccessToken  string    `json:"access_token,omitempty"`
+	ExpiresIn    int       `json:"expires_in,omitempty"`
+	IdToken      string    `json:"id_token,omitempty"`
+	RefreshToken string    `json:"refresh_token,omitempty"`
+	Scope        string    `json:"scope,omitempty"`
+	TokenType    TokenType `json:"token_type,omitempty"`
+	UserId       string    `json:"userId,omitempty"`
 }
+
 func (b *AccessToken) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type ActionData struct {
-  ActioneeUserId                   string                             `json:"actioneeUserId,omitempty"`
-  ActionerUserId                   string                             `json:"actionerUserId,omitempty"`
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
-  Comment                          string                             `json:"comment,omitempty"`
-  EmailUser                        bool                               `json:"emailUser"`
-  Expiry                           int64                              `json:"expiry,omitempty"`
-  NotifyUser                       bool                               `json:"notifyUser"`
-  Option                           string                             `json:"option,omitempty"`
-  ReasonId                         string                             `json:"reasonId,omitempty"`
-  UserActionId                     string                             `json:"userActionId,omitempty"`
+	ActioneeUserId string   `json:"actioneeUserId,omitempty"`
+	ActionerUserId string   `json:"actionerUserId,omitempty"`
+	ApplicationIds []string `json:"applicationIds,omitempty"`
+	Comment        string   `json:"comment,omitempty"`
+	EmailUser      bool     `json:"emailUser"`
+	Expiry         int64    `json:"expiry,omitempty"`
+	NotifyUser     bool     `json:"notifyUser"`
+	Option         string   `json:"option,omitempty"`
+	ReasonId       string   `json:"reasonId,omitempty"`
+	UserActionId   string   `json:"userActionId,omitempty"`
 }
 
 /**
@@ -70,8 +70,8 @@ type ActionData struct {
  * @author Brian Pontarelli
  */
 type ActionRequest struct {
-  Action                           ActionData                         `json:"action,omitempty"`
-  Broadcast                        bool                               `json:"broadcast"`
+	Action    ActionData `json:"action,omitempty"`
+	Broadcast bool       `json:"broadcast"`
 }
 
 /**
@@ -80,12 +80,13 @@ type ActionRequest struct {
  * @author Brian Pontarelli
  */
 type ActionResponse struct {
-  BaseHTTPResponse
-  Action                           UserActionLog                      `json:"action,omitempty"`
-  Actions                          []UserActionLog                    `json:"actions,omitempty"`
+	BaseHTTPResponse
+	Action  UserActionLog   `json:"action,omitempty"`
+	Actions []UserActionLog `json:"actions,omitempty"`
 }
+
 func (b *ActionResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -94,75 +95,76 @@ func (b *ActionResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type Algorithm string
+
 const (
-  Algorithm_ES256                            Algorithm                          = "ES256"
-  Algorithm_ES384                            Algorithm                          = "ES384"
-  Algorithm_ES512                            Algorithm                          = "ES512"
-  Algorithm_HS256                            Algorithm                          = "HS256"
-  Algorithm_HS384                            Algorithm                          = "HS384"
-  Algorithm_HS512                            Algorithm                          = "HS512"
-  Algorithm_RS256                            Algorithm                          = "RS256"
-  Algorithm_RS384                            Algorithm                          = "RS384"
-  Algorithm_RS512                            Algorithm                          = "RS512"
-  Algorithm_None                             Algorithm                          = "none"
+	Algorithm_ES256 Algorithm = "ES256"
+	Algorithm_ES384 Algorithm = "ES384"
+	Algorithm_ES512 Algorithm = "ES512"
+	Algorithm_HS256 Algorithm = "HS256"
+	Algorithm_HS384 Algorithm = "HS384"
+	Algorithm_HS512 Algorithm = "HS512"
+	Algorithm_RS256 Algorithm = "RS256"
+	Algorithm_RS384 Algorithm = "RS384"
+	Algorithm_RS512 Algorithm = "RS512"
+	Algorithm_None  Algorithm = "none"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type AppleApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  KeyId                            string                             `json:"keyId,omitempty"`
-  Scope                            string                             `json:"scope,omitempty"`
-  ServicesId                       string                             `json:"servicesId,omitempty"`
-  TeamId                           string                             `json:"teamId,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText string `json:"buttonText,omitempty"`
+	KeyId      string `json:"keyId,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	ServicesId string `json:"servicesId,omitempty"`
+	TeamId     string `json:"teamId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type AppleIdentityProvider struct {
-  BaseIdentityProvider
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  KeyId                            string                             `json:"keyId,omitempty"`
-  Scope                            string                             `json:"scope,omitempty"`
-  ServicesId                       string                             `json:"servicesId,omitempty"`
-  TeamId                           string                             `json:"teamId,omitempty"`
+	BaseIdentityProvider
+	ButtonText string `json:"buttonText,omitempty"`
+	KeyId      string `json:"keyId,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	ServicesId string `json:"servicesId,omitempty"`
+	TeamId     string `json:"teamId,omitempty"`
 }
 
 /**
  * @author Seth Musselman
  */
 type Application struct {
-  Active                           bool                               `json:"active"`
-  AuthenticationTokenConfiguration AuthenticationTokenConfiguration   `json:"authenticationTokenConfiguration,omitempty"`
-  CleanSpeakConfiguration          CleanSpeakConfiguration            `json:"cleanSpeakConfiguration,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  EmailConfiguration               ApplicationEmailConfiguration      `json:"emailConfiguration,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  JwtConfiguration                 JWTConfiguration                   `json:"jwtConfiguration,omitempty"`
-  LambdaConfiguration              LambdaConfiguration                `json:"lambdaConfiguration,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LoginConfiguration               LoginConfiguration                 `json:"loginConfiguration,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  OauthConfiguration               OAuth2Configuration                `json:"oauthConfiguration,omitempty"`
-  PasswordlessConfiguration        PasswordlessConfiguration          `json:"passwordlessConfiguration,omitempty"`
-  RegistrationConfiguration        RegistrationConfiguration          `json:"registrationConfiguration,omitempty"`
-  RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy `json:"registrationDeletePolicy,omitempty"`
-  Roles                            []ApplicationRole                  `json:"roles,omitempty"`
-  Samlv2Configuration              SAMLv2Configuration                `json:"samlv2Configuration,omitempty"`
-  TenantId                         string                             `json:"tenantId,omitempty"`
-  VerificationEmailTemplateId      string                             `json:"verificationEmailTemplateId,omitempty"`
-  VerifyRegistration               bool                               `json:"verifyRegistration"`
+	Active                           bool                                `json:"active"`
+	AuthenticationTokenConfiguration AuthenticationTokenConfiguration    `json:"authenticationTokenConfiguration,omitempty"`
+	CleanSpeakConfiguration          CleanSpeakConfiguration             `json:"cleanSpeakConfiguration,omitempty"`
+	Data                             map[string]interface{}              `json:"data,omitempty"`
+	EmailConfiguration               ApplicationEmailConfiguration       `json:"emailConfiguration,omitempty"`
+	Id                               string                              `json:"id,omitempty"`
+	InsertInstant                    int64                               `json:"insertInstant,omitempty"`
+	JwtConfiguration                 JWTConfiguration                    `json:"jwtConfiguration,omitempty"`
+	LambdaConfiguration              LambdaConfiguration                 `json:"lambdaConfiguration,omitempty"`
+	LastUpdateInstant                int64                               `json:"lastUpdateInstant,omitempty"`
+	LoginConfiguration               LoginConfiguration                  `json:"loginConfiguration,omitempty"`
+	Name                             string                              `json:"name,omitempty"`
+	OauthConfiguration               OAuth2Configuration                 `json:"oauthConfiguration,omitempty"`
+	PasswordlessConfiguration        PasswordlessConfiguration           `json:"passwordlessConfiguration,omitempty"`
+	RegistrationConfiguration        RegistrationConfiguration           `json:"registrationConfiguration,omitempty"`
+	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy `json:"registrationDeletePolicy,omitempty"`
+	Roles                            []ApplicationRole                   `json:"roles,omitempty"`
+	Samlv2Configuration              SAMLv2Configuration                 `json:"samlv2Configuration,omitempty"`
+	TenantId                         string                              `json:"tenantId,omitempty"`
+	VerificationEmailTemplateId      string                              `json:"verificationEmailTemplateId,omitempty"`
+	VerifyRegistration               bool                                `json:"verifyRegistration"`
 }
 
 type ApplicationEmailConfiguration struct {
-  EmailVerificationEmailTemplateId string                             `json:"emailVerificationEmailTemplateId,omitempty"`
-  ForgotPasswordEmailTemplateId    string                             `json:"forgotPasswordEmailTemplateId,omitempty"`
-  PasswordlessEmailTemplateId      string                             `json:"passwordlessEmailTemplateId,omitempty"`
-  SetPasswordEmailTemplateId       string                             `json:"setPasswordEmailTemplateId,omitempty"`
+	EmailVerificationEmailTemplateId string `json:"emailVerificationEmailTemplateId,omitempty"`
+	ForgotPasswordEmailTemplateId    string `json:"forgotPasswordEmailTemplateId,omitempty"`
+	PasswordlessEmailTemplateId      string `json:"passwordlessEmailTemplateId,omitempty"`
+	SetPasswordEmailTemplateId       string `json:"setPasswordEmailTemplateId,omitempty"`
 }
 
 /**
@@ -171,7 +173,7 @@ type ApplicationEmailConfiguration struct {
  * @author Trevor Smith
  */
 type ApplicationRegistrationDeletePolicy struct {
-  Unverified                       TimeBasedDeletePolicy              `json:"unverified,omitempty"`
+	Unverified TimeBasedDeletePolicy `json:"unverified,omitempty"`
 }
 
 /**
@@ -180,9 +182,9 @@ type ApplicationRegistrationDeletePolicy struct {
  * @author Brian Pontarelli
  */
 type ApplicationRequest struct {
-  Application                      Application                        `json:"application,omitempty"`
-  Role                             ApplicationRole                    `json:"role,omitempty"`
-  WebhookIds                       []string                           `json:"webhookIds,omitempty"`
+	Application Application     `json:"application,omitempty"`
+	Role        ApplicationRole `json:"role,omitempty"`
+	WebhookIds  []string        `json:"webhookIds,omitempty"`
 }
 
 /**
@@ -191,13 +193,14 @@ type ApplicationRequest struct {
  * @author Brian Pontarelli
  */
 type ApplicationResponse struct {
-  BaseHTTPResponse
-  Application                      Application                        `json:"application,omitempty"`
-  Applications                     []Application                      `json:"applications,omitempty"`
-  Role                             ApplicationRole                    `json:"role,omitempty"`
+	BaseHTTPResponse
+	Application  Application     `json:"application,omitempty"`
+	Applications []Application   `json:"applications,omitempty"`
+	Role         ApplicationRole `json:"role,omitempty"`
 }
+
 func (b *ApplicationResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -206,13 +209,13 @@ func (b *ApplicationResponse) SetStatus(status int) {
  * @author Seth Musselman
  */
 type ApplicationRole struct {
-  Description                      string                             `json:"description,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  IsDefault                        bool                               `json:"isDefault"`
-  IsSuperRole                      bool                               `json:"isSuperRole"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
+	Description       string `json:"description,omitempty"`
+	Id                string `json:"id,omitempty"`
+	InsertInstant     int64  `json:"insertInstant,omitempty"`
+	IsDefault         bool   `json:"isDefault"`
+	IsSuperRole       bool   `json:"isSuperRole"`
+	LastUpdateInstant int64  `json:"lastUpdateInstant,omitempty"`
+	Name              string `json:"name,omitempty"`
 }
 
 /**
@@ -221,9 +224,9 @@ type ApplicationRole struct {
  * @author Brian Pontarelli
  */
 type Attachment struct {
-  Attachment                       []byte                             `json:"attachment,omitempty"`
-  Mime                             string                             `json:"mime,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
+	Attachment []byte `json:"attachment,omitempty"`
+	Mime       string `json:"mime,omitempty"`
+	Name       string `json:"name,omitempty"`
 }
 
 /**
@@ -232,33 +235,33 @@ type Attachment struct {
  * @author Brian Pontarelli
  */
 type AuditLog struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Id                               int64                              `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  InsertUser                       string                             `json:"insertUser,omitempty"`
-  Message                          string                             `json:"message,omitempty"`
-  NewValue                         interface{}                        `json:"newValue,omitempty"`
-  OldValue                         interface{}                        `json:"oldValue,omitempty"`
-  Reason                           string                             `json:"reason,omitempty"`
+	Data          map[string]interface{} `json:"data,omitempty"`
+	Id            int64                  `json:"id,omitempty"`
+	InsertInstant int64                  `json:"insertInstant,omitempty"`
+	InsertUser    string                 `json:"insertUser,omitempty"`
+	Message       string                 `json:"message,omitempty"`
+	NewValue      interface{}            `json:"newValue,omitempty"`
+	OldValue      interface{}            `json:"oldValue,omitempty"`
+	Reason        string                 `json:"reason,omitempty"`
 }
 
 type AuditLogConfiguration struct {
-  Delete                           DeleteConfiguration                `json:"delete,omitempty"`
+	Delete DeleteConfiguration `json:"delete,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type AuditLogExportRequest struct {
-  BaseExportRequest
-  Criteria                         AuditLogSearchCriteria             `json:"criteria,omitempty"`
+	BaseExportRequest
+	Criteria AuditLogSearchCriteria `json:"criteria,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type AuditLogRequest struct {
-  AuditLog                         AuditLog                           `json:"auditLog,omitempty"`
+	AuditLog AuditLog `json:"auditLog,omitempty"`
 }
 
 /**
@@ -267,29 +270,30 @@ type AuditLogRequest struct {
  * @author Brian Pontarelli
  */
 type AuditLogResponse struct {
-  BaseHTTPResponse
-  AuditLog                         AuditLog                           `json:"auditLog,omitempty"`
+	BaseHTTPResponse
+	AuditLog AuditLog `json:"auditLog,omitempty"`
 }
+
 func (b *AuditLogResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Brian Pontarelli
  */
 type AuditLogSearchCriteria struct {
-  BaseSearchCriteria
-  End                              int64                              `json:"end,omitempty"`
-  Message                          string                             `json:"message,omitempty"`
-  Start                            int64                              `json:"start,omitempty"`
-  User                             string                             `json:"user,omitempty"`
+	BaseSearchCriteria
+	End     int64  `json:"end,omitempty"`
+	Message string `json:"message,omitempty"`
+	Start   int64  `json:"start,omitempty"`
+	User    string `json:"user,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type AuditLogSearchRequest struct {
-  Search                           AuditLogSearchCriteria             `json:"search,omitempty"`
+	Search AuditLogSearchCriteria `json:"search,omitempty"`
 }
 
 /**
@@ -298,27 +302,28 @@ type AuditLogSearchRequest struct {
  * @author Brian Pontarelli
  */
 type AuditLogSearchResponse struct {
-  BaseHTTPResponse
-  AuditLogs                        []AuditLog                         `json:"auditLogs,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	AuditLogs []AuditLog `json:"auditLogs,omitempty"`
+	Total     int64      `json:"total,omitempty"`
 }
+
 func (b *AuditLogSearchResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type AuthenticationTokenConfiguration struct {
-  Enableable
+	Enableable
 }
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseConnectorConfiguration struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Debug                            bool                               `json:"debug"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Type                             ConnectorType                      `json:"type,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Debug             bool                   `json:"debug"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+	Type              ConnectorType          `json:"type,omitempty"`
 }
 
 /**
@@ -327,86 +332,89 @@ type BaseConnectorConfiguration struct {
  * @author Brian Pontarelli
  */
 type BaseEvent struct {
-  CreateInstant                    int64                              `json:"createInstant,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  TenantId                         string                             `json:"tenantId,omitempty"`
+	CreateInstant int64  `json:"createInstant,omitempty"`
+	Id            string `json:"id,omitempty"`
+	TenantId      string `json:"tenantId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type BaseExportRequest struct {
-  DateTimeSecondsFormat            string                             `json:"dateTimeSecondsFormat,omitempty"`
-  ZoneId                           string                             `json:"zoneId,omitempty"`
+	DateTimeSecondsFormat string `json:"dateTimeSecondsFormat,omitempty"`
+	ZoneId                string `json:"zoneId,omitempty"`
 }
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseIdentityProvider struct {
-  Enableable
-  ApplicationConfiguration         map[string]interface{}             `json:"applicationConfiguration,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Debug                            bool                               `json:"debug"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LambdaConfiguration              ProviderLambdaConfiguration        `json:"lambdaConfiguration,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Type                             IdentityProviderType               `json:"type,omitempty"`
+	Enableable
+	ApplicationConfiguration map[string]interface{}      `json:"applicationConfiguration,omitempty"`
+	Data                     map[string]interface{}      `json:"data,omitempty"`
+	Debug                    bool                        `json:"debug"`
+	Id                       string                      `json:"id,omitempty"`
+	InsertInstant            int64                       `json:"insertInstant,omitempty"`
+	LambdaConfiguration      ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
+	LastUpdateInstant        int64                       `json:"lastUpdateInstant,omitempty"`
+	Name                     string                      `json:"name,omitempty"`
+	Type                     IdentityProviderType        `json:"type,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type BaseIdentityProviderApplicationConfiguration struct {
-  Enableable
-  CreateRegistration               bool                               `json:"createRegistration"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
+	Enableable
+	CreateRegistration bool                   `json:"createRegistration"`
+	Data               map[string]interface{} `json:"data,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type BaseLoginRequest struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  IpAddress                        string                             `json:"ipAddress,omitempty"`
-  MetaData                         MetaData                           `json:"metaData,omitempty"`
-  NoJWT                            bool                               `json:"noJWT"`
+	ApplicationId string   `json:"applicationId,omitempty"`
+	IpAddress     string   `json:"ipAddress,omitempty"`
+	MetaData      MetaData `json:"metaData,omitempty"`
+	NoJWT         bool     `json:"noJWT"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type BaseSearchCriteria struct {
-  NumberOfResults                  int                                `json:"numberOfResults,omitempty"`
-  OrderBy                          string                             `json:"orderBy,omitempty"`
-  StartRow                         int                                `json:"startRow,omitempty"`
+	NumberOfResults int    `json:"numberOfResults,omitempty"`
+	OrderBy         string `json:"orderBy,omitempty"`
+	StartRow        int    `json:"startRow,omitempty"`
 }
 
 type BreachAction string
+
 const (
-  BreachAction_Off                              BreachAction                       = "Off"
-  BreachAction_RecordOnly                       BreachAction                       = "RecordOnly"
-  BreachAction_NotifyUser                       BreachAction                       = "NotifyUser"
-  BreachAction_RequireChange                    BreachAction                       = "RequireChange"
+	BreachAction_Off           BreachAction = "Off"
+	BreachAction_RecordOnly    BreachAction = "RecordOnly"
+	BreachAction_NotifyUser    BreachAction = "NotifyUser"
+	BreachAction_RequireChange BreachAction = "RequireChange"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type BreachedPasswordStatus string
+
 const (
-  BreachedPasswordStatus_None                             BreachedPasswordStatus             = "None"
-  BreachedPasswordStatus_ExactMatch                       BreachedPasswordStatus             = "ExactMatch"
-  BreachedPasswordStatus_SubAddressMatch                  BreachedPasswordStatus             = "SubAddressMatch"
-  BreachedPasswordStatus_PasswordOnly                     BreachedPasswordStatus             = "PasswordOnly"
-  BreachedPasswordStatus_CommonPassword                   BreachedPasswordStatus             = "CommonPassword"
+	BreachedPasswordStatus_None            BreachedPasswordStatus = "None"
+	BreachedPasswordStatus_ExactMatch      BreachedPasswordStatus = "ExactMatch"
+	BreachedPasswordStatus_SubAddressMatch BreachedPasswordStatus = "SubAddressMatch"
+	BreachedPasswordStatus_PasswordOnly    BreachedPasswordStatus = "PasswordOnly"
+	BreachedPasswordStatus_CommonPassword  BreachedPasswordStatus = "CommonPassword"
 )
 
 type BreachMatchMode string
+
 const (
-  BreachMatchMode_Low                              BreachMatchMode                    = "Low"
-  BreachMatchMode_Medium                           BreachMatchMode                    = "Medium"
-  BreachMatchMode_High                             BreachMatchMode                    = "High"
+	BreachMatchMode_Low    BreachMatchMode = "Low"
+	BreachMatchMode_Medium BreachMatchMode = "Medium"
+	BreachMatchMode_High   BreachMatchMode = "High"
 )
 
 /**
@@ -415,35 +423,37 @@ const (
  * @author Brian Pontarelli
  */
 type CanonicalizationMethod string
+
 const (
-  CanonicalizationMethod_Exclusive                        CanonicalizationMethod             = "exclusive"
-  CanonicalizationMethod_ExclusiveWithComments            CanonicalizationMethod             = "exclusive_with_comments"
-  CanonicalizationMethod_Inclusive                        CanonicalizationMethod             = "inclusive"
-  CanonicalizationMethod_InclusiveWithComments            CanonicalizationMethod             = "inclusive_with_comments"
+	CanonicalizationMethod_Exclusive             CanonicalizationMethod = "exclusive"
+	CanonicalizationMethod_ExclusiveWithComments CanonicalizationMethod = "exclusive_with_comments"
+	CanonicalizationMethod_Inclusive             CanonicalizationMethod = "inclusive"
+	CanonicalizationMethod_InclusiveWithComments CanonicalizationMethod = "inclusive_with_comments"
 )
 
 type CertificateInformation struct {
-  Issuer                           string                             `json:"issuer,omitempty"`
-  Md5Fingerprint                   string                             `json:"md5Fingerprint,omitempty"`
-  SerialNumber                     string                             `json:"serialNumber,omitempty"`
-  Sha1Fingerprint                  string                             `json:"sha1Fingerprint,omitempty"`
-  Sha1Thumbprint                   string                             `json:"sha1Thumbprint,omitempty"`
-  Sha256Fingerprint                string                             `json:"sha256Fingerprint,omitempty"`
-  Sha256Thumbprint                 string                             `json:"sha256Thumbprint,omitempty"`
-  Subject                          string                             `json:"subject,omitempty"`
-  ValidFrom                        int64                              `json:"validFrom,omitempty"`
-  ValidTo                          int64                              `json:"validTo,omitempty"`
+	Issuer            string `json:"issuer,omitempty"`
+	Md5Fingerprint    string `json:"md5Fingerprint,omitempty"`
+	SerialNumber      string `json:"serialNumber,omitempty"`
+	Sha1Fingerprint   string `json:"sha1Fingerprint,omitempty"`
+	Sha1Thumbprint    string `json:"sha1Thumbprint,omitempty"`
+	Sha256Fingerprint string `json:"sha256Fingerprint,omitempty"`
+	Sha256Thumbprint  string `json:"sha256Thumbprint,omitempty"`
+	Subject           string `json:"subject,omitempty"`
+	ValidFrom         int64  `json:"validFrom,omitempty"`
+	ValidTo           int64  `json:"validTo,omitempty"`
 }
 
 /**
  * @author Trevor Smith
  */
 type ChangePasswordReason string
+
 const (
-  ChangePasswordReason_Administrative                   ChangePasswordReason               = "Administrative"
-  ChangePasswordReason_Breached                         ChangePasswordReason               = "Breached"
-  ChangePasswordReason_Expired                          ChangePasswordReason               = "Expired"
-  ChangePasswordReason_Validation                       ChangePasswordReason               = "Validation"
+	ChangePasswordReason_Administrative ChangePasswordReason = "Administrative"
+	ChangePasswordReason_Breached       ChangePasswordReason = "Breached"
+	ChangePasswordReason_Expired        ChangePasswordReason = "Expired"
+	ChangePasswordReason_Validation     ChangePasswordReason = "Validation"
 )
 
 /**
@@ -452,10 +462,10 @@ const (
  * @author Brian Pontarelli
  */
 type ChangePasswordRequest struct {
-  CurrentPassword                  string                             `json:"currentPassword,omitempty"`
-  LoginId                          string                             `json:"loginId,omitempty"`
-  Password                         string                             `json:"password,omitempty"`
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
+	CurrentPassword string `json:"currentPassword,omitempty"`
+	LoginId         string `json:"loginId,omitempty"`
+	Password        string `json:"password,omitempty"`
+	RefreshToken    string `json:"refreshToken,omitempty"`
 }
 
 /**
@@ -464,12 +474,13 @@ type ChangePasswordRequest struct {
  * @author Daniel DeGroff
  */
 type ChangePasswordResponse struct {
-  BaseHTTPResponse
-  OneTimePassword                  string                             `json:"oneTimePassword,omitempty"`
-  State                            map[string]interface{}             `json:"state,omitempty"`
+	BaseHTTPResponse
+	OneTimePassword string                 `json:"oneTimePassword,omitempty"`
+	State           map[string]interface{} `json:"state,omitempty"`
 }
+
 func (b *ChangePasswordResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -478,47 +489,49 @@ func (b *ChangePasswordResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type CleanSpeakConfiguration struct {
-  Enableable
-  ApiKey                           string                             `json:"apiKey,omitempty"`
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
-  Url                              string                             `json:"url,omitempty"`
-  UsernameModeration               UsernameModeration                 `json:"usernameModeration,omitempty"`
+	Enableable
+	ApiKey             string             `json:"apiKey,omitempty"`
+	ApplicationIds     []string           `json:"applicationIds,omitempty"`
+	Url                string             `json:"url,omitempty"`
+	UsernameModeration UsernameModeration `json:"usernameModeration,omitempty"`
 }
 
 type ClientAuthenticationMethod string
+
 const (
-  ClientAuthenticationMethod_None                             ClientAuthenticationMethod         = "none"
-  ClientAuthenticationMethod_ClientSecretBasic                ClientAuthenticationMethod         = "client_secret_basic"
-  ClientAuthenticationMethod_ClientSecretPost                 ClientAuthenticationMethod         = "client_secret_post"
+	ClientAuthenticationMethod_None              ClientAuthenticationMethod = "none"
+	ClientAuthenticationMethod_ClientSecretBasic ClientAuthenticationMethod = "client_secret_basic"
+	ClientAuthenticationMethod_ClientSecretPost  ClientAuthenticationMethod = "client_secret_post"
 )
 
 /**
  * @author Trevor Smith
  */
 type ConnectorPolicy struct {
-  ConnectorId                      string                             `json:"connectorId,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Domains                          []string                           `json:"domains,omitempty"`
-  Migrate                          bool                               `json:"migrate"`
+	ConnectorId string                 `json:"connectorId,omitempty"`
+	Data        map[string]interface{} `json:"data,omitempty"`
+	Domains     []string               `json:"domains,omitempty"`
+	Migrate     bool                   `json:"migrate"`
 }
 
 /**
  * @author Trevor Smith
  */
 type ConnectorRequest struct {
-  Connector                        BaseConnectorConfiguration         `json:"connector,omitempty"`
+	Connector BaseConnectorConfiguration `json:"connector,omitempty"`
 }
 
 /**
  * @author Trevor Smith
  */
 type ConnectorResponse struct {
-  BaseHTTPResponse
-  Connector                        BaseConnectorConfiguration         `json:"connector,omitempty"`
-  Connectors                       []BaseConnectorConfiguration       `json:"connectors,omitempty"`
+	BaseHTTPResponse
+	Connector  BaseConnectorConfiguration   `json:"connector,omitempty"`
+	Connectors []BaseConnectorConfiguration `json:"connectors,omitempty"`
 }
+
 func (b *ConnectorResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -527,10 +540,11 @@ func (b *ConnectorResponse) SetStatus(status int) {
  * @author Trevor Smith
  */
 type ConnectorType string
+
 const (
-  ConnectorType_FusionAuth                       ConnectorType                      = "FusionAuth"
-  ConnectorType_Generic                          ConnectorType                      = "Generic"
-  ConnectorType_LDAP                             ConnectorType                      = "LDAP"
+	ConnectorType_FusionAuth ConnectorType = "FusionAuth"
+	ConnectorType_Generic    ConnectorType = "Generic"
+	ConnectorType_LDAP       ConnectorType = "LDAP"
 )
 
 /**
@@ -539,17 +553,17 @@ const (
  * @author Daniel DeGroff
  */
 type Consent struct {
-  ConsentEmailTemplateId           string                             `json:"consentEmailTemplateId,omitempty"`
-  CountryMinimumAgeForSelfConsent  map[string]int                     `json:"countryMinimumAgeForSelfConsent,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  DefaultMinimumAgeForSelfConsent  int                                `json:"defaultMinimumAgeForSelfConsent,omitempty"`
-  EmailPlus                        EmailPlus                          `json:"emailPlus,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  MultipleValuesAllowed            bool                               `json:"multipleValuesAllowed"`
-  Name                             string                             `json:"name,omitempty"`
-  Values                           []string                           `json:"values,omitempty"`
+	ConsentEmailTemplateId          string                 `json:"consentEmailTemplateId,omitempty"`
+	CountryMinimumAgeForSelfConsent map[string]int         `json:"countryMinimumAgeForSelfConsent,omitempty"`
+	Data                            map[string]interface{} `json:"data,omitempty"`
+	DefaultMinimumAgeForSelfConsent int                    `json:"defaultMinimumAgeForSelfConsent,omitempty"`
+	EmailPlus                       EmailPlus              `json:"emailPlus,omitempty"`
+	Id                              string                 `json:"id,omitempty"`
+	InsertInstant                   int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant               int64                  `json:"lastUpdateInstant,omitempty"`
+	MultipleValuesAllowed           bool                   `json:"multipleValuesAllowed"`
+	Name                            string                 `json:"name,omitempty"`
+	Values                          []string               `json:"values,omitempty"`
 }
 
 /**
@@ -558,7 +572,7 @@ type Consent struct {
  * @author Daniel DeGroff
  */
 type ConsentRequest struct {
-  Consent                          Consent                            `json:"consent,omitempty"`
+	Consent Consent `json:"consent,omitempty"`
 }
 
 /**
@@ -567,12 +581,13 @@ type ConsentRequest struct {
  * @author Daniel DeGroff
  */
 type ConsentResponse struct {
-  BaseHTTPResponse
-  Consent                          Consent                            `json:"consent,omitempty"`
-  Consents                         []Consent                          `json:"consents,omitempty"`
+	BaseHTTPResponse
+	Consent  Consent   `json:"consent,omitempty"`
+	Consents []Consent `json:"consents,omitempty"`
 }
+
 func (b *ConsentResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -581,9 +596,10 @@ func (b *ConsentResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type ConsentStatus string
+
 const (
-  ConsentStatus_Active                           ConsentStatus                      = "Active"
-  ConsentStatus_Revoked                          ConsentStatus                      = "Revoked"
+	ConsentStatus_Active  ConsentStatus = "Active"
+	ConsentStatus_Revoked ConsentStatus = "Revoked"
 )
 
 /**
@@ -592,31 +608,32 @@ const (
  * @author Brian Pontarelli
  */
 type ContentStatus string
+
 const (
-  ContentStatus_ACTIVE                           ContentStatus                      = "ACTIVE"
-  ContentStatus_PENDING                          ContentStatus                      = "PENDING"
-  ContentStatus_REJECTED                         ContentStatus                      = "REJECTED"
+	ContentStatus_ACTIVE   ContentStatus = "ACTIVE"
+	ContentStatus_PENDING  ContentStatus = "PENDING"
+	ContentStatus_REJECTED ContentStatus = "REJECTED"
 )
 
 /**
  * @author Trevor Smith
  */
 type CORSConfiguration struct {
-  Enableable
-  AllowCredentials                 bool                               `json:"allowCredentials"`
-  AllowedHeaders                   []string                           `json:"allowedHeaders,omitempty"`
-  AllowedMethods                   []HTTPMethod                       `json:"allowedMethods,omitempty"`
-  AllowedOrigins                   []string                           `json:"allowedOrigins,omitempty"`
-  ExposedHeaders                   []string                           `json:"exposedHeaders,omitempty"`
-  PreflightMaxAgeInSeconds         int                                `json:"preflightMaxAgeInSeconds,omitempty"`
+	Enableable
+	AllowCredentials         bool         `json:"allowCredentials"`
+	AllowedHeaders           []string     `json:"allowedHeaders,omitempty"`
+	AllowedMethods           []HTTPMethod `json:"allowedMethods,omitempty"`
+	AllowedOrigins           []string     `json:"allowedOrigins,omitempty"`
+	ExposedHeaders           []string     `json:"exposedHeaders,omitempty"`
+	PreflightMaxAgeInSeconds int          `json:"preflightMaxAgeInSeconds,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type Count struct {
-  Count                            int                                `json:"count,omitempty"`
-  Interval                         int                                `json:"interval,omitempty"`
+	Count    int `json:"count,omitempty"`
+	Interval int `json:"interval,omitempty"`
 }
 
 /**
@@ -625,57 +642,60 @@ type Count struct {
  * @author Brian Pontarelli
  */
 type DailyActiveUserReportResponse struct {
-  BaseHTTPResponse
-  DailyActiveUsers                 []Count                            `json:"dailyActiveUsers,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	DailyActiveUsers []Count `json:"dailyActiveUsers,omitempty"`
+	Total            int64   `json:"total,omitempty"`
 }
+
 func (b *DailyActiveUserReportResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type DeleteConfiguration struct {
-  Enableable
-  NumberOfDaysToRetain             int                                `json:"numberOfDaysToRetain,omitempty"`
+	Enableable
+	NumberOfDaysToRetain int `json:"numberOfDaysToRetain,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type DeviceInfo struct {
-  Description                      string                             `json:"description,omitempty"`
-  LastAccessedAddress              string                             `json:"lastAccessedAddress,omitempty"`
-  LastAccessedInstant              int64                              `json:"lastAccessedInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Type                             DeviceType                         `json:"type,omitempty"`
+	Description         string     `json:"description,omitempty"`
+	LastAccessedAddress string     `json:"lastAccessedAddress,omitempty"`
+	LastAccessedInstant int64      `json:"lastAccessedInstant,omitempty"`
+	Name                string     `json:"name,omitempty"`
+	Type                DeviceType `json:"type,omitempty"`
 }
 
 /**
  * @author Trevor Smith
  */
 type DeviceResponse struct {
-  BaseHTTPResponse
-  DeviceCode                       string                             `json:"device_code,omitempty"`
-  ExpiresIn                        int                                `json:"expires_in,omitempty"`
-  Interval                         int                                `json:"interval,omitempty"`
-  UserCode                         string                             `json:"user_code,omitempty"`
-  VerificationUri                  string                             `json:"verification_uri,omitempty"`
-  VerificationUriComplete          string                             `json:"verification_uri_complete,omitempty"`
+	BaseHTTPResponse
+	DeviceCode              string `json:"device_code,omitempty"`
+	ExpiresIn               int    `json:"expires_in,omitempty"`
+	Interval                int    `json:"interval,omitempty"`
+	UserCode                string `json:"user_code,omitempty"`
+	VerificationUri         string `json:"verification_uri,omitempty"`
+	VerificationUriComplete string `json:"verification_uri_complete,omitempty"`
 }
+
 func (b *DeviceResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type DeviceType string
+
 const (
-  DeviceType_BROWSER                          DeviceType                         = "BROWSER"
-  DeviceType_DESKTOP                          DeviceType                         = "DESKTOP"
-  DeviceType_LAPTOP                           DeviceType                         = "LAPTOP"
-  DeviceType_MOBILE                           DeviceType                         = "MOBILE"
-  DeviceType_OTHER                            DeviceType                         = "OTHER"
-  DeviceType_SERVER                           DeviceType                         = "SERVER"
-  DeviceType_TABLET                           DeviceType                         = "TABLET"
-  DeviceType_TV                               DeviceType                         = "TV"
-  DeviceType_UNKNOWN                          DeviceType                         = "UNKNOWN"
+	DeviceType_BROWSER DeviceType = "BROWSER"
+	DeviceType_DESKTOP DeviceType = "DESKTOP"
+	DeviceType_LAPTOP  DeviceType = "LAPTOP"
+	DeviceType_MOBILE  DeviceType = "MOBILE"
+	DeviceType_OTHER   DeviceType = "OTHER"
+	DeviceType_SERVER  DeviceType = "SERVER"
+	DeviceType_TABLET  DeviceType = "TABLET"
+	DeviceType_TV      DeviceType = "TV"
+	DeviceType_UNKNOWN DeviceType = "UNKNOWN"
 )
 
 /**
@@ -684,9 +704,9 @@ const (
  * @author Brian Pontarelli
  */
 type DisplayableRawLogin struct {
-  RawLogin
-  ApplicationName                  string                             `json:"applicationName,omitempty"`
-  LoginId                          string                             `json:"loginId,omitempty"`
+	RawLogin
+	ApplicationName string `json:"applicationName,omitempty"`
+	LoginId         string `json:"loginId,omitempty"`
 }
 
 /**
@@ -701,15 +721,15 @@ type DomainBasedIdentityProvider struct {
  * @author Brian Pontarelli
  */
 type Email struct {
-  Attachments                      []Attachment                       `json:"attachments,omitempty"`
-  Bcc                              []EmailAddress                     `json:"bcc,omitempty"`
-  Cc                               []EmailAddress                     `json:"cc,omitempty"`
-  From                             EmailAddress                       `json:"from,omitempty"`
-  Html                             string                             `json:"html,omitempty"`
-  ReplyTo                          EmailAddress                       `json:"replyTo,omitempty"`
-  Subject                          string                             `json:"subject,omitempty"`
-  Text                             string                             `json:"text,omitempty"`
-  To                               []EmailAddress                     `json:"to,omitempty"`
+	Attachments []Attachment   `json:"attachments,omitempty"`
+	Bcc         []EmailAddress `json:"bcc,omitempty"`
+	Cc          []EmailAddress `json:"cc,omitempty"`
+	From        EmailAddress   `json:"from,omitempty"`
+	Html        string         `json:"html,omitempty"`
+	ReplyTo     EmailAddress   `json:"replyTo,omitempty"`
+	Subject     string         `json:"subject,omitempty"`
+	Text        string         `json:"text,omitempty"`
+	To          []EmailAddress `json:"to,omitempty"`
 }
 
 /**
@@ -718,42 +738,43 @@ type Email struct {
  * @author Brian Pontarelli
  */
 type EmailAddress struct {
-  Address                          string                             `json:"address,omitempty"`
-  Display                          string                             `json:"display,omitempty"`
+	Address string `json:"address,omitempty"`
+	Display string `json:"display,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type EmailConfiguration struct {
-  DefaultFromEmail                 string                             `json:"defaultFromEmail,omitempty"`
-  DefaultFromName                  string                             `json:"defaultFromName,omitempty"`
-  ForgotPasswordEmailTemplateId    string                             `json:"forgotPasswordEmailTemplateId,omitempty"`
-  Host                             string                             `json:"host,omitempty"`
-  Password                         string                             `json:"password,omitempty"`
-  PasswordlessEmailTemplateId      string                             `json:"passwordlessEmailTemplateId,omitempty"`
-  Port                             int                                `json:"port,omitempty"`
-  Properties                       string                             `json:"properties,omitempty"`
-  Security                         EmailSecurityType                  `json:"security,omitempty"`
-  SetPasswordEmailTemplateId       string                             `json:"setPasswordEmailTemplateId,omitempty"`
-  Username                         string                             `json:"username,omitempty"`
-  VerificationEmailTemplateId      string                             `json:"verificationEmailTemplateId,omitempty"`
-  VerifyEmail                      bool                               `json:"verifyEmail"`
-  VerifyEmailWhenChanged           bool                               `json:"verifyEmailWhenChanged"`
+	DefaultFromEmail              string            `json:"defaultFromEmail,omitempty"`
+	DefaultFromName               string            `json:"defaultFromName,omitempty"`
+	ForgotPasswordEmailTemplateId string            `json:"forgotPasswordEmailTemplateId,omitempty"`
+	Host                          string            `json:"host,omitempty"`
+	Password                      string            `json:"password,omitempty"`
+	PasswordlessEmailTemplateId   string            `json:"passwordlessEmailTemplateId,omitempty"`
+	Port                          int               `json:"port,omitempty"`
+	Properties                    string            `json:"properties,omitempty"`
+	Security                      EmailSecurityType `json:"security,omitempty"`
+	SetPasswordEmailTemplateId    string            `json:"setPasswordEmailTemplateId,omitempty"`
+	Username                      string            `json:"username,omitempty"`
+	VerificationEmailTemplateId   string            `json:"verificationEmailTemplateId,omitempty"`
+	VerifyEmail                   bool              `json:"verifyEmail"`
+	VerifyEmailWhenChanged        bool              `json:"verifyEmailWhenChanged"`
 }
 
 type EmailPlus struct {
-  Enableable
-  EmailTemplateId                  string                             `json:"emailTemplateId,omitempty"`
-  MaximumTimeToSendEmailInHours    int                                `json:"maximumTimeToSendEmailInHours,omitempty"`
-  MinimumTimeToSendEmailInHours    int                                `json:"minimumTimeToSendEmailInHours,omitempty"`
+	Enableable
+	EmailTemplateId               string `json:"emailTemplateId,omitempty"`
+	MaximumTimeToSendEmailInHours int    `json:"maximumTimeToSendEmailInHours,omitempty"`
+	MinimumTimeToSendEmailInHours int    `json:"minimumTimeToSendEmailInHours,omitempty"`
 }
 
 type EmailSecurityType string
+
 const (
-  EmailSecurityType_NONE                             EmailSecurityType                  = "NONE"
-  EmailSecurityType_SSL                              EmailSecurityType                  = "SSL"
-  EmailSecurityType_TLS                              EmailSecurityType                  = "TLS"
+	EmailSecurityType_NONE EmailSecurityType = "NONE"
+	EmailSecurityType_SSL  EmailSecurityType = "SSL"
+	EmailSecurityType_TLS  EmailSecurityType = "TLS"
 )
 
 /**
@@ -762,24 +783,24 @@ const (
  * @author Brian Pontarelli
  */
 type EmailTemplate struct {
-  DefaultFromName                  string                             `json:"defaultFromName,omitempty"`
-  DefaultHtmlTemplate              string                             `json:"defaultHtmlTemplate,omitempty"`
-  DefaultSubject                   string                             `json:"defaultSubject,omitempty"`
-  DefaultTextTemplate              string                             `json:"defaultTextTemplate,omitempty"`
-  FromEmail                        string                             `json:"fromEmail,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LocalizedFromNames               map[string]string                  `json:"localizedFromNames,omitempty"`
-  LocalizedHtmlTemplates           map[string]string                  `json:"localizedHtmlTemplates,omitempty"`
-  LocalizedSubjects                map[string]string                  `json:"localizedSubjects,omitempty"`
-  LocalizedTextTemplates           map[string]string                  `json:"localizedTextTemplates,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
+	DefaultFromName        string            `json:"defaultFromName,omitempty"`
+	DefaultHtmlTemplate    string            `json:"defaultHtmlTemplate,omitempty"`
+	DefaultSubject         string            `json:"defaultSubject,omitempty"`
+	DefaultTextTemplate    string            `json:"defaultTextTemplate,omitempty"`
+	FromEmail              string            `json:"fromEmail,omitempty"`
+	Id                     string            `json:"id,omitempty"`
+	InsertInstant          int64             `json:"insertInstant,omitempty"`
+	LastUpdateInstant      int64             `json:"lastUpdateInstant,omitempty"`
+	LocalizedFromNames     map[string]string `json:"localizedFromNames,omitempty"`
+	LocalizedHtmlTemplates map[string]string `json:"localizedHtmlTemplates,omitempty"`
+	LocalizedSubjects      map[string]string `json:"localizedSubjects,omitempty"`
+	LocalizedTextTemplates map[string]string `json:"localizedTextTemplates,omitempty"`
+	Name                   string            `json:"name,omitempty"`
 }
 
 type EmailTemplateErrors struct {
-  ParseErrors                      map[string]string                  `json:"parseErrors,omitempty"`
-  RenderErrors                     map[string]string                  `json:"renderErrors,omitempty"`
+	ParseErrors  map[string]string `json:"parseErrors,omitempty"`
+	RenderErrors map[string]string `json:"renderErrors,omitempty"`
 }
 
 /**
@@ -788,7 +809,7 @@ type EmailTemplateErrors struct {
  * @author Brian Pontarelli
  */
 type EmailTemplateRequest struct {
-  EmailTemplate                    EmailTemplate                      `json:"emailTemplate,omitempty"`
+	EmailTemplate EmailTemplate `json:"emailTemplate,omitempty"`
 }
 
 /**
@@ -797,12 +818,13 @@ type EmailTemplateRequest struct {
  * @author Brian Pontarelli
  */
 type EmailTemplateResponse struct {
-  BaseHTTPResponse
-  EmailTemplate                    EmailTemplate                      `json:"emailTemplate,omitempty"`
-  EmailTemplates                   []EmailTemplate                    `json:"emailTemplates,omitempty"`
+	BaseHTTPResponse
+	EmailTemplate  EmailTemplate   `json:"emailTemplate,omitempty"`
+	EmailTemplates []EmailTemplate `json:"emailTemplates,omitempty"`
 }
+
 func (b *EmailTemplateResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -811,7 +833,7 @@ func (b *EmailTemplateResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type Enableable struct {
-  Enabled                          bool                               `json:"enabled"`
+	Enabled bool `json:"enabled"`
 }
 
 /**
@@ -820,8 +842,8 @@ type Enableable struct {
  * @author Brian Pontarelli
  */
 type Error struct {
-  Code                             string                             `json:"code,omitempty"`
-  Message                          string                             `json:"message,omitempty"`
+	Code    string `json:"code,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 /**
@@ -830,20 +852,20 @@ type Error struct {
  * @author Brian Pontarelli
  */
 type Errors struct {
-  FieldErrors                      map[string][]Error                 `json:"fieldErrors,omitempty"`
-  GeneralErrors                    []Error                            `json:"generalErrors,omitempty"`
+	FieldErrors   map[string][]Error `json:"fieldErrors,omitempty"`
+	GeneralErrors []Error            `json:"generalErrors,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type EventConfiguration struct {
-  Events                           map[EventType]EventConfigurationData `json:"events,omitempty"`
+	Events map[EventType]EventConfigurationData `json:"events,omitempty"`
 }
 
 type EventConfigurationData struct {
-  Enableable
-  TransactionType                  TransactionType                    `json:"transactionType,omitempty"`
+	Enableable
+	TransactionType TransactionType `json:"transactionType,omitempty"`
 }
 
 /**
@@ -852,14 +874,14 @@ type EventConfigurationData struct {
  * @author Brian Pontarelli
  */
 type EventLog struct {
-  Id                               int64                              `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  Message                          string                             `json:"message,omitempty"`
-  Type                             EventLogType                       `json:"type,omitempty"`
+	Id            int64        `json:"id,omitempty"`
+	InsertInstant int64        `json:"insertInstant,omitempty"`
+	Message       string       `json:"message,omitempty"`
+	Type          EventLogType `json:"type,omitempty"`
 }
 
 type EventLogConfiguration struct {
-  NumberToRetain                   int                                `json:"numberToRetain,omitempty"`
+	NumberToRetain int `json:"numberToRetain,omitempty"`
 }
 
 /**
@@ -868,11 +890,12 @@ type EventLogConfiguration struct {
  * @author Daniel DeGroff
  */
 type EventLogResponse struct {
-  BaseHTTPResponse
-  EventLog                         EventLog                           `json:"eventLog,omitempty"`
+	BaseHTTPResponse
+	EventLog EventLog `json:"eventLog,omitempty"`
 }
+
 func (b *EventLogResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -881,18 +904,18 @@ func (b *EventLogResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type EventLogSearchCriteria struct {
-  BaseSearchCriteria
-  End                              int64                              `json:"end,omitempty"`
-  Message                          string                             `json:"message,omitempty"`
-  Start                            int64                              `json:"start,omitempty"`
-  Type                             EventLogType                       `json:"type,omitempty"`
+	BaseSearchCriteria
+	End     int64        `json:"end,omitempty"`
+	Message string       `json:"message,omitempty"`
+	Start   int64        `json:"start,omitempty"`
+	Type    EventLogType `json:"type,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type EventLogSearchRequest struct {
-  Search                           EventLogSearchCriteria             `json:"search,omitempty"`
+	Search EventLogSearchCriteria `json:"search,omitempty"`
 }
 
 /**
@@ -901,12 +924,13 @@ type EventLogSearchRequest struct {
  * @author Brian Pontarelli
  */
 type EventLogSearchResponse struct {
-  BaseHTTPResponse
-  EventLogs                        []EventLog                         `json:"eventLogs,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	EventLogs []EventLog `json:"eventLogs,omitempty"`
+	Total     int64      `json:"total,omitempty"`
 }
+
 func (b *EventLogSearchResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -915,10 +939,11 @@ func (b *EventLogSearchResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type EventLogType string
+
 const (
-  EventLogType_Information                      EventLogType                       = "Information"
-  EventLogType_Debug                            EventLogType                       = "Debug"
-  EventLogType_Error                            EventLogType                       = "Error"
+	EventLogType_Information EventLogType = "Information"
+	EventLogType_Debug       EventLogType = "Debug"
+	EventLogType_Error       EventLogType = "Error"
 )
 
 /**
@@ -927,7 +952,7 @@ const (
  * @author Brian Pontarelli
  */
 type EventRequest struct {
-  Event                            BaseEvent                          `json:"event,omitempty"`
+	Event BaseEvent `json:"event,omitempty"`
 }
 
 /**
@@ -936,70 +961,72 @@ type EventRequest struct {
  * @author Brian Pontarelli
  */
 type EventType string
+
 const (
-  EventType_UserDelete                       EventType                          = "user.delete"
-  EventType_UserCreate                       EventType                          = "user.create"
-  EventType_UserUpdate                       EventType                          = "user.update"
-  EventType_UserDeactivate                   EventType                          = "user.deactivate"
-  EventType_UserBulkCreate                   EventType                          = "user.bulk.create"
-  EventType_UserReactivate                   EventType                          = "user.reactivate"
-  EventType_UserAction                       EventType                          = "user.action"
-  EventType_JWTRefreshTokenRevoke            EventType                          = "jwt.refresh-token.revoke"
-  EventType_JWTRefresh                       EventType                          = "jwt.refresh"
-  EventType_JWTPublicKeyUpdate               EventType                          = "jwt.public-key.update"
-  EventType_UserLoginSuccess                 EventType                          = "user.login.success"
-  EventType_UserLoginFailed                  EventType                          = "user.login.failed"
-  EventType_UserRegistrationCreate           EventType                          = "user.registration.create"
-  EventType_UserRegistrationUpdate           EventType                          = "user.registration.update"
-  EventType_UserRegistrationDelete           EventType                          = "user.registration.delete"
-  EventType_UserRegistrationVerified         EventType                          = "user.registration.verified"
-  EventType_UserEmailVerified                EventType                          = "user.email.verified"
-  EventType_UserPasswordBreach               EventType                          = "user.password.breach"
-  EventType_Test                             EventType                          = "test"
+	EventType_UserDelete               EventType = "user.delete"
+	EventType_UserCreate               EventType = "user.create"
+	EventType_UserUpdate               EventType = "user.update"
+	EventType_UserDeactivate           EventType = "user.deactivate"
+	EventType_UserBulkCreate           EventType = "user.bulk.create"
+	EventType_UserReactivate           EventType = "user.reactivate"
+	EventType_UserAction               EventType = "user.action"
+	EventType_JWTRefreshTokenRevoke    EventType = "jwt.refresh-token.revoke"
+	EventType_JWTRefresh               EventType = "jwt.refresh"
+	EventType_JWTPublicKeyUpdate       EventType = "jwt.public-key.update"
+	EventType_UserLoginSuccess         EventType = "user.login.success"
+	EventType_UserLoginFailed          EventType = "user.login.failed"
+	EventType_UserRegistrationCreate   EventType = "user.registration.create"
+	EventType_UserRegistrationUpdate   EventType = "user.registration.update"
+	EventType_UserRegistrationDelete   EventType = "user.registration.delete"
+	EventType_UserRegistrationVerified EventType = "user.registration.verified"
+	EventType_UserEmailVerified        EventType = "user.email.verified"
+	EventType_UserPasswordBreach       EventType = "user.password.breach"
+	EventType_Test                     EventType = "test"
 )
 
 /**
  * @author Brian Pontarelli
  */
 type ExpiryUnit string
+
 const (
-  ExpiryUnit_MINUTES                          ExpiryUnit                         = "MINUTES"
-  ExpiryUnit_HOURS                            ExpiryUnit                         = "HOURS"
-  ExpiryUnit_DAYS                             ExpiryUnit                         = "DAYS"
-  ExpiryUnit_WEEKS                            ExpiryUnit                         = "WEEKS"
-  ExpiryUnit_MONTHS                           ExpiryUnit                         = "MONTHS"
-  ExpiryUnit_YEARS                            ExpiryUnit                         = "YEARS"
+	ExpiryUnit_MINUTES ExpiryUnit = "MINUTES"
+	ExpiryUnit_HOURS   ExpiryUnit = "HOURS"
+	ExpiryUnit_DAYS    ExpiryUnit = "DAYS"
+	ExpiryUnit_WEEKS   ExpiryUnit = "WEEKS"
+	ExpiryUnit_MONTHS  ExpiryUnit = "MONTHS"
+	ExpiryUnit_YEARS   ExpiryUnit = "YEARS"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type ExternalIdentifierConfiguration struct {
-  AuthorizationGrantIdTimeToLiveInSeconds int                                `json:"authorizationGrantIdTimeToLiveInSeconds,omitempty"`
-  ChangePasswordIdGenerator        SecureGeneratorConfiguration       `json:"changePasswordIdGenerator,omitempty"`
-  ChangePasswordIdTimeToLiveInSeconds int                                `json:"changePasswordIdTimeToLiveInSeconds,omitempty"`
-  DeviceCodeTimeToLiveInSeconds    int                                `json:"deviceCodeTimeToLiveInSeconds,omitempty"`
-  DeviceUserCodeIdGenerator        SecureGeneratorConfiguration       `json:"deviceUserCodeIdGenerator,omitempty"`
-  EmailVerificationIdGenerator     SecureGeneratorConfiguration       `json:"emailVerificationIdGenerator,omitempty"`
-  EmailVerificationIdTimeToLiveInSeconds int                                `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
-  ExternalAuthenticationIdTimeToLiveInSeconds int                                `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
-  OneTimePasswordTimeToLiveInSeconds int                                `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
-  PasswordlessLoginGenerator       SecureGeneratorConfiguration       `json:"passwordlessLoginGenerator,omitempty"`
-  PasswordlessLoginTimeToLiveInSeconds int                                `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
-  RegistrationVerificationIdGenerator SecureGeneratorConfiguration       `json:"registrationVerificationIdGenerator,omitempty"`
-  RegistrationVerificationIdTimeToLiveInSeconds int                                `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
-  Samlv2AuthNRequestIdTimeToLiveInSeconds int                                `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
-  SetupPasswordIdGenerator         SecureGeneratorConfiguration       `json:"setupPasswordIdGenerator,omitempty"`
-  SetupPasswordIdTimeToLiveInSeconds int                                `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
-  TwoFactorIdTimeToLiveInSeconds   int                                `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
-  TwoFactorTrustIdTimeToLiveInSeconds int                                `json:"twoFactorTrustIdTimeToLiveInSeconds,omitempty"`
+	AuthorizationGrantIdTimeToLiveInSeconds       int                          `json:"authorizationGrantIdTimeToLiveInSeconds,omitempty"`
+	ChangePasswordIdGenerator                     SecureGeneratorConfiguration `json:"changePasswordIdGenerator,omitempty"`
+	ChangePasswordIdTimeToLiveInSeconds           int                          `json:"changePasswordIdTimeToLiveInSeconds,omitempty"`
+	DeviceCodeTimeToLiveInSeconds                 int                          `json:"deviceCodeTimeToLiveInSeconds,omitempty"`
+	DeviceUserCodeIdGenerator                     SecureGeneratorConfiguration `json:"deviceUserCodeIdGenerator,omitempty"`
+	EmailVerificationIdGenerator                  SecureGeneratorConfiguration `json:"emailVerificationIdGenerator,omitempty"`
+	EmailVerificationIdTimeToLiveInSeconds        int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
+	ExternalAuthenticationIdTimeToLiveInSeconds   int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
+	OneTimePasswordTimeToLiveInSeconds            int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
+	PasswordlessLoginGenerator                    SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
+	PasswordlessLoginTimeToLiveInSeconds          int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
+	RegistrationVerificationIdGenerator           SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
+	RegistrationVerificationIdTimeToLiveInSeconds int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
+	Samlv2AuthNRequestIdTimeToLiveInSeconds       int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
+	SetupPasswordIdGenerator                      SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
+	SetupPasswordIdTimeToLiveInSeconds            int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
+	TwoFactorIdTimeToLiveInSeconds                int                          `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
+	TwoFactorTrustIdTimeToLiveInSeconds           int                          `json:"twoFactorTrustIdTimeToLiveInSeconds,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type ExternalJWTApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
+	BaseIdentityProviderApplicationConfiguration
 }
 
 /**
@@ -1008,25 +1035,25 @@ type ExternalJWTApplicationConfiguration struct {
  * @author Daniel DeGroff and Brian Pontarelli
  */
 type ExternalJWTIdentityProvider struct {
-  BaseIdentityProvider
-  ClaimMap                         map[string]string                  `json:"claimMap,omitempty"`
-  DefaultKeyId                     string                             `json:"defaultKeyId,omitempty"`
-  Domains                          []string                           `json:"domains,omitempty"`
-  HeaderKeyParameter               string                             `json:"headerKeyParameter,omitempty"`
-  Oauth2                           IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
-  UniqueIdentityClaim              string                             `json:"uniqueIdentityClaim,omitempty"`
+	BaseIdentityProvider
+	ClaimMap            map[string]string                   `json:"claimMap,omitempty"`
+	DefaultKeyId        string                              `json:"defaultKeyId,omitempty"`
+	Domains             []string                            `json:"domains,omitempty"`
+	HeaderKeyParameter  string                              `json:"headerKeyParameter,omitempty"`
+	Oauth2              IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	UniqueIdentityClaim string                              `json:"uniqueIdentityClaim,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type FacebookApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  AppId                            string                             `json:"appId,omitempty"`
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  ClientSecret                     string                             `json:"client_secret,omitempty"`
-  Fields                           string                             `json:"fields,omitempty"`
-  Permissions                      string                             `json:"permissions,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	AppId        string `json:"appId,omitempty"`
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Fields       string `json:"fields,omitempty"`
+	Permissions  string `json:"permissions,omitempty"`
 }
 
 /**
@@ -1035,12 +1062,12 @@ type FacebookApplicationConfiguration struct {
  * @author Brian Pontarelli
  */
 type FacebookIdentityProvider struct {
-  BaseIdentityProvider
-  AppId                            string                             `json:"appId,omitempty"`
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  ClientSecret                     string                             `json:"client_secret,omitempty"`
-  Fields                           string                             `json:"fields,omitempty"`
-  Permissions                      string                             `json:"permissions,omitempty"`
+	BaseIdentityProvider
+	AppId        string `json:"appId,omitempty"`
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Fields       string `json:"fields,omitempty"`
+	Permissions  string `json:"permissions,omitempty"`
 }
 
 /**
@@ -1049,11 +1076,11 @@ type FacebookIdentityProvider struct {
  * @author Daniel DeGroff
  */
 type FailedAuthenticationConfiguration struct {
-  ActionDuration                   int64                              `json:"actionDuration,omitempty"`
-  ActionDurationUnit               ExpiryUnit                         `json:"actionDurationUnit,omitempty"`
-  ResetCountInSeconds              int                                `json:"resetCountInSeconds,omitempty"`
-  TooManyAttempts                  int                                `json:"tooManyAttempts,omitempty"`
-  UserActionId                     string                             `json:"userActionId,omitempty"`
+	ActionDuration      int64      `json:"actionDuration,omitempty"`
+	ActionDurationUnit  ExpiryUnit `json:"actionDurationUnit,omitempty"`
+	ResetCountInSeconds int        `json:"resetCountInSeconds,omitempty"`
+	TooManyAttempts     int        `json:"tooManyAttempts,omitempty"`
+	UserActionId        string     `json:"userActionId,omitempty"`
 }
 
 /**
@@ -1062,26 +1089,26 @@ type FailedAuthenticationConfiguration struct {
  * @author Brian Pontarelli
  */
 type Family struct {
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Members                          []FamilyMember                     `json:"members,omitempty"`
+	Id                string         `json:"id,omitempty"`
+	InsertInstant     int64          `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64          `json:"lastUpdateInstant,omitempty"`
+	Members           []FamilyMember `json:"members,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type FamilyConfiguration struct {
-  Enableable
-  AllowChildRegistrations          bool                               `json:"allowChildRegistrations"`
-  ConfirmChildEmailTemplateId      string                             `json:"confirmChildEmailTemplateId,omitempty"`
-  DeleteOrphanedAccounts           bool                               `json:"deleteOrphanedAccounts"`
-  DeleteOrphanedAccountsDays       int                                `json:"deleteOrphanedAccountsDays,omitempty"`
-  FamilyRequestEmailTemplateId     string                             `json:"familyRequestEmailTemplateId,omitempty"`
-  MaximumChildAge                  int                                `json:"maximumChildAge,omitempty"`
-  MinimumOwnerAge                  int                                `json:"minimumOwnerAge,omitempty"`
-  ParentEmailRequired              bool                               `json:"parentEmailRequired"`
-  ParentRegistrationEmailTemplateId string                             `json:"parentRegistrationEmailTemplateId,omitempty"`
+	Enableable
+	AllowChildRegistrations           bool   `json:"allowChildRegistrations"`
+	ConfirmChildEmailTemplateId       string `json:"confirmChildEmailTemplateId,omitempty"`
+	DeleteOrphanedAccounts            bool   `json:"deleteOrphanedAccounts"`
+	DeleteOrphanedAccountsDays        int    `json:"deleteOrphanedAccountsDays,omitempty"`
+	FamilyRequestEmailTemplateId      string `json:"familyRequestEmailTemplateId,omitempty"`
+	MaximumChildAge                   int    `json:"maximumChildAge,omitempty"`
+	MinimumOwnerAge                   int    `json:"minimumOwnerAge,omitempty"`
+	ParentEmailRequired               bool   `json:"parentEmailRequired"`
+	ParentRegistrationEmailTemplateId string `json:"parentRegistrationEmailTemplateId,omitempty"`
 }
 
 /**
@@ -1090,7 +1117,7 @@ type FamilyConfiguration struct {
  * @author Brian Pontarelli
  */
 type FamilyEmailRequest struct {
-  ParentEmail                      string                             `json:"parentEmail,omitempty"`
+	ParentEmail string `json:"parentEmail,omitempty"`
 }
 
 /**
@@ -1099,12 +1126,12 @@ type FamilyEmailRequest struct {
  * @author Brian Pontarelli
  */
 type FamilyMember struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Owner                            bool                               `json:"owner"`
-  Role                             FamilyRole                         `json:"role,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Owner             bool                   `json:"owner"`
+	Role              FamilyRole             `json:"role,omitempty"`
+	UserId            string                 `json:"userId,omitempty"`
 }
 
 /**
@@ -1113,7 +1140,7 @@ type FamilyMember struct {
  * @author Brian Pontarelli
  */
 type FamilyRequest struct {
-  FamilyMember                     FamilyMember                       `json:"familyMember,omitempty"`
+	FamilyMember FamilyMember `json:"familyMember,omitempty"`
 }
 
 /**
@@ -1122,19 +1149,21 @@ type FamilyRequest struct {
  * @author Brian Pontarelli
  */
 type FamilyResponse struct {
-  BaseHTTPResponse
-  Families                         []Family                           `json:"families,omitempty"`
-  Family                           Family                             `json:"family,omitempty"`
+	BaseHTTPResponse
+	Families []Family `json:"families,omitempty"`
+	Family   Family   `json:"family,omitempty"`
 }
+
 func (b *FamilyResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type FamilyRole string
+
 const (
-  FamilyRole_Child                            FamilyRole                         = "Child"
-  FamilyRole_Teen                             FamilyRole                         = "Teen"
-  FamilyRole_Adult                            FamilyRole                         = "Adult"
+	FamilyRole_Child FamilyRole = "Child"
+	FamilyRole_Teen  FamilyRole = "Teen"
+	FamilyRole_Adult FamilyRole = "Adult"
 )
 
 /**
@@ -1143,13 +1172,13 @@ const (
  * @author Brian Pontarelli
  */
 type ForgotPasswordRequest struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  ChangePasswordId                 string                             `json:"changePasswordId,omitempty"`
-  Email                            string                             `json:"email,omitempty"`
-  LoginId                          string                             `json:"loginId,omitempty"`
-  SendForgotPasswordEmail          bool                               `json:"sendForgotPasswordEmail"`
-  State                            map[string]interface{}             `json:"state,omitempty"`
-  Username                         string                             `json:"username,omitempty"`
+	ApplicationId           string                 `json:"applicationId,omitempty"`
+	ChangePasswordId        string                 `json:"changePasswordId,omitempty"`
+	Email                   string                 `json:"email,omitempty"`
+	LoginId                 string                 `json:"loginId,omitempty"`
+	SendForgotPasswordEmail bool                   `json:"sendForgotPasswordEmail"`
+	State                   map[string]interface{} `json:"state,omitempty"`
+	Username                string                 `json:"username,omitempty"`
 }
 
 /**
@@ -1158,80 +1187,84 @@ type ForgotPasswordRequest struct {
  * @author Daniel DeGroff
  */
 type ForgotPasswordResponse struct {
-  BaseHTTPResponse
-  ChangePasswordId                 string                             `json:"changePasswordId,omitempty"`
+	BaseHTTPResponse
+	ChangePasswordId string `json:"changePasswordId,omitempty"`
 }
+
 func (b *ForgotPasswordResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type Form struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Steps                            []FormStep                         `json:"steps,omitempty"`
-  Type                             FormType                           `json:"type,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+	Steps             []FormStep             `json:"steps,omitempty"`
+	Type              FormType               `json:"type,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type FormControl string
+
 const (
-  FormControl_Checkbox                         FormControl                        = "checkbox"
-  FormControl_Number                           FormControl                        = "number"
-  FormControl_Password                         FormControl                        = "password"
-  FormControl_Radio                            FormControl                        = "radio"
-  FormControl_Select                           FormControl                        = "select"
-  FormControl_Textarea                         FormControl                        = "textarea"
-  FormControl_Text                             FormControl                        = "text"
+	FormControl_Checkbox FormControl = "checkbox"
+	FormControl_Number   FormControl = "number"
+	FormControl_Password FormControl = "password"
+	FormControl_Radio    FormControl = "radio"
+	FormControl_Select   FormControl = "select"
+	FormControl_Textarea FormControl = "textarea"
+	FormControl_Text     FormControl = "text"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type FormDataType string
+
 const (
-  FormDataType_Bool                             FormDataType                       = "bool"
-  FormDataType_Consent                          FormDataType                       = "consent"
-  FormDataType_Date                             FormDataType                       = "date"
-  FormDataType_Email                            FormDataType                       = "email"
-  FormDataType_Number                           FormDataType                       = "number"
-  FormDataType_String                           FormDataType                       = "string"
+	FormDataType_Bool    FormDataType = "bool"
+	FormDataType_Consent FormDataType = "consent"
+	FormDataType_Date    FormDataType = "date"
+	FormDataType_Email   FormDataType = "email"
+	FormDataType_Number  FormDataType = "number"
+	FormDataType_String  FormDataType = "string"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type FormField struct {
-  Confirm                          bool                               `json:"confirm"`
-  ConsentId                        string                             `json:"consentId,omitempty"`
-  Control                          FormControl                        `json:"control,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Description                      string                             `json:"description,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  Key                              string                             `json:"key,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Options                          []string                           `json:"options,omitempty"`
-  Required                         bool                               `json:"required"`
-  Type                             FormDataType                       `json:"type,omitempty"`
-  Validator                        FormFieldValidator                 `json:"validator,omitempty"`
+	Confirm           bool                   `json:"confirm"`
+	ConsentId         string                 `json:"consentId,omitempty"`
+	Control           FormControl            `json:"control,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Description       string                 `json:"description,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	Key               string                 `json:"key,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+	Options           []string               `json:"options,omitempty"`
+	Required          bool                   `json:"required"`
+	Type              FormDataType           `json:"type,omitempty"`
+	Validator         FormFieldValidator     `json:"validator,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type FormFieldAdminPolicy string
+
 const (
-  FormFieldAdminPolicy_Edit                             FormFieldAdminPolicy               = "Edit"
-  FormFieldAdminPolicy_View                             FormFieldAdminPolicy               = "View"
+	FormFieldAdminPolicy_Edit FormFieldAdminPolicy = "Edit"
+	FormFieldAdminPolicy_View FormFieldAdminPolicy = "View"
 )
 
 /**
@@ -1240,8 +1273,8 @@ const (
  * @author Brett Guy
  */
 type FormFieldRequest struct {
-  Field                            FormField                          `json:"field,omitempty"`
-  Fields                           []FormField                        `json:"fields,omitempty"`
+	Field  FormField   `json:"field,omitempty"`
+	Fields []FormField `json:"fields,omitempty"`
 }
 
 /**
@@ -1250,20 +1283,21 @@ type FormFieldRequest struct {
  * @author Brett Guy
  */
 type FormFieldResponse struct {
-  BaseHTTPResponse
-  Field                            FormField                          `json:"field,omitempty"`
-  Fields                           []FormField                        `json:"fields,omitempty"`
+	BaseHTTPResponse
+	Field  FormField   `json:"field,omitempty"`
+	Fields []FormField `json:"fields,omitempty"`
 }
+
 func (b *FormFieldResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type FormFieldValidator struct {
-  Enableable
-  Expression                       string                             `json:"expression,omitempty"`
+	Enableable
+	Expression string `json:"expression,omitempty"`
 }
 
 /**
@@ -1272,7 +1306,7 @@ type FormFieldValidator struct {
  * @author Daniel DeGroff
  */
 type FormRequest struct {
-  Form                             Form                               `json:"form,omitempty"`
+	Form Form `json:"form,omitempty"`
 }
 
 /**
@@ -1281,27 +1315,29 @@ type FormRequest struct {
  * @author Daniel DeGroff
  */
 type FormResponse struct {
-  BaseHTTPResponse
-  Form                             Form                               `json:"form,omitempty"`
-  Forms                            []Form                             `json:"forms,omitempty"`
+	BaseHTTPResponse
+	Form  Form   `json:"form,omitempty"`
+	Forms []Form `json:"forms,omitempty"`
 }
+
 func (b *FormResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type FormStep struct {
-  Fields                           []string                           `json:"fields,omitempty"`
+	Fields []string `json:"fields,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type FormType string
+
 const (
-  FormType_Registration                     FormType                           = "registration"
+	FormType_Registration FormType = "registration"
 )
 
 /**
@@ -1310,7 +1346,7 @@ const (
  * @author Trevor Smith
  */
 type FusionAuthConnectorConfiguration struct {
-  BaseConnectorConfiguration
+	BaseConnectorConfiguration
 }
 
 /**
@@ -1319,25 +1355,25 @@ type FusionAuthConnectorConfiguration struct {
  * @author Trevor Smith
  */
 type GenericConnectorConfiguration struct {
-  BaseConnectorConfiguration
-  AuthenticationURL                string                             `json:"authenticationURL,omitempty"`
-  ConnectTimeout                   int                                `json:"connectTimeout,omitempty"`
-  Headers                          map[string]string                  `json:"headers,omitempty"`
-  HttpAuthenticationPassword       string                             `json:"httpAuthenticationPassword,omitempty"`
-  HttpAuthenticationUsername       string                             `json:"httpAuthenticationUsername,omitempty"`
-  ReadTimeout                      int                                `json:"readTimeout,omitempty"`
-  SslCertificateKeyId              string                             `json:"sslCertificateKeyId,omitempty"`
+	BaseConnectorConfiguration
+	AuthenticationURL          string            `json:"authenticationURL,omitempty"`
+	ConnectTimeout             int               `json:"connectTimeout,omitempty"`
+	Headers                    map[string]string `json:"headers,omitempty"`
+	HttpAuthenticationPassword string            `json:"httpAuthenticationPassword,omitempty"`
+	HttpAuthenticationUsername string            `json:"httpAuthenticationUsername,omitempty"`
+	ReadTimeout                int               `json:"readTimeout,omitempty"`
+	SslCertificateKeyId        string            `json:"sslCertificateKeyId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type GoogleApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  ClientId                         string                             `json:"client_id,omitempty"`
-  ClientSecret                     string                             `json:"client_secret,omitempty"`
-  Scope                            string                             `json:"scope,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
 }
 
 /**
@@ -1346,11 +1382,11 @@ type GoogleApplicationConfiguration struct {
  * @author Daniel DeGroff
  */
 type GoogleIdentityProvider struct {
-  BaseIdentityProvider
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  ClientId                         string                             `json:"client_id,omitempty"`
-  ClientSecret                     string                             `json:"client_secret,omitempty"`
-  Scope                            string                             `json:"scope,omitempty"`
+	BaseIdentityProvider
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
 }
 
 /**
@@ -1363,27 +1399,28 @@ type GoogleIdentityProvider struct {
  * @author Daniel DeGroff
  */
 type GrantType string
+
 const (
-  GrantType_AuthorizationCode                GrantType                          = "authorization_code"
-  GrantType_Implicit                         GrantType                          = "implicit"
-  GrantType_Password                         GrantType                          = "password"
-  GrantType_ClientCredentials                GrantType                          = "client_credentials"
-  GrantType_RefreshToken                     GrantType                          = "refresh_token"
-  GrantType_Unknown                          GrantType                          = "unknown"
-  GrantType_DeviceCode                       GrantType                          = "urn:ietf:params:oauth:grant-type:device_code"
+	GrantType_AuthorizationCode GrantType = "authorization_code"
+	GrantType_Implicit          GrantType = "implicit"
+	GrantType_Password          GrantType = "password"
+	GrantType_ClientCredentials GrantType = "client_credentials"
+	GrantType_RefreshToken      GrantType = "refresh_token"
+	GrantType_Unknown           GrantType = "unknown"
+	GrantType_DeviceCode        GrantType = "urn:ietf:params:oauth:grant-type:device_code"
 )
 
 /**
  * @author Tyler Scott
  */
 type Group struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Roles                            map[string][]ApplicationRole       `json:"roles,omitempty"`
-  TenantId                         string                             `json:"tenantId,omitempty"`
+	Data              map[string]interface{}       `json:"data,omitempty"`
+	Id                string                       `json:"id,omitempty"`
+	InsertInstant     int64                        `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                        `json:"lastUpdateInstant,omitempty"`
+	Name              string                       `json:"name,omitempty"`
+	Roles             map[string][]ApplicationRole `json:"roles,omitempty"`
+	TenantId          string                       `json:"tenantId,omitempty"`
 }
 
 /**
@@ -1392,11 +1429,11 @@ type Group struct {
  * @author Daniel DeGroff
  */
 type GroupMember struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  GroupId                          string                             `json:"groupId,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	Data          map[string]interface{} `json:"data,omitempty"`
+	GroupId       string                 `json:"groupId,omitempty"`
+	Id            string                 `json:"id,omitempty"`
+	InsertInstant int64                  `json:"insertInstant,omitempty"`
+	UserId        string                 `json:"userId,omitempty"`
 }
 
 /**
@@ -1405,8 +1442,8 @@ type GroupMember struct {
  * @author Daniel DeGroff
  */
 type GroupRequest struct {
-  Group                            Group                              `json:"group,omitempty"`
-  RoleIds                          []string                           `json:"roleIds,omitempty"`
+	Group   Group    `json:"group,omitempty"`
+	RoleIds []string `json:"roleIds,omitempty"`
 }
 
 /**
@@ -1415,60 +1452,62 @@ type GroupRequest struct {
  * @author Daniel DeGroff
  */
 type GroupResponse struct {
-  BaseHTTPResponse
-  Group                            Group                              `json:"group,omitempty"`
-  Groups                           []Group                            `json:"groups,omitempty"`
+	BaseHTTPResponse
+	Group  Group   `json:"group,omitempty"`
+	Groups []Group `json:"groups,omitempty"`
 }
+
 func (b *GroupResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type HistoryItem struct {
-  ActionerUserId                   string                             `json:"actionerUserId,omitempty"`
-  Comment                          string                             `json:"comment,omitempty"`
-  CreateInstant                    int64                              `json:"createInstant,omitempty"`
-  Expiry                           int64                              `json:"expiry,omitempty"`
+	ActionerUserId string `json:"actionerUserId,omitempty"`
+	Comment        string `json:"comment,omitempty"`
+	CreateInstant  int64  `json:"createInstant,omitempty"`
+	Expiry         int64  `json:"expiry,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type HTTPMethod string
+
 const (
-  HTTPMethod_GET                              HTTPMethod                         = "GET"
-  HTTPMethod_POST                             HTTPMethod                         = "POST"
-  HTTPMethod_PUT                              HTTPMethod                         = "PUT"
-  HTTPMethod_DELETE                           HTTPMethod                         = "DELETE"
-  HTTPMethod_HEAD                             HTTPMethod                         = "HEAD"
-  HTTPMethod_OPTIONS                          HTTPMethod                         = "OPTIONS"
-  HTTPMethod_PATCH                            HTTPMethod                         = "PATCH"
+	HTTPMethod_GET     HTTPMethod = "GET"
+	HTTPMethod_POST    HTTPMethod = "POST"
+	HTTPMethod_PUT     HTTPMethod = "PUT"
+	HTTPMethod_DELETE  HTTPMethod = "DELETE"
+	HTTPMethod_HEAD    HTTPMethod = "HEAD"
+	HTTPMethod_OPTIONS HTTPMethod = "OPTIONS"
+	HTTPMethod_PATCH   HTTPMethod = "PATCH"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type HYPRApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  RelyingPartyApplicationId        string                             `json:"relyingPartyApplicationId,omitempty"`
-  RelyingPartyURL                  string                             `json:"relyingPartyURL,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	RelyingPartyApplicationId string `json:"relyingPartyApplicationId,omitempty"`
+	RelyingPartyURL           string `json:"relyingPartyURL,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type HYPRIdentityProvider struct {
-  BaseIdentityProvider
-  RelyingPartyApplicationId        string                             `json:"relyingPartyApplicationId,omitempty"`
-  RelyingPartyURL                  string                             `json:"relyingPartyURL,omitempty"`
+	BaseIdentityProvider
+	RelyingPartyApplicationId string `json:"relyingPartyApplicationId,omitempty"`
+	RelyingPartyURL           string `json:"relyingPartyURL,omitempty"`
 }
 
 type IdentityProviderDetails struct {
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  IdpEndpoint                      string                             `json:"idpEndpoint,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Oauth2                           IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
-  Type                             IdentityProviderType               `json:"type,omitempty"`
+	ApplicationIds []string                            `json:"applicationIds,omitempty"`
+	Id             string                              `json:"id,omitempty"`
+	IdpEndpoint    string                              `json:"idpEndpoint,omitempty"`
+	Name           string                              `json:"name,omitempty"`
+	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	Type           IdentityProviderType                `json:"type,omitempty"`
 }
 
 /**
@@ -1477,78 +1516,81 @@ type IdentityProviderDetails struct {
  * @author Brian Pontarelli
  */
 type IdentityProviderLoginRequest struct {
-  BaseLoginRequest
-  Data                             map[string]string                  `json:"data,omitempty"`
-  EncodedJWT                       string                             `json:"encodedJWT,omitempty"`
-  IdentityProviderId               string                             `json:"identityProviderId,omitempty"`
+	BaseLoginRequest
+	Data               map[string]string `json:"data,omitempty"`
+	EncodedJWT         string            `json:"encodedJWT,omitempty"`
+	IdentityProviderId string            `json:"identityProviderId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type IdentityProviderOauth2Configuration struct {
-  AuthorizationEndpoint            string                             `json:"authorization_endpoint,omitempty"`
-  ClientId                         string                             `json:"client_id,omitempty"`
-  ClientSecret                     string                             `json:"client_secret,omitempty"`
-  ClientAuthenticationMethod       ClientAuthenticationMethod         `json:"clientAuthenticationMethod,omitempty"`
-  EmailClaim                       string                             `json:"emailClaim,omitempty"`
-  Issuer                           string                             `json:"issuer,omitempty"`
-  Scope                            string                             `json:"scope,omitempty"`
-  TokenEndpoint                    string                             `json:"token_endpoint,omitempty"`
-  UserinfoEndpoint                 string                             `json:"userinfo_endpoint,omitempty"`
+	AuthorizationEndpoint      string                     `json:"authorization_endpoint,omitempty"`
+	ClientId                   string                     `json:"client_id,omitempty"`
+	ClientSecret               string                     `json:"client_secret,omitempty"`
+	ClientAuthenticationMethod ClientAuthenticationMethod `json:"clientAuthenticationMethod,omitempty"`
+	EmailClaim                 string                     `json:"emailClaim,omitempty"`
+	Issuer                     string                     `json:"issuer,omitempty"`
+	Scope                      string                     `json:"scope,omitempty"`
+	TokenEndpoint              string                     `json:"token_endpoint,omitempty"`
+	UserinfoEndpoint           string                     `json:"userinfo_endpoint,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type IdentityProviderRequest struct {
-  IdentityProvider                 BaseIdentityProvider               `json:"identityProvider,omitempty"`
+	IdentityProvider BaseIdentityProvider `json:"identityProvider,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type IdentityProviderResponse struct {
-  BaseHTTPResponse
-  IdentityProvider                 BaseIdentityProvider               `json:"identityProvider,omitempty"`
-  IdentityProviders                []BaseIdentityProvider             `json:"identityProviders,omitempty"`
+	BaseHTTPResponse
+	IdentityProvider  BaseIdentityProvider   `json:"identityProvider,omitempty"`
+	IdentityProviders []BaseIdentityProvider `json:"identityProviders,omitempty"`
 }
+
 func (b *IdentityProviderResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type IdentityProviderStartLoginRequest struct {
-  BaseLoginRequest
-  Data                             map[string]string                  `json:"data,omitempty"`
-  IdentityProviderId               string                             `json:"identityProviderId,omitempty"`
-  LoginId                          string                             `json:"loginId,omitempty"`
-  State                            map[string]interface{}             `json:"state,omitempty"`
+	BaseLoginRequest
+	Data               map[string]string      `json:"data,omitempty"`
+	IdentityProviderId string                 `json:"identityProviderId,omitempty"`
+	LoginId            string                 `json:"loginId,omitempty"`
+	State              map[string]interface{} `json:"state,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type IdentityProviderStartLoginResponse struct {
-  BaseHTTPResponse
-  Code                             string                             `json:"code,omitempty"`
+	BaseHTTPResponse
+	Code string `json:"code,omitempty"`
 }
+
 func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type IdentityProviderType string
+
 const (
-  IdentityProviderType_ExternalJWT                      IdentityProviderType               = "ExternalJWT"
-  IdentityProviderType_OpenIDConnect                    IdentityProviderType               = "OpenIDConnect"
-  IdentityProviderType_Facebook                         IdentityProviderType               = "Facebook"
-  IdentityProviderType_Google                           IdentityProviderType               = "Google"
-  IdentityProviderType_Twitter                          IdentityProviderType               = "Twitter"
-  IdentityProviderType_SAMLv2                           IdentityProviderType               = "SAMLv2"
-  IdentityProviderType_HYPR                             IdentityProviderType               = "HYPR"
-  IdentityProviderType_Apple                            IdentityProviderType               = "Apple"
+	IdentityProviderType_ExternalJWT   IdentityProviderType = "ExternalJWT"
+	IdentityProviderType_OpenIDConnect IdentityProviderType = "OpenIDConnect"
+	IdentityProviderType_Facebook      IdentityProviderType = "Facebook"
+	IdentityProviderType_Google        IdentityProviderType = "Google"
+	IdentityProviderType_Twitter       IdentityProviderType = "Twitter"
+	IdentityProviderType_SAMLv2        IdentityProviderType = "SAMLv2"
+	IdentityProviderType_HYPR          IdentityProviderType = "HYPR"
+	IdentityProviderType_Apple         IdentityProviderType = "Apple"
 )
 
 /**
@@ -1557,10 +1599,10 @@ const (
  * @author Brian Pontarelli
  */
 type ImportRequest struct {
-  EncryptionScheme                 string                             `json:"encryptionScheme,omitempty"`
-  Factor                           int                                `json:"factor,omitempty"`
-  Users                            []User                             `json:"users,omitempty"`
-  ValidateDbConstraints            bool                               `json:"validateDbConstraints"`
+	EncryptionScheme      string `json:"encryptionScheme,omitempty"`
+	Factor                int    `json:"factor,omitempty"`
+	Users                 []User `json:"users,omitempty"`
+	ValidateDbConstraints bool   `json:"validateDbConstraints"`
 }
 
 /**
@@ -1569,7 +1611,7 @@ type ImportRequest struct {
  * @author Daniel DeGroff
  */
 type IntegrationRequest struct {
-  Integrations                     Integrations                       `json:"integrations,omitempty"`
+	Integrations Integrations `json:"integrations,omitempty"`
 }
 
 /**
@@ -1578,11 +1620,12 @@ type IntegrationRequest struct {
  * @author Daniel DeGroff
  */
 type IntegrationResponse struct {
-  BaseHTTPResponse
-  Integrations                     Integrations                       `json:"integrations,omitempty"`
+	BaseHTTPResponse
+	Integrations Integrations `json:"integrations,omitempty"`
 }
+
 func (b *IntegrationResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -1591,9 +1634,9 @@ func (b *IntegrationResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type Integrations struct {
-  Cleanspeak                       CleanSpeakConfiguration            `json:"cleanspeak,omitempty"`
-  Kafka                            KafkaConfiguration                 `json:"kafka,omitempty"`
-  Twilio                           TwilioConfiguration                `json:"twilio,omitempty"`
+	Cleanspeak CleanSpeakConfiguration `json:"cleanspeak,omitempty"`
+	Kafka      KafkaConfiguration      `json:"kafka,omitempty"`
+	Twilio     TwilioConfiguration     `json:"twilio,omitempty"`
 }
 
 /**
@@ -1602,10 +1645,10 @@ type Integrations struct {
  * @author Brian Pontarelli
  */
 type IntervalCount struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Count                            int                                `json:"count,omitempty"`
-  DecrementedCount                 int                                `json:"decrementedCount,omitempty"`
-  Period                           int                                `json:"period,omitempty"`
+	ApplicationId    string `json:"applicationId,omitempty"`
+	Count            int    `json:"count,omitempty"`
+	DecrementedCount int    `json:"decrementedCount,omitempty"`
+	Period           int    `json:"period,omitempty"`
 }
 
 /**
@@ -1614,21 +1657,22 @@ type IntervalCount struct {
  * @author Brian Pontarelli
  */
 type IntervalUser struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Period                           int                                `json:"period,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	ApplicationId string `json:"applicationId,omitempty"`
+	Period        int    `json:"period,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type IssueResponse struct {
-  BaseHTTPResponse
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
+	BaseHTTPResponse
+	RefreshToken string `json:"refreshToken,omitempty"`
+	Token        string `json:"token,omitempty"`
 }
+
 func (b *IssueResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -1638,25 +1682,25 @@ func (b *IssueResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type JSONWebKey struct {
-  Alg                              Algorithm                          `json:"alg,omitempty"`
-  Crv                              string                             `json:"crv,omitempty"`
-  D                                string                             `json:"d,omitempty"`
-  Dp                               string                             `json:"dp,omitempty"`
-  Dq                               string                             `json:"dq,omitempty"`
-  E                                string                             `json:"e,omitempty"`
-  Kid                              string                             `json:"kid,omitempty"`
-  Kty                              KeyType                            `json:"kty,omitempty"`
-  N                                string                             `json:"n,omitempty"`
-  Other                            map[string]interface{}             `json:"other,omitempty"`
-  P                                string                             `json:"p,omitempty"`
-  Q                                string                             `json:"q,omitempty"`
-  Qi                               string                             `json:"qi,omitempty"`
-  Use                              string                             `json:"use,omitempty"`
-  X                                string                             `json:"x,omitempty"`
-  X5c                              []string                           `json:"x5c,omitempty"`
-  X5t                              string                             `json:"x5t,omitempty"`
-  X5t_S256                         string                             `json:"x5t#S256,omitempty"`
-  Y                                string                             `json:"y,omitempty"`
+	Alg      Algorithm              `json:"alg,omitempty"`
+	Crv      string                 `json:"crv,omitempty"`
+	D        string                 `json:"d,omitempty"`
+	Dp       string                 `json:"dp,omitempty"`
+	Dq       string                 `json:"dq,omitempty"`
+	E        string                 `json:"e,omitempty"`
+	Kid      string                 `json:"kid,omitempty"`
+	Kty      KeyType                `json:"kty,omitempty"`
+	N        string                 `json:"n,omitempty"`
+	Other    map[string]interface{} `json:"other,omitempty"`
+	P        string                 `json:"p,omitempty"`
+	Q        string                 `json:"q,omitempty"`
+	Qi       string                 `json:"qi,omitempty"`
+	Use      string                 `json:"use,omitempty"`
+	X        string                 `json:"x,omitempty"`
+	X5c      []string               `json:"x5c,omitempty"`
+	X5t      string                 `json:"x5t,omitempty"`
+	X5t_S256 string                 `json:"x5t#S256,omitempty"`
+	Y        string                 `json:"y,omitempty"`
 }
 
 /**
@@ -1669,11 +1713,12 @@ type JSONWebKeyInfoProvider struct {
  * @author Daniel DeGroff
  */
 type JWKSResponse struct {
-  BaseHTTPResponse
-  Keys                             []JSONWebKey                       `json:"keys,omitempty"`
+	BaseHTTPResponse
+	Keys []JSONWebKey `json:"keys,omitempty"`
 }
+
 func (b *JWKSResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -1687,14 +1732,14 @@ func (b *JWKSResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type JWT struct {
-  Aud                              interface{}                        `json:"aud,omitempty"`
-  Exp                              int64                              `json:"exp,omitempty"`
-  Iat                              int64                              `json:"iat,omitempty"`
-  Iss                              string                             `json:"iss,omitempty"`
-  Jti                              string                             `json:"jti,omitempty"`
-  Nbf                              int64                              `json:"nbf,omitempty"`
-  OtherClaims                      map[string]interface{}             `json:"otherClaims,omitempty"`
-  Sub                              string                             `json:"sub,omitempty"`
+	Aud         interface{}            `json:"aud,omitempty"`
+	Exp         int64                  `json:"exp,omitempty"`
+	Iat         int64                  `json:"iat,omitempty"`
+	Iss         string                 `json:"iss,omitempty"`
+	Jti         string                 `json:"jti,omitempty"`
+	Nbf         int64                  `json:"nbf,omitempty"`
+	OtherClaims map[string]interface{} `json:"otherClaims,omitempty"`
+	Sub         string                 `json:"sub,omitempty"`
 }
 
 /**
@@ -1704,14 +1749,14 @@ type JWT struct {
  * @author Daniel DeGroff
  */
 type JWTConfiguration struct {
-  Enableable
-  AccessTokenKeyId                 string                             `json:"accessTokenKeyId,omitempty"`
-  IdTokenKeyId                     string                             `json:"idTokenKeyId,omitempty"`
-  RefreshTokenExpirationPolicy     RefreshTokenExpirationPolicy       `json:"refreshTokenExpirationPolicy,omitempty"`
-  RefreshTokenRevocationPolicy     RefreshTokenRevocationPolicy       `json:"refreshTokenRevocationPolicy,omitempty"`
-  RefreshTokenTimeToLiveInMinutes  int                                `json:"refreshTokenTimeToLiveInMinutes,omitempty"`
-  RefreshTokenUsagePolicy          RefreshTokenUsagePolicy            `json:"refreshTokenUsagePolicy,omitempty"`
-  TimeToLiveInSeconds              int                                `json:"timeToLiveInSeconds,omitempty"`
+	Enableable
+	AccessTokenKeyId                string                       `json:"accessTokenKeyId,omitempty"`
+	IdTokenKeyId                    string                       `json:"idTokenKeyId,omitempty"`
+	RefreshTokenExpirationPolicy    RefreshTokenExpirationPolicy `json:"refreshTokenExpirationPolicy,omitempty"`
+	RefreshTokenRevocationPolicy    RefreshTokenRevocationPolicy `json:"refreshTokenRevocationPolicy,omitempty"`
+	RefreshTokenTimeToLiveInMinutes int                          `json:"refreshTokenTimeToLiveInMinutes,omitempty"`
+	RefreshTokenUsagePolicy         RefreshTokenUsagePolicy      `json:"refreshTokenUsagePolicy,omitempty"`
+	TimeToLiveInSeconds             int                          `json:"timeToLiveInSeconds,omitempty"`
 }
 
 /**
@@ -1721,8 +1766,8 @@ type JWTConfiguration struct {
  * @author Brian Pontarelli
  */
 type JWTPublicKeyUpdateEvent struct {
-  BaseEvent
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
+	BaseEvent
+	ApplicationIds []string `json:"applicationIds,omitempty"`
 }
 
 /**
@@ -1731,12 +1776,12 @@ type JWTPublicKeyUpdateEvent struct {
  * @author Daniel DeGroff
  */
 type JWTRefreshEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Original                         string                             `json:"original,omitempty"`
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	BaseEvent
+	ApplicationId string `json:"applicationId,omitempty"`
+	Original      string `json:"original,omitempty"`
+	RefreshToken  string `json:"refreshToken,omitempty"`
+	Token         string `json:"token,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
@@ -1746,20 +1791,20 @@ type JWTRefreshEvent struct {
  * @author Brian Pontarelli
  */
 type JWTRefreshTokenRevokeEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  ApplicationTimeToLiveInSeconds   map[string]int                     `json:"applicationTimeToLiveInSeconds,omitempty"`
-  User                             User                               `json:"user,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	BaseEvent
+	ApplicationId                  string         `json:"applicationId,omitempty"`
+	ApplicationTimeToLiveInSeconds map[string]int `json:"applicationTimeToLiveInSeconds,omitempty"`
+	User                           User           `json:"user,omitempty"`
+	UserId                         string         `json:"userId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type KafkaConfiguration struct {
-  Enableable
-  DefaultTopic                     string                             `json:"defaultTopic,omitempty"`
-  Producer                         map[string]string                  `json:"producer,omitempty"`
+	Enableable
+	DefaultTopic string            `json:"defaultTopic,omitempty"`
+	Producer     map[string]string `json:"producer,omitempty"`
 }
 
 /**
@@ -1768,35 +1813,36 @@ type KafkaConfiguration struct {
  * @author Brian Pontarelli
  */
 type Key struct {
-  Algorithm                        KeyAlgorithm                       `json:"algorithm,omitempty"`
-  Certificate                      string                             `json:"certificate,omitempty"`
-  CertificateInformation           CertificateInformation             `json:"certificateInformation,omitempty"`
-  ExpirationInstant                int64                              `json:"expirationInstant,omitempty"`
-  HasPrivateKey                    bool                               `json:"hasPrivateKey"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  Issuer                           string                             `json:"issuer,omitempty"`
-  Kid                              string                             `json:"kid,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Length                           int                                `json:"length,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  PrivateKey                       string                             `json:"privateKey,omitempty"`
-  PublicKey                        string                             `json:"publicKey,omitempty"`
-  Secret                           string                             `json:"secret,omitempty"`
-  Type                             KeyType                            `json:"type,omitempty"`
+	Algorithm              KeyAlgorithm           `json:"algorithm,omitempty"`
+	Certificate            string                 `json:"certificate,omitempty"`
+	CertificateInformation CertificateInformation `json:"certificateInformation,omitempty"`
+	ExpirationInstant      int64                  `json:"expirationInstant,omitempty"`
+	HasPrivateKey          bool                   `json:"hasPrivateKey"`
+	Id                     string                 `json:"id,omitempty"`
+	InsertInstant          int64                  `json:"insertInstant,omitempty"`
+	Issuer                 string                 `json:"issuer,omitempty"`
+	Kid                    string                 `json:"kid,omitempty"`
+	LastUpdateInstant      int64                  `json:"lastUpdateInstant,omitempty"`
+	Length                 int                    `json:"length,omitempty"`
+	Name                   string                 `json:"name,omitempty"`
+	PrivateKey             string                 `json:"privateKey,omitempty"`
+	PublicKey              string                 `json:"publicKey,omitempty"`
+	Secret                 string                 `json:"secret,omitempty"`
+	Type                   KeyType                `json:"type,omitempty"`
 }
 
 type KeyAlgorithm string
+
 const (
-  KeyAlgorithm_ES256                            KeyAlgorithm                       = "ES256"
-  KeyAlgorithm_ES384                            KeyAlgorithm                       = "ES384"
-  KeyAlgorithm_ES512                            KeyAlgorithm                       = "ES512"
-  KeyAlgorithm_HS256                            KeyAlgorithm                       = "HS256"
-  KeyAlgorithm_HS384                            KeyAlgorithm                       = "HS384"
-  KeyAlgorithm_HS512                            KeyAlgorithm                       = "HS512"
-  KeyAlgorithm_RS256                            KeyAlgorithm                       = "RS256"
-  KeyAlgorithm_RS384                            KeyAlgorithm                       = "RS384"
-  KeyAlgorithm_RS512                            KeyAlgorithm                       = "RS512"
+	KeyAlgorithm_ES256 KeyAlgorithm = "ES256"
+	KeyAlgorithm_ES384 KeyAlgorithm = "ES384"
+	KeyAlgorithm_ES512 KeyAlgorithm = "ES512"
+	KeyAlgorithm_HS256 KeyAlgorithm = "HS256"
+	KeyAlgorithm_HS384 KeyAlgorithm = "HS384"
+	KeyAlgorithm_HS512 KeyAlgorithm = "HS512"
+	KeyAlgorithm_RS256 KeyAlgorithm = "RS256"
+	KeyAlgorithm_RS384 KeyAlgorithm = "RS384"
+	KeyAlgorithm_RS512 KeyAlgorithm = "RS512"
 )
 
 /**
@@ -1805,7 +1851,7 @@ const (
  * @author Daniel DeGroff
  */
 type KeyRequest struct {
-  Key                              Key                                `json:"key,omitempty"`
+	Key Key `json:"key,omitempty"`
 }
 
 /**
@@ -1814,19 +1860,34 @@ type KeyRequest struct {
  * @author Daniel DeGroff
  */
 type KeyResponse struct {
-  BaseHTTPResponse
-  Key                              Key                                `json:"key,omitempty"`
-  Keys                             []Key                              `json:"keys,omitempty"`
+	BaseHTTPResponse
+	Key  Key   `json:"key,omitempty"`
+	Keys []Key `json:"keys,omitempty"`
 }
+
 func (b *KeyResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type KeyType string
+
 const (
-  KeyType_EC                               KeyType                            = "EC"
-  KeyType_RSA                              KeyType                            = "RSA"
-  KeyType_HMAC                             KeyType                            = "HMAC"
+	KeyType_EC   KeyType = "EC"
+	KeyType_RSA  KeyType = "RSA"
+	KeyType_HMAC KeyType = "HMAC"
+)
+
+/**
+ * The use type of a key.
+ *
+ * @author Daniel DeGroff
+ */
+type KeyUse string
+
+const (
+	KeyUse_SignOnly      KeyUse = "SignOnly"
+	KeyUse_SignAndVerify KeyUse = "SignAndVerify"
+	KeyUse_VerifyOnly    KeyUse = "VerifyOnly"
 )
 
 /**
@@ -1835,28 +1896,28 @@ const (
  * @author Brian Pontarelli
  */
 type Lambda struct {
-  Enableable
-  Body                             string                             `json:"body,omitempty"`
-  Debug                            bool                               `json:"debug"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Type                             LambdaType                         `json:"type,omitempty"`
+	Enableable
+	Body              string     `json:"body,omitempty"`
+	Debug             bool       `json:"debug"`
+	Id                string     `json:"id,omitempty"`
+	InsertInstant     int64      `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64      `json:"lastUpdateInstant,omitempty"`
+	Name              string     `json:"name,omitempty"`
+	Type              LambdaType `json:"type,omitempty"`
 }
 
 type LambdaConfiguration struct {
-  AccessTokenPopulateId            string                             `json:"accessTokenPopulateId,omitempty"`
-  IdTokenPopulateId                string                             `json:"idTokenPopulateId,omitempty"`
-  Samlv2PopulateId                 string                             `json:"samlv2PopulateId,omitempty"`
+	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
+	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
+	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
 }
 
 type ConnectorLambdaConfiguration struct {
-  ReconcileId                      string                             `json:"reconcileId,omitempty"`
+	ReconcileId string `json:"reconcileId,omitempty"`
 }
 
 type ProviderLambdaConfiguration struct {
-  ReconcileId                      string                             `json:"reconcileId,omitempty"`
+	ReconcileId string `json:"reconcileId,omitempty"`
 }
 
 /**
@@ -1865,7 +1926,7 @@ type ProviderLambdaConfiguration struct {
  * @author Brian Pontarelli
  */
 type LambdaRequest struct {
-  Lambda                           Lambda                             `json:"lambda,omitempty"`
+	Lambda Lambda `json:"lambda,omitempty"`
 }
 
 /**
@@ -1874,12 +1935,13 @@ type LambdaRequest struct {
  * @author Brian Pontarelli
  */
 type LambdaResponse struct {
-  BaseHTTPResponse
-  Lambda                           Lambda                             `json:"lambda,omitempty"`
-  Lambdas                          []Lambda                           `json:"lambdas,omitempty"`
+	BaseHTTPResponse
+	Lambda  Lambda   `json:"lambda,omitempty"`
+	Lambdas []Lambda `json:"lambdas,omitempty"`
 }
+
 func (b *LambdaResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -1888,18 +1950,19 @@ func (b *LambdaResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type LambdaType string
+
 const (
-  LambdaType_JWTPopulate                      LambdaType                         = "JWTPopulate"
-  LambdaType_OpenIDReconcile                  LambdaType                         = "OpenIDReconcile"
-  LambdaType_SAMLv2Reconcile                  LambdaType                         = "SAMLv2Reconcile"
-  LambdaType_SAMLv2Populate                   LambdaType                         = "SAMLv2Populate"
-  LambdaType_AppleReconcile                   LambdaType                         = "AppleReconcile"
-  LambdaType_ExternalJWTReconcile             LambdaType                         = "ExternalJWTReconcile"
-  LambdaType_FacebookReconcile                LambdaType                         = "FacebookReconcile"
-  LambdaType_GoogleReconcile                  LambdaType                         = "GoogleReconcile"
-  LambdaType_HYPRReconcile                    LambdaType                         = "HYPRReconcile"
-  LambdaType_TwitterReconcile                 LambdaType                         = "TwitterReconcile"
-  LambdaType_LDAPConnectorReconcile           LambdaType                         = "LDAPConnectorReconcile"
+	LambdaType_JWTPopulate            LambdaType = "JWTPopulate"
+	LambdaType_OpenIDReconcile        LambdaType = "OpenIDReconcile"
+	LambdaType_SAMLv2Reconcile        LambdaType = "SAMLv2Reconcile"
+	LambdaType_SAMLv2Populate         LambdaType = "SAMLv2Populate"
+	LambdaType_AppleReconcile         LambdaType = "AppleReconcile"
+	LambdaType_ExternalJWTReconcile   LambdaType = "ExternalJWTReconcile"
+	LambdaType_FacebookReconcile      LambdaType = "FacebookReconcile"
+	LambdaType_GoogleReconcile        LambdaType = "GoogleReconcile"
+	LambdaType_HYPRReconcile          LambdaType = "HYPRReconcile"
+	LambdaType_TwitterReconcile       LambdaType = "TwitterReconcile"
+	LambdaType_LDAPConnectorReconcile LambdaType = "LDAPConnectorReconcile"
 )
 
 /**
@@ -1908,25 +1971,26 @@ const (
  * @author Trevor Smith
  */
 type LDAPConnectorConfiguration struct {
-  BaseConnectorConfiguration
-  AuthenticationURL                string                             `json:"authenticationURL,omitempty"`
-  BaseStructure                    string                             `json:"baseStructure,omitempty"`
-  ConnectTimeout                   int                                `json:"connectTimeout,omitempty"`
-  IdentifyingAttribute             string                             `json:"identifyingAttribute,omitempty"`
-  LambdaConfiguration              ConnectorLambdaConfiguration       `json:"lambdaConfiguration,omitempty"`
-  LoginIdAttribute                 string                             `json:"loginIdAttribute,omitempty"`
-  ReadTimeout                      int                                `json:"readTimeout,omitempty"`
-  RequestedAttributes              []string                           `json:"requestedAttributes,omitempty"`
-  SecurityMethod                   LDAPSecurityMethod                 `json:"securityMethod,omitempty"`
-  SystemAccountDN                  string                             `json:"systemAccountDN,omitempty"`
-  SystemAccountPassword            string                             `json:"systemAccountPassword,omitempty"`
+	BaseConnectorConfiguration
+	AuthenticationURL     string                       `json:"authenticationURL,omitempty"`
+	BaseStructure         string                       `json:"baseStructure,omitempty"`
+	ConnectTimeout        int                          `json:"connectTimeout,omitempty"`
+	IdentifyingAttribute  string                       `json:"identifyingAttribute,omitempty"`
+	LambdaConfiguration   ConnectorLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
+	LoginIdAttribute      string                       `json:"loginIdAttribute,omitempty"`
+	ReadTimeout           int                          `json:"readTimeout,omitempty"`
+	RequestedAttributes   []string                     `json:"requestedAttributes,omitempty"`
+	SecurityMethod        LDAPSecurityMethod           `json:"securityMethod,omitempty"`
+	SystemAccountDN       string                       `json:"systemAccountDN,omitempty"`
+	SystemAccountPassword string                       `json:"systemAccountPassword,omitempty"`
 }
 
 type LDAPSecurityMethod string
+
 const (
-  LDAPSecurityMethod_None                             LDAPSecurityMethod                 = "None"
-  LDAPSecurityMethod_LDAPS                            LDAPSecurityMethod                 = "LDAPS"
-  LDAPSecurityMethod_StartTLS                         LDAPSecurityMethod                 = "StartTLS"
+	LDAPSecurityMethod_None     LDAPSecurityMethod = "None"
+	LDAPSecurityMethod_LDAPS    LDAPSecurityMethod = "LDAPS"
+	LDAPSecurityMethod_StartTLS LDAPSecurityMethod = "StartTLS"
 )
 
 /**
@@ -1935,19 +1999,20 @@ const (
  * @author Brian Pontarelli
  */
 type LogHistory struct {
-  HistoryItems                     []HistoryItem                      `json:"historyItems,omitempty"`
+	HistoryItems []HistoryItem `json:"historyItems,omitempty"`
 }
 
 type LoginConfiguration struct {
-  AllowTokenRefresh                bool                               `json:"allowTokenRefresh"`
-  GenerateRefreshTokens            bool                               `json:"generateRefreshTokens"`
-  RequireAuthentication            bool                               `json:"requireAuthentication"`
+	AllowTokenRefresh     bool `json:"allowTokenRefresh"`
+	GenerateRefreshTokens bool `json:"generateRefreshTokens"`
+	RequireAuthentication bool `json:"requireAuthentication"`
 }
 
 type LoginIdType string
+
 const (
-  LoginIdType_Email                            LoginIdType                        = "email"
-  LoginIdType_Username                         LoginIdType                        = "username"
+	LoginIdType_Email    LoginIdType = "email"
+	LoginIdType_Username LoginIdType = "username"
 )
 
 /**
@@ -1956,51 +2021,52 @@ const (
  * @author Daniel DeGroff
  */
 type LoginPreventedResponse struct {
-  BaseHTTPResponse
-  ActionerUserId                   string                             `json:"actionerUserId,omitempty"`
-  ActionId                         string                             `json:"actionId,omitempty"`
-  Expiry                           int64                              `json:"expiry,omitempty"`
-  LocalizedName                    string                             `json:"localizedName,omitempty"`
-  LocalizedOption                  string                             `json:"localizedOption,omitempty"`
-  LocalizedReason                  string                             `json:"localizedReason,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Option                           string                             `json:"option,omitempty"`
-  Reason                           string                             `json:"reason,omitempty"`
-  ReasonCode                       string                             `json:"reasonCode,omitempty"`
+	BaseHTTPResponse
+	ActionerUserId  string `json:"actionerUserId,omitempty"`
+	ActionId        string `json:"actionId,omitempty"`
+	Expiry          int64  `json:"expiry,omitempty"`
+	LocalizedName   string `json:"localizedName,omitempty"`
+	LocalizedOption string `json:"localizedOption,omitempty"`
+	LocalizedReason string `json:"localizedReason,omitempty"`
+	Name            string `json:"name,omitempty"`
+	Option          string `json:"option,omitempty"`
+	Reason          string `json:"reason,omitempty"`
+	ReasonCode      string `json:"reasonCode,omitempty"`
 }
+
 func (b *LoginPreventedResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type LoginRecordConfiguration struct {
-  Delete                           DeleteConfiguration                `json:"delete,omitempty"`
+	Delete DeleteConfiguration `json:"delete,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type LoginRecordExportRequest struct {
-  BaseExportRequest
-  Criteria                         LoginRecordSearchCriteria          `json:"criteria,omitempty"`
+	BaseExportRequest
+	Criteria LoginRecordSearchCriteria `json:"criteria,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type LoginRecordSearchCriteria struct {
-  BaseSearchCriteria
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  End                              int64                              `json:"end,omitempty"`
-  Start                            int64                              `json:"start,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	BaseSearchCriteria
+	ApplicationId string `json:"applicationId,omitempty"`
+	End           int64  `json:"end,omitempty"`
+	Start         int64  `json:"start,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type LoginRecordSearchRequest struct {
-  RetrieveTotal                    bool                               `json:"retrieveTotal"`
-  Search                           LoginRecordSearchCriteria          `json:"search,omitempty"`
+	RetrieveTotal bool                      `json:"retrieveTotal"`
+	Search        LoginRecordSearchCriteria `json:"search,omitempty"`
 }
 
 /**
@@ -2009,12 +2075,13 @@ type LoginRecordSearchRequest struct {
  * @author Daniel DeGroff
  */
 type LoginRecordSearchResponse struct {
-  BaseHTTPResponse
-  Logins                           []DisplayableRawLogin              `json:"logins,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	Logins []DisplayableRawLogin `json:"logins,omitempty"`
+	Total  int64                 `json:"total,omitempty"`
 }
+
 func (b *LoginRecordSearchResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2023,12 +2090,13 @@ func (b *LoginRecordSearchResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type LoginReportResponse struct {
-  BaseHTTPResponse
-  HourlyCounts                     []Count                            `json:"hourlyCounts,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	HourlyCounts []Count `json:"hourlyCounts,omitempty"`
+	Total        int64   `json:"total,omitempty"`
 }
+
 func (b *LoginReportResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2037,58 +2105,61 @@ func (b *LoginReportResponse) SetStatus(status int) {
  * @author Seth Musselman
  */
 type LoginRequest struct {
-  BaseLoginRequest
-  LoginId                          string                             `json:"loginId,omitempty"`
-  OneTimePassword                  string                             `json:"oneTimePassword,omitempty"`
-  Password                         string                             `json:"password,omitempty"`
-  TwoFactorTrustId                 string                             `json:"twoFactorTrustId,omitempty"`
+	BaseLoginRequest
+	LoginId          string `json:"loginId,omitempty"`
+	OneTimePassword  string `json:"oneTimePassword,omitempty"`
+	Password         string `json:"password,omitempty"`
+	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type LoginResponse struct {
-  BaseHTTPResponse
-  Actions                          []LoginPreventedResponse           `json:"actions,omitempty"`
-  ChangePasswordId                 string                             `json:"changePasswordId,omitempty"`
-  ChangePasswordReason             ChangePasswordReason               `json:"changePasswordReason,omitempty"`
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  State                            map[string]interface{}             `json:"state,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
-  TwoFactorId                      string                             `json:"twoFactorId,omitempty"`
-  TwoFactorTrustId                 string                             `json:"twoFactorTrustId,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseHTTPResponse
+	Actions              []LoginPreventedResponse `json:"actions,omitempty"`
+	ChangePasswordId     string                   `json:"changePasswordId,omitempty"`
+	ChangePasswordReason ChangePasswordReason     `json:"changePasswordReason,omitempty"`
+	RefreshToken         string                   `json:"refreshToken,omitempty"`
+	State                map[string]interface{}   `json:"state,omitempty"`
+	Token                string                   `json:"token,omitempty"`
+	TwoFactorId          string                   `json:"twoFactorId,omitempty"`
+	TwoFactorTrustId     string                   `json:"twoFactorTrustId,omitempty"`
+	User                 User                     `json:"user,omitempty"`
 }
+
 func (b *LoginResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Matthew Altman
  */
 type LogoutBehavior string
+
 const (
-  LogoutBehavior_RedirectOnly                     LogoutBehavior                     = "RedirectOnly"
-  LogoutBehavior_AllApplications                  LogoutBehavior                     = "AllApplications"
+	LogoutBehavior_RedirectOnly    LogoutBehavior = "RedirectOnly"
+	LogoutBehavior_AllApplications LogoutBehavior = "AllApplications"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type LookupResponse struct {
-  BaseHTTPResponse
-  IdentityProvider                 IdentityProviderDetails            `json:"identityProvider,omitempty"`
+	BaseHTTPResponse
+	IdentityProvider IdentityProviderDetails `json:"identityProvider,omitempty"`
 }
+
 func (b *LookupResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type MaximumPasswordAge struct {
-  Enableable
-  Days                             int                                `json:"days,omitempty"`
+	Enableable
+	Days int `json:"days,omitempty"`
 }
 
 /**
@@ -2097,8 +2168,8 @@ type MaximumPasswordAge struct {
  * @author Daniel DeGroff
  */
 type MemberDeleteRequest struct {
-  MemberIds                        []string                           `json:"memberIds,omitempty"`
-  Members                          map[string][]string                `json:"members,omitempty"`
+	MemberIds []string            `json:"memberIds,omitempty"`
+	Members   map[string][]string `json:"members,omitempty"`
 }
 
 /**
@@ -2107,7 +2178,7 @@ type MemberDeleteRequest struct {
  * @author Daniel DeGroff
  */
 type MemberRequest struct {
-  Members                          map[string][]GroupMember           `json:"members,omitempty"`
+	Members map[string][]GroupMember `json:"members,omitempty"`
 }
 
 /**
@@ -2116,24 +2187,25 @@ type MemberRequest struct {
  * @author Daniel DeGroff
  */
 type MemberResponse struct {
-  BaseHTTPResponse
-  Members                          map[string][]GroupMember           `json:"members,omitempty"`
+	BaseHTTPResponse
+	Members map[string][]GroupMember `json:"members,omitempty"`
 }
+
 func (b *MemberResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type MetaData struct {
-  Device                           DeviceInfo                         `json:"device,omitempty"`
-  Scopes                           []string                           `json:"scopes,omitempty"`
+	Device DeviceInfo `json:"device,omitempty"`
+	Scopes []string   `json:"scopes,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type MinimumPasswordAge struct {
-  Enableable
-  Seconds                          int                                `json:"seconds,omitempty"`
+	Enableable
+	Seconds int `json:"seconds,omitempty"`
 }
 
 /**
@@ -2142,12 +2214,13 @@ type MinimumPasswordAge struct {
  * @author Brian Pontarelli
  */
 type MonthlyActiveUserReportResponse struct {
-  BaseHTTPResponse
-  MonthlyActiveUsers               []Count                            `json:"monthlyActiveUsers,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	MonthlyActiveUsers []Count `json:"monthlyActiveUsers,omitempty"`
+	Total              int64   `json:"total,omitempty"`
 }
+
 func (b *MonthlyActiveUserReportResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2162,119 +2235,123 @@ type Normalizer struct {
  * @author Daniel DeGroff
  */
 type OAuth2Configuration struct {
-  AuthorizedOriginURLs             []string                           `json:"authorizedOriginURLs,omitempty"`
-  AuthorizedRedirectURLs           []string                           `json:"authorizedRedirectURLs,omitempty"`
-  ClientId                         string                             `json:"clientId,omitempty"`
-  ClientSecret                     string                             `json:"clientSecret,omitempty"`
-  DeviceVerificationURL            string                             `json:"deviceVerificationURL,omitempty"`
-  EnabledGrants                    []GrantType                        `json:"enabledGrants,omitempty"`
-  GenerateRefreshTokens            bool                               `json:"generateRefreshTokens"`
-  LogoutBehavior                   LogoutBehavior                     `json:"logoutBehavior,omitempty"`
-  LogoutURL                        string                             `json:"logoutURL,omitempty"`
-  RequireClientAuthentication      bool                               `json:"requireClientAuthentication"`
+	AuthorizedOriginURLs        []string       `json:"authorizedOriginURLs,omitempty"`
+	AuthorizedRedirectURLs      []string       `json:"authorizedRedirectURLs,omitempty"`
+	ClientId                    string         `json:"clientId,omitempty"`
+	ClientSecret                string         `json:"clientSecret,omitempty"`
+	DeviceVerificationURL       string         `json:"deviceVerificationURL,omitempty"`
+	EnabledGrants               []GrantType    `json:"enabledGrants,omitempty"`
+	GenerateRefreshTokens       bool           `json:"generateRefreshTokens"`
+	LogoutBehavior              LogoutBehavior `json:"logoutBehavior,omitempty"`
+	LogoutURL                   string         `json:"logoutURL,omitempty"`
+	RequireClientAuthentication bool           `json:"requireClientAuthentication"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type OAuthConfigurationResponse struct {
-  BaseHTTPResponse
-  HttpSessionMaxInactiveInterval   int                                `json:"httpSessionMaxInactiveInterval,omitempty"`
-  LogoutURL                        string                             `json:"logoutURL,omitempty"`
-  OauthConfiguration               OAuth2Configuration                `json:"oauthConfiguration,omitempty"`
+	BaseHTTPResponse
+	HttpSessionMaxInactiveInterval int                 `json:"httpSessionMaxInactiveInterval,omitempty"`
+	LogoutURL                      string              `json:"logoutURL,omitempty"`
+	OauthConfiguration             OAuth2Configuration `json:"oauthConfiguration,omitempty"`
 }
+
 func (b *OAuthConfigurationResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type OAuthError struct {
-  ChangePasswordId                 string                             `json:"change_password_id,omitempty"`
-  Error                            OAuthErrorType                     `json:"error,omitempty"`
-  ErrorDescription                 string                             `json:"error_description,omitempty"`
-  ErrorReason                      OAuthErrorReason                   `json:"error_reason,omitempty"`
-  ErrorUri                         string                             `json:"error_uri,omitempty"`
-  TwoFactorId                      string                             `json:"two_factor_id,omitempty"`
+	ChangePasswordId string           `json:"change_password_id,omitempty"`
+	Error            OAuthErrorType   `json:"error,omitempty"`
+	ErrorDescription string           `json:"error_description,omitempty"`
+	ErrorReason      OAuthErrorReason `json:"error_reason,omitempty"`
+	ErrorUri         string           `json:"error_uri,omitempty"`
+	TwoFactorId      string           `json:"two_factor_id,omitempty"`
 }
 
 type OAuthErrorReason string
+
 const (
-  OAuthErrorReason_AuthCodeNotFound                 OAuthErrorReason                   = "auth_code_not_found"
-  OAuthErrorReason_AccessTokenMalformed             OAuthErrorReason                   = "access_token_malformed"
-  OAuthErrorReason_AccessTokenExpired               OAuthErrorReason                   = "access_token_expired"
-  OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason                   = "access_token_unavailable_for_processing"
-  OAuthErrorReason_AccessTokenFailedProcessing      OAuthErrorReason                   = "access_token_failed_processing"
-  OAuthErrorReason_RefreshTokenNotFound             OAuthErrorReason                   = "refresh_token_not_found"
-  OAuthErrorReason_InvalidClientId                  OAuthErrorReason                   = "invalid_client_id"
-  OAuthErrorReason_InvalidUserCredentials           OAuthErrorReason                   = "invalid_user_credentials"
-  OAuthErrorReason_InvalidGrantType                 OAuthErrorReason                   = "invalid_grant_type"
-  OAuthErrorReason_InvalidOrigin                    OAuthErrorReason                   = "invalid_origin"
-  OAuthErrorReason_InvalidOriginOpaque              OAuthErrorReason                   = "invalid_origin_opaque"
-  OAuthErrorReason_InvalidPkceCodeVerifier          OAuthErrorReason                   = "invalid_pkce_code_verifier"
-  OAuthErrorReason_InvalidPkceCodeChallenge         OAuthErrorReason                   = "invalid_pkce_code_challenge"
-  OAuthErrorReason_InvalidPkceCodeChallengeMethod   OAuthErrorReason                   = "invalid_pkce_code_challenge_method"
-  OAuthErrorReason_InvalidRedirectUri               OAuthErrorReason                   = "invalid_redirect_uri"
-  OAuthErrorReason_InvalidResponseMode              OAuthErrorReason                   = "invalid_response_mode"
-  OAuthErrorReason_InvalidResponseType              OAuthErrorReason                   = "invalid_response_type"
-  OAuthErrorReason_InvalidIdTokenHint               OAuthErrorReason                   = "invalid_id_token_hint"
-  OAuthErrorReason_InvalidPostLogoutRedirectUri     OAuthErrorReason                   = "invalid_post_logout_redirect_uri"
-  OAuthErrorReason_InvalidDeviceCode                OAuthErrorReason                   = "invalid_device_code"
-  OAuthErrorReason_InvalidUserCode                  OAuthErrorReason                   = "invalid_user_code"
-  OAuthErrorReason_InvalidAdditionalClientId        OAuthErrorReason                   = "invalid_additional_client_id"
-  OAuthErrorReason_GrantTypeDisabled                OAuthErrorReason                   = "grant_type_disabled"
-  OAuthErrorReason_MissingClientId                  OAuthErrorReason                   = "missing_client_id"
-  OAuthErrorReason_MissingCode                      OAuthErrorReason                   = "missing_code"
-  OAuthErrorReason_MissingDeviceCode                OAuthErrorReason                   = "missing_device_code"
-  OAuthErrorReason_MissingGrantType                 OAuthErrorReason                   = "missing_grant_type"
-  OAuthErrorReason_MissingRedirectUri               OAuthErrorReason                   = "missing_redirect_uri"
-  OAuthErrorReason_MissingRefreshToken              OAuthErrorReason                   = "missing_refresh_token"
-  OAuthErrorReason_MissingResponseType              OAuthErrorReason                   = "missing_response_type"
-  OAuthErrorReason_MissingToken                     OAuthErrorReason                   = "missing_token"
-  OAuthErrorReason_MissingUserCode                  OAuthErrorReason                   = "missing_user_code"
-  OAuthErrorReason_MissingVerificationUri           OAuthErrorReason                   = "missing_verification_uri"
-  OAuthErrorReason_LoginPrevented                   OAuthErrorReason                   = "login_prevented"
-  OAuthErrorReason_UserCodeExpired                  OAuthErrorReason                   = "user_code_expired"
-  OAuthErrorReason_UserExpired                      OAuthErrorReason                   = "user_expired"
-  OAuthErrorReason_UserLocked                       OAuthErrorReason                   = "user_locked"
-  OAuthErrorReason_UserNotFound                     OAuthErrorReason                   = "user_not_found"
-  OAuthErrorReason_ClientAuthenticationMissing      OAuthErrorReason                   = "client_authentication_missing"
-  OAuthErrorReason_InvalidClientAuthenticationScheme OAuthErrorReason                   = "invalid_client_authentication_scheme"
-  OAuthErrorReason_InvalidClientAuthentication      OAuthErrorReason                   = "invalid_client_authentication"
-  OAuthErrorReason_ClientIdMismatch                 OAuthErrorReason                   = "client_id_mismatch"
-  OAuthErrorReason_ChangePasswordAdministrative     OAuthErrorReason                   = "change_password_administrative"
-  OAuthErrorReason_ChangePasswordBreached           OAuthErrorReason                   = "change_password_breached"
-  OAuthErrorReason_ChangePasswordExpired            OAuthErrorReason                   = "change_password_expired"
-  OAuthErrorReason_ChangePasswordValidation         OAuthErrorReason                   = "change_password_validation"
-  OAuthErrorReason_Unknown                          OAuthErrorReason                   = "unknown"
+	OAuthErrorReason_AuthCodeNotFound                    OAuthErrorReason = "auth_code_not_found"
+	OAuthErrorReason_AccessTokenMalformed                OAuthErrorReason = "access_token_malformed"
+	OAuthErrorReason_AccessTokenExpired                  OAuthErrorReason = "access_token_expired"
+	OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason = "access_token_unavailable_for_processing"
+	OAuthErrorReason_AccessTokenFailedProcessing         OAuthErrorReason = "access_token_failed_processing"
+	OAuthErrorReason_RefreshTokenNotFound                OAuthErrorReason = "refresh_token_not_found"
+	OAuthErrorReason_InvalidClientId                     OAuthErrorReason = "invalid_client_id"
+	OAuthErrorReason_InvalidUserCredentials              OAuthErrorReason = "invalid_user_credentials"
+	OAuthErrorReason_InvalidGrantType                    OAuthErrorReason = "invalid_grant_type"
+	OAuthErrorReason_InvalidOrigin                       OAuthErrorReason = "invalid_origin"
+	OAuthErrorReason_InvalidOriginOpaque                 OAuthErrorReason = "invalid_origin_opaque"
+	OAuthErrorReason_InvalidPkceCodeVerifier             OAuthErrorReason = "invalid_pkce_code_verifier"
+	OAuthErrorReason_InvalidPkceCodeChallenge            OAuthErrorReason = "invalid_pkce_code_challenge"
+	OAuthErrorReason_InvalidPkceCodeChallengeMethod      OAuthErrorReason = "invalid_pkce_code_challenge_method"
+	OAuthErrorReason_InvalidRedirectUri                  OAuthErrorReason = "invalid_redirect_uri"
+	OAuthErrorReason_InvalidResponseMode                 OAuthErrorReason = "invalid_response_mode"
+	OAuthErrorReason_InvalidResponseType                 OAuthErrorReason = "invalid_response_type"
+	OAuthErrorReason_InvalidIdTokenHint                  OAuthErrorReason = "invalid_id_token_hint"
+	OAuthErrorReason_InvalidPostLogoutRedirectUri        OAuthErrorReason = "invalid_post_logout_redirect_uri"
+	OAuthErrorReason_InvalidDeviceCode                   OAuthErrorReason = "invalid_device_code"
+	OAuthErrorReason_InvalidUserCode                     OAuthErrorReason = "invalid_user_code"
+	OAuthErrorReason_InvalidAdditionalClientId           OAuthErrorReason = "invalid_additional_client_id"
+	OAuthErrorReason_GrantTypeDisabled                   OAuthErrorReason = "grant_type_disabled"
+	OAuthErrorReason_MissingClientId                     OAuthErrorReason = "missing_client_id"
+	OAuthErrorReason_MissingCode                         OAuthErrorReason = "missing_code"
+	OAuthErrorReason_MissingDeviceCode                   OAuthErrorReason = "missing_device_code"
+	OAuthErrorReason_MissingGrantType                    OAuthErrorReason = "missing_grant_type"
+	OAuthErrorReason_MissingRedirectUri                  OAuthErrorReason = "missing_redirect_uri"
+	OAuthErrorReason_MissingRefreshToken                 OAuthErrorReason = "missing_refresh_token"
+	OAuthErrorReason_MissingResponseType                 OAuthErrorReason = "missing_response_type"
+	OAuthErrorReason_MissingToken                        OAuthErrorReason = "missing_token"
+	OAuthErrorReason_MissingUserCode                     OAuthErrorReason = "missing_user_code"
+	OAuthErrorReason_MissingVerificationUri              OAuthErrorReason = "missing_verification_uri"
+	OAuthErrorReason_LoginPrevented                      OAuthErrorReason = "login_prevented"
+	OAuthErrorReason_UserCodeExpired                     OAuthErrorReason = "user_code_expired"
+	OAuthErrorReason_UserExpired                         OAuthErrorReason = "user_expired"
+	OAuthErrorReason_UserLocked                          OAuthErrorReason = "user_locked"
+	OAuthErrorReason_UserNotFound                        OAuthErrorReason = "user_not_found"
+	OAuthErrorReason_ClientAuthenticationMissing         OAuthErrorReason = "client_authentication_missing"
+	OAuthErrorReason_InvalidClientAuthenticationScheme   OAuthErrorReason = "invalid_client_authentication_scheme"
+	OAuthErrorReason_InvalidClientAuthentication         OAuthErrorReason = "invalid_client_authentication"
+	OAuthErrorReason_ClientIdMismatch                    OAuthErrorReason = "client_id_mismatch"
+	OAuthErrorReason_ChangePasswordAdministrative        OAuthErrorReason = "change_password_administrative"
+	OAuthErrorReason_ChangePasswordBreached              OAuthErrorReason = "change_password_breached"
+	OAuthErrorReason_ChangePasswordExpired               OAuthErrorReason = "change_password_expired"
+	OAuthErrorReason_ChangePasswordValidation            OAuthErrorReason = "change_password_validation"
+	OAuthErrorReason_Unknown                             OAuthErrorReason = "unknown"
 )
 
 type OAuthErrorType string
+
 const (
-  OAuthErrorType_InvalidRequest                   OAuthErrorType                     = "invalid_request"
-  OAuthErrorType_InvalidClient                    OAuthErrorType                     = "invalid_client"
-  OAuthErrorType_InvalidGrant                     OAuthErrorType                     = "invalid_grant"
-  OAuthErrorType_InvalidToken                     OAuthErrorType                     = "invalid_token"
-  OAuthErrorType_UnauthorizedClient               OAuthErrorType                     = "unauthorized_client"
-  OAuthErrorType_InvalidScope                     OAuthErrorType                     = "invalid_scope"
-  OAuthErrorType_ServerError                      OAuthErrorType                     = "server_error"
-  OAuthErrorType_UnsupportedGrantType             OAuthErrorType                     = "unsupported_grant_type"
-  OAuthErrorType_UnsupportedResponseType          OAuthErrorType                     = "unsupported_response_type"
-  OAuthErrorType_ChangePasswordRequired           OAuthErrorType                     = "change_password_required"
-  OAuthErrorType_TwoFactorRequired                OAuthErrorType                     = "two_factor_required"
-  OAuthErrorType_AuthorizationPending             OAuthErrorType                     = "authorization_pending"
-  OAuthErrorType_ExpiredToken                     OAuthErrorType                     = "expired_token"
+	OAuthErrorType_InvalidRequest          OAuthErrorType = "invalid_request"
+	OAuthErrorType_InvalidClient           OAuthErrorType = "invalid_client"
+	OAuthErrorType_InvalidGrant            OAuthErrorType = "invalid_grant"
+	OAuthErrorType_InvalidToken            OAuthErrorType = "invalid_token"
+	OAuthErrorType_UnauthorizedClient      OAuthErrorType = "unauthorized_client"
+	OAuthErrorType_InvalidScope            OAuthErrorType = "invalid_scope"
+	OAuthErrorType_ServerError             OAuthErrorType = "server_error"
+	OAuthErrorType_UnsupportedGrantType    OAuthErrorType = "unsupported_grant_type"
+	OAuthErrorType_UnsupportedResponseType OAuthErrorType = "unsupported_response_type"
+	OAuthErrorType_ChangePasswordRequired  OAuthErrorType = "change_password_required"
+	OAuthErrorType_TwoFactorRequired       OAuthErrorType = "two_factor_required"
+	OAuthErrorType_AuthorizationPending    OAuthErrorType = "authorization_pending"
+	OAuthErrorType_ExpiredToken            OAuthErrorType = "expired_token"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type OAuthResponse struct {
-  BaseHTTPResponse
+	BaseHTTPResponse
 }
+
 func (b *OAuthResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2284,60 +2361,61 @@ func (b *OAuthResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type OpenIdConfiguration struct {
-  BaseHTTPResponse
-  AuthorizationEndpoint            string                             `json:"authorization_endpoint,omitempty"`
-  BackchannelLogoutSupported       bool                               `json:"backchannel_logout_supported"`
-  ClaimsSupported                  []string                           `json:"claims_supported,omitempty"`
-  DeviceAuthorizationEndpoint      string                             `json:"device_authorization_endpoint,omitempty"`
-  EndSessionEndpoint               string                             `json:"end_session_endpoint,omitempty"`
-  FrontchannelLogoutSupported      bool                               `json:"frontchannel_logout_supported"`
-  GrantTypesSupported              []string                           `json:"grant_types_supported,omitempty"`
-  IdTokenSigningAlgValuesSupported []string                           `json:"id_token_signing_alg_values_supported,omitempty"`
-  Issuer                           string                             `json:"issuer,omitempty"`
-  JwksUri                          string                             `json:"jwks_uri,omitempty"`
-  ResponseModesSupported           []string                           `json:"response_modes_supported,omitempty"`
-  ResponseTypesSupported           []string                           `json:"response_types_supported,omitempty"`
-  ScopesSupported                  []string                           `json:"scopes_supported,omitempty"`
-  SubjectTypesSupported            []string                           `json:"subject_types_supported,omitempty"`
-  TokenEndpoint                    string                             `json:"token_endpoint,omitempty"`
-  TokenEndpointAuthMethodsSupported []string                           `json:"token_endpoint_auth_methods_supported,omitempty"`
-  UserinfoEndpoint                 string                             `json:"userinfo_endpoint,omitempty"`
-  UserinfoSigningAlgValuesSupported []string                           `json:"userinfo_signing_alg_values_supported,omitempty"`
+	BaseHTTPResponse
+	AuthorizationEndpoint             string   `json:"authorization_endpoint,omitempty"`
+	BackchannelLogoutSupported        bool     `json:"backchannel_logout_supported"`
+	ClaimsSupported                   []string `json:"claims_supported,omitempty"`
+	DeviceAuthorizationEndpoint       string   `json:"device_authorization_endpoint,omitempty"`
+	EndSessionEndpoint                string   `json:"end_session_endpoint,omitempty"`
+	FrontchannelLogoutSupported       bool     `json:"frontchannel_logout_supported"`
+	GrantTypesSupported               []string `json:"grant_types_supported,omitempty"`
+	IdTokenSigningAlgValuesSupported  []string `json:"id_token_signing_alg_values_supported,omitempty"`
+	Issuer                            string   `json:"issuer,omitempty"`
+	JwksUri                           string   `json:"jwks_uri,omitempty"`
+	ResponseModesSupported            []string `json:"response_modes_supported,omitempty"`
+	ResponseTypesSupported            []string `json:"response_types_supported,omitempty"`
+	ScopesSupported                   []string `json:"scopes_supported,omitempty"`
+	SubjectTypesSupported             []string `json:"subject_types_supported,omitempty"`
+	TokenEndpoint                     string   `json:"token_endpoint,omitempty"`
+	TokenEndpointAuthMethodsSupported []string `json:"token_endpoint_auth_methods_supported,omitempty"`
+	UserinfoEndpoint                  string   `json:"userinfo_endpoint,omitempty"`
+	UserinfoSigningAlgValuesSupported []string `json:"userinfo_signing_alg_values_supported,omitempty"`
 }
+
 func (b *OpenIdConfiguration) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type OpenIdConnectApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  ButtonImageURL                   string                             `json:"buttonImageURL,omitempty"`
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  Oauth2                           IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	ButtonImageURL string                              `json:"buttonImageURL,omitempty"`
+	ButtonText     string                              `json:"buttonText,omitempty"`
+	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type OpenIdConnectIdentityProvider struct {
-  BaseIdentityProvider
-  ButtonImageURL                   string                             `json:"buttonImageURL,omitempty"`
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  Domains                          []string                           `json:"domains,omitempty"`
-  Oauth2                           IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
-  PostRequest                      bool                               `json:"postRequest"`
+	BaseIdentityProvider
+	ButtonImageURL string                              `json:"buttonImageURL,omitempty"`
+	ButtonText     string                              `json:"buttonText,omitempty"`
+	Domains        []string                            `json:"domains,omitempty"`
+	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	PostRequest    bool                                `json:"postRequest"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type PasswordBreachDetection struct {
-  Enableable
-  MatchMode                        BreachMatchMode                    `json:"matchMode,omitempty"`
-  NotifyUserEmailTemplateId        string                             `json:"notifyUserEmailTemplateId,omitempty"`
-  OnLogin                          BreachAction                       `json:"onLogin,omitempty"`
+	Enableable
+	MatchMode                 BreachMatchMode `json:"matchMode,omitempty"`
+	NotifyUserEmailTemplateId string          `json:"notifyUserEmailTemplateId,omitempty"`
+	OnLogin                   BreachAction    `json:"onLogin,omitempty"`
 }
 
 /**
@@ -2346,13 +2424,13 @@ type PasswordBreachDetection struct {
  * @author Daniel DeGroff
  */
 type PasswordEncryptionConfiguration struct {
-  EncryptionScheme                 string                             `json:"encryptionScheme,omitempty"`
-  EncryptionSchemeFactor           int                                `json:"encryptionSchemeFactor,omitempty"`
-  ModifyEncryptionSchemeOnLogin    bool                               `json:"modifyEncryptionSchemeOnLogin"`
+	EncryptionScheme              string `json:"encryptionScheme,omitempty"`
+	EncryptionSchemeFactor        int    `json:"encryptionSchemeFactor,omitempty"`
+	ModifyEncryptionSchemeOnLogin bool   `json:"modifyEncryptionSchemeOnLogin"`
 }
 
 type PasswordlessConfiguration struct {
-  Enableable
+	Enableable
 }
 
 /**
@@ -2365,95 +2443,99 @@ type PasswordlessIdentityProvider struct {
  * @author Daniel DeGroff
  */
 type PasswordlessLoginRequest struct {
-  BaseLoginRequest
-  Code                             string                             `json:"code,omitempty"`
-  TwoFactorTrustId                 string                             `json:"twoFactorTrustId,omitempty"`
+	BaseLoginRequest
+	Code             string `json:"code,omitempty"`
+	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type PasswordlessSendRequest struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Code                             string                             `json:"code,omitempty"`
-  LoginId                          string                             `json:"loginId,omitempty"`
-  State                            map[string]interface{}             `json:"state,omitempty"`
+	ApplicationId string                 `json:"applicationId,omitempty"`
+	Code          string                 `json:"code,omitempty"`
+	LoginId       string                 `json:"loginId,omitempty"`
+	State         map[string]interface{} `json:"state,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type PasswordlessStartRequest struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  LoginId                          string                             `json:"loginId,omitempty"`
-  State                            map[string]interface{}             `json:"state,omitempty"`
+	ApplicationId string                 `json:"applicationId,omitempty"`
+	LoginId       string                 `json:"loginId,omitempty"`
+	State         map[string]interface{} `json:"state,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type PasswordlessStartResponse struct {
-  BaseHTTPResponse
-  Code                             string                             `json:"code,omitempty"`
+	BaseHTTPResponse
+	Code string `json:"code,omitempty"`
 }
+
 func (b *PasswordlessStartResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Derek Klatt
  */
 type PasswordValidationRules struct {
-  BreachDetection                  PasswordBreachDetection            `json:"breachDetection,omitempty"`
-  MaxLength                        int                                `json:"maxLength,omitempty"`
-  MinLength                        int                                `json:"minLength,omitempty"`
-  RememberPreviousPasswords        RememberPreviousPasswords          `json:"rememberPreviousPasswords,omitempty"`
-  RequireMixedCase                 bool                               `json:"requireMixedCase"`
-  RequireNonAlpha                  bool                               `json:"requireNonAlpha"`
-  RequireNumber                    bool                               `json:"requireNumber"`
-  ValidateOnLogin                  bool                               `json:"validateOnLogin"`
+	BreachDetection           PasswordBreachDetection   `json:"breachDetection,omitempty"`
+	MaxLength                 int                       `json:"maxLength,omitempty"`
+	MinLength                 int                       `json:"minLength,omitempty"`
+	RememberPreviousPasswords RememberPreviousPasswords `json:"rememberPreviousPasswords,omitempty"`
+	RequireMixedCase          bool                      `json:"requireMixedCase"`
+	RequireNonAlpha           bool                      `json:"requireNonAlpha"`
+	RequireNumber             bool                      `json:"requireNumber"`
+	ValidateOnLogin           bool                      `json:"validateOnLogin"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type PasswordValidationRulesResponse struct {
-  BaseHTTPResponse
-  PasswordValidationRules          PasswordValidationRules            `json:"passwordValidationRules,omitempty"`
+	BaseHTTPResponse
+	PasswordValidationRules PasswordValidationRules `json:"passwordValidationRules,omitempty"`
 }
+
 func (b *PasswordValidationRulesResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Brian Pontarelli
  */
 type PendingResponse struct {
-  BaseHTTPResponse
-  Users                            []User                             `json:"users,omitempty"`
+	BaseHTTPResponse
+	Users []User `json:"users,omitempty"`
 }
+
 func (b *PendingResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Brian Pontarelli
  */
 type PreviewRequest struct {
-  EmailTemplate                    EmailTemplate                      `json:"emailTemplate,omitempty"`
-  Locale                           string                             `json:"locale,omitempty"`
+	EmailTemplate EmailTemplate `json:"emailTemplate,omitempty"`
+	Locale        string        `json:"locale,omitempty"`
 }
 
 /**
  * @author Seth Musselman
  */
 type PreviewResponse struct {
-  BaseHTTPResponse
-  Email                            Email                              `json:"email,omitempty"`
-  Errors                           Errors                             `json:"errors,omitempty"`
+	BaseHTTPResponse
+	Email  Email  `json:"email,omitempty"`
+	Errors Errors `json:"errors,omitempty"`
 }
+
 func (b *PreviewResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2462,12 +2544,13 @@ func (b *PreviewResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type PublicKeyResponse struct {
-  BaseHTTPResponse
-  PublicKey                        string                             `json:"publicKey,omitempty"`
-  PublicKeys                       map[string]string                  `json:"publicKeys,omitempty"`
+	BaseHTTPResponse
+	PublicKey  string            `json:"publicKey,omitempty"`
+	PublicKeys map[string]string `json:"publicKeys,omitempty"`
 }
+
 func (b *PublicKeyResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2476,10 +2559,10 @@ func (b *PublicKeyResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type RawLogin struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Instant                          int64                              `json:"instant,omitempty"`
-  IpAddress                        string                             `json:"ipAddress,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	ApplicationId string `json:"applicationId,omitempty"`
+	Instant       int64  `json:"instant,omitempty"`
+	IpAddress     string `json:"ipAddress,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
@@ -2488,32 +2571,34 @@ type RawLogin struct {
  * @author Seth Musselman
  */
 type RecentLoginResponse struct {
-  BaseHTTPResponse
-  Logins                           []DisplayableRawLogin              `json:"logins,omitempty"`
+	BaseHTTPResponse
+	Logins []DisplayableRawLogin `json:"logins,omitempty"`
 }
+
 func (b *RecentLoginResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type RefreshRequest struct {
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
+	RefreshToken string `json:"refreshToken,omitempty"`
+	Token        string `json:"token,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type RefreshResponse struct {
-  BaseHTTPResponse
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  RefreshTokens                    []RefreshToken                     `json:"refreshTokens,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
+	BaseHTTPResponse
+	RefreshToken  string         `json:"refreshToken,omitempty"`
+	RefreshTokens []RefreshToken `json:"refreshTokens,omitempty"`
+	Token         string         `json:"token,omitempty"`
 }
+
 func (b *RefreshResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2522,23 +2607,24 @@ func (b *RefreshResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type RefreshToken struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  MetaData                         MetaData                           `json:"metaData,omitempty"`
-  StartInstant                     int64                              `json:"startInstant,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	ApplicationId string                 `json:"applicationId,omitempty"`
+	Data          map[string]interface{} `json:"data,omitempty"`
+	Id            string                 `json:"id,omitempty"`
+	InsertInstant int64                  `json:"insertInstant,omitempty"`
+	MetaData      MetaData               `json:"metaData,omitempty"`
+	StartInstant  int64                  `json:"startInstant,omitempty"`
+	Token         string                 `json:"token,omitempty"`
+	UserId        string                 `json:"userId,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type RefreshTokenExpirationPolicy string
+
 const (
-  RefreshTokenExpirationPolicy_Fixed                            RefreshTokenExpirationPolicy       = "Fixed"
-  RefreshTokenExpirationPolicy_SlidingWindow                    RefreshTokenExpirationPolicy       = "SlidingWindow"
+	RefreshTokenExpirationPolicy_Fixed         RefreshTokenExpirationPolicy = "Fixed"
+	RefreshTokenExpirationPolicy_SlidingWindow RefreshTokenExpirationPolicy = "SlidingWindow"
 )
 
 /**
@@ -2547,39 +2633,40 @@ const (
  * @author Brett Guy
  */
 type RefreshTokenImportRequest struct {
-  RefreshTokens                    []RefreshToken                     `json:"refreshTokens,omitempty"`
-  ValidateDbConstraints            bool                               `json:"validateDbConstraints"`
+	RefreshTokens         []RefreshToken `json:"refreshTokens,omitempty"`
+	ValidateDbConstraints bool           `json:"validateDbConstraints"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type RefreshTokenRevocationPolicy struct {
-  OnLoginPrevented                 bool                               `json:"onLoginPrevented"`
-  OnPasswordChanged                bool                               `json:"onPasswordChanged"`
+	OnLoginPrevented  bool `json:"onLoginPrevented"`
+	OnPasswordChanged bool `json:"onPasswordChanged"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type RefreshTokenUsagePolicy string
+
 const (
-  RefreshTokenUsagePolicy_Reusable                         RefreshTokenUsagePolicy            = "Reusable"
-  RefreshTokenUsagePolicy_OneTimeUse                       RefreshTokenUsagePolicy            = "OneTimeUse"
+	RefreshTokenUsagePolicy_Reusable   RefreshTokenUsagePolicy = "Reusable"
+	RefreshTokenUsagePolicy_OneTimeUse RefreshTokenUsagePolicy = "OneTimeUse"
 )
 
 type RegistrationConfiguration struct {
-  Enableable
-  BirthDate                        Requirable                         `json:"birthDate,omitempty"`
-  ConfirmPassword                  bool                               `json:"confirmPassword"`
-  FirstName                        Requirable                         `json:"firstName,omitempty"`
-  FormId                           string                             `json:"formId,omitempty"`
-  FullName                         Requirable                         `json:"fullName,omitempty"`
-  LastName                         Requirable                         `json:"lastName,omitempty"`
-  LoginIdType                      LoginIdType                        `json:"loginIdType,omitempty"`
-  MiddleName                       Requirable                         `json:"middleName,omitempty"`
-  MobilePhone                      Requirable                         `json:"mobilePhone,omitempty"`
-  Type                             RegistrationType                   `json:"type,omitempty"`
+	Enableable
+	BirthDate       Requirable       `json:"birthDate,omitempty"`
+	ConfirmPassword bool             `json:"confirmPassword"`
+	FirstName       Requirable       `json:"firstName,omitempty"`
+	FormId          string           `json:"formId,omitempty"`
+	FullName        Requirable       `json:"fullName,omitempty"`
+	LastName        Requirable       `json:"lastName,omitempty"`
+	LoginIdType     LoginIdType      `json:"loginIdType,omitempty"`
+	MiddleName      Requirable       `json:"middleName,omitempty"`
+	MobilePhone     Requirable       `json:"mobilePhone,omitempty"`
+	Type            RegistrationType `json:"type,omitempty"`
 }
 
 /**
@@ -2588,12 +2675,13 @@ type RegistrationConfiguration struct {
  * @author Brian Pontarelli
  */
 type RegistrationReportResponse struct {
-  BaseHTTPResponse
-  HourlyCounts                     []Count                            `json:"hourlyCounts,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	BaseHTTPResponse
+	HourlyCounts []Count `json:"hourlyCounts,omitempty"`
+	Total        int64   `json:"total,omitempty"`
 }
+
 func (b *RegistrationReportResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2602,12 +2690,12 @@ func (b *RegistrationReportResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type RegistrationRequest struct {
-  GenerateAuthenticationToken      bool                               `json:"generateAuthenticationToken"`
-  Registration                     UserRegistration                   `json:"registration,omitempty"`
-  SendSetPasswordEmail             bool                               `json:"sendSetPasswordEmail"`
-  SkipRegistrationVerification     bool                               `json:"skipRegistrationVerification"`
-  SkipVerification                 bool                               `json:"skipVerification"`
-  User                             User                               `json:"user,omitempty"`
+	GenerateAuthenticationToken  bool             `json:"generateAuthenticationToken"`
+	Registration                 UserRegistration `json:"registration,omitempty"`
+	SendSetPasswordEmail         bool             `json:"sendSetPasswordEmail"`
+	SkipRegistrationVerification bool             `json:"skipRegistrationVerification"`
+	SkipVerification             bool             `json:"skipVerification"`
+	User                         User             `json:"user,omitempty"`
 }
 
 /**
@@ -2616,35 +2704,37 @@ type RegistrationRequest struct {
  * @author Brian Pontarelli
  */
 type RegistrationResponse struct {
-  BaseHTTPResponse
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  Registration                     UserRegistration                   `json:"registration,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseHTTPResponse
+	RefreshToken string           `json:"refreshToken,omitempty"`
+	Registration UserRegistration `json:"registration,omitempty"`
+	Token        string           `json:"token,omitempty"`
+	User         User             `json:"user,omitempty"`
 }
+
 func (b *RegistrationResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 type RegistrationType string
+
 const (
-  RegistrationType_Basic                            RegistrationType                   = "basic"
-  RegistrationType_Advanced                         RegistrationType                   = "advanced"
+	RegistrationType_Basic    RegistrationType = "basic"
+	RegistrationType_Advanced RegistrationType = "advanced"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type ReloadRequest struct {
-  Names                            []string                           `json:"names,omitempty"`
+	Names []string `json:"names,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type RememberPreviousPasswords struct {
-  Enableable
-  Count                            int                                `json:"count,omitempty"`
+	Enableable
+	Count int `json:"count,omitempty"`
 }
 
 /**
@@ -2654,8 +2744,8 @@ type RememberPreviousPasswords struct {
  * @author Brian Pontarelli
  */
 type Requirable struct {
-  Enableable
-  Required                         bool                               `json:"required"`
+	Enableable
+	Required bool `json:"required"`
 }
 
 /**
@@ -2670,23 +2760,23 @@ type RequiresCORSConfiguration struct {
  * @author Brian Pontarelli
  */
 type SAMLv2ApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  ButtonImageURL                   string                             `json:"buttonImageURL,omitempty"`
-  ButtonText                       string                             `json:"buttonText,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	ButtonImageURL string `json:"buttonImageURL,omitempty"`
+	ButtonText     string `json:"buttonText,omitempty"`
 }
 
 type SAMLv2Configuration struct {
-  Enableable
-  Audience                         string                             `json:"audience,omitempty"`
-  AuthorizedRedirectURLs           []string                           `json:"authorizedRedirectURLs,omitempty"`
-  CallbackURL                      string                             `json:"callbackURL,omitempty"`
-  Debug                            bool                               `json:"debug"`
-  DefaultVerificationKeyId         string                             `json:"defaultVerificationKeyId,omitempty"`
-  Issuer                           string                             `json:"issuer,omitempty"`
-  KeyId                            string                             `json:"keyId,omitempty"`
-  LogoutURL                        string                             `json:"logoutURL,omitempty"`
-  RequireSignedRequests            bool                               `json:"requireSignedRequests"`
-  XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
+	Enableable
+	Audience                 string                 `json:"audience,omitempty"`
+	AuthorizedRedirectURLs   []string               `json:"authorizedRedirectURLs,omitempty"`
+	CallbackURL              string                 `json:"callbackURL,omitempty"`
+	Debug                    bool                   `json:"debug"`
+	DefaultVerificationKeyId string                 `json:"defaultVerificationKeyId,omitempty"`
+	Issuer                   string                 `json:"issuer,omitempty"`
+	KeyId                    string                 `json:"keyId,omitempty"`
+	LogoutURL                string                 `json:"logoutURL,omitempty"`
+	RequireSignedRequests    bool                   `json:"requireSignedRequests"`
+	XmlSignatureC14nMethod   CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
 /**
@@ -2695,19 +2785,19 @@ type SAMLv2Configuration struct {
  * @author Brian Pontarelli
  */
 type SAMLv2IdentityProvider struct {
-  BaseIdentityProvider
-  ButtonImageURL                   string                             `json:"buttonImageURL,omitempty"`
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  Domains                          []string                           `json:"domains,omitempty"`
-  EmailClaim                       string                             `json:"emailClaim,omitempty"`
-  IdpEndpoint                      string                             `json:"idpEndpoint,omitempty"`
-  Issuer                           string                             `json:"issuer,omitempty"`
-  KeyId                            string                             `json:"keyId,omitempty"`
-  PostRequest                      bool                               `json:"postRequest"`
-  RequestSigningKeyId              string                             `json:"requestSigningKeyId,omitempty"`
-  SignRequest                      bool                               `json:"signRequest"`
-  UseNameIdForEmail                bool                               `json:"useNameIdForEmail"`
-  XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
+	BaseIdentityProvider
+	ButtonImageURL         string                 `json:"buttonImageURL,omitempty"`
+	ButtonText             string                 `json:"buttonText,omitempty"`
+	Domains                []string               `json:"domains,omitempty"`
+	EmailClaim             string                 `json:"emailClaim,omitempty"`
+	IdpEndpoint            string                 `json:"idpEndpoint,omitempty"`
+	Issuer                 string                 `json:"issuer,omitempty"`
+	KeyId                  string                 `json:"keyId,omitempty"`
+	PostRequest            bool                   `json:"postRequest"`
+	RequestSigningKeyId    string                 `json:"requestSigningKeyId,omitempty"`
+	SignRequest            bool                   `json:"signRequest"`
+	UseNameIdForEmail      bool                   `json:"useNameIdForEmail"`
+	XmlSignatureC14nMethod CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
 /**
@@ -2716,7 +2806,7 @@ type SAMLv2IdentityProvider struct {
  * @author Brian Pontarelli
  */
 type SearchRequest struct {
-  Search                           UserSearchCriteria                 `json:"search,omitempty"`
+	Search UserSearchCriteria `json:"search,omitempty"`
 }
 
 /**
@@ -2725,12 +2815,13 @@ type SearchRequest struct {
  * @author Brian Pontarelli
  */
 type SearchResponse struct {
-  BaseHTTPResponse
-  Total                            int64                              `json:"total,omitempty"`
-  Users                            []User                             `json:"users,omitempty"`
+	BaseHTTPResponse
+	Total int64  `json:"total,omitempty"`
+	Users []User `json:"users,omitempty"`
 }
+
 func (b *SearchResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2739,102 +2830,106 @@ func (b *SearchResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type SearchResults struct {
-  Results                          []interface{}                      `json:"results,omitempty"`
-  Total                            int64                              `json:"total,omitempty"`
+	Results []interface{} `json:"results,omitempty"`
+	Total   int64         `json:"total,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type SecretResponse struct {
-  BaseHTTPResponse
-  Secret                           string                             `json:"secret,omitempty"`
-  SecretBase32Encoded              string                             `json:"secretBase32Encoded,omitempty"`
+	BaseHTTPResponse
+	Secret              string `json:"secret,omitempty"`
+	SecretBase32Encoded string `json:"secretBase32Encoded,omitempty"`
 }
+
 func (b *SecretResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type SecureGeneratorConfiguration struct {
-  Length                           int                                `json:"length,omitempty"`
-  Type                             SecureGeneratorType                `json:"type,omitempty"`
+	Length int                 `json:"length,omitempty"`
+	Type   SecureGeneratorType `json:"type,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type SecureGeneratorType string
+
 const (
-  SecureGeneratorType_RandomDigits                     SecureGeneratorType                = "randomDigits"
-  SecureGeneratorType_RandomBytes                      SecureGeneratorType                = "randomBytes"
-  SecureGeneratorType_RandomAlpha                      SecureGeneratorType                = "randomAlpha"
-  SecureGeneratorType_RandomAlphaNumeric               SecureGeneratorType                = "randomAlphaNumeric"
+	SecureGeneratorType_RandomDigits       SecureGeneratorType = "randomDigits"
+	SecureGeneratorType_RandomBytes        SecureGeneratorType = "randomBytes"
+	SecureGeneratorType_RandomAlpha        SecureGeneratorType = "randomAlpha"
+	SecureGeneratorType_RandomAlphaNumeric SecureGeneratorType = "randomAlphaNumeric"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type SecureIdentity struct {
-  BreachedPasswordLastCheckedInstant int64                              `json:"breachedPasswordLastCheckedInstant,omitempty"`
-  BreachedPasswordStatus           BreachedPasswordStatus             `json:"breachedPasswordStatus,omitempty"`
-  ConnectorId                      string                             `json:"connectorId,omitempty"`
-  EncryptionScheme                 string                             `json:"encryptionScheme,omitempty"`
-  Factor                           int                                `json:"factor,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  LastLoginInstant                 int64                              `json:"lastLoginInstant,omitempty"`
-  Password                         string                             `json:"password,omitempty"`
-  PasswordChangeReason             ChangePasswordReason               `json:"passwordChangeReason,omitempty"`
-  PasswordChangeRequired           bool                               `json:"passwordChangeRequired"`
-  PasswordLastUpdateInstant        int64                              `json:"passwordLastUpdateInstant,omitempty"`
-  Salt                             string                             `json:"salt,omitempty"`
-  TwoFactorDelivery                TwoFactorDelivery                  `json:"twoFactorDelivery,omitempty"`
-  TwoFactorEnabled                 bool                               `json:"twoFactorEnabled"`
-  TwoFactorSecret                  string                             `json:"twoFactorSecret,omitempty"`
-  Username                         string                             `json:"username,omitempty"`
-  UsernameStatus                   ContentStatus                      `json:"usernameStatus,omitempty"`
-  Verified                         bool                               `json:"verified"`
+	BreachedPasswordLastCheckedInstant int64                  `json:"breachedPasswordLastCheckedInstant,omitempty"`
+	BreachedPasswordStatus             BreachedPasswordStatus `json:"breachedPasswordStatus,omitempty"`
+	ConnectorId                        string                 `json:"connectorId,omitempty"`
+	EncryptionScheme                   string                 `json:"encryptionScheme,omitempty"`
+	Factor                             int                    `json:"factor,omitempty"`
+	Id                                 string                 `json:"id,omitempty"`
+	LastLoginInstant                   int64                  `json:"lastLoginInstant,omitempty"`
+	Password                           string                 `json:"password,omitempty"`
+	PasswordChangeReason               ChangePasswordReason   `json:"passwordChangeReason,omitempty"`
+	PasswordChangeRequired             bool                   `json:"passwordChangeRequired"`
+	PasswordLastUpdateInstant          int64                  `json:"passwordLastUpdateInstant,omitempty"`
+	Salt                               string                 `json:"salt,omitempty"`
+	TwoFactorDelivery                  TwoFactorDelivery      `json:"twoFactorDelivery,omitempty"`
+	TwoFactorEnabled                   bool                   `json:"twoFactorEnabled"`
+	TwoFactorSecret                    string                 `json:"twoFactorSecret,omitempty"`
+	Username                           string                 `json:"username,omitempty"`
+	UsernameStatus                     ContentStatus          `json:"usernameStatus,omitempty"`
+	Verified                           bool                   `json:"verified"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type SendRequest struct {
-  BccAddresses                     []string                           `json:"bccAddresses,omitempty"`
-  CcAddresses                      []string                           `json:"ccAddresses,omitempty"`
-  RequestData                      map[string]interface{}             `json:"requestData,omitempty"`
-  UserIds                          []string                           `json:"userIds,omitempty"`
+	BccAddresses []string               `json:"bccAddresses,omitempty"`
+	CcAddresses  []string               `json:"ccAddresses,omitempty"`
+	RequestData  map[string]interface{} `json:"requestData,omitempty"`
+	UserIds      []string               `json:"userIds,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type SendResponse struct {
-  BaseHTTPResponse
-  Results                          map[string]EmailTemplateErrors     `json:"results,omitempty"`
+	BaseHTTPResponse
+	Results map[string]EmailTemplateErrors `json:"results,omitempty"`
 }
+
 func (b *SendResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type Sort string
+
 const (
-  Sort_Asc                              Sort                               = "asc"
-  Sort_Desc                             Sort                               = "desc"
+	Sort_Asc  Sort = "asc"
+	Sort_Desc Sort = "desc"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type SortField struct {
-  Missing                          string                             `json:"missing,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Order                            Sort                               `json:"order,omitempty"`
+	Missing string `json:"missing,omitempty"`
+	Name    string `json:"name,omitempty"`
+	Order   Sort   `json:"order,omitempty"`
 }
 
 /**
@@ -2849,15 +2944,15 @@ type SupportsPostBindings struct {
  * @author Brian Pontarelli
  */
 type SystemConfiguration struct {
-  AuditLogConfiguration            AuditLogConfiguration              `json:"auditLogConfiguration,omitempty"`
-  CorsConfiguration                CORSConfiguration                  `json:"corsConfiguration,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  EventLogConfiguration            EventLogConfiguration              `json:"eventLogConfiguration,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LoginRecordConfiguration         LoginRecordConfiguration           `json:"loginRecordConfiguration,omitempty"`
-  ReportTimezone                   string                             `json:"reportTimezone,omitempty"`
-  UiConfiguration                  UIConfiguration                    `json:"uiConfiguration,omitempty"`
+	AuditLogConfiguration    AuditLogConfiguration    `json:"auditLogConfiguration,omitempty"`
+	CorsConfiguration        CORSConfiguration        `json:"corsConfiguration,omitempty"`
+	Data                     map[string]interface{}   `json:"data,omitempty"`
+	EventLogConfiguration    EventLogConfiguration    `json:"eventLogConfiguration,omitempty"`
+	InsertInstant            int64                    `json:"insertInstant,omitempty"`
+	LastUpdateInstant        int64                    `json:"lastUpdateInstant,omitempty"`
+	LoginRecordConfiguration LoginRecordConfiguration `json:"loginRecordConfiguration,omitempty"`
+	ReportTimezone           string                   `json:"reportTimezone,omitempty"`
+	UiConfiguration          UIConfiguration          `json:"uiConfiguration,omitempty"`
 }
 
 /**
@@ -2866,7 +2961,7 @@ type SystemConfiguration struct {
  * @author Brian Pontarelli
  */
 type SystemConfigurationRequest struct {
-  SystemConfiguration              SystemConfiguration                `json:"systemConfiguration,omitempty"`
+	SystemConfiguration SystemConfiguration `json:"systemConfiguration,omitempty"`
 }
 
 /**
@@ -2875,73 +2970,74 @@ type SystemConfigurationRequest struct {
  * @author Brian Pontarelli
  */
 type SystemConfigurationResponse struct {
-  BaseHTTPResponse
-  SystemConfiguration              SystemConfiguration                `json:"systemConfiguration,omitempty"`
+	BaseHTTPResponse
+	SystemConfiguration SystemConfiguration `json:"systemConfiguration,omitempty"`
 }
+
 func (b *SystemConfigurationResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type SystemLogsExportRequest struct {
-  BaseExportRequest
-  LastNBytes                       int                                `json:"lastNBytes,omitempty"`
+	BaseExportRequest
+	LastNBytes int `json:"lastNBytes,omitempty"`
 }
 
 type Templates struct {
-  EmailComplete                    string                             `json:"emailComplete,omitempty"`
-  EmailSend                        string                             `json:"emailSend,omitempty"`
-  EmailVerify                      string                             `json:"emailVerify,omitempty"`
-  Helpers                          string                             `json:"helpers,omitempty"`
-  Oauth2Authorize                  string                             `json:"oauth2Authorize,omitempty"`
-  Oauth2ChildRegistrationNotAllowed string                             `json:"oauth2ChildRegistrationNotAllowed,omitempty"`
-  Oauth2ChildRegistrationNotAllowedComplete string                             `json:"oauth2ChildRegistrationNotAllowedComplete,omitempty"`
-  Oauth2CompleteRegistration       string                             `json:"oauth2CompleteRegistration,omitempty"`
-  Oauth2Device                     string                             `json:"oauth2Device,omitempty"`
-  Oauth2DeviceComplete             string                             `json:"oauth2DeviceComplete,omitempty"`
-  Oauth2Error                      string                             `json:"oauth2Error,omitempty"`
-  Oauth2Logout                     string                             `json:"oauth2Logout,omitempty"`
-  Oauth2Passwordless               string                             `json:"oauth2Passwordless,omitempty"`
-  Oauth2Register                   string                             `json:"oauth2Register,omitempty"`
-  Oauth2TwoFactor                  string                             `json:"oauth2TwoFactor,omitempty"`
-  Oauth2Wait                       string                             `json:"oauth2Wait,omitempty"`
-  PasswordChange                   string                             `json:"passwordChange,omitempty"`
-  PasswordComplete                 string                             `json:"passwordComplete,omitempty"`
-  PasswordForgot                   string                             `json:"passwordForgot,omitempty"`
-  PasswordSent                     string                             `json:"passwordSent,omitempty"`
-  RegistrationComplete             string                             `json:"registrationComplete,omitempty"`
-  RegistrationSend                 string                             `json:"registrationSend,omitempty"`
-  RegistrationVerify               string                             `json:"registrationVerify,omitempty"`
+	EmailComplete                             string `json:"emailComplete,omitempty"`
+	EmailSend                                 string `json:"emailSend,omitempty"`
+	EmailVerify                               string `json:"emailVerify,omitempty"`
+	Helpers                                   string `json:"helpers,omitempty"`
+	Oauth2Authorize                           string `json:"oauth2Authorize,omitempty"`
+	Oauth2ChildRegistrationNotAllowed         string `json:"oauth2ChildRegistrationNotAllowed,omitempty"`
+	Oauth2ChildRegistrationNotAllowedComplete string `json:"oauth2ChildRegistrationNotAllowedComplete,omitempty"`
+	Oauth2CompleteRegistration                string `json:"oauth2CompleteRegistration,omitempty"`
+	Oauth2Device                              string `json:"oauth2Device,omitempty"`
+	Oauth2DeviceComplete                      string `json:"oauth2DeviceComplete,omitempty"`
+	Oauth2Error                               string `json:"oauth2Error,omitempty"`
+	Oauth2Logout                              string `json:"oauth2Logout,omitempty"`
+	Oauth2Passwordless                        string `json:"oauth2Passwordless,omitempty"`
+	Oauth2Register                            string `json:"oauth2Register,omitempty"`
+	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
+	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
+	PasswordChange                            string `json:"passwordChange,omitempty"`
+	PasswordComplete                          string `json:"passwordComplete,omitempty"`
+	PasswordForgot                            string `json:"passwordForgot,omitempty"`
+	PasswordSent                              string `json:"passwordSent,omitempty"`
+	RegistrationComplete                      string `json:"registrationComplete,omitempty"`
+	RegistrationSend                          string `json:"registrationSend,omitempty"`
+	RegistrationVerify                        string `json:"registrationVerify,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type Tenant struct {
-  Configured                       bool                               `json:"configured"`
-  ConnectorPolicies                []ConnectorPolicy                  `json:"connectorPolicies,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  EmailConfiguration               EmailConfiguration                 `json:"emailConfiguration,omitempty"`
-  EventConfiguration               EventConfiguration                 `json:"eventConfiguration,omitempty"`
-  ExternalIdentifierConfiguration  ExternalIdentifierConfiguration    `json:"externalIdentifierConfiguration,omitempty"`
-  FailedAuthenticationConfiguration FailedAuthenticationConfiguration  `json:"failedAuthenticationConfiguration,omitempty"`
-  FamilyConfiguration              FamilyConfiguration                `json:"familyConfiguration,omitempty"`
-  HttpSessionMaxInactiveInterval   int                                `json:"httpSessionMaxInactiveInterval,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  Issuer                           string                             `json:"issuer,omitempty"`
-  JwtConfiguration                 JWTConfiguration                   `json:"jwtConfiguration,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LogoutURL                        string                             `json:"logoutURL,omitempty"`
-  MaximumPasswordAge               MaximumPasswordAge                 `json:"maximumPasswordAge,omitempty"`
-  MinimumPasswordAge               MinimumPasswordAge                 `json:"minimumPasswordAge,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  PasswordEncryptionConfiguration  PasswordEncryptionConfiguration    `json:"passwordEncryptionConfiguration,omitempty"`
-  PasswordValidationRules          PasswordValidationRules            `json:"passwordValidationRules,omitempty"`
-  ThemeId                          string                             `json:"themeId,omitempty"`
-  UserDeletePolicy                 TenantUserDeletePolicy             `json:"userDeletePolicy,omitempty"`
+	Configured                        bool                              `json:"configured"`
+	ConnectorPolicies                 []ConnectorPolicy                 `json:"connectorPolicies,omitempty"`
+	Data                              map[string]interface{}            `json:"data,omitempty"`
+	EmailConfiguration                EmailConfiguration                `json:"emailConfiguration,omitempty"`
+	EventConfiguration                EventConfiguration                `json:"eventConfiguration,omitempty"`
+	ExternalIdentifierConfiguration   ExternalIdentifierConfiguration   `json:"externalIdentifierConfiguration,omitempty"`
+	FailedAuthenticationConfiguration FailedAuthenticationConfiguration `json:"failedAuthenticationConfiguration,omitempty"`
+	FamilyConfiguration               FamilyConfiguration               `json:"familyConfiguration,omitempty"`
+	HttpSessionMaxInactiveInterval    int                               `json:"httpSessionMaxInactiveInterval,omitempty"`
+	Id                                string                            `json:"id,omitempty"`
+	InsertInstant                     int64                             `json:"insertInstant,omitempty"`
+	Issuer                            string                            `json:"issuer,omitempty"`
+	JwtConfiguration                  JWTConfiguration                  `json:"jwtConfiguration,omitempty"`
+	LastUpdateInstant                 int64                             `json:"lastUpdateInstant,omitempty"`
+	LogoutURL                         string                            `json:"logoutURL,omitempty"`
+	MaximumPasswordAge                MaximumPasswordAge                `json:"maximumPasswordAge,omitempty"`
+	MinimumPasswordAge                MinimumPasswordAge                `json:"minimumPasswordAge,omitempty"`
+	Name                              string                            `json:"name,omitempty"`
+	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
+	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
+	ThemeId                           string                            `json:"themeId,omitempty"`
+	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
 }
 
 /**
@@ -2954,20 +3050,21 @@ type Tenantable struct {
  * @author Daniel DeGroff
  */
 type TenantRequest struct {
-  SourceTenantId                   string                             `json:"sourceTenantId,omitempty"`
-  Tenant                           Tenant                             `json:"tenant,omitempty"`
+	SourceTenantId string `json:"sourceTenantId,omitempty"`
+	Tenant         Tenant `json:"tenant,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type TenantResponse struct {
-  BaseHTTPResponse
-  Tenant                           Tenant                             `json:"tenant,omitempty"`
-  Tenants                          []Tenant                           `json:"tenants,omitempty"`
+	BaseHTTPResponse
+	Tenant  Tenant   `json:"tenant,omitempty"`
+	Tenants []Tenant `json:"tenants,omitempty"`
 }
+
 func (b *TenantResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -2976,30 +3073,30 @@ func (b *TenantResponse) SetStatus(status int) {
  * @author Trevor Smith
  */
 type TenantUserDeletePolicy struct {
-  Unverified                       TimeBasedDeletePolicy              `json:"unverified,omitempty"`
+	Unverified TimeBasedDeletePolicy `json:"unverified,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type TestEvent struct {
-  BaseEvent
-  Message                          string                             `json:"message,omitempty"`
+	BaseEvent
+	Message string `json:"message,omitempty"`
 }
 
 /**
  * @author Trevor Smith
  */
 type Theme struct {
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  DefaultMessages                  string                             `json:"defaultMessages,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LocalizedMessages                map[string]string                  `json:"localizedMessages,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Stylesheet                       string                             `json:"stylesheet,omitempty"`
-  Templates                        Templates                          `json:"templates,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	DefaultMessages   string                 `json:"defaultMessages,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	LocalizedMessages map[string]string      `json:"localizedMessages,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+	Stylesheet        string                 `json:"stylesheet,omitempty"`
+	Templates         Templates              `json:"templates,omitempty"`
 }
 
 /**
@@ -3008,8 +3105,8 @@ type Theme struct {
  * @author Trevor Smith
  */
 type ThemeRequest struct {
-  SourceThemeId                    string                             `json:"sourceThemeId,omitempty"`
-  Theme                            Theme                              `json:"theme,omitempty"`
+	SourceThemeId string `json:"sourceThemeId,omitempty"`
+	Theme         Theme  `json:"theme,omitempty"`
 }
 
 /**
@@ -3018,12 +3115,13 @@ type ThemeRequest struct {
  * @author Trevor Smith
  */
 type ThemeResponse struct {
-  BaseHTTPResponse
-  Theme                            Theme                              `json:"theme,omitempty"`
-  Themes                           []Theme                            `json:"themes,omitempty"`
+	BaseHTTPResponse
+	Theme  Theme   `json:"theme,omitempty"`
+	Themes []Theme `json:"themes,omitempty"`
 }
+
 func (b *ThemeResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3032,8 +3130,8 @@ func (b *ThemeResponse) SetStatus(status int) {
  * @author Trevor Smith
  */
 type TimeBasedDeletePolicy struct {
-  Enableable
-  NumberOfDaysToRetain             int                                `json:"numberOfDaysToRetain,omitempty"`
+	Enableable
+	NumberOfDaysToRetain int `json:"numberOfDaysToRetain,omitempty"`
 }
 
 /**
@@ -3048,15 +3146,16 @@ type TimeBasedDeletePolicy struct {
  * @author Daniel DeGroff
  */
 type TokenType string
+
 const (
-  TokenType_Bearer                           TokenType                          = "Bearer"
-  TokenType_MAC                              TokenType                          = "MAC"
+	TokenType_Bearer TokenType = "Bearer"
+	TokenType_MAC    TokenType = "MAC"
 )
 
 type Totals struct {
-  Logins                           int64                              `json:"logins,omitempty"`
-  Registrations                    int64                              `json:"registrations,omitempty"`
-  TotalRegistrations               int64                              `json:"totalRegistrations,omitempty"`
+	Logins             int64 `json:"logins,omitempty"`
+	Registrations      int64 `json:"registrations,omitempty"`
+	TotalRegistrations int64 `json:"totalRegistrations,omitempty"`
 }
 
 /**
@@ -3065,13 +3164,14 @@ type Totals struct {
  * @author Brian Pontarelli
  */
 type TotalsReportResponse struct {
-  BaseHTTPResponse
-  ApplicationTotals                map[string]Totals                  `json:"applicationTotals,omitempty"`
-  GlobalRegistrations              int64                              `json:"globalRegistrations,omitempty"`
-  TotalGlobalRegistrations         int64                              `json:"totalGlobalRegistrations,omitempty"`
+	BaseHTTPResponse
+	ApplicationTotals        map[string]Totals `json:"applicationTotals,omitempty"`
+	GlobalRegistrations      int64             `json:"globalRegistrations,omitempty"`
+	TotalGlobalRegistrations int64             `json:"totalGlobalRegistrations,omitempty"`
 }
+
 func (b *TotalsReportResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3080,12 +3180,13 @@ func (b *TotalsReportResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type TransactionType string
+
 const (
-  TransactionType_None                             TransactionType                    = "None"
-  TransactionType_Any                              TransactionType                    = "Any"
-  TransactionType_SimpleMajority                   TransactionType                    = "SimpleMajority"
-  TransactionType_SuperMajority                    TransactionType                    = "SuperMajority"
-  TransactionType_AbsoluteMajority                 TransactionType                    = "AbsoluteMajority"
+	TransactionType_None             TransactionType = "None"
+	TransactionType_Any              TransactionType = "Any"
+	TransactionType_SimpleMajority   TransactionType = "SimpleMajority"
+	TransactionType_SuperMajority    TransactionType = "SuperMajority"
+	TransactionType_AbsoluteMajority TransactionType = "AbsoluteMajority"
 )
 
 /**
@@ -3094,22 +3195,22 @@ const (
  * @author Daniel DeGroff
  */
 type TwilioConfiguration struct {
-  Enableable
-  AccountSID                       string                             `json:"accountSID,omitempty"`
-  AuthToken                        string                             `json:"authToken,omitempty"`
-  FromPhoneNumber                  string                             `json:"fromPhoneNumber,omitempty"`
-  MessagingServiceSid              string                             `json:"messagingServiceSid,omitempty"`
-  Url                              string                             `json:"url,omitempty"`
+	Enableable
+	AccountSID          string `json:"accountSID,omitempty"`
+	AuthToken           string `json:"authToken,omitempty"`
+	FromPhoneNumber     string `json:"fromPhoneNumber,omitempty"`
+	MessagingServiceSid string `json:"messagingServiceSid,omitempty"`
+	Url                 string `json:"url,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type TwitterApplicationConfiguration struct {
-  BaseIdentityProviderApplicationConfiguration
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  ConsumerKey                      string                             `json:"consumerKey,omitempty"`
-  ConsumerSecret                   string                             `json:"consumerSecret,omitempty"`
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText     string `json:"buttonText,omitempty"`
+	ConsumerKey    string `json:"consumerKey,omitempty"`
+	ConsumerSecret string `json:"consumerSecret,omitempty"`
 }
 
 /**
@@ -3118,54 +3219,55 @@ type TwitterApplicationConfiguration struct {
  * @author Daniel DeGroff
  */
 type TwitterIdentityProvider struct {
-  BaseIdentityProvider
-  ButtonText                       string                             `json:"buttonText,omitempty"`
-  ConsumerKey                      string                             `json:"consumerKey,omitempty"`
-  ConsumerSecret                   string                             `json:"consumerSecret,omitempty"`
+	BaseIdentityProvider
+	ButtonText     string `json:"buttonText,omitempty"`
+	ConsumerKey    string `json:"consumerKey,omitempty"`
+	ConsumerSecret string `json:"consumerSecret,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type TwoFactorDelivery string
+
 const (
-  TwoFactorDelivery_None                             TwoFactorDelivery                  = "None"
-  TwoFactorDelivery_TextMessage                      TwoFactorDelivery                  = "TextMessage"
+	TwoFactorDelivery_None        TwoFactorDelivery = "None"
+	TwoFactorDelivery_TextMessage TwoFactorDelivery = "TextMessage"
 )
 
 /**
  * @author Daniel DeGroff
  */
 type TwoFactorLoginRequest struct {
-  BaseLoginRequest
-  Code                             string                             `json:"code,omitempty"`
-  TrustComputer                    bool                               `json:"trustComputer"`
-  TwoFactorId                      string                             `json:"twoFactorId,omitempty"`
+	BaseLoginRequest
+	Code          string `json:"code,omitempty"`
+	TrustComputer bool   `json:"trustComputer"`
+	TwoFactorId   string `json:"twoFactorId,omitempty"`
 }
 
 /**
  * @author Brian Pontarelli
  */
 type TwoFactorRequest struct {
-  Code                             string                             `json:"code,omitempty"`
-  Delivery                         TwoFactorDelivery                  `json:"delivery,omitempty"`
-  Secret                           string                             `json:"secret,omitempty"`
-  SecretBase32Encoded              string                             `json:"secretBase32Encoded,omitempty"`
+	Code                string            `json:"code,omitempty"`
+	Delivery            TwoFactorDelivery `json:"delivery,omitempty"`
+	Secret              string            `json:"secret,omitempty"`
+	SecretBase32Encoded string            `json:"secretBase32Encoded,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type TwoFactorSendRequest struct {
-  MobilePhone                      string                             `json:"mobilePhone,omitempty"`
-  Secret                           string                             `json:"secret,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	MobilePhone string `json:"mobilePhone,omitempty"`
+	Secret      string `json:"secret,omitempty"`
+	UserId      string `json:"userId,omitempty"`
 }
 
 type UIConfiguration struct {
-  HeaderColor                      string                             `json:"headerColor,omitempty"`
-  LogoURL                          string                             `json:"logoURL,omitempty"`
-  MenuFontColor                    string                             `json:"menuFontColor,omitempty"`
+	HeaderColor   string `json:"headerColor,omitempty"`
+	LogoURL       string `json:"logoURL,omitempty"`
+	MenuFontColor string `json:"menuFontColor,omitempty"`
 }
 
 /**
@@ -3175,27 +3277,27 @@ type UIConfiguration struct {
  * @author Seth Musselman
  */
 type User struct {
-  SecureIdentity
-  Active                           bool                               `json:"active"`
-  BirthDate                        string                             `json:"birthDate,omitempty"`
-  CleanSpeakId                     string                             `json:"cleanSpeakId,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Email                            string                             `json:"email,omitempty"`
-  Expiry                           int64                              `json:"expiry,omitempty"`
-  FirstName                        string                             `json:"firstName,omitempty"`
-  FullName                         string                             `json:"fullName,omitempty"`
-  ImageUrl                         string                             `json:"imageUrl,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastName                         string                             `json:"lastName,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Memberships                      []GroupMember                      `json:"memberships,omitempty"`
-  MiddleName                       string                             `json:"middleName,omitempty"`
-  MobilePhone                      string                             `json:"mobilePhone,omitempty"`
-  ParentEmail                      string                             `json:"parentEmail,omitempty"`
-  PreferredLanguages               []string                           `json:"preferredLanguages,omitempty"`
-  Registrations                    []UserRegistration                 `json:"registrations,omitempty"`
-  TenantId                         string                             `json:"tenantId,omitempty"`
-  Timezone                         string                             `json:"timezone,omitempty"`
+	SecureIdentity
+	Active             bool                   `json:"active"`
+	BirthDate          string                 `json:"birthDate,omitempty"`
+	CleanSpeakId       string                 `json:"cleanSpeakId,omitempty"`
+	Data               map[string]interface{} `json:"data,omitempty"`
+	Email              string                 `json:"email,omitempty"`
+	Expiry             int64                  `json:"expiry,omitempty"`
+	FirstName          string                 `json:"firstName,omitempty"`
+	FullName           string                 `json:"fullName,omitempty"`
+	ImageUrl           string                 `json:"imageUrl,omitempty"`
+	InsertInstant      int64                  `json:"insertInstant,omitempty"`
+	LastName           string                 `json:"lastName,omitempty"`
+	LastUpdateInstant  int64                  `json:"lastUpdateInstant,omitempty"`
+	Memberships        []GroupMember          `json:"memberships,omitempty"`
+	MiddleName         string                 `json:"middleName,omitempty"`
+	MobilePhone        string                 `json:"mobilePhone,omitempty"`
+	ParentEmail        string                 `json:"parentEmail,omitempty"`
+	PreferredLanguages []string               `json:"preferredLanguages,omitempty"`
+	Registrations      []UserRegistration     `json:"registrations,omitempty"`
+	TenantId           string                 `json:"tenantId,omitempty"`
+	Timezone           string                 `json:"timezone,omitempty"`
 }
 
 /**
@@ -3204,24 +3306,24 @@ type User struct {
  * @author Brian Pontarelli
  */
 type UserAction struct {
-  Active                           bool                               `json:"active"`
-  CancelEmailTemplateId            string                             `json:"cancelEmailTemplateId,omitempty"`
-  EndEmailTemplateId               string                             `json:"endEmailTemplateId,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  IncludeEmailInEventJSON          bool                               `json:"includeEmailInEventJSON"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LocalizedNames                   map[string]string                  `json:"localizedNames,omitempty"`
-  ModifyEmailTemplateId            string                             `json:"modifyEmailTemplateId,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  Options                          []UserActionOption                 `json:"options,omitempty"`
-  PreventLogin                     bool                               `json:"preventLogin"`
-  SendEndEvent                     bool                               `json:"sendEndEvent"`
-  StartEmailTemplateId             string                             `json:"startEmailTemplateId,omitempty"`
-  Temporal                         bool                               `json:"temporal"`
-  TransactionType                  TransactionType                    `json:"transactionType,omitempty"`
-  UserEmailingEnabled              bool                               `json:"userEmailingEnabled"`
-  UserNotificationsEnabled         bool                               `json:"userNotificationsEnabled"`
+	Active                   bool               `json:"active"`
+	CancelEmailTemplateId    string             `json:"cancelEmailTemplateId,omitempty"`
+	EndEmailTemplateId       string             `json:"endEmailTemplateId,omitempty"`
+	Id                       string             `json:"id,omitempty"`
+	IncludeEmailInEventJSON  bool               `json:"includeEmailInEventJSON"`
+	InsertInstant            int64              `json:"insertInstant,omitempty"`
+	LastUpdateInstant        int64              `json:"lastUpdateInstant,omitempty"`
+	LocalizedNames           map[string]string  `json:"localizedNames,omitempty"`
+	ModifyEmailTemplateId    string             `json:"modifyEmailTemplateId,omitempty"`
+	Name                     string             `json:"name,omitempty"`
+	Options                  []UserActionOption `json:"options,omitempty"`
+	PreventLogin             bool               `json:"preventLogin"`
+	SendEndEvent             bool               `json:"sendEndEvent"`
+	StartEmailTemplateId     string             `json:"startEmailTemplateId,omitempty"`
+	Temporal                 bool               `json:"temporal"`
+	TransactionType          TransactionType    `json:"transactionType,omitempty"`
+	UserEmailingEnabled      bool               `json:"userEmailingEnabled"`
+	UserNotificationsEnabled bool               `json:"userNotificationsEnabled"`
 }
 
 /**
@@ -3230,25 +3332,25 @@ type UserAction struct {
  * @author Brian Pontarelli
  */
 type UserActionEvent struct {
-  BaseEvent
-  Action                           string                             `json:"action,omitempty"`
-  ActioneeUserId                   string                             `json:"actioneeUserId,omitempty"`
-  ActionerUserId                   string                             `json:"actionerUserId,omitempty"`
-  ActionId                         string                             `json:"actionId,omitempty"`
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
-  Comment                          string                             `json:"comment,omitempty"`
-  Email                            Email                              `json:"email,omitempty"`
-  EmailedUser                      bool                               `json:"emailedUser"`
-  Expiry                           int64                              `json:"expiry,omitempty"`
-  LocalizedAction                  string                             `json:"localizedAction,omitempty"`
-  LocalizedDuration                string                             `json:"localizedDuration,omitempty"`
-  LocalizedOption                  string                             `json:"localizedOption,omitempty"`
-  LocalizedReason                  string                             `json:"localizedReason,omitempty"`
-  NotifyUser                       bool                               `json:"notifyUser"`
-  Option                           string                             `json:"option,omitempty"`
-  Phase                            UserActionPhase                    `json:"phase,omitempty"`
-  Reason                           string                             `json:"reason,omitempty"`
-  ReasonCode                       string                             `json:"reasonCode,omitempty"`
+	BaseEvent
+	Action            string          `json:"action,omitempty"`
+	ActioneeUserId    string          `json:"actioneeUserId,omitempty"`
+	ActionerUserId    string          `json:"actionerUserId,omitempty"`
+	ActionId          string          `json:"actionId,omitempty"`
+	ApplicationIds    []string        `json:"applicationIds,omitempty"`
+	Comment           string          `json:"comment,omitempty"`
+	Email             Email           `json:"email,omitempty"`
+	EmailedUser       bool            `json:"emailedUser"`
+	Expiry            int64           `json:"expiry,omitempty"`
+	LocalizedAction   string          `json:"localizedAction,omitempty"`
+	LocalizedDuration string          `json:"localizedDuration,omitempty"`
+	LocalizedOption   string          `json:"localizedOption,omitempty"`
+	LocalizedReason   string          `json:"localizedReason,omitempty"`
+	NotifyUser        bool            `json:"notifyUser"`
+	Option            string          `json:"option,omitempty"`
+	Phase             UserActionPhase `json:"phase,omitempty"`
+	Reason            string          `json:"reason,omitempty"`
+	ReasonCode        string          `json:"reasonCode,omitempty"`
 }
 
 /**
@@ -3257,25 +3359,25 @@ type UserActionEvent struct {
  * @author Brian Pontarelli
  */
 type UserActionLog struct {
-  ActioneeUserId                   string                             `json:"actioneeUserId,omitempty"`
-  ActionerUserId                   string                             `json:"actionerUserId,omitempty"`
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
-  Comment                          string                             `json:"comment,omitempty"`
-  EmailUserOnEnd                   bool                               `json:"emailUserOnEnd"`
-  EndEventSent                     bool                               `json:"endEventSent"`
-  Expiry                           int64                              `json:"expiry,omitempty"`
-  History                          LogHistory                         `json:"history,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LocalizedName                    string                             `json:"localizedName,omitempty"`
-  LocalizedOption                  string                             `json:"localizedOption,omitempty"`
-  LocalizedReason                  string                             `json:"localizedReason,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
-  NotifyUserOnEnd                  bool                               `json:"notifyUserOnEnd"`
-  Option                           string                             `json:"option,omitempty"`
-  Reason                           string                             `json:"reason,omitempty"`
-  ReasonCode                       string                             `json:"reasonCode,omitempty"`
-  UserActionId                     string                             `json:"userActionId,omitempty"`
+	ActioneeUserId  string     `json:"actioneeUserId,omitempty"`
+	ActionerUserId  string     `json:"actionerUserId,omitempty"`
+	ApplicationIds  []string   `json:"applicationIds,omitempty"`
+	Comment         string     `json:"comment,omitempty"`
+	EmailUserOnEnd  bool       `json:"emailUserOnEnd"`
+	EndEventSent    bool       `json:"endEventSent"`
+	Expiry          int64      `json:"expiry,omitempty"`
+	History         LogHistory `json:"history,omitempty"`
+	Id              string     `json:"id,omitempty"`
+	InsertInstant   int64      `json:"insertInstant,omitempty"`
+	LocalizedName   string     `json:"localizedName,omitempty"`
+	LocalizedOption string     `json:"localizedOption,omitempty"`
+	LocalizedReason string     `json:"localizedReason,omitempty"`
+	Name            string     `json:"name,omitempty"`
+	NotifyUserOnEnd bool       `json:"notifyUserOnEnd"`
+	Option          string     `json:"option,omitempty"`
+	Reason          string     `json:"reason,omitempty"`
+	ReasonCode      string     `json:"reasonCode,omitempty"`
+	UserActionId    string     `json:"userActionId,omitempty"`
 }
 
 /**
@@ -3284,8 +3386,8 @@ type UserActionLog struct {
  * @author Brian Pontarelli
  */
 type UserActionOption struct {
-  LocalizedNames                   map[string]string                  `json:"localizedNames,omitempty"`
-  Name                             string                             `json:"name,omitempty"`
+	LocalizedNames map[string]string `json:"localizedNames,omitempty"`
+	Name           string            `json:"name,omitempty"`
 }
 
 /**
@@ -3294,11 +3396,12 @@ type UserActionOption struct {
  * @author Brian Pontarelli
  */
 type UserActionPhase string
+
 const (
-  UserActionPhase_Start                            UserActionPhase                    = "start"
-  UserActionPhase_Modify                           UserActionPhase                    = "modify"
-  UserActionPhase_Cancel                           UserActionPhase                    = "cancel"
-  UserActionPhase_End                              UserActionPhase                    = "end"
+	UserActionPhase_Start  UserActionPhase = "start"
+	UserActionPhase_Modify UserActionPhase = "modify"
+	UserActionPhase_Cancel UserActionPhase = "cancel"
+	UserActionPhase_End    UserActionPhase = "end"
 )
 
 /**
@@ -3307,12 +3410,12 @@ const (
  * @author Brian Pontarelli
  */
 type UserActionReason struct {
-  Code                             string                             `json:"code,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  LocalizedTexts                   map[string]string                  `json:"localizedTexts,omitempty"`
-  Text                             string                             `json:"text,omitempty"`
+	Code              string            `json:"code,omitempty"`
+	Id                string            `json:"id,omitempty"`
+	InsertInstant     int64             `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64             `json:"lastUpdateInstant,omitempty"`
+	LocalizedTexts    map[string]string `json:"localizedTexts,omitempty"`
+	Text              string            `json:"text,omitempty"`
 }
 
 /**
@@ -3321,7 +3424,7 @@ type UserActionReason struct {
  * @author Brian Pontarelli
  */
 type UserActionReasonRequest struct {
-  UserActionReason                 UserActionReason                   `json:"userActionReason,omitempty"`
+	UserActionReason UserActionReason `json:"userActionReason,omitempty"`
 }
 
 /**
@@ -3330,12 +3433,13 @@ type UserActionReasonRequest struct {
  * @author Brian Pontarelli
  */
 type UserActionReasonResponse struct {
-  BaseHTTPResponse
-  UserActionReason                 UserActionReason                   `json:"userActionReason,omitempty"`
-  UserActionReasons                []UserActionReason                 `json:"userActionReasons,omitempty"`
+	BaseHTTPResponse
+	UserActionReason  UserActionReason   `json:"userActionReason,omitempty"`
+	UserActionReasons []UserActionReason `json:"userActionReasons,omitempty"`
 }
+
 func (b *UserActionReasonResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3344,7 +3448,7 @@ func (b *UserActionReasonResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type UserActionRequest struct {
-  UserAction                       UserAction                         `json:"userAction,omitempty"`
+	UserAction UserAction `json:"userAction,omitempty"`
 }
 
 /**
@@ -3353,12 +3457,13 @@ type UserActionRequest struct {
  * @author Brian Pontarelli
  */
 type UserActionResponse struct {
-  BaseHTTPResponse
-  UserAction                       UserAction                         `json:"userAction,omitempty"`
-  UserActions                      []UserAction                       `json:"userActions,omitempty"`
+	BaseHTTPResponse
+	UserAction  UserAction   `json:"userAction,omitempty"`
+	UserActions []UserAction `json:"userActions,omitempty"`
 }
+
 func (b *UserActionResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3367,8 +3472,8 @@ func (b *UserActionResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type UserBulkCreateEvent struct {
-  BaseEvent
-  Users                            []User                             `json:"users,omitempty"`
+	BaseEvent
+	Users []User `json:"users,omitempty"`
 }
 
 /**
@@ -3377,18 +3482,18 @@ type UserBulkCreateEvent struct {
  * @author Brian Pontarelli
  */
 type UserComment struct {
-  Comment                          string                             `json:"comment,omitempty"`
-  CommenterId                      string                             `json:"commenterId,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
+	Comment       string `json:"comment,omitempty"`
+	CommenterId   string `json:"commenterId,omitempty"`
+	Id            string `json:"id,omitempty"`
+	InsertInstant int64  `json:"insertInstant,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
  * @author Seth Musselman
  */
 type UserCommentRequest struct {
-  UserComment                      UserComment                        `json:"userComment,omitempty"`
+	UserComment UserComment `json:"userComment,omitempty"`
 }
 
 /**
@@ -3397,12 +3502,13 @@ type UserCommentRequest struct {
  * @author Seth Musselman
  */
 type UserCommentResponse struct {
-  BaseHTTPResponse
-  UserComment                      UserComment                        `json:"userComment,omitempty"`
-  UserComments                     []UserComment                      `json:"userComments,omitempty"`
+	BaseHTTPResponse
+	UserComment  UserComment   `json:"userComment,omitempty"`
+	UserComments []UserComment `json:"userComments,omitempty"`
 }
+
 func (b *UserCommentResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3411,16 +3517,16 @@ func (b *UserCommentResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type UserConsent struct {
-  Consent                          Consent                            `json:"consent,omitempty"`
-  ConsentId                        string                             `json:"consentId,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  GiverUserId                      string                             `json:"giverUserId,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  Status                           ConsentStatus                      `json:"status,omitempty"`
-  UserId                           string                             `json:"userId,omitempty"`
-  Values                           []string                           `json:"values,omitempty"`
+	Consent           Consent                `json:"consent,omitempty"`
+	ConsentId         string                 `json:"consentId,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	GiverUserId       string                 `json:"giverUserId,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Status            ConsentStatus          `json:"status,omitempty"`
+	UserId            string                 `json:"userId,omitempty"`
+	Values            []string               `json:"values,omitempty"`
 }
 
 /**
@@ -3429,7 +3535,7 @@ type UserConsent struct {
  * @author Daniel DeGroff
  */
 type UserConsentRequest struct {
-  UserConsent                      UserConsent                        `json:"userConsent,omitempty"`
+	UserConsent UserConsent `json:"userConsent,omitempty"`
 }
 
 /**
@@ -3438,12 +3544,13 @@ type UserConsentRequest struct {
  * @author Daniel DeGroff
  */
 type UserConsentResponse struct {
-  BaseHTTPResponse
-  UserConsent                      UserConsent                        `json:"userConsent,omitempty"`
-  UserConsents                     []UserConsent                      `json:"userConsents,omitempty"`
+	BaseHTTPResponse
+	UserConsent  UserConsent   `json:"userConsent,omitempty"`
+	UserConsents []UserConsent `json:"userConsents,omitempty"`
 }
+
 func (b *UserConsentResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3452,8 +3559,8 @@ func (b *UserConsentResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type UserCreateEvent struct {
-  BaseEvent
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -3462,8 +3569,8 @@ type UserCreateEvent struct {
  * @author Brian Pontarelli
  */
 type UserDeactivateEvent struct {
-  BaseEvent
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -3473,8 +3580,8 @@ type UserDeactivateEvent struct {
  * @author Brian Pontarelli
  */
 type UserDeleteEvent struct {
-  BaseEvent
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -3483,11 +3590,11 @@ type UserDeleteEvent struct {
  * @author Daniel DeGroff
  */
 type UserDeleteRequest struct {
-  DryRun                           bool                               `json:"dryRun"`
-  HardDelete                       bool                               `json:"hardDelete"`
-  Query                            string                             `json:"query,omitempty"`
-  QueryString                      string                             `json:"queryString,omitempty"`
-  UserIds                          []string                           `json:"userIds,omitempty"`
+	DryRun      bool     `json:"dryRun"`
+	HardDelete  bool     `json:"hardDelete"`
+	Query       string   `json:"query,omitempty"`
+	QueryString string   `json:"queryString,omitempty"`
+	UserIds     []string `json:"userIds,omitempty"`
 }
 
 /**
@@ -3496,14 +3603,15 @@ type UserDeleteRequest struct {
  * @author Trevor Smith
  */
 type UserDeleteResponse struct {
-  BaseHTTPResponse
-  DryRun                           bool                               `json:"dryRun"`
-  HardDelete                       bool                               `json:"hardDelete"`
-  Total                            int                                `json:"total,omitempty"`
-  UserIds                          []string                           `json:"userIds,omitempty"`
+	BaseHTTPResponse
+	DryRun     bool     `json:"dryRun"`
+	HardDelete bool     `json:"hardDelete"`
+	Total      int      `json:"total,omitempty"`
+	UserIds    []string `json:"userIds,omitempty"`
 }
+
 func (b *UserDeleteResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3512,8 +3620,8 @@ func (b *UserDeleteResponse) SetStatus(status int) {
  * @author Trevor Smith
  */
 type UserEmailVerifiedEvent struct {
-  BaseEvent
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -3522,10 +3630,10 @@ type UserEmailVerifiedEvent struct {
  * @author Daniel DeGroff
  */
 type UserLoginFailedEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  AuthenticationType               string                             `json:"authenticationType,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	ApplicationId      string `json:"applicationId,omitempty"`
+	AuthenticationType string `json:"authenticationType,omitempty"`
+	User               User   `json:"user,omitempty"`
 }
 
 /**
@@ -3534,18 +3642,18 @@ type UserLoginFailedEvent struct {
  * @author Daniel DeGroff
  */
 type UserLoginSuccessEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  AuthenticationType               string                             `json:"authenticationType,omitempty"`
-  ConnectorId                      string                             `json:"connectorId,omitempty"`
-  IdentityProviderId               string                             `json:"identityProviderId,omitempty"`
-  IdentityProviderName             string                             `json:"identityProviderName,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	ApplicationId        string `json:"applicationId,omitempty"`
+	AuthenticationType   string `json:"authenticationType,omitempty"`
+	ConnectorId          string `json:"connectorId,omitempty"`
+	IdentityProviderId   string `json:"identityProviderId,omitempty"`
+	IdentityProviderName string `json:"identityProviderName,omitempty"`
+	User                 User   `json:"user,omitempty"`
 }
 
 type UsernameModeration struct {
-  Enableable
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
+	Enableable
+	ApplicationId string `json:"applicationId,omitempty"`
 }
 
 /**
@@ -3554,8 +3662,8 @@ type UsernameModeration struct {
  * @author Matthew Altman
  */
 type UserPasswordBreachEvent struct {
-  BaseEvent
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -3564,8 +3672,8 @@ type UserPasswordBreachEvent struct {
  * @author Brian Pontarelli
  */
 type UserReactivateEvent struct {
-  BaseEvent
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -3574,21 +3682,21 @@ type UserReactivateEvent struct {
  * @author Brian Pontarelli
  */
 type UserRegistration struct {
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  AuthenticationToken              string                             `json:"authenticationToken,omitempty"`
-  CleanSpeakId                     string                             `json:"cleanSpeakId,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastLoginInstant                 int64                              `json:"lastLoginInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  PreferredLanguages               []string                           `json:"preferredLanguages,omitempty"`
-  Roles                            []string                           `json:"roles,omitempty"`
-  Timezone                         string                             `json:"timezone,omitempty"`
-  Tokens                           map[string]string                  `json:"tokens,omitempty"`
-  Username                         string                             `json:"username,omitempty"`
-  UsernameStatus                   ContentStatus                      `json:"usernameStatus,omitempty"`
-  Verified                         bool                               `json:"verified"`
+	ApplicationId       string                 `json:"applicationId,omitempty"`
+	AuthenticationToken string                 `json:"authenticationToken,omitempty"`
+	CleanSpeakId        string                 `json:"cleanSpeakId,omitempty"`
+	Data                map[string]interface{} `json:"data,omitempty"`
+	Id                  string                 `json:"id,omitempty"`
+	InsertInstant       int64                  `json:"insertInstant,omitempty"`
+	LastLoginInstant    int64                  `json:"lastLoginInstant,omitempty"`
+	LastUpdateInstant   int64                  `json:"lastUpdateInstant,omitempty"`
+	PreferredLanguages  []string               `json:"preferredLanguages,omitempty"`
+	Roles               []string               `json:"roles,omitempty"`
+	Timezone            string                 `json:"timezone,omitempty"`
+	Tokens              map[string]string      `json:"tokens,omitempty"`
+	Username            string                 `json:"username,omitempty"`
+	UsernameStatus      ContentStatus          `json:"usernameStatus,omitempty"`
+	Verified            bool                   `json:"verified"`
 }
 
 /**
@@ -3597,10 +3705,10 @@ type UserRegistration struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationCreateEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Registration                     UserRegistration                   `json:"registration,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -3609,10 +3717,10 @@ type UserRegistrationCreateEvent struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationDeleteEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Registration                     UserRegistration                   `json:"registration,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -3621,11 +3729,11 @@ type UserRegistrationDeleteEvent struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationUpdateEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Original                         UserRegistration                   `json:"original,omitempty"`
-  Registration                     UserRegistration                   `json:"registration,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Original      UserRegistration `json:"original,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -3634,10 +3742,10 @@ type UserRegistrationUpdateEvent struct {
  * @author Trevor Smith
  */
 type UserRegistrationVerifiedEvent struct {
-  BaseEvent
-  ApplicationId                    string                             `json:"applicationId,omitempty"`
-  Registration                     UserRegistration                   `json:"registration,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -3646,9 +3754,9 @@ type UserRegistrationVerifiedEvent struct {
  * @author Brian Pontarelli
  */
 type UserRequest struct {
-  SendSetPasswordEmail             bool                               `json:"sendSetPasswordEmail"`
-  SkipVerification                 bool                               `json:"skipVerification"`
-  User                             User                               `json:"user,omitempty"`
+	SendSetPasswordEmail bool `json:"sendSetPasswordEmail"`
+	SkipVerification     bool `json:"skipVerification"`
+	User                 User `json:"user,omitempty"`
 }
 
 /**
@@ -3657,12 +3765,13 @@ type UserRequest struct {
  * @author Brian Pontarelli
  */
 type UserResponse struct {
-  BaseHTTPResponse
-  Token                            string                             `json:"token,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseHTTPResponse
+	Token string `json:"token,omitempty"`
+	User  User   `json:"user,omitempty"`
 }
+
 func (b *UserResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3671,20 +3780,21 @@ func (b *UserResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type UserSearchCriteria struct {
-  BaseSearchCriteria
-  Ids                              []string                           `json:"ids,omitempty"`
-  Query                            string                             `json:"query,omitempty"`
-  QueryString                      string                             `json:"queryString,omitempty"`
-  SortFields                       []SortField                        `json:"sortFields,omitempty"`
+	BaseSearchCriteria
+	Ids         []string    `json:"ids,omitempty"`
+	Query       string      `json:"query,omitempty"`
+	QueryString string      `json:"queryString,omitempty"`
+	SortFields  []SortField `json:"sortFields,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type UserState string
+
 const (
-  UserState_Authenticated                    UserState                          = "Authenticated"
-  UserState_AuthenticatedNotRegistered       UserState                          = "AuthenticatedNotRegistered"
+	UserState_Authenticated              UserState = "Authenticated"
+	UserState_AuthenticatedNotRegistered UserState = "AuthenticatedNotRegistered"
 )
 
 /**
@@ -3693,42 +3803,45 @@ const (
  * @author Brian Pontarelli
  */
 type UserUpdateEvent struct {
-  BaseEvent
-  Original                         User                               `json:"original,omitempty"`
-  User                             User                               `json:"user,omitempty"`
+	BaseEvent
+	Original User `json:"original,omitempty"`
+	User     User `json:"user,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type ValidateResponse struct {
-  BaseHTTPResponse
-  Jwt                              JWT                                `json:"jwt,omitempty"`
+	BaseHTTPResponse
+	Jwt JWT `json:"jwt,omitempty"`
 }
+
 func (b *ValidateResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type VerifyEmailResponse struct {
-  BaseHTTPResponse
-  VerificationId                   string                             `json:"verificationId,omitempty"`
+	BaseHTTPResponse
+	VerificationId string `json:"verificationId,omitempty"`
 }
+
 func (b *VerifyEmailResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
  * @author Daniel DeGroff
  */
 type VerifyRegistrationResponse struct {
-  BaseHTTPResponse
-  VerificationId                   string                             `json:"verificationId,omitempty"`
+	BaseHTTPResponse
+	VerificationId string `json:"verificationId,omitempty"`
 }
+
 func (b *VerifyRegistrationResponse) SetStatus(status int) {
-  b.StatusCode = status
+	b.StatusCode = status
 }
 
 /**
@@ -3737,21 +3850,21 @@ func (b *VerifyRegistrationResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type Webhook struct {
-  ApplicationIds                   []string                           `json:"applicationIds,omitempty"`
-  ConnectTimeout                   int                                `json:"connectTimeout,omitempty"`
-  Data                             map[string]interface{}             `json:"data,omitempty"`
-  Description                      string                             `json:"description,omitempty"`
-  EventsEnabled                    map[EventType]bool                 `json:"eventsEnabled,omitempty"`
-  Global                           bool                               `json:"global"`
-  Headers                          map[string]string                  `json:"headers,omitempty"`
-  HttpAuthenticationPassword       string                             `json:"httpAuthenticationPassword,omitempty"`
-  HttpAuthenticationUsername       string                             `json:"httpAuthenticationUsername,omitempty"`
-  Id                               string                             `json:"id,omitempty"`
-  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
-  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
-  ReadTimeout                      int                                `json:"readTimeout,omitempty"`
-  SslCertificate                   string                             `json:"sslCertificate,omitempty"`
-  Url                              string                             `json:"url,omitempty"`
+	ApplicationIds             []string               `json:"applicationIds,omitempty"`
+	ConnectTimeout             int                    `json:"connectTimeout,omitempty"`
+	Data                       map[string]interface{} `json:"data,omitempty"`
+	Description                string                 `json:"description,omitempty"`
+	EventsEnabled              map[EventType]bool     `json:"eventsEnabled,omitempty"`
+	Global                     bool                   `json:"global"`
+	Headers                    map[string]string      `json:"headers,omitempty"`
+	HttpAuthenticationPassword string                 `json:"httpAuthenticationPassword,omitempty"`
+	HttpAuthenticationUsername string                 `json:"httpAuthenticationUsername,omitempty"`
+	Id                         string                 `json:"id,omitempty"`
+	InsertInstant              int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant          int64                  `json:"lastUpdateInstant,omitempty"`
+	ReadTimeout                int                    `json:"readTimeout,omitempty"`
+	SslCertificate             string                 `json:"sslCertificate,omitempty"`
+	Url                        string                 `json:"url,omitempty"`
 }
 
 /**
@@ -3760,7 +3873,7 @@ type Webhook struct {
  * @author Brian Pontarelli
  */
 type WebhookRequest struct {
-  Webhook                          Webhook                            `json:"webhook,omitempty"`
+	Webhook Webhook `json:"webhook,omitempty"`
 }
 
 /**
@@ -3769,11 +3882,11 @@ type WebhookRequest struct {
  * @author Brian Pontarelli
  */
 type WebhookResponse struct {
-  BaseHTTPResponse
-  Webhook                          Webhook                            `json:"webhook,omitempty"`
-  Webhooks                         []Webhook                          `json:"webhooks,omitempty"`
-}
-func (b *WebhookResponse) SetStatus(status int) {
-  b.StatusCode = status
+	BaseHTTPResponse
+	Webhook  Webhook   `json:"webhook,omitempty"`
+	Webhooks []Webhook `json:"webhooks,omitempty"`
 }
 
+func (b *WebhookResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
