@@ -17,6 +17,11 @@
 
 package fusionauth
 
+import(
+  "fmt"
+  "strings"
+)
+
 type StatusAble interface {
   SetStatus(status int)
 }
@@ -840,6 +845,25 @@ type Error struct {
 type Errors struct {
   FieldErrors                      map[string][]Error                 `json:"fieldErrors,omitempty"`
   GeneralErrors                    []Error                            `json:"generalErrors,omitempty"`
+}
+
+func (e Errors) Present() bool {
+	return len(e.FieldErrors) != 0 || len(e.GeneralErrors) != 0
+}
+
+func (e Errors) Error() string {
+	messages := []string{}
+	for _, generalError := range e.GeneralErrors {
+		messages = append(messages, generalError.Message)
+	}
+	for fieldName, fieldErrors := range e.FieldErrors {
+		fieldMessages := []string{}
+		for _, fieldError := range fieldErrors {
+			fieldMessages = append(fieldMessages, fieldError.Message)
+		}
+		messages = append(messages, fmt.Sprintf("%s: %s", fieldName, strings.Join(fieldMessages, ",")))
+	}
+	return strings.Join(messages, " ")
 }
 
 /**
