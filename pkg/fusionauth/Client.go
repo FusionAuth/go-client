@@ -1224,7 +1224,7 @@ func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorReque
 
 // ExchangeOAuthCodeForAccessToken
 // Exchanges an OAuth authorization code for an access token.
-// If you will be using the Authorization Code grant, you will make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
+// Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
 //   string code The authorization code returned on the /oauth2/authorize response.
 //   string clientId The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate.
 //   string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
@@ -1238,6 +1238,36 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId
     formBody.Set("client_secret", clientSecret)
     formBody.Set("grant_type", "authorization_code")
     formBody.Set("redirect_uri", redirectUri)
+
+    restClient := c.StartAnonymous(&resp, &errors)
+    err := restClient.WithUri("/oauth2/token").
+    WithFormData(formBody).
+    WithMethod(http.MethodPost).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// ExchangeOAuthCodeForAccessTokenUsingPKCE
+// Exchanges an OAuth authorization code and code_verifier for an access token.
+// Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint and a code_verifier for an access token.
+//   string code The authorization code returned on the /oauth2/authorize response.
+//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+//   string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+//   string redirectUri The URI to redirect to upon a successful request.
+//   string codeVerifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
+func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string, clientId string, clientSecret string, redirectUri string, codeVerifier string) (*AccessToken, *OAuthError, error) {
+    var resp AccessToken
+    var errors OAuthError
+    formBody := url.Values{}
+    formBody.Set("code", code)
+    formBody.Set("client_id", clientId)
+    formBody.Set("client_secret", clientSecret)
+    formBody.Set("grant_type", "authorization_code")
+    formBody.Set("redirect_uri", redirectUri)
+    formBody.Set("code_verifier", codeVerifier)
 
     restClient := c.StartAnonymous(&resp, &errors)
     err := restClient.WithUri("/oauth2/token").

@@ -101,6 +101,9 @@ const (
   Algorithm_HS256                            Algorithm                          = "HS256"
   Algorithm_HS384                            Algorithm                          = "HS384"
   Algorithm_HS512                            Algorithm                          = "HS512"
+  Algorithm_PS256                            Algorithm                          = "PS256"
+  Algorithm_PS384                            Algorithm                          = "PS384"
+  Algorithm_PS512                            Algorithm                          = "PS512"
   Algorithm_RS256                            Algorithm                          = "RS256"
   Algorithm_RS384                            Algorithm                          = "RS384"
   Algorithm_RS512                            Algorithm                          = "RS512"
@@ -2709,6 +2712,7 @@ type SAMLv2Configuration struct {
   LogoutURL                        string                             `json:"logoutURL,omitempty"`
   RequireSignedRequests            bool                               `json:"requireSignedRequests"`
   XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
+  XmlSignatureLocation             XMLSignatureLocation               `json:"xmlSignatureLocation,omitempty"`
 }
 
 /**
@@ -3806,4 +3810,10 @@ type WebhookResponse struct {
 func (b *WebhookResponse) SetStatus(status int) {
   b.StatusCode = status
 }
+
+type XMLSignatureLocation string
+const (
+  XMLSignatureLocation_Assertion                        XMLSignatureLocation               = "Assertion"
+  XMLSignatureLocation_Response                         XMLSignatureLocation               = "Response"
+)
 
