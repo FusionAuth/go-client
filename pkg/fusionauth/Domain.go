@@ -852,12 +852,12 @@ func (e Errors) Present() bool {
 }
 
 func (e Errors) Error() string {
-	messages := []string{}
+	var messages []string
 	for _, generalError := range e.GeneralErrors {
 		messages = append(messages, generalError.Message)
 	}
 	for fieldName, fieldErrors := range e.FieldErrors {
-		fieldMessages := []string{}
+		var fieldMessages []string
 		for _, fieldError := range fieldErrors {
 			fieldMessages = append(fieldMessages, fieldError.Message)
 		}
