@@ -2169,6 +2169,38 @@ func (b *MemberResponse) SetStatus(status int) {
   b.StatusCode = status
 }
 
+/**
+ * Stores an message template used to distribute messages;
+ *
+ * @author Michael Sleevi
+ */
+type MessageTemplate struct {
+  DefaultTemplate                  string                             `json:"defaultTemplate,omitempty"`
+  Id                               string                             `json:"id,omitempty"`
+  InsertInstant                    int64                              `json:"insertInstant,omitempty"`
+  LastUpdateInstant                int64                              `json:"lastUpdateInstant,omitempty"`
+  LocalizedTemplates               map[string]string                  `json:"localizedTemplates,omitempty"`
+  Name                             string                             `json:"name,omitempty"`
+}
+
+/**
+ * A Message Template Request to the API
+ *
+ * @author Michael Sleevi
+ */
+type MessageTemplateRequest struct {
+  MessageTemplate                  MessageTemplate                    `json:"messageTemplate,omitempty"`
+}
+
+type MessageTemplateResponse struct {
+  BaseHTTPResponse
+  MessageTemplate                  MessageTemplate                    `json:"messageTemplate,omitempty"`
+  MessageTemplates                 []MessageTemplate                  `json:"messageTemplates,omitempty"`
+}
+func (b *MessageTemplateResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
 type MetaData struct {
   Device                           DeviceInfo                         `json:"device,omitempty"`
   Scopes                           []string                           `json:"scopes,omitempty"`
