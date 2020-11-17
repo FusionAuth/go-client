@@ -542,6 +542,26 @@ func (c *FusionAuthClient) CreateLambda(lambdaId string, request LambdaRequest) 
     return &resp, &errors, err
 }
 
+// CreateMessageTemplate
+// Creates an message template. You can optionally specify an Id for the template, if not provided one will be generated.
+//   string messageTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
+//   MessageTemplateRequest request The request object that contains all of the information used to create the message template.
+func (c *FusionAuthClient) CreateMessageTemplate(messageTemplateId string, request MessageTemplateRequest) (*MessageTemplateResponse, *Errors, error) {
+    var resp MessageTemplateResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/message/template").
+       WithUriSegment(messageTemplateId).
+      WithJSONBody(request).
+    WithMethod(http.MethodPost).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // CreateTenant
 // Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
 //   string tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -996,6 +1016,24 @@ func (c *FusionAuthClient) DeleteLambda(lambdaId string) (*BaseHTTPResponse, *Er
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/lambda").
        WithUriSegment(lambdaId).
+    WithMethod(http.MethodDelete).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// DeleteMessageTemplate
+// Deletes the message template for the given Id.
+//   string messageTemplateId The Id of the message template to delete.
+func (c *FusionAuthClient) DeleteMessageTemplate(messageTemplateId string) (*BaseHTTPResponse, *Errors, error) {
+    var resp BaseHTTPResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/message/template").
+       WithUriSegment(messageTemplateId).
     WithMethod(http.MethodDelete).
     Do()
     if restClient.ErrorRef == nil {
@@ -1872,6 +1910,26 @@ func (c *FusionAuthClient) PatchLambda(lambdaId string, request map[string]inter
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/lambda").
        WithUriSegment(lambdaId).
+      WithJSONBody(request).
+    WithMethod(http.MethodPatch).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// PatchMessageTemplate
+// Updates, via PATCH, the message template with the given Id.
+//   string messageTemplateId The Id of the message template to update.
+//   MessageTemplateRequest request The request that contains just the new message template information.
+func (c *FusionAuthClient) PatchMessageTemplate(messageTemplateId string, request map[string]interface{}) (*MessageTemplateResponse, *Errors, error) {
+    var resp MessageTemplateResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/message/template").
+       WithUriSegment(messageTemplateId).
       WithJSONBody(request).
     WithMethod(http.MethodPatch).
     Do()
@@ -2810,6 +2868,32 @@ func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start int64
       return &resp, nil, err
     }
     return &resp, &errors, err
+}
+
+// RetrieveMessageTemplate
+// Retrieves the message template for the given Id. If you don't specify the id, this will return all of the message templates.
+//   string messageTemplateId (Optional) The Id of the message template.
+func (c *FusionAuthClient) RetrieveMessageTemplate(messageTemplateId string) (*MessageTemplateResponse, error) {
+    var resp MessageTemplateResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/message/template").
+       WithUriSegment(messageTemplateId).
+    WithMethod(http.MethodGet).
+    Do()
+    return &resp, err
+}
+
+// RetrieveMessageTemplates
+// Retrieves all of the message templates.
+func (c *FusionAuthClient) RetrieveMessageTemplates() (*MessageTemplateResponse, error) {
+    var resp MessageTemplateResponse
+
+    err := c.Start(&resp, nil).
+             WithUri("/api/message/template").
+    WithMethod(http.MethodGet).
+    Do()
+    return &resp, err
 }
 
 // RetrieveMonthlyActiveReport
@@ -3943,6 +4027,26 @@ func (c *FusionAuthClient) UpdateLambda(lambdaId string, request LambdaRequest) 
     restClient := c.Start(&resp, &errors)
     err := restClient.WithUri("/api/lambda").
        WithUriSegment(lambdaId).
+      WithJSONBody(request).
+    WithMethod(http.MethodPut).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
+// UpdateMessageTemplate
+// Updates the message template with the given Id.
+//   string messageTemplateId The Id of the message template to update.
+//   MessageTemplateRequest request The request that contains all of the new message template information.
+func (c *FusionAuthClient) UpdateMessageTemplate(messageTemplateId string, request MessageTemplateRequest) (*MessageTemplateResponse, *Errors, error) {
+    var resp MessageTemplateResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/message/template").
+       WithUriSegment(messageTemplateId).
       WithJSONBody(request).
     WithMethod(http.MethodPut).
     Do()
