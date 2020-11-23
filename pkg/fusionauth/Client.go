@@ -2884,6 +2884,24 @@ func (c *FusionAuthClient) RetrieveMessageTemplate(messageTemplateId string) (*M
     return &resp, err
 }
 
+// RetrieveMessageTemplatePreview
+// Creates a preview of the message template provided in the request, normalized to a given locale.
+//   PreviewMessageTemplateRequest request The request that contains the email template and optionally a locale to render it in.
+func (c *FusionAuthClient) RetrieveMessageTemplatePreview(request PreviewMessageTemplateRequest) (*PreviewMessageTemplateResponse, *Errors, error) {
+    var resp PreviewMessageTemplateResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/message/template/preview").
+      WithJSONBody(request).
+    WithMethod(http.MethodPost).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // RetrieveMessageTemplates
 // Retrieves all of the message templates.
 func (c *FusionAuthClient) RetrieveMessageTemplates() (*MessageTemplateResponse, error) {

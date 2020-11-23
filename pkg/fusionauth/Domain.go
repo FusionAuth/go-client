@@ -2170,6 +2170,15 @@ func (b *MemberResponse) SetStatus(status int) {
 }
 
 /**
+ * An incredible simplified view of a message
+ *
+ * @author Michael Sleevi
+ */
+type Message struct {
+  Text                             string                             `json:"text,omitempty"`
+}
+
+/**
  * Stores an message template used to distribute messages;
  *
  * @author Michael Sleevi
@@ -2511,6 +2520,23 @@ type PendingResponse struct {
   Users                            []User                             `json:"users,omitempty"`
 }
 func (b *PendingResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
+/**
+ * @author Michael Sleevi
+ */
+type PreviewMessageTemplateRequest struct {
+  Locale                           string                             `json:"locale,omitempty"`
+  MessageTemplate                  MessageTemplate                    `json:"messageTemplate,omitempty"`
+}
+
+type PreviewMessageTemplateResponse struct {
+  BaseHTTPResponse
+  Errors                           Errors                             `json:"errors,omitempty"`
+  Message                          Message                            `json:"message,omitempty"`
+}
+func (b *PreviewMessageTemplateResponse) SetStatus(status int) {
   b.StatusCode = status
 }
 
