@@ -1776,7 +1776,7 @@ type JWT struct {
 	Sub                string                 `json:"sub,omitempty"`
 	AuthenticationType string                 `json:"authenticationType,omitempty"`
 	Email              string                 `json:"email,omitempty"`
-	EmailVerified      string                 `json:"email_verified,omitempty"`
+	EmailVerified      bool                 `json:"email_verified,omitempty"`
 	PreferredUsername  string                 `json:"preferred_username,omitempty"`
 }
 
