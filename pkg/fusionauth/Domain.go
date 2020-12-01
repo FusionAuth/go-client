@@ -159,6 +159,7 @@ type Application struct {
   RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy `json:"registrationDeletePolicy,omitempty"`
   Roles                            []ApplicationRole                  `json:"roles,omitempty"`
   Samlv2Configuration              SAMLv2Configuration                `json:"samlv2Configuration,omitempty"`
+  State                            ObjectState                        `json:"state,omitempty"`
   TenantId                         string                             `json:"tenantId,omitempty"`
   VerificationEmailTemplateId      string                             `json:"verificationEmailTemplateId,omitempty"`
   VerifyRegistration               bool                               `json:"verifyRegistration"`
