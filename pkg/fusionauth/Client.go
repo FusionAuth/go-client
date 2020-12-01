@@ -1042,6 +1042,26 @@ func (c *FusionAuthClient) DeleteTenant(tenantId string) (*BaseHTTPResponse, *Er
     return &resp, &errors, err
 }
 
+// DeleteTenantAsync
+// Deletes the tenant for the given Id asynchronously.
+// This method is helpful if you do not want to wait for the delete operation to complete.
+//   string tenantId The Id of the tenant to delete.
+func (c *FusionAuthClient) DeleteTenantAsync(tenantId string) (*BaseHTTPResponse, *Errors, error) {
+    var resp BaseHTTPResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/tenant").
+       WithUriSegment(tenantId).
+        WithParameter("async", strconv.FormatBool(true)).
+    WithMethod(http.MethodDelete).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // DeleteTheme
 // Deletes the theme for the given Id.
 //   string themeId The Id of the theme to delete.

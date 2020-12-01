@@ -2324,6 +2324,16 @@ func (b *OAuthResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type ObjectState string
+const (
+  ObjectState_Active                           ObjectState                        = "Active"
+  ObjectState_Inactive                         ObjectState                        = "Inactive"
+  ObjectState_PendingDelete                    ObjectState                        = "PendingDelete"
+)
+
+/**
  * OpenID Connect Configuration as described by the <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID
  * Provider Metadata</a>.
  *
@@ -2988,6 +2998,7 @@ type Tenant struct {
   Name                             string                             `json:"name,omitempty"`
   PasswordEncryptionConfiguration  PasswordEncryptionConfiguration    `json:"passwordEncryptionConfiguration,omitempty"`
   PasswordValidationRules          PasswordValidationRules            `json:"passwordValidationRules,omitempty"`
+  State                            ObjectState                        `json:"state,omitempty"`
   ThemeId                          string                             `json:"themeId,omitempty"`
   UserDeletePolicy                 TenantUserDeletePolicy             `json:"userDeletePolicy,omitempty"`
 }
