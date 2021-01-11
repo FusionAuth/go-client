@@ -1584,6 +1584,7 @@ const (
   IdentityProviderType_SAMLv2                           IdentityProviderType               = "SAMLv2"
   IdentityProviderType_HYPR                             IdentityProviderType               = "HYPR"
   IdentityProviderType_Apple                            IdentityProviderType               = "Apple"
+  IdentityProviderType_LinkedIn                         IdentityProviderType               = "LinkedIn"
 )
 
 /**
@@ -1947,6 +1948,7 @@ const (
   LambdaType_HYPRReconcile                    LambdaType                         = "HYPRReconcile"
   LambdaType_TwitterReconcile                 LambdaType                         = "TwitterReconcile"
   LambdaType_LDAPConnectorReconcile           LambdaType                         = "LDAPConnectorReconcile"
+  LambdaType_LinkedInReconcile                LambdaType                         = "LinkedInReconcile"
 )
 
 /**
@@ -1975,6 +1977,28 @@ const (
   LDAPSecurityMethod_LDAPS                            LDAPSecurityMethod                 = "LDAPS"
   LDAPSecurityMethod_StartTLS                         LDAPSecurityMethod                 = "StartTLS"
 )
+
+/**
+ * @author Daniel DeGroff
+ */
+type LinkedInApplicationConfiguration struct {
+  BaseIdentityProviderApplicationConfiguration
+  ButtonText                       string                             `json:"buttonText,omitempty"`
+  ClientId                         string                             `json:"client_id,omitempty"`
+  ClientSecret                     string                             `json:"client_secret,omitempty"`
+  Scope                            string                             `json:"scope,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type LinkedInIdentityProvider struct {
+  BaseIdentityProvider
+  ButtonText                       string                             `json:"buttonText,omitempty"`
+  ClientId                         string                             `json:"client_id,omitempty"`
+  ClientSecret                     string                             `json:"client_secret,omitempty"`
+  Scope                            string                             `json:"scope,omitempty"`
+}
 
 /**
  * A historical state of a user log event. Since events can be modified, this stores the historical state.
