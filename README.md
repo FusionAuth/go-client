@@ -73,6 +73,40 @@ func Login() http.HandlerFunc {
 }
 ```
 
+You can also call the API directly without logging a user in. This code uses an API key to determine the number of tenants in a FusionAuth installation.
+
+```
+package main
+
+import (
+    "net/http"
+    "net/url"
+    "time"
+    "fmt"
+    
+    "github.com/FusionAuth/go-client/pkg/fusionauth"
+)
+
+const host = "http://localhost:9011"
+
+var apiKey = "API KEY"
+var httpClient = &http.Client{
+    Timeout: time.Second * 10,
+}
+
+func main() {
+    var baseURL, _ = url.Parse(host)
+
+    // Construct a new FusionAuth Client
+    var client = fusionauth.NewClient(httpClient, baseURL, apiKey)
+    
+    // for production code, don't ignore the error!
+    tenantResponse, _ := client.RetrieveTenants()
+    
+    fmt.Print(len(tenantResponse.Tenants))
+}
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/FusionAuth/go-client.
