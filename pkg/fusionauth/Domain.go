@@ -2278,6 +2278,7 @@ const (
   OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason                   = "access_token_unavailable_for_processing"
   OAuthErrorReason_AccessTokenFailedProcessing      OAuthErrorReason                   = "access_token_failed_processing"
   OAuthErrorReason_RefreshTokenNotFound             OAuthErrorReason                   = "refresh_token_not_found"
+  OAuthErrorReason_RefreshTokenTypeNotSupported     OAuthErrorReason                   = "refresh_token_type_not_supported"
   OAuthErrorReason_InvalidClientId                  OAuthErrorReason                   = "invalid_client_id"
   OAuthErrorReason_InvalidUserCredentials           OAuthErrorReason                   = "invalid_user_credentials"
   OAuthErrorReason_InvalidGrantType                 OAuthErrorReason                   = "invalid_grant_type"
@@ -2336,6 +2337,7 @@ const (
   OAuthErrorType_TwoFactorRequired                OAuthErrorType                     = "two_factor_required"
   OAuthErrorType_AuthorizationPending             OAuthErrorType                     = "authorization_pending"
   OAuthErrorType_ExpiredToken                     OAuthErrorType                     = "expired_token"
+  OAuthErrorType_UnsupportedTokenType             OAuthErrorType                     = "unsupported_token_type"
 )
 
 /**
@@ -2823,6 +2825,7 @@ func (b *SearchResponse) SetStatus(status int) {
 type SearchResults struct {
   Results                          []interface{}                      `json:"results,omitempty"`
   Total                            int64                              `json:"total,omitempty"`
+  TotalEqualToActual               bool                               `json:"totalEqualToActual"`
 }
 
 /**
@@ -3763,6 +3766,7 @@ func (b *UserResponse) SetStatus(status int) {
  */
 type UserSearchCriteria struct {
   BaseSearchCriteria
+  AccurateTotal                    bool                               `json:"accurateTotal"`
   Ids                              []string                           `json:"ids,omitempty"`
   Query                            string                             `json:"query,omitempty"`
   QueryString                      string                             `json:"queryString,omitempty"`
