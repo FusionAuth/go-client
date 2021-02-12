@@ -1333,8 +1333,8 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForAccessToken(refreshToken strin
 // ExchangeRefreshTokenForJWT
 // Exchange a refresh token for a new JWT.
 //   RefreshRequest request The refresh request.
-func (c *FusionAuthClient) ExchangeRefreshTokenForJWT(request RefreshRequest) (*RefreshResponse, *Errors, error) {
-    var resp RefreshResponse
+func (c *FusionAuthClient) ExchangeRefreshTokenForJWT(request RefreshRequest) (*JWTRefreshResponse, *Errors, error) {
+    var resp JWTRefreshResponse
     var errors Errors
 
     restClient := c.StartAnonymous(&resp, &errors)
@@ -2955,11 +2955,29 @@ func (c *FusionAuthClient) RetrieveRecentLogins(offset int, limit int) (*RecentL
     return &resp, &errors, err
 }
 
+// RetrieveRefreshTokenById
+// Retrieves a single refresh token by unique Id. This is not the same thing as the string value of the refresh token, if you have that, you already have what you need..
+//   string userId The Id of the user.
+func (c *FusionAuthClient) RetrieveRefreshTokenById(userId string) (*RefreshTokenResponse, *Errors, error) {
+    var resp RefreshTokenResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/jwt/refresh").
+       WithUriSegment(userId).
+    WithMethod(http.MethodGet).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // RetrieveRefreshTokens
 // Retrieves the refresh tokens that belong to the user with the given Id.
 //   string userId The Id of the user.
-func (c *FusionAuthClient) RetrieveRefreshTokens(userId string) (*RefreshResponse, *Errors, error) {
-    var resp RefreshResponse
+func (c *FusionAuthClient) RetrieveRefreshTokens(userId string) (*RefreshTokenResponse, *Errors, error) {
+    var resp RefreshTokenResponse
     var errors Errors
 
     restClient := c.Start(&resp, &errors)

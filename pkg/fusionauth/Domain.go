@@ -1776,6 +1776,22 @@ type JWTRefreshEvent struct {
 }
 
 /**
+ * API response for refreshing a JWT with a Refresh Token.
+ * <p>
+ * Using a different response object from RefreshTokenResponse because the retrieve response will return an object for refreshToken, and this is a string.
+ *
+ * @author Daniel DeGroff
+ */
+type JWTRefreshResponse struct {
+  BaseHTTPResponse
+  RefreshToken                     string                             `json:"refreshToken,omitempty"`
+  Token                            string                             `json:"token,omitempty"`
+}
+func (b *JWTRefreshResponse) SetStatus(status int) {
+  b.StatusCode = status
+}
+
+/**
  * Models the Refresh Token Revoke Event (and can be converted to JSON). This event might be for a single token, a user
  * or an entire application.
  *
@@ -2591,9 +2607,6 @@ type RefreshRequest struct {
  */
 type RefreshResponse struct {
   BaseHTTPResponse
-  RefreshToken                     string                             `json:"refreshToken,omitempty"`
-  RefreshTokens                    []RefreshToken                     `json:"refreshTokens,omitempty"`
-  Token                            string                             `json:"token,omitempty"`
 }
 func (b *RefreshResponse) SetStatus(status int) {
   b.StatusCode = status
@@ -2632,6 +2645,20 @@ const (
 type RefreshTokenImportRequest struct {
   RefreshTokens                    []RefreshToken                     `json:"refreshTokens,omitempty"`
   ValidateDbConstraints            bool                               `json:"validateDbConstraints"`
+}
+
+/**
+ * API response for retrieving Refresh Tokens
+ *
+ * @author Daniel DeGroff
+ */
+type RefreshTokenResponse struct {
+  BaseHTTPResponse
+  RefreshToken                     RefreshToken                       `json:"refreshToken,omitempty"`
+  RefreshTokens                    []RefreshToken                     `json:"refreshTokens,omitempty"`
+}
+func (b *RefreshTokenResponse) SetStatus(status int) {
+  b.StatusCode = status
 }
 
 /**
