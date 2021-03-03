@@ -2625,6 +2625,26 @@ func (c *FusionAuthClient) RetrieveGroups() (*GroupResponse, error) {
     return &resp, err
 }
 
+// RetrieveIdentityProviderByType
+// Retrieves one or more identity provider for the given type. For types such as Google, Facebook, Twitter and LinkedIn, only a single 
+// identity provider can exist. For types such as OpenID Connect and SAMLv2 more than one identity provider can be configured so this request 
+// may return multiple identity providers.
+//   IdentityProviderType _type The type of the identity provider.
+func (c *FusionAuthClient) RetrieveIdentityProviderByType(_type IdentityProviderType) (*IdentityProviderResponse, *Errors, error) {
+    var resp IdentityProviderResponse
+    var errors Errors
+
+    restClient := c.Start(&resp, &errors)
+    err := restClient.WithUri("/api/identity-provider").
+        WithParameter("type", string(_type)).
+    WithMethod(http.MethodGet).
+    Do()
+    if restClient.ErrorRef == nil {
+      return &resp, nil, err
+    }
+    return &resp, &errors, err
+}
+
 // RetrieveInactiveActions
 // Retrieves all of the actions for the user with the given Id that are currently inactive.
 // An inactive action means one that is time based and has been canceled or has expired, or is not time based.
