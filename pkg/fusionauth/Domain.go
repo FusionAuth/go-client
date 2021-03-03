@@ -2253,6 +2253,7 @@ type OAuth2Configuration struct {
   AuthorizedRedirectURLs           []string                           `json:"authorizedRedirectURLs,omitempty"`
   ClientId                         string                             `json:"clientId,omitempty"`
   ClientSecret                     string                             `json:"clientSecret,omitempty"`
+  Debug                            bool                               `json:"debug"`
   DeviceVerificationURL            string                             `json:"deviceVerificationURL,omitempty"`
   EnabledGrants                    []GrantType                        `json:"enabledGrants,omitempty"`
   GenerateRefreshTokens            bool                               `json:"generateRefreshTokens"`
