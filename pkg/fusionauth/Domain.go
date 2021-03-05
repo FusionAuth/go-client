@@ -621,6 +621,7 @@ type CORSConfiguration struct {
   AllowedHeaders                   []string                           `json:"allowedHeaders,omitempty"`
   AllowedMethods                   []HTTPMethod                       `json:"allowedMethods,omitempty"`
   AllowedOrigins                   []string                           `json:"allowedOrigins,omitempty"`
+  Debug                            bool                               `json:"debug"`
   ExposedHeaders                   []string                           `json:"exposedHeaders,omitempty"`
   PreflightMaxAgeInSeconds         int                                `json:"preflightMaxAgeInSeconds,omitempty"`
 }
@@ -2777,6 +2778,12 @@ type Requirable struct {
 type RequiresCORSConfiguration struct {
 }
 
+type SAMLLogoutBehavior string
+const (
+  SAMLLogoutBehavior_AllParticipants                  SAMLLogoutBehavior                 = "AllParticipants"
+  SAMLLogoutBehavior_OnlyOriginator                   SAMLLogoutBehavior                 = "OnlyOriginator"
+)
+
 /**
  * @author Brian Pontarelli
  */
@@ -2795,6 +2802,7 @@ type SAMLv2Configuration struct {
   DefaultVerificationKeyId         string                             `json:"defaultVerificationKeyId,omitempty"`
   Issuer                           string                             `json:"issuer,omitempty"`
   KeyId                            string                             `json:"keyId,omitempty"`
+  Logout                           SAMLv2Logout                       `json:"logout,omitempty"`
   LogoutURL                        string                             `json:"logoutURL,omitempty"`
   RequireSignedRequests            bool                               `json:"requireSignedRequests"`
   XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
@@ -2819,6 +2827,22 @@ type SAMLv2IdentityProvider struct {
   RequestSigningKeyId              string                             `json:"requestSigningKeyId,omitempty"`
   SignRequest                      bool                               `json:"signRequest"`
   UseNameIdForEmail                bool                               `json:"useNameIdForEmail"`
+  XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
+}
+
+type SAMLv2Logout struct {
+  Behavior                         SAMLLogoutBehavior                 `json:"behavior,omitempty"`
+  DefaultVerificationKeyId         string                             `json:"defaultVerificationKeyId,omitempty"`
+  KeyId                            string                             `json:"keyId,omitempty"`
+  RequireSignedRequests            bool                               `json:"requireSignedRequests"`
+  SingleLogout                     SAMLv2SingleLogout                 `json:"singleLogout,omitempty"`
+  XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
+}
+
+type SAMLv2SingleLogout struct {
+  Enableable
+  KeyId                            string                             `json:"keyId,omitempty"`
+  Url                              string                             `json:"url,omitempty"`
   XmlSignatureC14nMethod           CanonicalizationMethod             `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
@@ -3027,6 +3051,7 @@ type Templates struct {
   RegistrationComplete             string                             `json:"registrationComplete,omitempty"`
   RegistrationSend                 string                             `json:"registrationSend,omitempty"`
   RegistrationVerify               string                             `json:"registrationVerify,omitempty"`
+  Samlv2Logout                     string                             `json:"samlv2Logout,omitempty"`
 }
 
 /**
