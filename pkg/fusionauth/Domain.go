@@ -1372,6 +1372,7 @@ type GoogleApplicationConfiguration struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   ClientId                         string                             `json:"client_id,omitempty"`
   ClientSecret                     string                             `json:"client_secret,omitempty"`
+  LoginMethod                      LoginMethod                        `json:"login_method,omitempty"`
   Scope                            string                             `json:"scope,omitempty"`
 }
 
@@ -1385,6 +1386,7 @@ type GoogleIdentityProvider struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   ClientId                         string                             `json:"client_id,omitempty"`
   ClientSecret                     string                             `json:"client_secret,omitempty"`
+  LoginMethod                      LoginMethod                        `json:"login_method,omitempty"`
   Scope                            string                             `json:"scope,omitempty"`
 }
 
@@ -2035,6 +2037,15 @@ type LoginIdType string
 const (
   LoginIdType_Email                            LoginIdType                        = "email"
   LoginIdType_Username                         LoginIdType                        = "username"
+)
+
+/**
+ * @author Brett Pontarelli
+ */
+type LoginMethod string
+const (
+  LoginMethod_UsePopup                         LoginMethod                        = "UsePopup"
+  LoginMethod_UseRedirect                      LoginMethod                        = "UseRedirect"
 )
 
 /**
