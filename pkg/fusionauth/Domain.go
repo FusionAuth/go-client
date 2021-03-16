@@ -1373,7 +1373,7 @@ type GoogleApplicationConfiguration struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   ClientId                         string                             `json:"client_id,omitempty"`
   ClientSecret                     string                             `json:"client_secret,omitempty"`
-  LoginMethod                      LoginMethod                        `json:"login_method,omitempty"`
+  LoginMethod                      LoginMethod                        `json:"loginMethod,omitempty"`
   Scope                            string                             `json:"scope,omitempty"`
 }
 
@@ -1387,7 +1387,7 @@ type GoogleIdentityProvider struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   ClientId                         string                             `json:"client_id,omitempty"`
   ClientSecret                     string                             `json:"client_secret,omitempty"`
-  LoginMethod                      LoginMethod                        `json:"login_method,omitempty"`
+  LoginMethod                      LoginMethod                        `json:"loginMethod,omitempty"`
   Scope                            string                             `json:"scope,omitempty"`
 }
 
