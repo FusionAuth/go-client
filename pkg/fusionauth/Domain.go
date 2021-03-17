@@ -1060,6 +1060,7 @@ type FacebookApplicationConfiguration struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   ClientSecret                     string                             `json:"client_secret,omitempty"`
   Fields                           string                             `json:"fields,omitempty"`
+  LoginMethod                      LoginMethod                        `json:"loginMethod,omitempty"`
   Permissions                      string                             `json:"permissions,omitempty"`
 }
 
@@ -1074,6 +1075,7 @@ type FacebookIdentityProvider struct {
   ButtonText                       string                             `json:"buttonText,omitempty"`
   ClientSecret                     string                             `json:"client_secret,omitempty"`
   Fields                           string                             `json:"fields,omitempty"`
+  LoginMethod                      LoginMethod                        `json:"loginMethod,omitempty"`
   Permissions                      string                             `json:"permissions,omitempty"`
 }
 
