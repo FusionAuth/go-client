@@ -12,172 +12,172 @@
 * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 * either express or implied. See the License for the specific
 * language governing permissions and limitations under the License.
-*/
+ */
 
 package fusionauth
 
 import (
-  "bytes"
-  "encoding/json"
-  "fmt"
-  "io"
-  "net/http"
-  "net/http/httputil"
-  "net/url"
-  "path"
-  "strconv"
-  "strings"
-  "time"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"path"
+	"strconv"
+	"strings"
+	"time"
 )
 
 // NewClient creates a new FusionAuthClient
 // if httpClient is nil then a DefaultClient is used
 func NewClient(httpClient *http.Client, baseURL *url.URL, apiKey string) *FusionAuthClient {
-  if httpClient == nil {
-    httpClient = &http.Client{
-      Timeout: 5 * time.Minute,
-    }
-  }
-  c := &FusionAuthClient{
-    HTTPClient: httpClient,
-    BaseURL:    baseURL,
-    APIKey:     apiKey,
-  }
+	if httpClient == nil {
+		httpClient = &http.Client{
+			Timeout: 5 * time.Minute,
+		}
+	}
+	c := &FusionAuthClient{
+		HTTPClient: httpClient,
+		BaseURL:    baseURL,
+		APIKey:     apiKey,
+	}
 
-  return c
+	return c
 }
 
 // SetTenantId sets the tenantId on the client
-func (c *FusionAuthClient) SetTenantId(tenantId string)  {
-  c.TenantId = tenantId
+func (c *FusionAuthClient) SetTenantId(tenantId string) {
+	c.TenantId = tenantId
 }
 
 // FusionAuthClient describes the Go Client for interacting with FusionAuth's RESTful API
 type FusionAuthClient struct {
-  HTTPClient *http.Client
-  BaseURL    *url.URL
-  APIKey     string
-  Debug      bool
-  TenantId   string
+	HTTPClient *http.Client
+	BaseURL    *url.URL
+	APIKey     string
+	Debug      bool
+	TenantId   string
 }
 
 type restClient struct {
-  Body        io.Reader
-  Debug       bool
-  ErrorRef    interface{}
-  Headers     map[string]string
-  HTTPClient  *http.Client
-  Method      string
-  ResponseRef interface{}
-  Uri         *url.URL
+	Body        io.Reader
+	Debug       bool
+	ErrorRef    interface{}
+	Headers     map[string]string
+	HTTPClient  *http.Client
+	Method      string
+	ResponseRef interface{}
+	Uri         *url.URL
 }
 
 func (c *FusionAuthClient) Start(responseRef interface{}, errorRef interface{}) *restClient {
-  return c.StartAnonymous(responseRef, errorRef).WithAuthorization(c.APIKey)
+	return c.StartAnonymous(responseRef, errorRef).WithAuthorization(c.APIKey)
 }
 
 func (c *FusionAuthClient) StartAnonymous(responseRef interface{}, errorRef interface{}) *restClient {
-  rc := &restClient{
-    Debug:       c.Debug,
-    ErrorRef:    errorRef,
-    Headers:     make(map[string]string),
-    HTTPClient:  c.HTTPClient,
-    ResponseRef: responseRef,
-  }
-  rc.Uri, _ = url.Parse(c.BaseURL.String())
-  if c.TenantId != "" {
-    rc.WithHeader("X-FusionAuth-TenantId", c.TenantId)
-  }
-  rc.WithHeader("Content-Type", "text/plain")
-  rc.WithHeader("Accept", "application/json")
-  return rc
+	rc := &restClient{
+		Debug:       c.Debug,
+		ErrorRef:    errorRef,
+		Headers:     make(map[string]string),
+		HTTPClient:  c.HTTPClient,
+		ResponseRef: responseRef,
+	}
+	rc.Uri, _ = url.Parse(c.BaseURL.String())
+	if c.TenantId != "" {
+		rc.WithHeader("X-FusionAuth-TenantId", c.TenantId)
+	}
+	rc.WithHeader("Content-Type", "text/plain")
+	rc.WithHeader("Accept", "application/json")
+	return rc
 }
 
 func (rc *restClient) Do() error {
-  req, err := http.NewRequest(rc.Method, rc.Uri.String(), rc.Body)
-  if err != nil {
-    return err
-  }
-  for key, val := range rc.Headers {
-    req.Header.Set(key, val)
-  }
-  resp, err := rc.HTTPClient.Do(req)
-  if err != nil {
-    return err
-  }
-  defer resp.Body.Close()
-  if rc.Debug {
-    responseDump, _ := httputil.DumpResponse(resp, true)
-    fmt.Println(string(responseDump))
-  }
-  if resp.StatusCode < 200 || resp.StatusCode > 299 {
-    if err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef); err == io.EOF {
-      err = nil
-    }
-  } else {
-    rc.ErrorRef = nil
-    if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
-      err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
-    }
-  }
-  rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
-  return err
+	req, err := http.NewRequest(rc.Method, rc.Uri.String(), rc.Body)
+	if err != nil {
+		return err
+	}
+	for key, val := range rc.Headers {
+		req.Header.Set(key, val)
+	}
+	resp, err := rc.HTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if rc.Debug {
+		responseDump, _ := httputil.DumpResponse(resp, true)
+		fmt.Println(string(responseDump))
+	}
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		if err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef); err == io.EOF {
+			err = nil
+		}
+	} else {
+		rc.ErrorRef = nil
+		if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
+			err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
+		}
+	}
+	rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
+	return err
 }
 
 func (rc *restClient) WithAuthorization(key string) *restClient {
-  if key != "" {
-    rc.WithHeader("Authorization", key)
-  }
-  return rc
+	if key != "" {
+		rc.WithHeader("Authorization", key)
+	}
+	return rc
 }
 
 func (rc *restClient) WithFormData(formBody url.Values) *restClient {
-  rc.WithHeader("Content-Type", "application/x-www-form-urlencoded")
-  rc.Body = strings.NewReader(formBody.Encode())
-  return rc
+	rc.WithHeader("Content-Type", "application/x-www-form-urlencoded")
+	rc.Body = strings.NewReader(formBody.Encode())
+	return rc
 }
 
 func (rc *restClient) WithHeader(key string, value string) *restClient {
-  rc.Headers[key] = value
-  return rc
+	rc.Headers[key] = value
+	return rc
 }
 
 func (rc *restClient) WithJSONBody(body interface{}) *restClient {
-  rc.WithHeader("Content-Type", "application/json")
-  buf := new(bytes.Buffer)
-  json.NewEncoder(buf).Encode(body)
-  rc.Body = buf
-  return rc
+	rc.WithHeader("Content-Type", "application/json")
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(body)
+	rc.Body = buf
+	return rc
 }
 
 func (rc *restClient) WithMethod(method string) *restClient {
-  rc.Method = method
-  return rc
+	rc.Method = method
+	return rc
 }
 
 func (rc *restClient) WithParameter(key string, value interface{}) *restClient {
-  q := rc.Uri.Query()
-  if x, ok := value.([]string); ok {
-    for _, i := range x {
-      q.Add(key, i)
-    }
-  } else {
-    q.Add(key, fmt.Sprintf("%v", value))
-  }
-  rc.Uri.RawQuery = q.Encode()
-  return rc
+	q := rc.Uri.Query()
+	if x, ok := value.([]string); ok {
+		for _, i := range x {
+			q.Add(key, i)
+		}
+	} else {
+		q.Add(key, fmt.Sprintf("%v", value))
+	}
+	rc.Uri.RawQuery = q.Encode()
+	return rc
 }
 
 func (rc *restClient) WithUri(uri string) *restClient {
-  rc.Uri.Path = path.Join(rc.Uri.Path, uri)
-  return rc
+	rc.Uri.Path = path.Join(rc.Uri.Path, uri)
+	return rc
 }
 
 func (rc *restClient) WithUriSegment(segment string) *restClient {
-  if segment != "" {
-    rc.Uri.Path = path.Join(rc.Uri.Path, "/"+segment)
-  }
-  return rc
+	if segment != "" {
+		rc.Uri.Path = path.Join(rc.Uri.Path, "/"+segment)
+	}
+	return rc
 }
 
 // ActionUser
@@ -186,18 +186,18 @@ func (rc *restClient) WithUriSegment(segment string) *restClient {
 //   ActionRequest request The action request that includes all of the information about the action being taken including
 //   the id of the action, any options and the duration (if applicable).
 func (c *FusionAuthClient) ActionUser(request ActionRequest) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // AddUserToFamily
@@ -205,19 +205,19 @@ func (c *FusionAuthClient) ActionUser(request ActionRequest) (*ActionResponse, *
 //   string familyId The id of the family.
 //   FamilyRequest request The request object that contains all of the information used to determine which user to add to the family.
 func (c *FusionAuthClient) AddUserToFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
-    var resp FamilyResponse
-    var errors Errors
+	var resp FamilyResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/family").
-       WithUriSegment(familyId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/family").
+		WithUriSegment(familyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CancelAction
@@ -225,19 +225,19 @@ func (c *FusionAuthClient) AddUserToFamily(familyId string, request FamilyReques
 //   string actionId The action id of the action to cancel.
 //   ActionRequest request The action request that contains the information about the cancellation.
 func (c *FusionAuthClient) CancelAction(actionId string, request ActionRequest) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-       WithUriSegment(actionId).
-      WithJSONBody(request).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithUriSegment(actionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ChangePassword
@@ -246,19 +246,19 @@ func (c *FusionAuthClient) CancelAction(actionId string, request ActionRequest) 
 //   string changePasswordId The change password Id used to find the user. This value is generated by FusionAuth once the change password workflow has been initiated.
 //   ChangePasswordRequest request The change password request that contains all of the information used to change the password.
 func (c *FusionAuthClient) ChangePassword(changePasswordId string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
-    var resp ChangePasswordResponse
-    var errors Errors
+	var resp ChangePasswordResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/change-password").
-       WithUriSegment(changePasswordId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/change-password").
+		WithUriSegment(changePasswordId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ChangePasswordByIdentity
@@ -267,36 +267,36 @@ func (c *FusionAuthClient) ChangePassword(changePasswordId string, request Chang
 // method.
 //   ChangePasswordRequest request The change password request that contains all of the information used to change the password.
 func (c *FusionAuthClient) ChangePasswordByIdentity(request ChangePasswordRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/change-password").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/change-password").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CommentOnUser
 // Adds a comment to the user's account.
 //   UserCommentRequest request The request object that contains all of the information used to create the user comment.
 func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/comment").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/comment").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateApplication
@@ -304,19 +304,19 @@ func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPR
 //   string applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
 //   ApplicationRequest request The request object that contains all of the information used to create the application.
 func (c *FusionAuthClient) CreateApplication(applicationId string, request ApplicationRequest) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateApplicationRole
@@ -326,21 +326,21 @@ func (c *FusionAuthClient) CreateApplication(applicationId string, request Appli
 //   string roleId (Optional) The Id of the role. If not provided a secure random UUID will be generated.
 //   ApplicationRequest request The request object that contains all of the information used to create the application role.
 func (c *FusionAuthClient) CreateApplicationRole(applicationId string, roleId string, request ApplicationRequest) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-       WithUriSegment("role").
-       WithUriSegment(roleId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("role").
+		WithUriSegment(roleId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateAuditLog
@@ -349,18 +349,18 @@ func (c *FusionAuthClient) CreateApplicationRole(applicationId string, roleId st
 // written to the audit log. However, if you are accessing the API, you must write the audit logs yourself.
 //   AuditLogRequest request The request object that contains all of the information used to create the audit log entry.
 func (c *FusionAuthClient) CreateAuditLog(request AuditLogRequest) (*AuditLogResponse, *Errors, error) {
-    var resp AuditLogResponse
-    var errors Errors
+	var resp AuditLogResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/system/audit-log").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/audit-log").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateConnector
@@ -368,19 +368,19 @@ func (c *FusionAuthClient) CreateAuditLog(request AuditLogRequest) (*AuditLogRes
 //   string connectorId (Optional) The Id for the connector. If not provided a secure random UUID will be generated.
 //   ConnectorRequest request The request object that contains all of the information used to create the connector.
 func (c *FusionAuthClient) CreateConnector(connectorId string, request ConnectorRequest) (*ConnectorResponse, *Errors, error) {
-    var resp ConnectorResponse
-    var errors Errors
+	var resp ConnectorResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/connector").
-       WithUriSegment(connectorId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/connector").
+		WithUriSegment(connectorId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateConsent
@@ -388,19 +388,19 @@ func (c *FusionAuthClient) CreateConnector(connectorId string, request Connector
 //   string consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
 //   ConsentRequest request The request object that contains all of the information used to create the consent.
 func (c *FusionAuthClient) CreateConsent(consentId string, request ConsentRequest) (*ConsentResponse, *Errors, error) {
-    var resp ConsentResponse
-    var errors Errors
+	var resp ConsentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/consent").
-       WithUriSegment(consentId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/consent").
+		WithUriSegment(consentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateEmailTemplate
@@ -408,19 +408,19 @@ func (c *FusionAuthClient) CreateConsent(consentId string, request ConsentReques
 //   string emailTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
 //   EmailTemplateRequest request The request object that contains all of the information used to create the email template.
 func (c *FusionAuthClient) CreateEmailTemplate(emailTemplateId string, request EmailTemplateRequest) (*EmailTemplateResponse, *Errors, error) {
-    var resp EmailTemplateResponse
-    var errors Errors
+	var resp EmailTemplateResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/email/template").
-       WithUriSegment(emailTemplateId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/email/template").
+		WithUriSegment(emailTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateFamily
@@ -429,19 +429,19 @@ func (c *FusionAuthClient) CreateEmailTemplate(emailTemplateId string, request E
 //   string familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
 //   FamilyRequest request The request object that contains all of the information used to create the family.
 func (c *FusionAuthClient) CreateFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
-    var resp FamilyResponse
-    var errors Errors
+	var resp FamilyResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/family").
-       WithUriSegment(familyId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/family").
+		WithUriSegment(familyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateForm
@@ -449,19 +449,19 @@ func (c *FusionAuthClient) CreateFamily(familyId string, request FamilyRequest) 
 //   string formId (Optional) The Id for the form. If not provided a secure random UUID will be generated.
 //   FormRequest request The request object that contains all of the information used to create the form.
 func (c *FusionAuthClient) CreateForm(formId string, request FormRequest) (*FormResponse, *Errors, error) {
-    var resp FormResponse
-    var errors Errors
+	var resp FormResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/form").
-       WithUriSegment(formId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form").
+		WithUriSegment(formId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateFormField
@@ -469,19 +469,19 @@ func (c *FusionAuthClient) CreateForm(formId string, request FormRequest) (*Form
 //   string fieldId (Optional) The Id for the form field. If not provided a secure random UUID will be generated.
 //   FormFieldRequest request The request object that contains all of the information used to create the form field.
 func (c *FusionAuthClient) CreateFormField(fieldId string, request FormFieldRequest) (*FormFieldResponse, *Errors, error) {
-    var resp FormFieldResponse
-    var errors Errors
+	var resp FormFieldResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/form/field").
-       WithUriSegment(fieldId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form/field").
+		WithUriSegment(fieldId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateGroup
@@ -489,37 +489,37 @@ func (c *FusionAuthClient) CreateFormField(fieldId string, request FormFieldRequ
 //   string groupId (Optional) The Id for the group. If not provided a secure random UUID will be generated.
 //   GroupRequest request The request object that contains all of the information used to create the group.
 func (c *FusionAuthClient) CreateGroup(groupId string, request GroupRequest) (*GroupResponse, *Errors, error) {
-    var resp GroupResponse
-    var errors Errors
+	var resp GroupResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group").
-       WithUriSegment(groupId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group").
+		WithUriSegment(groupId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateGroupMembers
 // Creates a member in a group.
 //   MemberRequest request The request object that contains all of the information used to create the group member(s).
 func (c *FusionAuthClient) CreateGroupMembers(request MemberRequest) (*MemberResponse, *Errors, error) {
-    var resp MemberResponse
-    var errors Errors
+	var resp MemberResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group/member").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group/member").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateLambda
@@ -527,19 +527,19 @@ func (c *FusionAuthClient) CreateGroupMembers(request MemberRequest) (*MemberRes
 //   string lambdaId (Optional) The Id for the lambda. If not provided a secure random UUID will be generated.
 //   LambdaRequest request The request object that contains all of the information used to create the lambda.
 func (c *FusionAuthClient) CreateLambda(lambdaId string, request LambdaRequest) (*LambdaResponse, *Errors, error) {
-    var resp LambdaResponse
-    var errors Errors
+	var resp LambdaResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/lambda").
-       WithUriSegment(lambdaId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/lambda").
+		WithUriSegment(lambdaId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateTenant
@@ -547,19 +547,19 @@ func (c *FusionAuthClient) CreateLambda(lambdaId string, request LambdaRequest) 
 //   string tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
 //   TenantRequest request The request object that contains all of the information used to create the tenant.
 func (c *FusionAuthClient) CreateTenant(tenantId string, request TenantRequest) (*TenantResponse, *Errors, error) {
-    var resp TenantResponse
-    var errors Errors
+	var resp TenantResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/tenant").
-       WithUriSegment(tenantId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateTheme
@@ -567,19 +567,19 @@ func (c *FusionAuthClient) CreateTenant(tenantId string, request TenantRequest) 
 //   string themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
 //   ThemeRequest request The request object that contains all of the information used to create the theme.
 func (c *FusionAuthClient) CreateTheme(themeId string, request ThemeRequest) (*ThemeResponse, *Errors, error) {
-    var resp ThemeResponse
-    var errors Errors
+	var resp ThemeResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/theme").
-       WithUriSegment(themeId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/theme").
+		WithUriSegment(themeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateUser
@@ -587,19 +587,19 @@ func (c *FusionAuthClient) CreateTheme(themeId string, request ThemeRequest) (*T
 //   string userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
 //   UserRequest request The request object that contains all of the information used to create the user.
 func (c *FusionAuthClient) CreateUser(userId string, request UserRequest) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateUserAction
@@ -608,19 +608,19 @@ func (c *FusionAuthClient) CreateUser(userId string, request UserRequest) (*User
 //   string userActionId (Optional) The Id for the user action. If not provided a secure random UUID will be generated.
 //   UserActionRequest request The request object that contains all of the information used to create the user action.
 func (c *FusionAuthClient) CreateUserAction(userActionId string, request UserActionRequest) (*UserActionResponse, *Errors, error) {
-    var resp UserActionResponse
-    var errors Errors
+	var resp UserActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateUserActionReason
@@ -629,19 +629,19 @@ func (c *FusionAuthClient) CreateUserAction(userActionId string, request UserAct
 //   string userActionReasonId (Optional) The Id for the user action reason. If not provided a secure random UUID will be generated.
 //   UserActionReasonRequest request The request object that contains all of the information used to create the user action reason.
 func (c *FusionAuthClient) CreateUserActionReason(userActionReasonId string, request UserActionReasonRequest) (*UserActionReasonResponse, *Errors, error) {
-    var resp UserActionReasonResponse
-    var errors Errors
+	var resp UserActionReasonResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action-reason").
-       WithUriSegment(userActionReasonId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action-reason").
+		WithUriSegment(userActionReasonId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateUserConsent
@@ -649,19 +649,19 @@ func (c *FusionAuthClient) CreateUserActionReason(userActionReasonId string, req
 //   string userConsentId (Optional) The Id for the User consent. If not provided a secure random UUID will be generated.
 //   UserConsentRequest request The request that contains the user consent information.
 func (c *FusionAuthClient) CreateUserConsent(userConsentId string, request UserConsentRequest) (*UserConsentResponse, *Errors, error) {
-    var resp UserConsentResponse
-    var errors Errors
+	var resp UserConsentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/consent").
-       WithUriSegment(userConsentId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/consent").
+		WithUriSegment(userConsentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // CreateWebhook
@@ -669,73 +669,73 @@ func (c *FusionAuthClient) CreateUserConsent(userConsentId string, request UserC
 //   string webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
 //   WebhookRequest request The request object that contains all of the information used to create the webhook.
 func (c *FusionAuthClient) CreateWebhook(webhookId string, request WebhookRequest) (*WebhookResponse, *Errors, error) {
-    var resp WebhookResponse
-    var errors Errors
+	var resp WebhookResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/webhook").
-       WithUriSegment(webhookId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webhook").
+		WithUriSegment(webhookId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeactivateApplication
 // Deactivates the application with the given Id.
 //   string applicationId The Id of the application to deactivate.
 func (c *FusionAuthClient) DeactivateApplication(applicationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeactivateUser
 // Deactivates the user with the given Id.
 //   string userId The Id of the user to deactivate.
 func (c *FusionAuthClient) DeactivateUser(userId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeactivateUserAction
 // Deactivates the user action with the given Id.
 //   string userActionId The Id of the user action to deactivate.
 func (c *FusionAuthClient) DeactivateUserAction(userActionId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeactivateUsers
@@ -744,40 +744,40 @@ func (c *FusionAuthClient) DeactivateUserAction(userActionId string) (*BaseHTTPR
 //
 // Deprecated: This method has been renamed to DeactivateUsersByIds, use that method instead.
 func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*UserDeleteResponse, *Errors, error) {
-    var resp UserDeleteResponse
-    var errors Errors
+	var resp UserDeleteResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/bulk").
-        WithParameter("userId", userIds).
-        WithParameter("dryRun", strconv.FormatBool(false)).
-        WithParameter("hardDelete", strconv.FormatBool(false)).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/bulk").
+		WithParameter("userId", userIds).
+		WithParameter("dryRun", strconv.FormatBool(false)).
+		WithParameter("hardDelete", strconv.FormatBool(false)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeactivateUsersByIds
 // Deactivates the users with the given ids.
 //   []string userIds The ids of the users to deactivate.
 func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteResponse, *Errors, error) {
-    var resp UserDeleteResponse
-    var errors Errors
+	var resp UserDeleteResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/bulk").
-        WithParameter("userId", userIds).
-        WithParameter("dryRun", strconv.FormatBool(false)).
-        WithParameter("hardDelete", strconv.FormatBool(false)).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/bulk").
+		WithParameter("userId", userIds).
+		WithParameter("dryRun", strconv.FormatBool(false)).
+		WithParameter("hardDelete", strconv.FormatBool(false)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteApplication
@@ -787,19 +787,19 @@ func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteRe
 // long time, depending on the amount of data in your database.
 //   string applicationId The Id of the application to delete.
 func (c *FusionAuthClient) DeleteApplication(applicationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-        WithParameter("hardDelete", strconv.FormatBool(true)).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithParameter("hardDelete", strconv.FormatBool(true)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteApplicationRole
@@ -808,200 +808,200 @@ func (c *FusionAuthClient) DeleteApplication(applicationId string) (*BaseHTTPRes
 //   string applicationId The Id of the application to deactivate.
 //   string roleId The Id of the role to delete.
 func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-       WithUriSegment("role").
-       WithUriSegment(roleId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("role").
+		WithUriSegment(roleId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteConnector
 // Deletes the connector for the given Id.
 //   string connectorId The Id of the connector to delete.
 func (c *FusionAuthClient) DeleteConnector(connectorId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/connector").
-       WithUriSegment(connectorId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/connector").
+		WithUriSegment(connectorId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteConsent
 // Deletes the consent for the given Id.
 //   string consentId The Id of the consent to delete.
 func (c *FusionAuthClient) DeleteConsent(consentId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/consent").
-       WithUriSegment(consentId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/consent").
+		WithUriSegment(consentId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteEmailTemplate
 // Deletes the email template for the given Id.
 //   string emailTemplateId The Id of the email template to delete.
 func (c *FusionAuthClient) DeleteEmailTemplate(emailTemplateId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/email/template").
-       WithUriSegment(emailTemplateId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/email/template").
+		WithUriSegment(emailTemplateId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteForm
 // Deletes the form for the given Id.
 //   string formId The Id of the form to delete.
 func (c *FusionAuthClient) DeleteForm(formId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/form").
-       WithUriSegment(formId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form").
+		WithUriSegment(formId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteFormField
 // Deletes the form field for the given Id.
 //   string fieldId The Id of the form field to delete.
 func (c *FusionAuthClient) DeleteFormField(fieldId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/form/field").
-       WithUriSegment(fieldId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form/field").
+		WithUriSegment(fieldId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteGroup
 // Deletes the group for the given Id.
 //   string groupId The Id of the group to delete.
 func (c *FusionAuthClient) DeleteGroup(groupId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group").
-       WithUriSegment(groupId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group").
+		WithUriSegment(groupId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteGroupMembers
 // Removes users as members of a group.
 //   MemberDeleteRequest request The member request that contains all of the information used to remove members to the group.
 func (c *FusionAuthClient) DeleteGroupMembers(request MemberDeleteRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group/member").
-      WithJSONBody(request).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group/member").
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteIdentityProvider
 // Deletes the identity provider for the given Id.
 //   string identityProviderId The Id of the identity provider to delete.
 func (c *FusionAuthClient) DeleteIdentityProvider(identityProviderId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/identity-provider").
-       WithUriSegment(identityProviderId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider").
+		WithUriSegment(identityProviderId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteKey
 // Deletes the key for the given Id.
 //   string keyId The Id of the key to delete.
 func (c *FusionAuthClient) DeleteKey(keyId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/key").
-       WithUriSegment(keyId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/key").
+		WithUriSegment(keyId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteLambda
 // Deletes the lambda for the given Id.
 //   string lambdaId The Id of the lambda to delete.
 func (c *FusionAuthClient) DeleteLambda(lambdaId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/lambda").
-       WithUriSegment(lambdaId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/lambda").
+		WithUriSegment(lambdaId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteRegistration
@@ -1009,37 +1009,37 @@ func (c *FusionAuthClient) DeleteLambda(lambdaId string) (*BaseHTTPResponse, *Er
 //   string userId The Id of the user whose registration is being deleted.
 //   string applicationId The Id of the application to remove the registration for.
 func (c *FusionAuthClient) DeleteRegistration(userId string, applicationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/registration").
-       WithUriSegment(userId).
-       WithUriSegment(applicationId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/registration").
+		WithUriSegment(userId).
+		WithUriSegment(applicationId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteTenant
 // Deletes the tenant for the given Id.
 //   string tenantId The Id of the tenant to delete.
 func (c *FusionAuthClient) DeleteTenant(tenantId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/tenant").
-       WithUriSegment(tenantId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteTenantAsync
@@ -1047,37 +1047,37 @@ func (c *FusionAuthClient) DeleteTenant(tenantId string) (*BaseHTTPResponse, *Er
 // This method is helpful if you do not want to wait for the delete operation to complete.
 //   string tenantId The Id of the tenant to delete.
 func (c *FusionAuthClient) DeleteTenantAsync(tenantId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/tenant").
-       WithUriSegment(tenantId).
-        WithParameter("async", strconv.FormatBool(true)).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithParameter("async", strconv.FormatBool(true)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteTheme
 // Deletes the theme for the given Id.
 //   string themeId The Id of the theme to delete.
 func (c *FusionAuthClient) DeleteTheme(themeId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/theme").
-       WithUriSegment(themeId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/theme").
+		WithUriSegment(themeId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteUser
@@ -1085,19 +1085,19 @@ func (c *FusionAuthClient) DeleteTheme(themeId string) (*BaseHTTPResponse, *Erro
 // with the user.
 //   string userId The Id of the user to delete.
 func (c *FusionAuthClient) DeleteUser(userId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-        WithParameter("hardDelete", strconv.FormatBool(true)).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithParameter("hardDelete", strconv.FormatBool(true)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteUserAction
@@ -1105,37 +1105,37 @@ func (c *FusionAuthClient) DeleteUser(userId string) (*BaseHTTPResponse, *Errors
 // the action being applied to any users.
 //   string userActionId The Id of the user action to delete.
 func (c *FusionAuthClient) DeleteUserAction(userActionId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-        WithParameter("hardDelete", strconv.FormatBool(true)).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithParameter("hardDelete", strconv.FormatBool(true)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteUserActionReason
 // Deletes the user action reason for the given Id.
 //   string userActionReasonId The Id of the user action reason to delete.
 func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action-reason").
-       WithUriSegment(userActionReasonId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action-reason").
+		WithUriSegment(userActionReasonId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteUsers
@@ -1148,18 +1148,18 @@ func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (*B
 //
 // Deprecated: This method has been renamed to DeleteUsersByQuery, use that method instead.
 func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteResponse, *Errors, error) {
-    var resp UserDeleteResponse
-    var errors Errors
+	var resp UserDeleteResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/bulk").
-      WithJSONBody(request).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/bulk").
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteUsersByQuery
@@ -1170,36 +1170,36 @@ func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteRe
 // Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
 //   UserDeleteRequest request The UserDeleteRequest.
 func (c *FusionAuthClient) DeleteUsersByQuery(request UserDeleteRequest) (*UserDeleteResponse, *Errors, error) {
-    var resp UserDeleteResponse
-    var errors Errors
+	var resp UserDeleteResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/bulk").
-      WithJSONBody(request).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/bulk").
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DeleteWebhook
 // Deletes the webhook for the given Id.
 //   string webhookId The Id of the webhook to delete.
 func (c *FusionAuthClient) DeleteWebhook(webhookId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/webhook").
-       WithUriSegment(webhookId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webhook").
+		WithUriSegment(webhookId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // DisableTwoFactor
@@ -1207,19 +1207,19 @@ func (c *FusionAuthClient) DeleteWebhook(webhookId string) (*BaseHTTPResponse, *
 //   string userId The Id of the User for which you're disabling Two Factor authentication.
 //   string code The Two Factor code used verify the the caller knows the Two Factor secret.
 func (c *FusionAuthClient) DisableTwoFactor(userId string, code string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/two-factor").
-        WithParameter("userId", userId).
-        WithParameter("code", code).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/two-factor").
+		WithParameter("userId", userId).
+		WithParameter("code", code).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // EnableTwoFactor
@@ -1227,19 +1227,19 @@ func (c *FusionAuthClient) DisableTwoFactor(userId string, code string) (*BaseHT
 //   string userId The Id of the user to enable Two Factor authentication.
 //   TwoFactorRequest request The two factor enable request information.
 func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/two-factor").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/two-factor").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ExchangeOAuthCodeForAccessToken
@@ -1250,24 +1250,24 @@ func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorReque
 //   string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //   string redirectUri The URI to redirect to upon a successful request.
 func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId string, clientSecret string, redirectUri string) (*AccessToken, *OAuthError, error) {
-    var resp AccessToken
-    var errors OAuthError
-    formBody := url.Values{}
-    formBody.Set("code", code)
-    formBody.Set("client_id", clientId)
-    formBody.Set("client_secret", clientSecret)
-    formBody.Set("grant_type", "authorization_code")
-    formBody.Set("redirect_uri", redirectUri)
+	var resp AccessToken
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("code", code)
+	formBody.Set("client_id", clientId)
+	formBody.Set("client_secret", clientSecret)
+	formBody.Set("grant_type", "authorization_code")
+	formBody.Set("redirect_uri", redirectUri)
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/oauth2/token").
-    WithFormData(formBody).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/token").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ExchangeOAuthCodeForAccessTokenUsingPKCE
@@ -1279,25 +1279,25 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId
 //   string redirectUri The URI to redirect to upon a successful request.
 //   string codeVerifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
 func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string, clientId string, clientSecret string, redirectUri string, codeVerifier string) (*AccessToken, *OAuthError, error) {
-    var resp AccessToken
-    var errors OAuthError
-    formBody := url.Values{}
-    formBody.Set("code", code)
-    formBody.Set("client_id", clientId)
-    formBody.Set("client_secret", clientSecret)
-    formBody.Set("grant_type", "authorization_code")
-    formBody.Set("redirect_uri", redirectUri)
-    formBody.Set("code_verifier", codeVerifier)
+	var resp AccessToken
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("code", code)
+	formBody.Set("client_id", clientId)
+	formBody.Set("client_secret", clientSecret)
+	formBody.Set("grant_type", "authorization_code")
+	formBody.Set("redirect_uri", redirectUri)
+	formBody.Set("code_verifier", codeVerifier)
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/oauth2/token").
-    WithFormData(formBody).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/token").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ExchangeRefreshTokenForAccessToken
@@ -1309,43 +1309,43 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string,
 //   string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //   string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
 func (c *FusionAuthClient) ExchangeRefreshTokenForAccessToken(refreshToken string, clientId string, clientSecret string, scope string, userCode string) (*AccessToken, *OAuthError, error) {
-    var resp AccessToken
-    var errors OAuthError
-    formBody := url.Values{}
-    formBody.Set("refresh_token", refreshToken)
-    formBody.Set("client_id", clientId)
-    formBody.Set("client_secret", clientSecret)
-    formBody.Set("grant_type", "refresh_token")
-    formBody.Set("scope", scope)
-    formBody.Set("user_code", userCode)
+	var resp AccessToken
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("refresh_token", refreshToken)
+	formBody.Set("client_id", clientId)
+	formBody.Set("client_secret", clientSecret)
+	formBody.Set("grant_type", "refresh_token")
+	formBody.Set("scope", scope)
+	formBody.Set("user_code", userCode)
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/oauth2/token").
-    WithFormData(formBody).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/token").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ExchangeRefreshTokenForJWT
 // Exchange a refresh token for a new JWT.
 //   RefreshRequest request The refresh request.
 func (c *FusionAuthClient) ExchangeRefreshTokenForJWT(request RefreshRequest) (*JWTRefreshResponse, *Errors, error) {
-    var resp JWTRefreshResponse
-    var errors Errors
+	var resp JWTRefreshResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ExchangeUserCredentialsForAccessToken
@@ -1358,44 +1358,44 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForJWT(request RefreshRequest) (*
 //   string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //   string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
 func (c *FusionAuthClient) ExchangeUserCredentialsForAccessToken(username string, password string, clientId string, clientSecret string, scope string, userCode string) (*AccessToken, *OAuthError, error) {
-    var resp AccessToken
-    var errors OAuthError
-    formBody := url.Values{}
-    formBody.Set("username", username)
-    formBody.Set("password", password)
-    formBody.Set("client_id", clientId)
-    formBody.Set("client_secret", clientSecret)
-    formBody.Set("grant_type", "password")
-    formBody.Set("scope", scope)
-    formBody.Set("user_code", userCode)
+	var resp AccessToken
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("username", username)
+	formBody.Set("password", password)
+	formBody.Set("client_id", clientId)
+	formBody.Set("client_secret", clientSecret)
+	formBody.Set("grant_type", "password")
+	formBody.Set("scope", scope)
+	formBody.Set("user_code", userCode)
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/oauth2/token").
-    WithFormData(formBody).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/token").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ForgotPassword
 // Begins the forgot password sequence, which kicks off an email to the user so that they can reset their password.
 //   ForgotPasswordRequest request The request that contains the information about the user so that they can be emailed.
 func (c *FusionAuthClient) ForgotPassword(request ForgotPasswordRequest) (*ForgotPasswordResponse, *Errors, error) {
-    var resp ForgotPasswordResponse
-    var errors Errors
+	var resp ForgotPasswordResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/forgot-password").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/forgot-password").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // GenerateEmailVerificationId
@@ -1403,15 +1403,15 @@ func (c *FusionAuthClient) ForgotPassword(request ForgotPasswordRequest) (*Forgo
 // email to the User. This API may be used to collect the verificationId for use with a third party system.
 //   string email The email address of the user that needs a new verification email.
 func (c *FusionAuthClient) GenerateEmailVerificationId(email string) (*VerifyEmailResponse, error) {
-    var resp VerifyEmailResponse
+	var resp VerifyEmailResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/verify-email").
-        WithParameter("email", email).
-        WithParameter("sendVerifyEmail", strconv.FormatBool(false)).
-    WithMethod(http.MethodPut).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/verify-email").
+		WithParameter("email", email).
+		WithParameter("sendVerifyEmail", strconv.FormatBool(false)).
+		WithMethod(http.MethodPut).
+		Do()
+	return &resp, err
 }
 
 // GenerateKey
@@ -1419,19 +1419,19 @@ func (c *FusionAuthClient) GenerateEmailVerificationId(email string) (*VerifyEma
 //   string keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
 //   KeyRequest request The request object that contains all of the information used to create the key.
 func (c *FusionAuthClient) GenerateKey(keyId string, request KeyRequest) (*KeyResponse, *Errors, error) {
-    var resp KeyResponse
-    var errors Errors
+	var resp KeyResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/key/generate").
-       WithUriSegment(keyId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/key/generate").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // GenerateRegistrationVerificationId
@@ -1440,16 +1440,16 @@ func (c *FusionAuthClient) GenerateKey(keyId string, request KeyRequest) (*KeyRe
 //   string email The email address of the user that needs a new verification email.
 //   string applicationId The Id of the application to be verified.
 func (c *FusionAuthClient) GenerateRegistrationVerificationId(email string, applicationId string) (*VerifyRegistrationResponse, error) {
-    var resp VerifyRegistrationResponse
+	var resp VerifyRegistrationResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/verify-registration").
-        WithParameter("email", email).
-        WithParameter("sendVerifyPasswordEmail", strconv.FormatBool(false)).
-        WithParameter("applicationId", applicationId).
-    WithMethod(http.MethodPut).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/verify-registration").
+		WithParameter("email", email).
+		WithParameter("sendVerifyPasswordEmail", strconv.FormatBool(false)).
+		WithParameter("applicationId", applicationId).
+		WithMethod(http.MethodPut).
+		Do()
+	return &resp, err
 }
 
 // GenerateTwoFactorSecret
@@ -1457,13 +1457,13 @@ func (c *FusionAuthClient) GenerateRegistrationVerificationId(email string, appl
 // both the secret and a Base32 encoded form of the secret which can be shown to a User when using a 2 Step Authentication
 // application such as Google Authenticator.
 func (c *FusionAuthClient) GenerateTwoFactorSecret() (*SecretResponse, error) {
-    var resp SecretResponse
+	var resp SecretResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/two-factor/secret").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/two-factor/secret").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // GenerateTwoFactorSecretUsingJWT
@@ -1472,14 +1472,14 @@ func (c *FusionAuthClient) GenerateTwoFactorSecret() (*SecretResponse, error) {
 // application such as Google Authenticator.
 //   string encodedJWT The encoded JWT (access token).
 func (c *FusionAuthClient) GenerateTwoFactorSecretUsingJWT(encodedJWT string) (*SecretResponse, error) {
-    var resp SecretResponse
+	var resp SecretResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/two-factor/secret").
-             WithAuthorization("Bearer " + encodedJWT).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/two-factor/secret").
+		WithAuthorization("Bearer " + encodedJWT).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // IdentityProviderLogin
@@ -1488,18 +1488,18 @@ func (c *FusionAuthClient) GenerateTwoFactorSecretUsingJWT(encodedJWT string) (*
 //   IdentityProviderLoginRequest request The third-party login request that contains information from the third-party login
 //   providers that FusionAuth uses to reconcile the user's account.
 func (c *FusionAuthClient) IdentityProviderLogin(request IdentityProviderLoginRequest) (*LoginResponse, *Errors, error) {
-    var resp LoginResponse
-    var errors Errors
+	var resp LoginResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/identity-provider/login").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/login").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ImportKey
@@ -1507,19 +1507,19 @@ func (c *FusionAuthClient) IdentityProviderLogin(request IdentityProviderLoginRe
 //   string keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
 //   KeyRequest request The request object that contains all of the information used to create the key.
 func (c *FusionAuthClient) ImportKey(keyId string, request KeyRequest) (*KeyResponse, *Errors, error) {
-    var resp KeyResponse
-    var errors Errors
+	var resp KeyResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/key/import").
-       WithUriSegment(keyId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/key/import").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ImportRefreshTokens
@@ -1533,18 +1533,18 @@ func (c *FusionAuthClient) ImportKey(keyId string, request KeyRequest) (*KeyResp
 // the failure. See the validateDbConstraints request parameter.
 //   RefreshTokenImportRequest request The request that contains all of the information about all of the refresh tokens to import.
 func (c *FusionAuthClient) ImportRefreshTokens(request RefreshTokenImportRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/refresh-token/import").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/refresh-token/import").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ImportUsers
@@ -1558,18 +1558,18 @@ func (c *FusionAuthClient) ImportRefreshTokens(request RefreshTokenImportRequest
 // the validateDbConstraints request parameter.
 //   ImportRequest request The request that contains all of the information about all of the users to import.
 func (c *FusionAuthClient) ImportUsers(request ImportRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/import").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/import").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // IssueJWT
@@ -1584,40 +1584,40 @@ func (c *FusionAuthClient) ImportUsers(request ImportRequest) (*BaseHTTPResponse
 //   <p>The target application represented by the applicationId request parameter must have refresh
 //   tokens enabled in order to receive a refresh token in the response.</p>
 func (c *FusionAuthClient) IssueJWT(applicationId string, encodedJWT string, refreshToken string) (*IssueResponse, *Errors, error) {
-    var resp IssueResponse
-    var errors Errors
+	var resp IssueResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/issue").
-             WithAuthorization("Bearer " + encodedJWT).
-        WithParameter("applicationId", applicationId).
-        WithParameter("refreshToken", refreshToken).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/issue").
+		WithAuthorization("Bearer "+encodedJWT).
+		WithParameter("applicationId", applicationId).
+		WithParameter("refreshToken", refreshToken).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // Login
-// Authenticates a user to FusionAuth. 
+// Authenticates a user to FusionAuth.
 //
 // This API optionally requires an API key. See <code>Application.loginConfiguration.requireAuthentication</code>.
 //   LoginRequest request The login request that contains the user credentials used to log them in.
 func (c *FusionAuthClient) Login(request LoginRequest) (*LoginResponse, *Errors, error) {
-    var resp LoginResponse
-    var errors Errors
+	var resp LoginResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/login").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/login").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // LoginPing
@@ -1630,20 +1630,20 @@ func (c *FusionAuthClient) Login(request LoginRequest) (*LoginResponse, *Errors,
 //   string callerIPAddress (Optional) The IP address of the end-user that is logging in. If a null value is provided
 //   the IP address will be that of the client or last proxy that sent the request.
 func (c *FusionAuthClient) LoginPing(userId string, applicationId string, callerIPAddress string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/login").
-       WithUriSegment(userId).
-       WithUriSegment(applicationId).
-        WithParameter("ipAddress", callerIPAddress).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/login").
+		WithUriSegment(userId).
+		WithUriSegment(applicationId).
+		WithParameter("ipAddress", callerIPAddress).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // Logout
@@ -1655,15 +1655,15 @@ func (c *FusionAuthClient) LoginPing(userId string, applicationId string, caller
 //   string refreshToken (Optional) The refresh_token as a request parameter instead of coming in via a cookie.
 //   If provided this takes precedence over the cookie.
 func (c *FusionAuthClient) Logout(global bool, refreshToken string) (*BaseHTTPResponse, error) {
-    var resp BaseHTTPResponse
+	var resp BaseHTTPResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/logout").
-        WithParameter("global", strconv.FormatBool(global)).
-        WithParameter("refreshToken", refreshToken).
-    WithMethod(http.MethodPost).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/logout").
+		WithParameter("global", strconv.FormatBool(global)).
+		WithParameter("refreshToken", refreshToken).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
 }
 
 // LookupIdentityProvider
@@ -1671,14 +1671,14 @@ func (c *FusionAuthClient) Logout(global bool, refreshToken string) (*BaseHTTPRe
 // by a registered identity provider. A 404 indicates the domain is not managed.
 //   string domain The domain or email address to lookup.
 func (c *FusionAuthClient) LookupIdentityProvider(domain string) (*LookupResponse, error) {
-    var resp LookupResponse
+	var resp LookupResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/identity-provider/lookup").
-        WithParameter("domain", domain).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/identity-provider/lookup").
+		WithParameter("domain", domain).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // ModifyAction
@@ -1687,37 +1687,37 @@ func (c *FusionAuthClient) LookupIdentityProvider(domain string) (*LookupRespons
 //   string actionId The Id of the action to modify. This is technically the user action log id.
 //   ActionRequest request The request that contains all of the information about the modification.
 func (c *FusionAuthClient) ModifyAction(actionId string, request ActionRequest) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-       WithUriSegment(actionId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithUriSegment(actionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PasswordlessLogin
 // Complete a login request using a passwordless code
 //   PasswordlessLoginRequest request The passwordless login request that contains all of the information used to complete login.
 func (c *FusionAuthClient) PasswordlessLogin(request PasswordlessLoginRequest) (*LoginResponse, *Errors, error) {
-    var resp LoginResponse
-    var errors Errors
+	var resp LoginResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/passwordless/login").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/passwordless/login").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchApplication
@@ -1725,19 +1725,19 @@ func (c *FusionAuthClient) PasswordlessLogin(request PasswordlessLoginRequest) (
 //   string applicationId The Id of the application to update.
 //   ApplicationRequest request The request that contains just the new application information.
 func (c *FusionAuthClient) PatchApplication(applicationId string, request map[string]interface{}) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchApplicationRole
@@ -1746,21 +1746,21 @@ func (c *FusionAuthClient) PatchApplication(applicationId string, request map[st
 //   string roleId The Id of the role to update.
 //   ApplicationRequest request The request that contains just the new role information.
 func (c *FusionAuthClient) PatchApplicationRole(applicationId string, roleId string, request map[string]interface{}) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-       WithUriSegment("role").
-       WithUriSegment(roleId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("role").
+		WithUriSegment(roleId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchConnector
@@ -1768,19 +1768,19 @@ func (c *FusionAuthClient) PatchApplicationRole(applicationId string, roleId str
 //   string connectorId The Id of the connector to update.
 //   ConnectorRequest request The request that contains just the new connector information.
 func (c *FusionAuthClient) PatchConnector(connectorId string, request map[string]interface{}) (*ConnectorResponse, *Errors, error) {
-    var resp ConnectorResponse
-    var errors Errors
+	var resp ConnectorResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/connector").
-       WithUriSegment(connectorId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/connector").
+		WithUriSegment(connectorId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchConsent
@@ -1788,19 +1788,19 @@ func (c *FusionAuthClient) PatchConnector(connectorId string, request map[string
 //   string consentId The Id of the consent to update.
 //   ConsentRequest request The request that contains just the new consent information.
 func (c *FusionAuthClient) PatchConsent(consentId string, request map[string]interface{}) (*ConsentResponse, *Errors, error) {
-    var resp ConsentResponse
-    var errors Errors
+	var resp ConsentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/consent").
-       WithUriSegment(consentId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/consent").
+		WithUriSegment(consentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchEmailTemplate
@@ -1808,19 +1808,19 @@ func (c *FusionAuthClient) PatchConsent(consentId string, request map[string]int
 //   string emailTemplateId The Id of the email template to update.
 //   EmailTemplateRequest request The request that contains just the new email template information.
 func (c *FusionAuthClient) PatchEmailTemplate(emailTemplateId string, request map[string]interface{}) (*EmailTemplateResponse, *Errors, error) {
-    var resp EmailTemplateResponse
-    var errors Errors
+	var resp EmailTemplateResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/email/template").
-       WithUriSegment(emailTemplateId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/email/template").
+		WithUriSegment(emailTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchGroup
@@ -1828,19 +1828,19 @@ func (c *FusionAuthClient) PatchEmailTemplate(emailTemplateId string, request ma
 //   string groupId The Id of the group to update.
 //   GroupRequest request The request that contains just the new group information.
 func (c *FusionAuthClient) PatchGroup(groupId string, request map[string]interface{}) (*GroupResponse, *Errors, error) {
-    var resp GroupResponse
-    var errors Errors
+	var resp GroupResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group").
-       WithUriSegment(groupId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group").
+		WithUriSegment(groupId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchIdentityProvider
@@ -1848,37 +1848,37 @@ func (c *FusionAuthClient) PatchGroup(groupId string, request map[string]interfa
 //   string identityProviderId The Id of the identity provider to update.
 //   IdentityProviderRequest request The request object that contains just the updated identity provider information.
 func (c *FusionAuthClient) PatchIdentityProvider(identityProviderId string, request map[string]interface{}) (*IdentityProviderResponse, *Errors, error) {
-    var resp IdentityProviderResponse
-    var errors Errors
+	var resp IdentityProviderResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/identity-provider").
-       WithUriSegment(identityProviderId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider").
+		WithUriSegment(identityProviderId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchIntegrations
 // Updates, via PATCH, the available integrations.
 //   IntegrationRequest request The request that contains just the new integration information.
 func (c *FusionAuthClient) PatchIntegrations(request map[string]interface{}) (*IntegrationResponse, *Errors, error) {
-    var resp IntegrationResponse
-    var errors Errors
+	var resp IntegrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/integration").
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/integration").
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchLambda
@@ -1886,19 +1886,19 @@ func (c *FusionAuthClient) PatchIntegrations(request map[string]interface{}) (*I
 //   string lambdaId The Id of the lambda to update.
 //   LambdaRequest request The request that contains just the new lambda information.
 func (c *FusionAuthClient) PatchLambda(lambdaId string, request map[string]interface{}) (*LambdaResponse, *Errors, error) {
-    var resp LambdaResponse
-    var errors Errors
+	var resp LambdaResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/lambda").
-       WithUriSegment(lambdaId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/lambda").
+		WithUriSegment(lambdaId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchRegistration
@@ -1906,37 +1906,37 @@ func (c *FusionAuthClient) PatchLambda(lambdaId string, request map[string]inter
 //   string userId The Id of the user whose registration is going to be updated.
 //   RegistrationRequest request The request that contains just the new registration information.
 func (c *FusionAuthClient) PatchRegistration(userId string, request map[string]interface{}) (*RegistrationResponse, *Errors, error) {
-    var resp RegistrationResponse
-    var errors Errors
+	var resp RegistrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/registration").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/registration").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchSystemConfiguration
 // Updates, via PATCH, the system configuration.
 //   SystemConfigurationRequest request The request that contains just the new system configuration information.
 func (c *FusionAuthClient) PatchSystemConfiguration(request map[string]interface{}) (*SystemConfigurationResponse, *Errors, error) {
-    var resp SystemConfigurationResponse
-    var errors Errors
+	var resp SystemConfigurationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/system-configuration").
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system-configuration").
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchTenant
@@ -1944,19 +1944,19 @@ func (c *FusionAuthClient) PatchSystemConfiguration(request map[string]interface
 //   string tenantId The Id of the tenant to update.
 //   TenantRequest request The request that contains just the new tenant information.
 func (c *FusionAuthClient) PatchTenant(tenantId string, request map[string]interface{}) (*TenantResponse, *Errors, error) {
-    var resp TenantResponse
-    var errors Errors
+	var resp TenantResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/tenant").
-       WithUriSegment(tenantId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchTheme
@@ -1964,19 +1964,19 @@ func (c *FusionAuthClient) PatchTenant(tenantId string, request map[string]inter
 //   string themeId The Id of the theme to update.
 //   ThemeRequest request The request that contains just the new theme information.
 func (c *FusionAuthClient) PatchTheme(themeId string, request map[string]interface{}) (*ThemeResponse, *Errors, error) {
-    var resp ThemeResponse
-    var errors Errors
+	var resp ThemeResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/theme").
-       WithUriSegment(themeId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/theme").
+		WithUriSegment(themeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchUser
@@ -1984,19 +1984,19 @@ func (c *FusionAuthClient) PatchTheme(themeId string, request map[string]interfa
 //   string userId The Id of the user to update.
 //   UserRequest request The request that contains just the new user information.
 func (c *FusionAuthClient) PatchUser(userId string, request map[string]interface{}) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchUserAction
@@ -2004,19 +2004,19 @@ func (c *FusionAuthClient) PatchUser(userId string, request map[string]interface
 //   string userActionId The Id of the user action to update.
 //   UserActionRequest request The request that contains just the new user action information.
 func (c *FusionAuthClient) PatchUserAction(userActionId string, request map[string]interface{}) (*UserActionResponse, *Errors, error) {
-    var resp UserActionResponse
-    var errors Errors
+	var resp UserActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchUserActionReason
@@ -2024,19 +2024,19 @@ func (c *FusionAuthClient) PatchUserAction(userActionId string, request map[stri
 //   string userActionReasonId The Id of the user action reason to update.
 //   UserActionReasonRequest request The request that contains just the new user action reason information.
 func (c *FusionAuthClient) PatchUserActionReason(userActionReasonId string, request map[string]interface{}) (*UserActionReasonResponse, *Errors, error) {
-    var resp UserActionReasonResponse
-    var errors Errors
+	var resp UserActionReasonResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action-reason").
-       WithUriSegment(userActionReasonId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action-reason").
+		WithUriSegment(userActionReasonId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // PatchUserConsent
@@ -2044,113 +2044,113 @@ func (c *FusionAuthClient) PatchUserActionReason(userActionReasonId string, requ
 //   string userConsentId The User Consent Id
 //   UserConsentRequest request The request that contains just the new user consent information.
 func (c *FusionAuthClient) PatchUserConsent(userConsentId string, request map[string]interface{}) (*UserConsentResponse, *Errors, error) {
-    var resp UserConsentResponse
-    var errors Errors
+	var resp UserConsentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/consent").
-       WithUriSegment(userConsentId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPatch).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/consent").
+		WithUriSegment(userConsentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ReactivateApplication
 // Reactivates the application with the given Id.
 //   string applicationId The Id of the application to reactivate.
 func (c *FusionAuthClient) ReactivateApplication(applicationId string) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-        WithParameter("reactivate", strconv.FormatBool(true)).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithParameter("reactivate", strconv.FormatBool(true)).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ReactivateUser
 // Reactivates the user with the given Id.
 //   string userId The Id of the user to reactivate.
 func (c *FusionAuthClient) ReactivateUser(userId string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-        WithParameter("reactivate", strconv.FormatBool(true)).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithParameter("reactivate", strconv.FormatBool(true)).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ReactivateUserAction
 // Reactivates the user action with the given Id.
 //   string userActionId The Id of the user action to reactivate.
 func (c *FusionAuthClient) ReactivateUserAction(userActionId string) (*UserActionResponse, *Errors, error) {
-    var resp UserActionResponse
-    var errors Errors
+	var resp UserActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-        WithParameter("reactivate", strconv.FormatBool(true)).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithParameter("reactivate", strconv.FormatBool(true)).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ReconcileJWT
 // Reconcile a User to FusionAuth using JWT issued from another Identity Provider.
 //   IdentityProviderLoginRequest request The reconcile request that contains the data to reconcile the User.
 func (c *FusionAuthClient) ReconcileJWT(request IdentityProviderLoginRequest) (*LoginResponse, *Errors, error) {
-    var resp LoginResponse
-    var errors Errors
+	var resp LoginResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/reconcile").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/reconcile").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RefreshUserSearchIndex
 // Request a refresh of the User search index. This API is not generally necessary and the search index will become consistent in a
-// reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be 
+// reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be
 // if you are using the Search API or Delete Tenant API immediately following a User Create etc, you may wish to request a refresh to
 //  ensure the index immediately current before making a query request to the search index.
 func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/search").
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/search").
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // Register
@@ -2162,19 +2162,19 @@ func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, *Errors,
 //   string userId (Optional) The Id of the user being registered for the application and optionally created.
 //   RegistrationRequest request The request that optionally contains the User and must contain the UserRegistration.
 func (c *FusionAuthClient) Register(userId string, request RegistrationRequest) (*RegistrationResponse, *Errors, error) {
-    var resp RegistrationResponse
-    var errors Errors
+	var resp RegistrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/registration").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/registration").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RemoveUserFromFamily
@@ -2182,37 +2182,37 @@ func (c *FusionAuthClient) Register(userId string, request RegistrationRequest) 
 //   string familyId The id of the family to remove the user from.
 //   string userId The id of the user to remove from the family.
 func (c *FusionAuthClient) RemoveUserFromFamily(familyId string, userId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/family").
-       WithUriSegment(familyId).
-       WithUriSegment(userId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/family").
+		WithUriSegment(familyId).
+		WithUriSegment(userId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ResendEmailVerification
 // Re-sends the verification email to the user.
 //   string email The email address of the user that needs a new verification email.
 func (c *FusionAuthClient) ResendEmailVerification(email string) (*VerifyEmailResponse, *Errors, error) {
-    var resp VerifyEmailResponse
-    var errors Errors
+	var resp VerifyEmailResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/verify-email").
-        WithParameter("email", email).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/verify-email").
+		WithParameter("email", email).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ResendEmailVerificationWithApplicationTemplate
@@ -2221,19 +2221,19 @@ func (c *FusionAuthClient) ResendEmailVerification(email string) (*VerifyEmailRe
 //   string applicationId The unique Application Id to used to resolve an application specific email template.
 //   string email The email address of the user that needs a new verification email.
 func (c *FusionAuthClient) ResendEmailVerificationWithApplicationTemplate(applicationId string, email string) (*VerifyEmailResponse, *Errors, error) {
-    var resp VerifyEmailResponse
-    var errors Errors
+	var resp VerifyEmailResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/verify-email").
-        WithParameter("applicationId", applicationId).
-        WithParameter("email", email).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/verify-email").
+		WithParameter("applicationId", applicationId).
+		WithParameter("email", email).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ResendRegistrationVerification
@@ -2241,37 +2241,37 @@ func (c *FusionAuthClient) ResendEmailVerificationWithApplicationTemplate(applic
 //   string email The email address of the user that needs a new verification email.
 //   string applicationId The Id of the application to be verified.
 func (c *FusionAuthClient) ResendRegistrationVerification(email string, applicationId string) (*VerifyRegistrationResponse, *Errors, error) {
-    var resp VerifyRegistrationResponse
-    var errors Errors
+	var resp VerifyRegistrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/verify-registration").
-        WithParameter("email", email).
-        WithParameter("applicationId", applicationId).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/verify-registration").
+		WithParameter("email", email).
+		WithParameter("applicationId", applicationId).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveAction
 // Retrieves a single action log (the log of a user action that was taken on a user previously) for the given Id.
 //   string actionId The Id of the action to retrieve.
 func (c *FusionAuthClient) RetrieveAction(actionId string) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-       WithUriSegment(actionId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithUriSegment(actionId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveActions
@@ -2279,37 +2279,37 @@ func (c *FusionAuthClient) RetrieveAction(actionId string) (*ActionResponse, *Er
 // and inactive as well as non-time based actions.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveActions(userId string) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-        WithParameter("userId", userId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveActionsPreventingLogin
 // Retrieves all of the actions for the user with the given Id that are currently preventing the User from logging in.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveActionsPreventingLogin(userId string) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-        WithParameter("userId", userId).
-        WithParameter("preventingLogin", strconv.FormatBool(true)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithParameter("userId", userId).
+		WithParameter("preventingLogin", strconv.FormatBool(true)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveActiveActions
@@ -2317,115 +2317,115 @@ func (c *FusionAuthClient) RetrieveActionsPreventingLogin(userId string) (*Actio
 // An active action means one that is time based and has not been canceled, and has not ended.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveActiveActions(userId string) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-        WithParameter("userId", userId).
-        WithParameter("active", strconv.FormatBool(true)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithParameter("userId", userId).
+		WithParameter("active", strconv.FormatBool(true)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveApplication
 // Retrieves the application for the given id or all of the applications if the id is null.
 //   string applicationId (Optional) The application id.
 func (c *FusionAuthClient) RetrieveApplication(applicationId string) (*ApplicationResponse, error) {
-    var resp ApplicationResponse
+	var resp ApplicationResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/application").
-       WithUriSegment(applicationId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveApplications
 // Retrieves all of the applications.
 func (c *FusionAuthClient) RetrieveApplications() (*ApplicationResponse, error) {
-    var resp ApplicationResponse
+	var resp ApplicationResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/application").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/application").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveAuditLog
 // Retrieves a single audit log for the given Id.
 //   int auditLogId The Id of the audit log to retrieve.
 func (c *FusionAuthClient) RetrieveAuditLog(auditLogId int) (*AuditLogResponse, *Errors, error) {
-    var resp AuditLogResponse
-    var errors Errors
+	var resp AuditLogResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/system/audit-log").
-        WithUriSegment(strconv.Itoa(auditLogId)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/audit-log").
+		WithUriSegment(strconv.Itoa(auditLogId)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveConnector
 // Retrieves the connector with the given Id.
 //   string connectorId The Id of the connector.
 func (c *FusionAuthClient) RetrieveConnector(connectorId string) (*ConnectorResponse, error) {
-    var resp ConnectorResponse
+	var resp ConnectorResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/connector").
-       WithUriSegment(connectorId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/connector").
+		WithUriSegment(connectorId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveConnectors
 // Retrieves all of the connectors.
 func (c *FusionAuthClient) RetrieveConnectors() (*ConnectorResponse, error) {
-    var resp ConnectorResponse
+	var resp ConnectorResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/connector").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/connector").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveConsent
 // Retrieves the Consent for the given Id.
 //   string consentId The Id of the consent.
 func (c *FusionAuthClient) RetrieveConsent(consentId string) (*ConsentResponse, error) {
-    var resp ConsentResponse
+	var resp ConsentResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/consent").
-       WithUriSegment(consentId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/consent").
+		WithUriSegment(consentId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveConsents
 // Retrieves all of the consent.
 func (c *FusionAuthClient) RetrieveConsents() (*ConsentResponse, error) {
-    var resp ConsentResponse
+	var resp ConsentResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/consent").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/consent").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveDailyActiveReport
@@ -2435,34 +2435,34 @@ func (c *FusionAuthClient) RetrieveConsents() (*ConsentResponse, error) {
 //   int64 start The start instant as UTC milliseconds since Epoch.
 //   int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveDailyActiveReport(applicationId string, start int64, end int64) (*DailyActiveUserReportResponse, *Errors, error) {
-    var resp DailyActiveUserReportResponse
-    var errors Errors
+	var resp DailyActiveUserReportResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/report/daily-active-user").
-        WithParameter("applicationId", applicationId).
-        WithParameter("start", strconv.FormatInt(start, 10)).
-        WithParameter("end", strconv.FormatInt(end, 10)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/daily-active-user").
+		WithParameter("applicationId", applicationId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveEmailTemplate
 // Retrieves the email template for the given Id. If you don't specify the id, this will return all of the email templates.
 //   string emailTemplateId (Optional) The Id of the email template.
 func (c *FusionAuthClient) RetrieveEmailTemplate(emailTemplateId string) (*EmailTemplateResponse, error) {
-    var resp EmailTemplateResponse
+	var resp EmailTemplateResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/email/template").
-       WithUriSegment(emailTemplateId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/email/template").
+		WithUriSegment(emailTemplateId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveEmailTemplatePreview
@@ -2471,178 +2471,178 @@ func (c *FusionAuthClient) RetrieveEmailTemplate(emailTemplateId string) (*Email
 // will create the preview based on whatever is given.
 //   PreviewRequest request The request that contains the email template and optionally a locale to render it in.
 func (c *FusionAuthClient) RetrieveEmailTemplatePreview(request PreviewRequest) (*PreviewResponse, *Errors, error) {
-    var resp PreviewResponse
-    var errors Errors
+	var resp PreviewResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/email/template/preview").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/email/template/preview").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveEmailTemplates
 // Retrieves all of the email templates.
 func (c *FusionAuthClient) RetrieveEmailTemplates() (*EmailTemplateResponse, error) {
-    var resp EmailTemplateResponse
+	var resp EmailTemplateResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/email/template").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/email/template").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveEventLog
 // Retrieves a single event log for the given Id.
 //   int eventLogId The Id of the event log to retrieve.
 func (c *FusionAuthClient) RetrieveEventLog(eventLogId int) (*EventLogResponse, *Errors, error) {
-    var resp EventLogResponse
-    var errors Errors
+	var resp EventLogResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/system/event-log").
-        WithUriSegment(strconv.Itoa(eventLogId)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/event-log").
+		WithUriSegment(strconv.Itoa(eventLogId)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveFamilies
 // Retrieves all of the families that a user belongs to.
 //   string userId The User's id
 func (c *FusionAuthClient) RetrieveFamilies(userId string) (*FamilyResponse, error) {
-    var resp FamilyResponse
+	var resp FamilyResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/family").
-        WithParameter("userId", userId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/family").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveFamilyMembersByFamilyId
 // Retrieves all of the members of a family by the unique Family Id.
 //   string familyId The unique Id of the Family.
 func (c *FusionAuthClient) RetrieveFamilyMembersByFamilyId(familyId string) (*FamilyResponse, error) {
-    var resp FamilyResponse
+	var resp FamilyResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/family").
-       WithUriSegment(familyId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/family").
+		WithUriSegment(familyId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveForm
 // Retrieves the form with the given Id.
 //   string formId The Id of the form.
 func (c *FusionAuthClient) RetrieveForm(formId string) (*FormResponse, error) {
-    var resp FormResponse
+	var resp FormResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/form").
-       WithUriSegment(formId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/form").
+		WithUriSegment(formId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveFormField
 // Retrieves the form field with the given Id.
 //   string fieldId The Id of the form field.
 func (c *FusionAuthClient) RetrieveFormField(fieldId string) (*FormFieldResponse, error) {
-    var resp FormFieldResponse
+	var resp FormFieldResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/form/field").
-       WithUriSegment(fieldId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/form/field").
+		WithUriSegment(fieldId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveFormFields
 // Retrieves all of the forms fields
 func (c *FusionAuthClient) RetrieveFormFields() (*FormFieldResponse, error) {
-    var resp FormFieldResponse
+	var resp FormFieldResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/form/field").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/form/field").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveForms
 // Retrieves all of the forms.
 func (c *FusionAuthClient) RetrieveForms() (*FormResponse, error) {
-    var resp FormResponse
+	var resp FormResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/form").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/form").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveGroup
 // Retrieves the group for the given Id.
 //   string groupId The Id of the group.
 func (c *FusionAuthClient) RetrieveGroup(groupId string) (*GroupResponse, *Errors, error) {
-    var resp GroupResponse
-    var errors Errors
+	var resp GroupResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group").
-       WithUriSegment(groupId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group").
+		WithUriSegment(groupId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveGroups
 // Retrieves all of the groups.
 func (c *FusionAuthClient) RetrieveGroups() (*GroupResponse, error) {
-    var resp GroupResponse
+	var resp GroupResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/group").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/group").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveIdentityProviderByType
-// Retrieves one or more identity provider for the given type. For types such as Google, Facebook, Twitter and LinkedIn, only a single 
-// identity provider can exist. For types such as OpenID Connect and SAMLv2 more than one identity provider can be configured so this request 
+// Retrieves one or more identity provider for the given type. For types such as Google, Facebook, Twitter and LinkedIn, only a single
+// identity provider can exist. For types such as OpenID Connect and SAMLv2 more than one identity provider can be configured so this request
 // may return multiple identity providers.
 //   IdentityProviderType _type The type of the identity provider.
 func (c *FusionAuthClient) RetrieveIdentityProviderByType(_type IdentityProviderType) (*IdentityProviderResponse, *Errors, error) {
-    var resp IdentityProviderResponse
-    var errors Errors
+	var resp IdentityProviderResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/identity-provider").
-        WithParameter("type", string(_type)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider").
+		WithParameter("type", string(_type)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveInactiveActions
@@ -2650,183 +2650,183 @@ func (c *FusionAuthClient) RetrieveIdentityProviderByType(_type IdentityProvider
 // An inactive action means one that is time based and has been canceled or has expired, or is not time based.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveInactiveActions(userId string) (*ActionResponse, *Errors, error) {
-    var resp ActionResponse
-    var errors Errors
+	var resp ActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/action").
-        WithParameter("userId", userId).
-        WithParameter("active", strconv.FormatBool(false)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/action").
+		WithParameter("userId", userId).
+		WithParameter("active", strconv.FormatBool(false)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveInactiveApplications
 // Retrieves all of the applications that are currently inactive.
 func (c *FusionAuthClient) RetrieveInactiveApplications() (*ApplicationResponse, error) {
-    var resp ApplicationResponse
+	var resp ApplicationResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/application").
-        WithParameter("inactive", strconv.FormatBool(true)).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/application").
+		WithParameter("inactive", strconv.FormatBool(true)).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveInactiveUserActions
 // Retrieves all of the user actions that are currently inactive.
 func (c *FusionAuthClient) RetrieveInactiveUserActions() (*UserActionResponse, error) {
-    var resp UserActionResponse
+	var resp UserActionResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user-action").
-        WithParameter("inactive", strconv.FormatBool(true)).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user-action").
+		WithParameter("inactive", strconv.FormatBool(true)).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveIntegration
 // Retrieves the available integrations.
 func (c *FusionAuthClient) RetrieveIntegration() (*IntegrationResponse, error) {
-    var resp IntegrationResponse
+	var resp IntegrationResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/integration").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/integration").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveJWTPublicKey
 // Retrieves the Public Key configured for verifying JSON Web Tokens (JWT) by the key Id (kid).
 //   string keyId The Id of the public key (kid).
 func (c *FusionAuthClient) RetrieveJWTPublicKey(keyId string) (*PublicKeyResponse, error) {
-    var resp PublicKeyResponse
+	var resp PublicKeyResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/jwt/public-key").
-        WithParameter("kid", keyId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/jwt/public-key").
+		WithParameter("kid", keyId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveJWTPublicKeyByApplicationId
 // Retrieves the Public Key configured for verifying the JSON Web Tokens (JWT) issued by the Login API by the Application Id.
 //   string applicationId The Id of the Application for which this key is used.
 func (c *FusionAuthClient) RetrieveJWTPublicKeyByApplicationId(applicationId string) (*PublicKeyResponse, error) {
-    var resp PublicKeyResponse
+	var resp PublicKeyResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/jwt/public-key").
-        WithParameter("applicationId", applicationId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/jwt/public-key").
+		WithParameter("applicationId", applicationId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveJWTPublicKeys
 // Retrieves all Public Keys configured for verifying JSON Web Tokens (JWT).
 func (c *FusionAuthClient) RetrieveJWTPublicKeys() (*PublicKeyResponse, error) {
-    var resp PublicKeyResponse
+	var resp PublicKeyResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/jwt/public-key").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/jwt/public-key").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveJsonWebKeySet
 // Returns public keys used by FusionAuth to cryptographically verify JWTs using the JSON Web Key format.
 func (c *FusionAuthClient) RetrieveJsonWebKeySet() (*JWKSResponse, error) {
-    var resp JWKSResponse
+	var resp JWKSResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/.well-known/jwks.json").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/.well-known/jwks.json").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveKey
 // Retrieves the key for the given Id.
 //   string keyId The Id of the key.
 func (c *FusionAuthClient) RetrieveKey(keyId string) (*KeyResponse, *Errors, error) {
-    var resp KeyResponse
-    var errors Errors
+	var resp KeyResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/key").
-       WithUriSegment(keyId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/key").
+		WithUriSegment(keyId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveKeys
 // Retrieves all of the keys.
 func (c *FusionAuthClient) RetrieveKeys() (*KeyResponse, error) {
-    var resp KeyResponse
+	var resp KeyResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/key").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/key").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveLambda
 // Retrieves the lambda for the given Id.
 //   string lambdaId The Id of the lambda.
 func (c *FusionAuthClient) RetrieveLambda(lambdaId string) (*LambdaResponse, *Errors, error) {
-    var resp LambdaResponse
-    var errors Errors
+	var resp LambdaResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/lambda").
-       WithUriSegment(lambdaId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/lambda").
+		WithUriSegment(lambdaId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveLambdas
 // Retrieves all of the lambdas.
 func (c *FusionAuthClient) RetrieveLambdas() (*LambdaResponse, error) {
-    var resp LambdaResponse
+	var resp LambdaResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/lambda").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/lambda").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveLambdasByType
 // Retrieves all of the lambdas for the provided type.
 //   LambdaType _type The type of the lambda to return.
 func (c *FusionAuthClient) RetrieveLambdasByType(_type LambdaType) (*LambdaResponse, error) {
-    var resp LambdaResponse
+	var resp LambdaResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/lambda").
-        WithParameter("type", string(_type)).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/lambda").
+		WithParameter("type", string(_type)).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveLoginReport
@@ -2836,20 +2836,20 @@ func (c *FusionAuthClient) RetrieveLambdasByType(_type LambdaType) (*LambdaRespo
 //   int64 start The start instant as UTC milliseconds since Epoch.
 //   int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
-    var resp LoginReportResponse
-    var errors Errors
+	var resp LoginReportResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/report/login").
-        WithParameter("applicationId", applicationId).
-        WithParameter("start", strconv.FormatInt(start, 10)).
-        WithParameter("end", strconv.FormatInt(end, 10)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/login").
+		WithParameter("applicationId", applicationId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveMonthlyActiveReport
@@ -2859,66 +2859,66 @@ func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start int64
 //   int64 start The start instant as UTC milliseconds since Epoch.
 //   int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveMonthlyActiveReport(applicationId string, start int64, end int64) (*MonthlyActiveUserReportResponse, *Errors, error) {
-    var resp MonthlyActiveUserReportResponse
-    var errors Errors
+	var resp MonthlyActiveUserReportResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/report/monthly-active-user").
-        WithParameter("applicationId", applicationId).
-        WithParameter("start", strconv.FormatInt(start, 10)).
-        WithParameter("end", strconv.FormatInt(end, 10)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/monthly-active-user").
+		WithParameter("applicationId", applicationId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveOauthConfiguration
 // Retrieves the Oauth2 configuration for the application for the given Application Id.
 //   string applicationId The Id of the Application to retrieve OAuth configuration.
 func (c *FusionAuthClient) RetrieveOauthConfiguration(applicationId string) (*OAuthConfigurationResponse, *Errors, error) {
-    var resp OAuthConfigurationResponse
-    var errors Errors
+	var resp OAuthConfigurationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-       WithUriSegment("oauth-configuration").
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("oauth-configuration").
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveOpenIdConfiguration
 // Returns the well known OpenID Configuration JSON document
 func (c *FusionAuthClient) RetrieveOpenIdConfiguration() (*OpenIdConfiguration, error) {
-    var resp OpenIdConfiguration
+	var resp OpenIdConfiguration
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/.well-known/openid-configuration").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/.well-known/openid-configuration").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrievePasswordValidationRules
-// Retrieves the password validation rules for a specific tenant. This method requires a tenantId to be provided 
+// Retrieves the password validation rules for a specific tenant. This method requires a tenantId to be provided
 // through the use of a Tenant scoped API key or an HTTP header X-FusionAuth-TenantId to specify the Tenant Id.
 //
 // This API does not require an API key.
 func (c *FusionAuthClient) RetrievePasswordValidationRules() (*PasswordValidationRulesResponse, error) {
-    var resp PasswordValidationRulesResponse
+	var resp PasswordValidationRulesResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/tenant/password-validation-rules").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/tenant/password-validation-rules").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrievePasswordValidationRulesWithTenantId
@@ -2927,32 +2927,32 @@ func (c *FusionAuthClient) RetrievePasswordValidationRules() (*PasswordValidatio
 // This API does not require an API key.
 //   string tenantId The Id of the tenant.
 func (c *FusionAuthClient) RetrievePasswordValidationRulesWithTenantId(tenantId string) (*PasswordValidationRulesResponse, error) {
-    var resp PasswordValidationRulesResponse
+	var resp PasswordValidationRulesResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/tenant/password-validation-rules").
-       WithUriSegment(tenantId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/tenant/password-validation-rules").
+		WithUriSegment(tenantId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrievePendingChildren
 // Retrieves all of the children for the given parent email address.
 //   string parentEmail The email of the parent.
 func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*PendingResponse, *Errors, error) {
-    var resp PendingResponse
-    var errors Errors
+	var resp PendingResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/family/pending").
-        WithParameter("parentEmail", parentEmail).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/family/pending").
+		WithParameter("parentEmail", parentEmail).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveRecentLogins
@@ -2960,55 +2960,55 @@ func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*Pending
 //   int offset The initial record. e.g. 0 is the last login, 100 will be the 100th most recent login.
 //   int limit (Optional, defaults to 10) The number of records to retrieve.
 func (c *FusionAuthClient) RetrieveRecentLogins(offset int, limit int) (*RecentLoginResponse, *Errors, error) {
-    var resp RecentLoginResponse
-    var errors Errors
+	var resp RecentLoginResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/recent-login").
-        WithParameter("offset", strconv.Itoa(offset)).
-        WithParameter("limit", strconv.Itoa(limit)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/recent-login").
+		WithParameter("offset", strconv.Itoa(offset)).
+		WithParameter("limit", strconv.Itoa(limit)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveRefreshTokenById
 // Retrieves a single refresh token by unique Id. This is not the same thing as the string value of the refresh token, if you have that, you already have what you need..
 //   string userId The Id of the user.
 func (c *FusionAuthClient) RetrieveRefreshTokenById(userId string) (*RefreshTokenResponse, *Errors, error) {
-    var resp RefreshTokenResponse
-    var errors Errors
+	var resp RefreshTokenResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-       WithUriSegment(userId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithUriSegment(userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveRefreshTokens
 // Retrieves the refresh tokens that belong to the user with the given Id.
 //   string userId The Id of the user.
 func (c *FusionAuthClient) RetrieveRefreshTokens(userId string) (*RefreshTokenResponse, *Errors, error) {
-    var resp RefreshTokenResponse
-    var errors Errors
+	var resp RefreshTokenResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-        WithParameter("userId", userId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveRegistration
@@ -3016,19 +3016,19 @@ func (c *FusionAuthClient) RetrieveRefreshTokens(userId string) (*RefreshTokenRe
 //   string userId The Id of the user.
 //   string applicationId The Id of the application.
 func (c *FusionAuthClient) RetrieveRegistration(userId string, applicationId string) (*RegistrationResponse, *Errors, error) {
-    var resp RegistrationResponse
-    var errors Errors
+	var resp RegistrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/registration").
-       WithUriSegment(userId).
-       WithUriSegment(applicationId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/registration").
+		WithUriSegment(userId).
+		WithUriSegment(applicationId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveRegistrationReport
@@ -3038,123 +3038,123 @@ func (c *FusionAuthClient) RetrieveRegistration(userId string, applicationId str
 //   int64 start The start instant as UTC milliseconds since Epoch.
 //   int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveRegistrationReport(applicationId string, start int64, end int64) (*RegistrationReportResponse, *Errors, error) {
-    var resp RegistrationReportResponse
-    var errors Errors
+	var resp RegistrationReportResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/report/registration").
-        WithParameter("applicationId", applicationId).
-        WithParameter("start", strconv.FormatInt(start, 10)).
-        WithParameter("end", strconv.FormatInt(end, 10)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/registration").
+		WithParameter("applicationId", applicationId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveSystemConfiguration
 // Retrieves the system configuration.
 func (c *FusionAuthClient) RetrieveSystemConfiguration() (*SystemConfigurationResponse, error) {
-    var resp SystemConfigurationResponse
+	var resp SystemConfigurationResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/system-configuration").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/system-configuration").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveTenant
 // Retrieves the tenant for the given Id.
 //   string tenantId The Id of the tenant.
 func (c *FusionAuthClient) RetrieveTenant(tenantId string) (*TenantResponse, *Errors, error) {
-    var resp TenantResponse
-    var errors Errors
+	var resp TenantResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/tenant").
-       WithUriSegment(tenantId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveTenants
 // Retrieves all of the tenants.
 func (c *FusionAuthClient) RetrieveTenants() (*TenantResponse, error) {
-    var resp TenantResponse
+	var resp TenantResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/tenant").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/tenant").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveTheme
 // Retrieves the theme for the given Id.
 //   string themeId The Id of the theme.
 func (c *FusionAuthClient) RetrieveTheme(themeId string) (*ThemeResponse, *Errors, error) {
-    var resp ThemeResponse
-    var errors Errors
+	var resp ThemeResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/theme").
-       WithUriSegment(themeId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/theme").
+		WithUriSegment(themeId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveThemes
 // Retrieves all of the themes.
 func (c *FusionAuthClient) RetrieveThemes() (*ThemeResponse, error) {
-    var resp ThemeResponse
+	var resp ThemeResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/theme").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/theme").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveTotalReport
 // Retrieves the totals report. This contains all of the total counts for each application and the global registration
 // count.
 func (c *FusionAuthClient) RetrieveTotalReport() (*TotalsReportResponse, error) {
-    var resp TotalsReportResponse
+	var resp TotalsReportResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/report/totals").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/report/totals").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUser
 // Retrieves the user for the given Id.
 //   string userId The Id of the user.
 func (c *FusionAuthClient) RetrieveUser(userId string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserAction
@@ -3162,14 +3162,14 @@ func (c *FusionAuthClient) RetrieveUser(userId string) (*UserResponse, *Errors, 
 // actions.
 //   string userActionId (Optional) The Id of the user action.
 func (c *FusionAuthClient) RetrieveUserAction(userActionId string) (*UserActionResponse, error) {
-    var resp UserActionResponse
+	var resp UserActionResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUserActionReason
@@ -3177,38 +3177,38 @@ func (c *FusionAuthClient) RetrieveUserAction(userActionId string) (*UserActionR
 // action reasons.
 //   string userActionReasonId (Optional) The Id of the user action reason.
 func (c *FusionAuthClient) RetrieveUserActionReason(userActionReasonId string) (*UserActionReasonResponse, error) {
-    var resp UserActionReasonResponse
+	var resp UserActionReasonResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user-action-reason").
-       WithUriSegment(userActionReasonId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user-action-reason").
+		WithUriSegment(userActionReasonId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUserActionReasons
 // Retrieves all the user action reasons.
 func (c *FusionAuthClient) RetrieveUserActionReasons() (*UserActionReasonResponse, error) {
-    var resp UserActionReasonResponse
+	var resp UserActionReasonResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user-action-reason").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user-action-reason").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUserActions
 // Retrieves all of the user actions.
 func (c *FusionAuthClient) RetrieveUserActions() (*UserActionResponse, error) {
-    var resp UserActionResponse
+	var resp UserActionResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user-action").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user-action").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUserByChangePasswordId
@@ -3216,72 +3216,72 @@ func (c *FusionAuthClient) RetrieveUserActions() (*UserActionResponse, error) {
 // password workflow has been initiated and you may not know the user's email or username.
 //   string changePasswordId The unique change password Id that was sent via email or returned by the Forgot Password API.
 func (c *FusionAuthClient) RetrieveUserByChangePasswordId(changePasswordId string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-        WithParameter("changePasswordId", changePasswordId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithParameter("changePasswordId", changePasswordId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserByEmail
 // Retrieves the user for the given email.
 //   string email The email of the user.
 func (c *FusionAuthClient) RetrieveUserByEmail(email string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-        WithParameter("email", email).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithParameter("email", email).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserByLoginId
 // Retrieves the user for the loginId. The loginId can be either the username or the email.
 //   string loginId The email or username of the user.
 func (c *FusionAuthClient) RetrieveUserByLoginId(loginId string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-        WithParameter("loginId", loginId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithParameter("loginId", loginId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserByUsername
 // Retrieves the user for the given username.
 //   string username The username of the user.
 func (c *FusionAuthClient) RetrieveUserByUsername(username string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-        WithParameter("username", username).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithParameter("username", username).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserByVerificationId
@@ -3289,82 +3289,82 @@ func (c *FusionAuthClient) RetrieveUserByUsername(username string) (*UserRespons
 // password workflow has been initiated and you may not know the user's email or username.
 //   string verificationId The unique verification Id that has been set on the user object.
 func (c *FusionAuthClient) RetrieveUserByVerificationId(verificationId string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-        WithParameter("verificationId", verificationId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithParameter("verificationId", verificationId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserComments
 // Retrieves all of the comments for the user with the given Id.
 //   string userId The Id of the user.
 func (c *FusionAuthClient) RetrieveUserComments(userId string) (*UserCommentResponse, *Errors, error) {
-    var resp UserCommentResponse
-    var errors Errors
+	var resp UserCommentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/comment").
-       WithUriSegment(userId).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/comment").
+		WithUriSegment(userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserConsent
 // Retrieve a single User consent by Id.
 //   string userConsentId The User consent Id
 func (c *FusionAuthClient) RetrieveUserConsent(userConsentId string) (*UserConsentResponse, error) {
-    var resp UserConsentResponse
+	var resp UserConsentResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/consent").
-       WithUriSegment(userConsentId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/consent").
+		WithUriSegment(userConsentId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUserConsents
 // Retrieves all of the consents for a User.
 //   string userId The User's Id
 func (c *FusionAuthClient) RetrieveUserConsents(userId string) (*UserConsentResponse, error) {
-    var resp UserConsentResponse
+	var resp UserConsentResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/consent").
-        WithParameter("userId", userId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/consent").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveUserInfoFromAccessToken
 // Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
 //   string encodedJWT The encoded JWT (access token).
 func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*UserResponse, *OAuthError, error) {
-    var resp UserResponse
-    var errors OAuthError
+	var resp UserResponse
+	var errors OAuthError
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/oauth2/userinfo").
-             WithAuthorization("Bearer " + encodedJWT).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/userinfo").
+		WithAuthorization("Bearer " + encodedJWT).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserLoginReport
@@ -3375,21 +3375,21 @@ func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*
 //   int64 start The start instant as UTC milliseconds since Epoch.
 //   int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveUserLoginReport(applicationId string, userId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
-    var resp LoginReportResponse
-    var errors Errors
+	var resp LoginReportResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/report/login").
-        WithParameter("applicationId", applicationId).
-        WithParameter("userId", userId).
-        WithParameter("start", strconv.FormatInt(start, 10)).
-        WithParameter("end", strconv.FormatInt(end, 10)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/login").
+		WithParameter("applicationId", applicationId).
+		WithParameter("userId", userId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserLoginReportByLoginId
@@ -3400,21 +3400,21 @@ func (c *FusionAuthClient) RetrieveUserLoginReport(applicationId string, userId 
 //   int64 start The start instant as UTC milliseconds since Epoch.
 //   int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveUserLoginReportByLoginId(applicationId string, loginId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
-    var resp LoginReportResponse
-    var errors Errors
+	var resp LoginReportResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/report/login").
-        WithParameter("applicationId", applicationId).
-        WithParameter("loginId", loginId).
-        WithParameter("start", strconv.FormatInt(start, 10)).
-        WithParameter("end", strconv.FormatInt(end, 10)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/login").
+		WithParameter("applicationId", applicationId).
+		WithParameter("loginId", loginId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserRecentLogins
@@ -3423,64 +3423,64 @@ func (c *FusionAuthClient) RetrieveUserLoginReportByLoginId(applicationId string
 //   int offset The initial record. e.g. 0 is the last login, 100 will be the 100th most recent login.
 //   int limit (Optional, defaults to 10) The number of records to retrieve.
 func (c *FusionAuthClient) RetrieveUserRecentLogins(userId string, offset int, limit int) (*RecentLoginResponse, *Errors, error) {
-    var resp RecentLoginResponse
-    var errors Errors
+	var resp RecentLoginResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/recent-login").
-        WithParameter("userId", userId).
-        WithParameter("offset", strconv.Itoa(offset)).
-        WithParameter("limit", strconv.Itoa(limit)).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/recent-login").
+		WithParameter("userId", userId).
+		WithParameter("offset", strconv.Itoa(offset)).
+		WithParameter("limit", strconv.Itoa(limit)).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUserUsingJWT
 // Retrieves the user for the given Id. This method does not use an API key, instead it uses a JSON Web Token (JWT) for authentication.
 //   string encodedJWT The encoded JWT (access token).
 func (c *FusionAuthClient) RetrieveUserUsingJWT(encodedJWT string) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-             WithAuthorization("Bearer " + encodedJWT).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithAuthorization("Bearer " + encodedJWT).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveWebhook
 // Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
 //   string webhookId (Optional) The Id of the webhook.
 func (c *FusionAuthClient) RetrieveWebhook(webhookId string) (*WebhookResponse, error) {
-    var resp WebhookResponse
+	var resp WebhookResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/webhook").
-       WithUriSegment(webhookId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/webhook").
+		WithUriSegment(webhookId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveWebhooks
 // Retrieves all the webhooks.
 func (c *FusionAuthClient) RetrieveWebhooks() (*WebhookResponse, error) {
-    var resp WebhookResponse
+	var resp WebhookResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/webhook").
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/webhook").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RevokeRefreshToken
@@ -3512,92 +3512,92 @@ func (c *FusionAuthClient) RetrieveWebhooks() (*WebhookResponse, error) {
 //   string userId (Optional) The user id whose tokens to delete.
 //   string applicationId (Optional) The application id of the tokens to delete.
 func (c *FusionAuthClient) RevokeRefreshToken(token string, userId string, applicationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-        WithParameter("token", token).
-        WithParameter("userId", userId).
-        WithParameter("applicationId", applicationId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithParameter("token", token).
+		WithParameter("userId", userId).
+		WithParameter("applicationId", applicationId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RevokeRefreshTokenById
 // Revokes a single refresh token by the unique Id. The unique Id is not sensitive as it cannot be used to obtain another JWT.
 //   string tokenId The unique Id of the token to delete.
 func (c *FusionAuthClient) RevokeRefreshTokenById(tokenId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-       WithUriSegment(tokenId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithUriSegment(tokenId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RevokeRefreshTokenByToken
 // Revokes a single refresh token by using the actual refresh token value. This refresh token value is sensitive, so  be careful with this API request.
 //   string token The refresh token to delete.
 func (c *FusionAuthClient) RevokeRefreshTokenByToken(token string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-        WithParameter("token", token).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithParameter("token", token).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RevokeRefreshTokensByApplicationId
 // Revoke all refresh tokens that belong to an application by applicationId.
 //   string applicationId The unique Id of the application that you want to delete all refresh tokens for.
 func (c *FusionAuthClient) RevokeRefreshTokensByApplicationId(applicationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-        WithParameter("applicationId", applicationId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithParameter("applicationId", applicationId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RevokeRefreshTokensByUserId
 // Revoke all refresh tokens that belong to a user by user Id.
 //   string userId The unique Id of the user that you want to delete all refresh tokens for.
 func (c *FusionAuthClient) RevokeRefreshTokensByUserId(userId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-        WithParameter("userId", userId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RevokeRefreshTokensByUserIdForApplication
@@ -3605,75 +3605,75 @@ func (c *FusionAuthClient) RevokeRefreshTokensByUserId(userId string) (*BaseHTTP
 //   string userId The unique Id of the user that you want to delete all refresh tokens for.
 //   string applicationId The unique Id of the application that you want to delete refresh tokens for.
 func (c *FusionAuthClient) RevokeRefreshTokensByUserIdForApplication(userId string, applicationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/jwt/refresh").
-        WithParameter("userId", userId).
-        WithParameter("applicationId", applicationId).
-    WithMethod(http.MethodDelete).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithParameter("userId", userId).
+		WithParameter("applicationId", applicationId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RevokeUserConsent
 // Revokes a single User consent by Id.
 //   string userConsentId The User Consent Id
 func (c *FusionAuthClient) RevokeUserConsent(userConsentId string) (*BaseHTTPResponse, error) {
-    var resp BaseHTTPResponse
+	var resp BaseHTTPResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/user/consent").
-       WithUriSegment(userConsentId).
-    WithMethod(http.MethodDelete).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/consent").
+		WithUriSegment(userConsentId).
+		WithMethod(http.MethodDelete).
+		Do()
+	return &resp, err
 }
 
 // SearchAuditLogs
 // Searches the audit logs with the specified criteria and pagination.
 //   AuditLogSearchRequest request The search criteria and pagination information.
 func (c *FusionAuthClient) SearchAuditLogs(request AuditLogSearchRequest) (*AuditLogSearchResponse, error) {
-    var resp AuditLogSearchResponse
+	var resp AuditLogSearchResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/system/audit-log/search").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/system/audit-log/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
 }
 
 // SearchEventLogs
 // Searches the event logs with the specified criteria and pagination.
 //   EventLogSearchRequest request The search criteria and pagination information.
 func (c *FusionAuthClient) SearchEventLogs(request EventLogSearchRequest) (*EventLogSearchResponse, error) {
-    var resp EventLogSearchResponse
+	var resp EventLogSearchResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/system/event-log/search").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/system/event-log/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
 }
 
 // SearchLoginRecords
 // Searches the login records with the specified criteria and pagination.
 //   LoginRecordSearchRequest request The search criteria and pagination information.
 func (c *FusionAuthClient) SearchLoginRecords(request LoginRecordSearchRequest) (*LoginRecordSearchResponse, error) {
-    var resp LoginRecordSearchResponse
+	var resp LoginRecordSearchResponse
 
-    err := c.Start(&resp, nil).
-             WithUri("/api/system/login-record/search").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    return &resp, err
+	err := c.Start(&resp, nil).
+		WithUri("/api/system/login-record/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
 }
 
 // SearchUsers
@@ -3682,36 +3682,36 @@ func (c *FusionAuthClient) SearchLoginRecords(request LoginRecordSearchRequest) 
 //
 // Deprecated: This method has been renamed to SearchUsersByIds, use that method instead.
 func (c *FusionAuthClient) SearchUsers(ids []string) (*SearchResponse, *Errors, error) {
-    var resp SearchResponse
-    var errors Errors
+	var resp SearchResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/search").
-        WithParameter("ids", ids).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/search").
+		WithParameter("ids", ids).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchUsersByIds
 // Retrieves the users for the given ids. If any id is invalid, it is ignored.
 //   []string ids The user ids to search for.
 func (c *FusionAuthClient) SearchUsersByIds(ids []string) (*SearchResponse, *Errors, error) {
-    var resp SearchResponse
-    var errors Errors
+	var resp SearchResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/search").
-        WithParameter("ids", ids).
-    WithMethod(http.MethodGet).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/search").
+		WithParameter("ids", ids).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchUsersByQuery
@@ -3719,18 +3719,18 @@ func (c *FusionAuthClient) SearchUsersByIds(ids []string) (*SearchResponse, *Err
 //   SearchRequest request The search criteria and pagination constraints. Fields used: ids, query, queryString, numberOfResults, orderBy, startRow,
 //   and sortFields.
 func (c *FusionAuthClient) SearchUsersByQuery(request SearchRequest) (*SearchResponse, *Errors, error) {
-    var resp SearchResponse
-    var errors Errors
+	var resp SearchResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/search").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchUsersByQueryString
@@ -3740,18 +3740,18 @@ func (c *FusionAuthClient) SearchUsersByQuery(request SearchRequest) (*SearchRes
 //
 // Deprecated: This method has been renamed to SearchUsersByQuery, use that method instead.
 func (c *FusionAuthClient) SearchUsersByQueryString(request SearchRequest) (*SearchResponse, *Errors, error) {
-    var resp SearchResponse
-    var errors Errors
+	var resp SearchResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/search").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SendEmail
@@ -3760,91 +3760,91 @@ func (c *FusionAuthClient) SearchUsersByQueryString(request SearchRequest) (*Sea
 //   string emailTemplateId The id for the template.
 //   SendRequest request The send email request that contains all of the information used to send the email.
 func (c *FusionAuthClient) SendEmail(emailTemplateId string, request SendRequest) (*SendResponse, *Errors, error) {
-    var resp SendResponse
-    var errors Errors
+	var resp SendResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/email/send").
-       WithUriSegment(emailTemplateId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/email/send").
+		WithUriSegment(emailTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SendFamilyRequestEmail
 // Sends out an email to a parent that they need to register and create a family or need to log in and add a child to their existing family.
 //   FamilyEmailRequest request The request object that contains the parent email.
 func (c *FusionAuthClient) SendFamilyRequestEmail(request FamilyEmailRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/family/request").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/family/request").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SendPasswordlessCode
 // Send a passwordless authentication code in an email to complete login.
 //   PasswordlessSendRequest request The passwordless send request that contains all of the information used to send an email containing a code.
 func (c *FusionAuthClient) SendPasswordlessCode(request PasswordlessSendRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/passwordless/send").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/passwordless/send").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SendTwoFactorCode
 // Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
 //   TwoFactorSendRequest request The request object that contains all of the information used to send the code.
 func (c *FusionAuthClient) SendTwoFactorCode(request TwoFactorSendRequest) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/two-factor/send").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/send").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SendTwoFactorCodeForLogin
 // Send a Two Factor authentication code to allow the completion of Two Factor authentication.
 //   string twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
 func (c *FusionAuthClient) SendTwoFactorCodeForLogin(twoFactorId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/two-factor/send").
-       WithUriSegment(twoFactorId).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/send").
+		WithUriSegment(twoFactorId).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // StartIdentityProviderLogin
@@ -3852,18 +3852,18 @@ func (c *FusionAuthClient) SendTwoFactorCodeForLogin(twoFactorId string) (*BaseH
 //   IdentityProviderStartLoginRequest request The third-party login request that contains information from the third-party login
 //   providers that FusionAuth uses to reconcile the user's account.
 func (c *FusionAuthClient) StartIdentityProviderLogin(request IdentityProviderStartLoginRequest) (*IdentityProviderStartLoginResponse, *Errors, error) {
-    var resp IdentityProviderStartLoginResponse
-    var errors Errors
+	var resp IdentityProviderStartLoginResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/identity-provider/start").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // StartPasswordlessLogin
@@ -3871,36 +3871,36 @@ func (c *FusionAuthClient) StartIdentityProviderLogin(request IdentityProviderSt
 // Passwordless Code API or using a mechanism outside of FusionAuth. The passwordless login is completed by using the Passwordless Login API with this code.
 //   PasswordlessStartRequest request The passwordless start request that contains all of the information used to begin the passwordless login request.
 func (c *FusionAuthClient) StartPasswordlessLogin(request PasswordlessStartRequest) (*PasswordlessStartResponse, *Errors, error) {
-    var resp PasswordlessStartResponse
-    var errors Errors
+	var resp PasswordlessStartResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/passwordless/start").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/passwordless/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // TwoFactorLogin
 // Complete login using a 2FA challenge
 //   TwoFactorLoginRequest request The login request that contains the user credentials used to log them in.
 func (c *FusionAuthClient) TwoFactorLogin(request TwoFactorLoginRequest) (*LoginResponse, *Errors, error) {
-    var resp LoginResponse
-    var errors Errors
+	var resp LoginResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/two-factor/login").
-      WithJSONBody(request).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/login").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateApplication
@@ -3908,19 +3908,19 @@ func (c *FusionAuthClient) TwoFactorLogin(request TwoFactorLoginRequest) (*Login
 //   string applicationId The Id of the application to update.
 //   ApplicationRequest request The request that contains all of the new application information.
 func (c *FusionAuthClient) UpdateApplication(applicationId string, request ApplicationRequest) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateApplicationRole
@@ -3929,21 +3929,21 @@ func (c *FusionAuthClient) UpdateApplication(applicationId string, request Appli
 //   string roleId The Id of the role to update.
 //   ApplicationRequest request The request that contains all of the new role information.
 func (c *FusionAuthClient) UpdateApplicationRole(applicationId string, roleId string, request ApplicationRequest) (*ApplicationResponse, *Errors, error) {
-    var resp ApplicationResponse
-    var errors Errors
+	var resp ApplicationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/application").
-       WithUriSegment(applicationId).
-       WithUriSegment("role").
-       WithUriSegment(roleId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("role").
+		WithUriSegment(roleId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateConnector
@@ -3951,19 +3951,19 @@ func (c *FusionAuthClient) UpdateApplicationRole(applicationId string, roleId st
 //   string connectorId The Id of the connector to update.
 //   ConnectorRequest request The request object that contains all of the new connector information.
 func (c *FusionAuthClient) UpdateConnector(connectorId string, request ConnectorRequest) (*ConnectorResponse, *Errors, error) {
-    var resp ConnectorResponse
-    var errors Errors
+	var resp ConnectorResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/connector").
-       WithUriSegment(connectorId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/connector").
+		WithUriSegment(connectorId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateConsent
@@ -3971,19 +3971,19 @@ func (c *FusionAuthClient) UpdateConnector(connectorId string, request Connector
 //   string consentId The Id of the consent to update.
 //   ConsentRequest request The request that contains all of the new consent information.
 func (c *FusionAuthClient) UpdateConsent(consentId string, request ConsentRequest) (*ConsentResponse, *Errors, error) {
-    var resp ConsentResponse
-    var errors Errors
+	var resp ConsentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/consent").
-       WithUriSegment(consentId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/consent").
+		WithUriSegment(consentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateEmailTemplate
@@ -3991,19 +3991,19 @@ func (c *FusionAuthClient) UpdateConsent(consentId string, request ConsentReques
 //   string emailTemplateId The Id of the email template to update.
 //   EmailTemplateRequest request The request that contains all of the new email template information.
 func (c *FusionAuthClient) UpdateEmailTemplate(emailTemplateId string, request EmailTemplateRequest) (*EmailTemplateResponse, *Errors, error) {
-    var resp EmailTemplateResponse
-    var errors Errors
+	var resp EmailTemplateResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/email/template").
-       WithUriSegment(emailTemplateId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/email/template").
+		WithUriSegment(emailTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateForm
@@ -4011,19 +4011,19 @@ func (c *FusionAuthClient) UpdateEmailTemplate(emailTemplateId string, request E
 //   string formId The Id of the form to update.
 //   FormRequest request The request object that contains all of the new form information.
 func (c *FusionAuthClient) UpdateForm(formId string, request FormRequest) (*FormResponse, *Errors, error) {
-    var resp FormResponse
-    var errors Errors
+	var resp FormResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/form").
-       WithUriSegment(formId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form").
+		WithUriSegment(formId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateFormField
@@ -4031,19 +4031,19 @@ func (c *FusionAuthClient) UpdateForm(formId string, request FormRequest) (*Form
 //   string fieldId The Id of the form field to update.
 //   FormFieldRequest request The request object that contains all of the new form field information.
 func (c *FusionAuthClient) UpdateFormField(fieldId string, request FormFieldRequest) (*FormFieldResponse, *Errors, error) {
-    var resp FormFieldResponse
-    var errors Errors
+	var resp FormFieldResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/form/field").
-       WithUriSegment(fieldId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form/field").
+		WithUriSegment(fieldId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateGroup
@@ -4051,37 +4051,37 @@ func (c *FusionAuthClient) UpdateFormField(fieldId string, request FormFieldRequ
 //   string groupId The Id of the group to update.
 //   GroupRequest request The request that contains all of the new group information.
 func (c *FusionAuthClient) UpdateGroup(groupId string, request GroupRequest) (*GroupResponse, *Errors, error) {
-    var resp GroupResponse
-    var errors Errors
+	var resp GroupResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/group").
-       WithUriSegment(groupId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group").
+		WithUriSegment(groupId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateIntegrations
 // Updates the available integrations.
 //   IntegrationRequest request The request that contains all of the new integration information.
 func (c *FusionAuthClient) UpdateIntegrations(request IntegrationRequest) (*IntegrationResponse, *Errors, error) {
-    var resp IntegrationResponse
-    var errors Errors
+	var resp IntegrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/integration").
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/integration").
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateKey
@@ -4089,19 +4089,19 @@ func (c *FusionAuthClient) UpdateIntegrations(request IntegrationRequest) (*Inte
 //   string keyId The Id of the key to update.
 //   KeyRequest request The request that contains all of the new key information.
 func (c *FusionAuthClient) UpdateKey(keyId string, request KeyRequest) (*KeyResponse, *Errors, error) {
-    var resp KeyResponse
-    var errors Errors
+	var resp KeyResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/key").
-       WithUriSegment(keyId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/key").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateLambda
@@ -4109,19 +4109,19 @@ func (c *FusionAuthClient) UpdateKey(keyId string, request KeyRequest) (*KeyResp
 //   string lambdaId The Id of the lambda to update.
 //   LambdaRequest request The request that contains all of the new lambda information.
 func (c *FusionAuthClient) UpdateLambda(lambdaId string, request LambdaRequest) (*LambdaResponse, *Errors, error) {
-    var resp LambdaResponse
-    var errors Errors
+	var resp LambdaResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/lambda").
-       WithUriSegment(lambdaId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/lambda").
+		WithUriSegment(lambdaId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateRegistration
@@ -4129,37 +4129,37 @@ func (c *FusionAuthClient) UpdateLambda(lambdaId string, request LambdaRequest) 
 //   string userId The Id of the user whose registration is going to be updated.
 //   RegistrationRequest request The request that contains all of the new registration information.
 func (c *FusionAuthClient) UpdateRegistration(userId string, request RegistrationRequest) (*RegistrationResponse, *Errors, error) {
-    var resp RegistrationResponse
-    var errors Errors
+	var resp RegistrationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/registration").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/registration").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateSystemConfiguration
 // Updates the system configuration.
 //   SystemConfigurationRequest request The request that contains all of the new system configuration information.
 func (c *FusionAuthClient) UpdateSystemConfiguration(request SystemConfigurationRequest) (*SystemConfigurationResponse, *Errors, error) {
-    var resp SystemConfigurationResponse
-    var errors Errors
+	var resp SystemConfigurationResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/system-configuration").
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system-configuration").
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateTenant
@@ -4167,19 +4167,19 @@ func (c *FusionAuthClient) UpdateSystemConfiguration(request SystemConfiguration
 //   string tenantId The Id of the tenant to update.
 //   TenantRequest request The request that contains all of the new tenant information.
 func (c *FusionAuthClient) UpdateTenant(tenantId string, request TenantRequest) (*TenantResponse, *Errors, error) {
-    var resp TenantResponse
-    var errors Errors
+	var resp TenantResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/tenant").
-       WithUriSegment(tenantId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateTheme
@@ -4187,19 +4187,19 @@ func (c *FusionAuthClient) UpdateTenant(tenantId string, request TenantRequest) 
 //   string themeId The Id of the theme to update.
 //   ThemeRequest request The request that contains all of the new theme information.
 func (c *FusionAuthClient) UpdateTheme(themeId string, request ThemeRequest) (*ThemeResponse, *Errors, error) {
-    var resp ThemeResponse
-    var errors Errors
+	var resp ThemeResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/theme").
-       WithUriSegment(themeId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/theme").
+		WithUriSegment(themeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateUser
@@ -4207,19 +4207,19 @@ func (c *FusionAuthClient) UpdateTheme(themeId string, request ThemeRequest) (*T
 //   string userId The Id of the user to update.
 //   UserRequest request The request that contains all of the new user information.
 func (c *FusionAuthClient) UpdateUser(userId string, request UserRequest) (*UserResponse, *Errors, error) {
-    var resp UserResponse
-    var errors Errors
+	var resp UserResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user").
-       WithUriSegment(userId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateUserAction
@@ -4227,19 +4227,19 @@ func (c *FusionAuthClient) UpdateUser(userId string, request UserRequest) (*User
 //   string userActionId The Id of the user action to update.
 //   UserActionRequest request The request that contains all of the new user action information.
 func (c *FusionAuthClient) UpdateUserAction(userActionId string, request UserActionRequest) (*UserActionResponse, *Errors, error) {
-    var resp UserActionResponse
-    var errors Errors
+	var resp UserActionResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action").
-       WithUriSegment(userActionId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action").
+		WithUriSegment(userActionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateUserActionReason
@@ -4247,19 +4247,19 @@ func (c *FusionAuthClient) UpdateUserAction(userActionId string, request UserAct
 //   string userActionReasonId The Id of the user action reason to update.
 //   UserActionReasonRequest request The request that contains all of the new user action reason information.
 func (c *FusionAuthClient) UpdateUserActionReason(userActionReasonId string, request UserActionReasonRequest) (*UserActionReasonResponse, *Errors, error) {
-    var resp UserActionReasonResponse
-    var errors Errors
+	var resp UserActionReasonResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user-action-reason").
-       WithUriSegment(userActionReasonId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user-action-reason").
+		WithUriSegment(userActionReasonId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateUserConsent
@@ -4267,19 +4267,19 @@ func (c *FusionAuthClient) UpdateUserActionReason(userActionReasonId string, req
 //   string userConsentId The User Consent Id
 //   UserConsentRequest request The request that contains the user consent information.
 func (c *FusionAuthClient) UpdateUserConsent(userConsentId string, request UserConsentRequest) (*UserConsentResponse, *Errors, error) {
-    var resp UserConsentResponse
-    var errors Errors
+	var resp UserConsentResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/user/consent").
-       WithUriSegment(userConsentId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/consent").
+		WithUriSegment(userConsentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // UpdateWebhook
@@ -4287,19 +4287,19 @@ func (c *FusionAuthClient) UpdateUserConsent(userConsentId string, request UserC
 //   string webhookId The Id of the webhook to update.
 //   WebhookRequest request The request that contains all of the new webhook information.
 func (c *FusionAuthClient) UpdateWebhook(webhookId string, request WebhookRequest) (*WebhookResponse, *Errors, error) {
-    var resp WebhookResponse
-    var errors Errors
+	var resp WebhookResponse
+	var errors Errors
 
-    restClient := c.Start(&resp, &errors)
-    err := restClient.WithUri("/api/webhook").
-       WithUriSegment(webhookId).
-      WithJSONBody(request).
-    WithMethod(http.MethodPut).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webhook").
+		WithUriSegment(webhookId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // ValidateDevice
@@ -4308,15 +4308,15 @@ func (c *FusionAuthClient) UpdateWebhook(webhookId string, request WebhookReques
 //   string userCode The end-user verification code.
 //   string clientId The client id.
 func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string) (*BaseHTTPResponse, error) {
-    var resp BaseHTTPResponse
+	var resp BaseHTTPResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/oauth2/device/validate").
-        WithParameter("user_code", userCode).
-        WithParameter("client_id", clientId).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/oauth2/device/validate").
+		WithParameter("user_code", userCode).
+		WithParameter("client_id", clientId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // ValidateJWT
@@ -4326,49 +4326,48 @@ func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string) (*Ba
 // This API may be used to verify the JWT as well as decode the encoded JWT into human readable identity claims.
 //   string encodedJWT The encoded JWT (access token).
 func (c *FusionAuthClient) ValidateJWT(encodedJWT string) (*ValidateResponse, error) {
-    var resp ValidateResponse
+	var resp ValidateResponse
 
-    err := c.StartAnonymous(&resp, nil).
-             WithUri("/api/jwt/validate").
-             WithAuthorization("Bearer " + encodedJWT).
-    WithMethod(http.MethodGet).
-    Do()
-    return &resp, err
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/jwt/validate").
+		WithAuthorization("Bearer " + encodedJWT).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // VerifyEmail
 // Confirms a email verification. The Id given is usually from an email sent to the user.
 //   string verificationId The email verification id sent to the user.
 func (c *FusionAuthClient) VerifyEmail(verificationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/user/verify-email").
-       WithUriSegment(verificationId).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/user/verify-email").
+		WithUriSegment(verificationId).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // VerifyRegistration
 // Confirms an application registration. The Id given is usually from an email sent to the user.
 //   string verificationId The registration verification Id sent to the user.
 func (c *FusionAuthClient) VerifyRegistration(verificationId string) (*BaseHTTPResponse, *Errors, error) {
-    var resp BaseHTTPResponse
-    var errors Errors
+	var resp BaseHTTPResponse
+	var errors Errors
 
-    restClient := c.StartAnonymous(&resp, &errors)
-    err := restClient.WithUri("/api/user/verify-registration").
-       WithUriSegment(verificationId).
-    WithMethod(http.MethodPost).
-    Do()
-    if restClient.ErrorRef == nil {
-      return &resp, nil, err
-    }
-    return &resp, &errors, err
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/user/verify-registration").
+		WithUriSegment(verificationId).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
-

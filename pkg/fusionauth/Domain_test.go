@@ -16,8 +16,8 @@
 package fusionauth
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestErrorsPresentReturnsTrueWhenFieldErrorsExist(t *testing.T) {
