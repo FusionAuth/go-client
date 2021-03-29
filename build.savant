@@ -16,6 +16,12 @@ project(group: "io.fusionauth", name: "go-client", version: "1.25.1", licenses: 
 // Plugins
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
+target(name: "setup", description: "Setup Go build tools") {
+  if (new ProcessBuilder('brew', 'install', 'go').inheritIO().start().waitFor() != 0) {
+    fail('Failed to brew install Go')
+  }
+}
+
 target(name: "clean", description: "Cleans build directory") {
 }
 
