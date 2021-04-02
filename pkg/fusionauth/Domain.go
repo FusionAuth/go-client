@@ -971,7 +971,6 @@ func (b *EntityResponse) SetStatus(status int) {
  */
 type EntitySearchCriteria struct {
 	BaseElasticSearchCriteria
-	TenantId string `json:"tenantId,omitempty"`
 }
 
 /**

@@ -2313,18 +2313,14 @@ func (c *FusionAuthClient) ReconcileJWT(request IdentityProviderLoginRequest) (*
 // reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be
 // if you are using the Search API or Delete Tenant API immediately following a Entity Create etc, you may wish to request a refresh to
 //  ensure the index immediately current before making a query request to the search index.
-func (c *FusionAuthClient) RefreshEntitySearchIndex() (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) RefreshEntitySearchIndex() (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
-	var errors Errors
 
-	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/entity/search").
+	err := c.Start(&resp, nil).
+		WithUri("/api/entity/search").
 		WithMethod(http.MethodPut).
 		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
+	return &resp, err
 }
 
 // RefreshUserSearchIndex
@@ -2332,18 +2328,14 @@ func (c *FusionAuthClient) RefreshEntitySearchIndex() (*BaseHTTPResponse, *Error
 // reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be
 // if you are using the Search API or Delete Tenant API immediately following a User Create etc, you may wish to request a refresh to
 //  ensure the index immediately current before making a query request to the search index.
-func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
-	var errors Errors
 
-	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/user/search").
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/search").
 		WithMethod(http.MethodPut).
 		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
+	return &resp, err
 }
 
 // RegenerateReactorKeys
@@ -3920,15 +3912,19 @@ func (c *FusionAuthClient) SearchAuditLogs(request AuditLogSearchRequest) (*Audi
 // SearchEntities
 // Searches entities with the specified criteria and pagination.
 //   EntitySearchRequest request The search criteria and pagination information.
-func (c *FusionAuthClient) SearchEntities(request EntitySearchRequest) (*EntitySearchResponse, error) {
+func (c *FusionAuthClient) SearchEntities(request EntitySearchRequest) (*EntitySearchResponse, *Errors, error) {
 	var resp EntitySearchResponse
+	var errors Errors
 
-	err := c.Start(&resp, nil).
-		WithUri("/api/entity/search").
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
-	return &resp, err
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchEntitiesByIds
