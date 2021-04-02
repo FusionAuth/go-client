@@ -933,6 +933,15 @@ func (b *EntityGrantResponse) SetStatus(status int) {
 }
 
 /**
+ * JWT Configuration for entities.
+ */
+type EntityJWTConfiguration struct {
+	Enableable
+	AccessTokenKeyId    string `json:"accessTokenKeyId,omitempty"`
+	TimeToLiveInSeconds int    `json:"timeToLiveInSeconds,omitempty"`
+}
+
+/**
  * Entity API request object.
  *
  * @author Brian Pontarelli
@@ -998,7 +1007,7 @@ type EntityType struct {
 	Data              map[string]interface{} `json:"data,omitempty"`
 	Id                string                 `json:"id,omitempty"`
 	InsertInstant     int64                  `json:"insertInstant,omitempty"`
-	JwtConfiguration  JWTConfiguration       `json:"jwtConfiguration,omitempty"`
+	JwtConfiguration  EntityJWTConfiguration `json:"jwtConfiguration,omitempty"`
 	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
 	Name              string                 `json:"name,omitempty"`
 	Permissions       []EntityTypePermission `json:"permissions,omitempty"`
@@ -2023,15 +2032,6 @@ type JWTConfiguration struct {
 	RefreshTokenTimeToLiveInMinutes int                          `json:"refreshTokenTimeToLiveInMinutes,omitempty"`
 	RefreshTokenUsagePolicy         RefreshTokenUsagePolicy      `json:"refreshTokenUsagePolicy,omitempty"`
 	TimeToLiveInSeconds             int                          `json:"timeToLiveInSeconds,omitempty"`
-}
-
-/**
- * JWT Configuration for entities.
- */
-type JWTConfiguration struct {
-	Enableable
-	AccessTokenKeyId    string `json:"accessTokenKeyId,omitempty"`
-	TimeToLiveInSeconds int    `json:"timeToLiveInSeconds,omitempty"`
 }
 
 /**
