@@ -2920,6 +2920,7 @@ type ReactorRequest struct {
  * @author Daniel DeGroff
  */
 type ReactorStatus struct {
+	AdvancedIdentityProviders ReactorFeatureStatus                    `json:"advancedIdentityProviders,omitempty"`
 	AdvancedRegistrationForms ReactorFeatureStatus                    `json:"advancedRegistrationForms,omitempty"`
 	BreachedPasswordDetection ReactorFeatureStatus                    `json:"breachedPasswordDetection,omitempty"`
 	BreachedPasswordMetrics   map[string]BreachedPasswordTenantMetric `json:"breachedPasswordMetrics,omitempty"`
