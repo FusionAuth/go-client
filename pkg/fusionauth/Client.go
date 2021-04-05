@@ -200,6 +200,26 @@ func (c *FusionAuthClient) ActionUser(request ActionRequest) (*ActionResponse, *
 	return &resp, &errors, err
 }
 
+// ActivateReactor
+// Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
+//   string licenseId The license id
+//   ReactorRequest request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
+func (c *FusionAuthClient) ActivateReactor(licenseId string, request ReactorRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/reactor").
+		WithUriSegment(licenseId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // AddUserToFamily
 // Adds a user to an existing family. The family id must be specified.
 //   string familyId The id of the family.
@@ -414,6 +434,70 @@ func (c *FusionAuthClient) CreateEmailTemplate(emailTemplateId string, request E
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/email/template").
 		WithUriSegment(emailTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CreateEntity
+// Creates an Entity. You can optionally specify an Id for the Entity. If not provided one will be generated.
+//   string entityId (Optional) The Id for the Entity. If not provided a secure random UUID will be generated.
+//   EntityRequest request The request object that contains all of the information used to create the Entity.
+func (c *FusionAuthClient) CreateEntity(entityId string, request EntityRequest) (*EntityResponse, *Errors, error) {
+	var resp EntityResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CreateEntityType
+// Creates a Entity Type. You can optionally specify an Id for the Entity Type, if not provided one will be generated.
+//   string entityTypeId (Optional) The Id for the Entity Type. If not provided a secure random UUID will be generated.
+//   EntityTypeRequest request The request object that contains all of the information used to create the Entity Type.
+func (c *FusionAuthClient) CreateEntityType(entityTypeId string, request EntityTypeRequest) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CreateEntityTypePermission
+// Creates a new permission for an entity type. You must specify the id of the entity type you are creating the permission for.
+// You can optionally specify an Id for the permission inside the EntityTypePermission object itself, if not provided one will be generated.
+//   string entityTypeId The Id of the entity type to create the permission on.
+//   string permissionId (Optional) The Id of the permission. If not provided a secure random UUID will be generated.
+//   EntityTypeRequest request The request object that contains all of the information used to create the permission.
+func (c *FusionAuthClient) CreateEntityTypePermission(entityTypeId string, permissionId string, request EntityTypeRequest) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithUriSegment("permission").
+		WithUriSegment(permissionId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
@@ -702,6 +786,18 @@ func (c *FusionAuthClient) DeactivateApplication(applicationId string) (*BaseHTT
 	return &resp, &errors, err
 }
 
+// DeactivateReactor
+// Deactivates the FusionAuth Reactor.
+func (c *FusionAuthClient) DeactivateReactor() (*BaseHTTPResponse, error) {
+	var resp BaseHTTPResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/reactor").
+		WithMethod(http.MethodDelete).
+		Do()
+	return &resp, err
+}
+
 // DeactivateUser
 // Deactivates the user with the given Id.
 //   string userId The Id of the user to deactivate.
@@ -870,6 +966,64 @@ func (c *FusionAuthClient) DeleteEmailTemplate(emailTemplateId string) (*BaseHTT
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/email/template").
 		WithUriSegment(emailTemplateId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteEntity
+// Deletes the Entity for the given Id.
+//   string entityId The Id of the Entity to delete.
+func (c *FusionAuthClient) DeleteEntity(entityId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteEntityType
+// Deletes the Entity Type for the given Id.
+//   string entityTypeId The Id of the Entity Type to delete.
+func (c *FusionAuthClient) DeleteEntityType(entityTypeId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteEntityTypePermission
+// Hard deletes a permission. This is a dangerous operation and should not be used in most circumstances. This
+// permanently removes the given permission from all grants that had it.
+//   string entityTypeId The Id of the entityType the the permission belongs to.
+//   string permissionId The Id of the permission to delete.
+func (c *FusionAuthClient) DeleteEntityTypePermission(entityTypeId string, permissionId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithUriSegment("permission").
+		WithUriSegment(permissionId).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1823,6 +1977,26 @@ func (c *FusionAuthClient) PatchEmailTemplate(emailTemplateId string, request ma
 	return &resp, &errors, err
 }
 
+// PatchEntityType
+// Updates, via PATCH, the Entity Type with the given Id.
+//   string entityTypeId The Id of the Entity Type to update.
+//   EntityTypeRequest request The request that contains just the new Entity Type information.
+func (c *FusionAuthClient) PatchEntityType(entityTypeId string, request map[string]interface{}) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchGroup
 // Updates, via PATCH, the group with the given Id.
 //   string groupId The Id of the group to update.
@@ -2134,23 +2308,46 @@ func (c *FusionAuthClient) ReconcileJWT(request IdentityProviderLoginRequest) (*
 	return &resp, &errors, err
 }
 
+// RefreshEntitySearchIndex
+// Request a refresh of the Entity search index. This API is not generally necessary and the search index will become consistent in a
+// reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be
+// if you are using the Search API or Delete Tenant API immediately following a Entity Create etc, you may wish to request a refresh to
+//  ensure the index immediately current before making a query request to the search index.
+func (c *FusionAuthClient) RefreshEntitySearchIndex() (*BaseHTTPResponse, error) {
+	var resp BaseHTTPResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/entity/search").
+		WithMethod(http.MethodPut).
+		Do()
+	return &resp, err
+}
+
 // RefreshUserSearchIndex
 // Request a refresh of the User search index. This API is not generally necessary and the search index will become consistent in a
 // reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be
 // if you are using the Search API or Delete Tenant API immediately following a User Create etc, you may wish to request a refresh to
 //  ensure the index immediately current before making a query request to the search index.
-func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) RefreshUserSearchIndex() (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
-	var errors Errors
 
-	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/user/search").
+	err := c.Start(&resp, nil).
+		WithUri("/api/user/search").
 		WithMethod(http.MethodPut).
 		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
+	return &resp, err
+}
+
+// RegenerateReactorKeys
+// Regenerates any keys that are used by the FusionAuth Reactor.
+func (c *FusionAuthClient) RegenerateReactorKeys() (*BaseHTTPResponse, error) {
+	var resp BaseHTTPResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/reactor").
+		WithMethod(http.MethodPut).
+		Do()
+	return &resp, err
 }
 
 // Register
@@ -2495,6 +2692,58 @@ func (c *FusionAuthClient) RetrieveEmailTemplates() (*EmailTemplateResponse, err
 		WithMethod(http.MethodGet).
 		Do()
 	return &resp, err
+}
+
+// RetrieveEntity
+// Retrieves the Entity for the given Id.
+//   string entityId The Id of the Entity.
+func (c *FusionAuthClient) RetrieveEntity(entityId string) (*EntityResponse, *Errors, error) {
+	var resp EntityResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveEntityType
+// Retrieves the Entity Type for the given Id.
+//   string entityTypeId The Id of the Entity Type.
+func (c *FusionAuthClient) RetrieveEntityType(entityTypeId string) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveEntityTypes
+// Retrieves all of the Entity Types.
+func (c *FusionAuthClient) RetrieveEntityTypes() (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveEventLog
@@ -2953,6 +3202,18 @@ func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*Pending
 		return &resp, nil, err
 	}
 	return &resp, &errors, err
+}
+
+// RetrieveReactorStatus
+// Retrieves the FusionAuth Reactor status.
+func (c *FusionAuthClient) RetrieveReactorStatus() (*ReactorStatus, error) {
+	var resp ReactorStatus
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/reactor").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
 }
 
 // RetrieveRecentLogins
@@ -3648,6 +3909,56 @@ func (c *FusionAuthClient) SearchAuditLogs(request AuditLogSearchRequest) (*Audi
 	return &resp, err
 }
 
+// SearchEntities
+// Searches entities with the specified criteria and pagination.
+//   EntitySearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchEntities(request EntitySearchRequest) (*EntitySearchResponse, *Errors, error) {
+	var resp EntitySearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchEntitiesByIds
+// Retrieves the entities for the given ids. If any id is invalid, it is ignored.
+//   []string ids The entity ids to search for.
+func (c *FusionAuthClient) SearchEntitiesByIds(ids []string) (*EntitySearchResponse, *Errors, error) {
+	var resp EntitySearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/search").
+		WithParameter("ids", ids).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchEntityTypes
+// Searches the entity types with the specified criteria and pagination.
+//   EntityTypeSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchEntityTypes(request EntityTypeSearchRequest) (*EntityTypeSearchResponse, error) {
+	var resp EntityTypeSearchResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/entity/type/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
+}
+
 // SearchEventLogs
 // Searches the event logs with the specified criteria and pagination.
 //   EventLogSearchRequest request The search criteria and pagination information.
@@ -3997,6 +4308,69 @@ func (c *FusionAuthClient) UpdateEmailTemplate(emailTemplateId string, request E
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/email/template").
 		WithUriSegment(emailTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateEntity
+// Updates the Entity with the given Id.
+//   string entityId The Id of the Entity to update.
+//   EntityRequest request The request that contains all of the new Entity information.
+func (c *FusionAuthClient) UpdateEntity(entityId string, request EntityRequest) (*EntityResponse, *Errors, error) {
+	var resp EntityResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateEntityType
+// Updates the Entity Type with the given Id.
+//   string entityTypeId The Id of the Entity Type to update.
+//   EntityTypeRequest request The request that contains all of the new Entity Type information.
+func (c *FusionAuthClient) UpdateEntityType(entityTypeId string, request EntityTypeRequest) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateEntityTypePermission
+// Updates the permission with the given id for the entity type.
+//   string entityTypeId The Id of the entityType that the permission belongs to.
+//   string permissionId The Id of the permission to update.
+//   EntityTypeRequest request The request that contains all of the new permission information.
+func (c *FusionAuthClient) UpdateEntityTypePermission(entityTypeId string, permissionId string, request EntityTypeRequest) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithUriSegment("permission").
+		WithUriSegment(permissionId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do()

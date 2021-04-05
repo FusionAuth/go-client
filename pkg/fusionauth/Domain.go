@@ -341,6 +341,18 @@ type BaseConnectorConfiguration struct {
 }
 
 /**
+ * @author Brian Pontarelli
+ */
+type BaseElasticSearchCriteria struct {
+	BaseSearchCriteria
+	AccurateTotal bool        `json:"accurateTotal"`
+	Ids           []string    `json:"ids,omitempty"`
+	Query         string      `json:"query,omitempty"`
+	QueryString   string      `json:"queryString,omitempty"`
+	SortFields    []SortField `json:"sortFields,omitempty"`
+}
+
+/**
  * Base-class for all FusionAuth events.
  *
  * @author Brian Pontarelli
@@ -422,6 +434,18 @@ const (
 	BreachedPasswordStatus_PasswordOnly    BreachedPasswordStatus = "PasswordOnly"
 	BreachedPasswordStatus_CommonPassword  BreachedPasswordStatus = "CommonPassword"
 )
+
+/**
+ * @author Daniel DeGroff
+ */
+type BreachedPasswordTenantMetric struct {
+	ActionRequired             int `json:"actionRequired,omitempty"`
+	MatchedCommonPasswordCount int `json:"matchedCommonPasswordCount,omitempty"`
+	MatchedExactCount          int `json:"matchedExactCount,omitempty"`
+	MatchedPasswordCount       int `json:"matchedPasswordCount,omitempty"`
+	MatchedSubAddressCount     int `json:"matchedSubAddressCount,omitempty"`
+	PasswordsCheckedCount      int `json:"passwordsCheckedCount,omitempty"`
+}
 
 type BreachMatchMode string
 
@@ -849,6 +873,218 @@ func (b *EmailTemplateResponse) SetStatus(status int) {
  */
 type Enableable struct {
 	Enabled bool `json:"enabled"`
+}
+
+/**
+ * Models an entity that a user can be granted permissions to. Or an entity that can be granted permissions to another entity.
+ *
+ * @author Brian Pontarelli
+ */
+type Entity struct {
+	ClientId          string                 `json:"clientId,omitempty"`
+	ClientSecret      string                 `json:"clientSecret,omitempty"`
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+	ParentId          string                 `json:"parentId,omitempty"`
+	TenantId          string                 `json:"tenantId,omitempty"`
+	Type              EntityType             `json:"type,omitempty"`
+}
+
+/**
+ * A grant for an entity to a user or another entity.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrant struct {
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Permissions       []string               `json:"permissions,omitempty"`
+	RecipientEntityId string                 `json:"recipientEntityId,omitempty"`
+	UserId            string                 `json:"userId,omitempty"`
+}
+
+/**
+ * Entity grant API request object.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrantRequest struct {
+	Grant EntityGrant `json:"grant,omitempty"`
+}
+
+/**
+ * Entity grant API response object.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrantResponse struct {
+	BaseHTTPResponse
+	Grant  EntityGrant   `json:"grant,omitempty"`
+	Grants []EntityGrant `json:"grants,omitempty"`
+}
+
+func (b *EntityGrantResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * JWT Configuration for entities.
+ */
+type EntityJWTConfiguration struct {
+	Enableable
+	AccessTokenKeyId    string `json:"accessTokenKeyId,omitempty"`
+	TimeToLiveInSeconds int    `json:"timeToLiveInSeconds,omitempty"`
+}
+
+/**
+ * Entity API request object.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityRequest struct {
+	Entity Entity `json:"entity,omitempty"`
+}
+
+/**
+ * Entity API response object.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityResponse struct {
+	BaseHTTPResponse
+	Entity Entity `json:"entity,omitempty"`
+}
+
+func (b *EntityResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * This class is the entity query. It provides a build pattern as well as public fields for use on forms and in actions.
+ *
+ * @author Brian Pontarelli
+ */
+type EntitySearchCriteria struct {
+	BaseElasticSearchCriteria
+}
+
+/**
+ * Search request for entities
+ *
+ * @author Brett Guy
+ */
+type EntitySearchRequest struct {
+	Search EntitySearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search request for entities
+ *
+ * @author Brett Guy
+ */
+type EntitySearchResponse struct {
+	BaseHTTPResponse
+	Entities []Entity `json:"entities,omitempty"`
+	Total    int64    `json:"total,omitempty"`
+}
+
+func (b *EntitySearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Models an entity type that has a specific set of permissions. These are global objects and can be used across tenants.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityType struct {
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	JwtConfiguration  EntityJWTConfiguration `json:"jwtConfiguration,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+	Permissions       []EntityTypePermission `json:"permissions,omitempty"`
+}
+
+/**
+ * Models a specific entity type permission. This permission can be granted to users or other entities.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityTypePermission struct {
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Description       string                 `json:"description,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	IsDefault         bool                   `json:"isDefault"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+}
+
+/**
+ * Entity Type API request object.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityTypeRequest struct {
+	EntityType EntityType           `json:"entityType,omitempty"`
+	Permission EntityTypePermission `json:"permission,omitempty"`
+}
+
+/**
+ * Entity Type API response object.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityTypeResponse struct {
+	BaseHTTPResponse
+	EntityType  EntityType           `json:"entityType,omitempty"`
+	EntityTypes []EntityType         `json:"entityTypes,omitempty"`
+	Permission  EntityTypePermission `json:"permission,omitempty"`
+}
+
+func (b *EntityTypeResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityTypeSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityTypeSearchRequest struct {
+	Search EntityTypeSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search request for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityTypeSearchResponse struct {
+	BaseHTTPResponse
+	EntityTypes []EntityType `json:"entityTypes,omitempty"`
+	Total       int64        `json:"total,omitempty"`
+}
+
+func (b *EntityTypeSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -1619,15 +1855,16 @@ func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
 type IdentityProviderType string
 
 const (
-	IdentityProviderType_ExternalJWT   IdentityProviderType = "ExternalJWT"
-	IdentityProviderType_OpenIDConnect IdentityProviderType = "OpenIDConnect"
-	IdentityProviderType_Facebook      IdentityProviderType = "Facebook"
-	IdentityProviderType_Google        IdentityProviderType = "Google"
-	IdentityProviderType_Twitter       IdentityProviderType = "Twitter"
-	IdentityProviderType_SAMLv2        IdentityProviderType = "SAMLv2"
-	IdentityProviderType_HYPR          IdentityProviderType = "HYPR"
-	IdentityProviderType_Apple         IdentityProviderType = "Apple"
-	IdentityProviderType_LinkedIn      IdentityProviderType = "LinkedIn"
+	IdentityProviderType_ExternalJWT        IdentityProviderType = "ExternalJWT"
+	IdentityProviderType_OpenIDConnect      IdentityProviderType = "OpenIDConnect"
+	IdentityProviderType_Facebook           IdentityProviderType = "Facebook"
+	IdentityProviderType_Google             IdentityProviderType = "Google"
+	IdentityProviderType_Twitter            IdentityProviderType = "Twitter"
+	IdentityProviderType_SAMLv2             IdentityProviderType = "SAMLv2"
+	IdentityProviderType_HYPR               IdentityProviderType = "HYPR"
+	IdentityProviderType_Apple              IdentityProviderType = "Apple"
+	IdentityProviderType_LinkedIn           IdentityProviderType = "LinkedIn"
+	IdentityProviderType_SAMLv2IdPInitiated IdentityProviderType = "SAMLv2IdPInitiated"
 )
 
 /**
@@ -2377,8 +2614,11 @@ const (
 	OAuthErrorReason_InvalidDeviceCode                   OAuthErrorReason = "invalid_device_code"
 	OAuthErrorReason_InvalidUserCode                     OAuthErrorReason = "invalid_user_code"
 	OAuthErrorReason_InvalidAdditionalClientId           OAuthErrorReason = "invalid_additional_client_id"
+	OAuthErrorReason_InvalidTargetEntityScope            OAuthErrorReason = "invalid_target_entity_scope"
+	OAuthErrorReason_InvalidEntityPermissionScope        OAuthErrorReason = "invalid_entity_permission_scope"
 	OAuthErrorReason_GrantTypeDisabled                   OAuthErrorReason = "grant_type_disabled"
 	OAuthErrorReason_MissingClientId                     OAuthErrorReason = "missing_client_id"
+	OAuthErrorReason_MissingClientSecret                 OAuthErrorReason = "missing_client_secret"
 	OAuthErrorReason_MissingCode                         OAuthErrorReason = "missing_code"
 	OAuthErrorReason_MissingDeviceCode                   OAuthErrorReason = "missing_device_code"
 	OAuthErrorReason_MissingGrantType                    OAuthErrorReason = "missing_grant_type"
@@ -2389,6 +2629,7 @@ const (
 	OAuthErrorReason_MissingUserCode                     OAuthErrorReason = "missing_user_code"
 	OAuthErrorReason_MissingVerificationUri              OAuthErrorReason = "missing_verification_uri"
 	OAuthErrorReason_LoginPrevented                      OAuthErrorReason = "login_prevented"
+	OAuthErrorReason_NotLicensed                         OAuthErrorReason = "not_licensed"
 	OAuthErrorReason_UserCodeExpired                     OAuthErrorReason = "user_code_expired"
 	OAuthErrorReason_UserExpired                         OAuthErrorReason = "user_expired"
 	OAuthErrorReason_UserLocked                          OAuthErrorReason = "user_locked"
@@ -2417,6 +2658,7 @@ const (
 	OAuthErrorType_UnsupportedGrantType    OAuthErrorType = "unsupported_grant_type"
 	OAuthErrorType_UnsupportedResponseType OAuthErrorType = "unsupported_response_type"
 	OAuthErrorType_ChangePasswordRequired  OAuthErrorType = "change_password_required"
+	OAuthErrorType_NotLicensed             OAuthErrorType = "not_licensed"
 	OAuthErrorType_TwoFactorRequired       OAuthErrorType = "two_factor_required"
 	OAuthErrorType_AuthorizationPending    OAuthErrorType = "authorization_pending"
 	OAuthErrorType_ExpiredToken            OAuthErrorType = "expired_token"
@@ -2654,6 +2896,38 @@ type RawLogin struct {
 	Instant       int64  `json:"instant,omitempty"`
 	IpAddress     string `json:"ipAddress,omitempty"`
 	UserId        string `json:"userId,omitempty"`
+}
+
+type ReactorFeatureStatus string
+
+const (
+	ReactorFeatureStatus_ACTIVE       ReactorFeatureStatus = "ACTIVE"
+	ReactorFeatureStatus_DISCONNECTED ReactorFeatureStatus = "DISCONNECTED"
+	ReactorFeatureStatus_PENDING      ReactorFeatureStatus = "PENDING"
+	ReactorFeatureStatus_UNKNOWN      ReactorFeatureStatus = "UNKNOWN"
+)
+
+/**
+ * Request for managing FusionAuth Reactor and licenses.
+ *
+ * @author Brian Pontarelli
+ */
+type ReactorRequest struct {
+	License string `json:"license,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type ReactorStatus struct {
+	AdvancedIdentityProviders ReactorFeatureStatus                    `json:"advancedIdentityProviders,omitempty"`
+	AdvancedRegistrationForms ReactorFeatureStatus                    `json:"advancedRegistrationForms,omitempty"`
+	BreachedPasswordDetection ReactorFeatureStatus                    `json:"breachedPasswordDetection,omitempty"`
+	BreachedPasswordMetrics   map[string]BreachedPasswordTenantMetric `json:"breachedPasswordMetrics,omitempty"`
+	Connectors                ReactorFeatureStatus                    `json:"connectors,omitempty"`
+	EntityManagement          ReactorFeatureStatus                    `json:"entityManagement,omitempty"`
+	Licensed                  bool                                    `json:"licensed"`
+	MultiFactorAuthentication ReactorFeatureStatus                    `json:"multiFactorAuthentication,omitempty"`
 }
 
 /**
@@ -2910,6 +3184,26 @@ type SAMLv2IdentityProvider struct {
 	SignRequest            bool                   `json:"signRequest"`
 	UseNameIdForEmail      bool                   `json:"useNameIdForEmail"`
 	XmlSignatureC14nMethod CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type SAMLv2IdPInitiatedApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+}
+
+/**
+ * SAML v2 IdP Initiated identity provider configuration.
+ *
+ * @author Daniel DeGroff
+ */
+type SAMLv2IdPInitiatedIdentityProvider struct {
+	BaseIdentityProvider
+	EmailClaim        string `json:"emailClaim,omitempty"`
+	Issuer            string `json:"issuer,omitempty"`
+	KeyId             string `json:"keyId,omitempty"`
+	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
 }
 
 type SAMLv2Logout struct {
@@ -3919,12 +4213,7 @@ func (b *UserResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type UserSearchCriteria struct {
-	BaseSearchCriteria
-	AccurateTotal bool        `json:"accurateTotal"`
-	Ids           []string    `json:"ids,omitempty"`
-	Query         string      `json:"query,omitempty"`
-	QueryString   string      `json:"queryString,omitempty"`
-	SortFields    []SortField `json:"sortFields,omitempty"`
+	BaseElasticSearchCriteria
 }
 
 /**
