@@ -3,7 +3,7 @@
  */
 savantVersion = "1.0.0"
 
-project(group: "io.fusionauth", name: "go-client", version: "1.25.1", licenses: ["ApacheV2_0"]) {
+project(group: "io.fusionauth", name: "go-client", version: "1.26.0", licenses: ["ApacheV2_0"]) {
   workflow {
     standard()
   }
@@ -16,10 +16,27 @@ project(group: "io.fusionauth", name: "go-client", version: "1.25.1", licenses: 
 // Plugins
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
+target(name: "setup", description: "Setup Go build tools") {
+  if (new ProcessBuilder('brew', 'install', 'go').inheritIO().start().waitFor() != 0) {
+    fail('Failed to brew install Go')
+  }
+}
+
 target(name: "clean", description: "Cleans build directory") {
 }
 
-target(name: "compile", description: "Compiles the source code") {
+target(name: "format", description: "Formats the source code") {
+  ProcessBuilder pb = new ProcessBuilder(
+      "go", "fmt")
+      .inheritIO()
+      .directory(new File("./pkg/fusionauth/"))
+
+  def process = pb.start()
+  process.consumeProcessOutput(System.out, System.err)
+  process.waitFor()
+}
+
+target(name: "compile", description: "Compiles the source code", dependsOn: ["format"]) {
 }
 
 target(name: "test", description: "Runs the project's unit tests", dependsOn: ["compile"]) {
