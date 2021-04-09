@@ -2560,6 +2560,7 @@ type OAuth2Configuration struct {
 	LogoutBehavior              LogoutBehavior `json:"logoutBehavior,omitempty"`
 	LogoutURL                   string         `json:"logoutURL,omitempty"`
 	RequireClientAuthentication bool           `json:"requireClientAuthentication"`
+	RequireRegistration         bool           `json:"requireRegistration"`
 }
 
 /**
