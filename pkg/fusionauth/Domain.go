@@ -900,6 +900,7 @@ type Entity struct {
  */
 type EntityGrant struct {
 	Data              map[string]interface{} `json:"data,omitempty"`
+	Entity            Entity                 `json:"entity,omitempty"`
 	Id                string                 `json:"id,omitempty"`
 	InsertInstant     int64                  `json:"insertInstant,omitempty"`
 	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
@@ -929,6 +930,42 @@ type EntityGrantResponse struct {
 }
 
 func (b *EntityGrantResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrantSearchCriteria struct {
+	BaseSearchCriteria
+	EntityId string `json:"entityId,omitempty"`
+	Name     string `json:"name,omitempty"`
+	UserId   string `json:"userId,omitempty"`
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrantSearchRequest struct {
+	Search EntityGrantSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrantSearchResponse struct {
+	BaseHTTPResponse
+	Grants []EntityGrant `json:"grants,omitempty"`
+	Total  int64         `json:"total,omitempty"`
+}
+
+func (b *EntityGrantSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -3415,6 +3452,7 @@ type Templates struct {
 	EmailSend                                 string `json:"emailSend,omitempty"`
 	EmailVerify                               string `json:"emailVerify,omitempty"`
 	Helpers                                   string `json:"helpers,omitempty"`
+	Oath2AuthorizedNotRegistered              string `json:"oath2AuthorizedNotRegistered,omitempty"`
 	Oauth2Authorize                           string `json:"oauth2Authorize,omitempty"`
 	Oauth2ChildRegistrationNotAllowed         string `json:"oauth2ChildRegistrationNotAllowed,omitempty"`
 	Oauth2ChildRegistrationNotAllowedComplete string `json:"oauth2ChildRegistrationNotAllowedComplete,omitempty"`
