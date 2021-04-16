@@ -180,7 +180,7 @@ type ApplicationEmailConfiguration struct {
  */
 type ApplicationFormConfiguration struct {
 	AdminRegistrationFormId string `json:"adminRegistrationFormId,omitempty"`
-	selfServiceFormId   string `json:"selfServiceFormId,omitempty"`
+	SelfServiceFormId       string `json:"selfServiceFormId,omitempty"`
 }
 
 /**
