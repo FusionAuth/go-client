@@ -1032,6 +1032,29 @@ func (c *FusionAuthClient) DeleteEntity(entityId string) (*BaseHTTPResponse, *Er
 	return &resp, &errors, err
 }
 
+// DeleteEntityGrant
+// Deletes an Entity Grant for the given User or Entity.
+//   string entityId The Id of the Entity that the Entity Grant is being deleted for.
+//   string recipientEntityId (Optional) The Id of the Entity that the Entity Grant is for.
+//   string userId (Optional) The Id of the User that the Entity Grant is for.
+func (c *FusionAuthClient) DeleteEntityGrant(entityId string, recipientEntityId string, userId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithUriSegment("grant").
+		WithParameter("recipientEntityId", recipientEntityId).
+		WithParameter("userId", userId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteEntityType
 // Deletes the Entity Type for the given Id.
 //   string entityTypeId The Id of the Entity Type to delete.
@@ -2848,6 +2871,29 @@ func (c *FusionAuthClient) RetrieveEntity(entityId string) (*EntityResponse, *Er
 	return &resp, &errors, err
 }
 
+// RetrieveEntityGrant
+// Retrieves an Entity Grant for the given Entity and User/Entity.
+//   string entityId The Id of the Entity.
+//   string recipientEntityId (Optional) The Id of the Entity that the Entity Grant is for.
+//   string userId (Optional) The Id of the User that the Entity Grant is for.
+func (c *FusionAuthClient) RetrieveEntityGrant(entityId string, recipientEntityId string, userId string) (*EntityGrantResponse, *Errors, error) {
+	var resp EntityGrantResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithUriSegment("grant").
+		WithParameter("recipientEntityId", recipientEntityId).
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveEntityType
 // Retrieves the Entity Type for the given Id.
 //   string entityTypeId The Id of the Entity Type.
@@ -4169,6 +4215,24 @@ func (c *FusionAuthClient) SearchEntitiesByIds(ids []string) (*EntitySearchRespo
 	return &resp, &errors, err
 }
 
+// SearchEntityGrants
+// Searches Entity Grants with the specified criteria and pagination.
+//   EntityGrantSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchEntityGrants(request EntityGrantSearchRequest) (*EntityGrantSearchResponse, *Errors, error) {
+	var resp EntityGrantSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/grant/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchEntityTypes
 // Searches the entity types with the specified criteria and pagination.
 //   EntityTypeSearchRequest request The search criteria and pagination information.
@@ -4998,6 +5062,27 @@ func (c *FusionAuthClient) UpdateWebhook(webhookId string, request WebhookReques
 		WithUriSegment(webhookId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpsertEntityGrant
+// Creates or updates an Entity Grant. This is when a User/Entity is granted permissions to an Entity.
+//   string entityId The Id of the Entity that the User/Entity is being granted access to.
+//   EntityGrantRequest request The request object that contains all of the information used to create the Entity Grant.
+func (c *FusionAuthClient) UpsertEntityGrant(entityId string, request EntityGrantRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithUriSegment("grant").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
 		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
