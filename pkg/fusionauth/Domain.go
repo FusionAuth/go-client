@@ -3724,6 +3724,7 @@ type Tenant struct {
 	Issuer                            string                            `json:"issuer,omitempty"`
 	JwtConfiguration                  JWTConfiguration                  `json:"jwtConfiguration,omitempty"`
 	LastUpdateInstant                 int64                             `json:"lastUpdateInstant,omitempty"`
+	LoginConfiguration                TenantLoginConfiguration          `json:"loginConfiguration,omitempty"`
 	LogoutURL                         string                            `json:"logoutURL,omitempty"`
 	MaximumPasswordAge                MaximumPasswordAge                `json:"maximumPasswordAge,omitempty"`
 	MinimumPasswordAge                MinimumPasswordAge                `json:"minimumPasswordAge,omitempty"`
@@ -3747,6 +3748,13 @@ type Tenantable struct {
  */
 type TenantFormConfiguration struct {
 	AdminUserFormId string `json:"adminUserFormId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type TenantLoginConfiguration struct {
+	RequireAuthentication bool `json:"requireAuthentication"`
 }
 
 /**
