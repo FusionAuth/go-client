@@ -3124,6 +3124,9 @@ type RawLogin struct {
 	UserId        string `json:"userId,omitempty"`
 }
 
+/**
+ * @author Brian Pontarelli
+ */
 type ReactorFeatureStatus string
 
 const (
@@ -3132,6 +3135,13 @@ const (
 	ReactorFeatureStatus_PENDING      ReactorFeatureStatus = "PENDING"
 	ReactorFeatureStatus_UNKNOWN      ReactorFeatureStatus = "UNKNOWN"
 )
+
+/**
+ * @author Daniel DeGroff
+ */
+type ReactorMetrics struct {
+	BreachedPasswordMetrics map[string]BreachedPasswordTenantMetric `json:"breachedPasswordMetrics,omitempty"`
+}
 
 /**
  * Request for managing FusionAuth Reactor and licenses.
@@ -3145,15 +3155,27 @@ type ReactorRequest struct {
 /**
  * @author Daniel DeGroff
  */
+type ReactorResponse struct {
+	BaseHTTPResponse
+	Metrics ReactorMetrics `json:"metrics,omitempty"`
+	Status  ReactorStatus  `json:"status,omitempty"`
+}
+
+func (b *ReactorResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type ReactorStatus struct {
-	AdvancedIdentityProviders ReactorFeatureStatus                    `json:"advancedIdentityProviders,omitempty"`
-	AdvancedRegistrationForms ReactorFeatureStatus                    `json:"advancedRegistrationForms,omitempty"`
-	BreachedPasswordDetection ReactorFeatureStatus                    `json:"breachedPasswordDetection,omitempty"`
-	BreachedPasswordMetrics   map[string]BreachedPasswordTenantMetric `json:"breachedPasswordMetrics,omitempty"`
-	Connectors                ReactorFeatureStatus                    `json:"connectors,omitempty"`
-	EntityManagement          ReactorFeatureStatus                    `json:"entityManagement,omitempty"`
-	Licensed                  bool                                    `json:"licensed"`
-	MultiFactorAuthentication ReactorFeatureStatus                    `json:"multiFactorAuthentication,omitempty"`
+	AdvancedIdentityProviders         ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
+	AdvancedMultiFactorAuthentication ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
+	AdvancedRegistrationForms         ReactorFeatureStatus `json:"advancedRegistrationForms,omitempty"`
+	BreachedPasswordDetection         ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
+	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
+	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
+	Licensed                          bool                 `json:"licensed"`
 }
 
 /**

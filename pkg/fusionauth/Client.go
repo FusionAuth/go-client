@@ -3458,8 +3458,8 @@ func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*Pending
 
 // RetrieveReactorStatus
 // Retrieves the FusionAuth Reactor status.
-func (c *FusionAuthClient) RetrieveReactorStatus() (*ReactorStatus, error) {
-	var resp ReactorStatus
+func (c *FusionAuthClient) RetrieveReactorStatus() (*ReactorResponse, error) {
+	var resp ReactorResponse
 
 	err := c.Start(&resp, nil).
 		WithUri("/api/reactor").
