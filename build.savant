@@ -16,18 +16,11 @@ project(group: "io.fusionauth", name: "go-client", version: "1.26.0", licenses: 
 // Plugins
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
-target(name: "setup", description: "Setup Go build tools") {
-  if (new ProcessBuilder('brew', 'install', 'go').inheritIO().start().waitFor() != 0) {
-    fail('Failed to brew install Go')
-  }
-}
-
 target(name: "clean", description: "Cleans build directory") {
 }
 
 target(name: "format", description: "Formats the source code") {
-  ProcessBuilder pb = new ProcessBuilder(
-      "go", "fmt")
+  ProcessBuilder pb = new ProcessBuilder("go", "fmt")
       .inheritIO()
       .directory(new File("./pkg/fusionauth/"))
 
@@ -40,8 +33,7 @@ target(name: "compile", description: "Compiles the source code", dependsOn: ["fo
 }
 
 target(name: "test", description: "Runs the project's unit tests", dependsOn: ["compile"]) {
-  ProcessBuilder pb = new ProcessBuilder(
-      "go", "test")
+  ProcessBuilder pb = new ProcessBuilder("go", "test")
       .inheritIO()
       .directory(new File("./pkg/fusionauth/"))
 
