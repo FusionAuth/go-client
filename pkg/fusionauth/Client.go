@@ -319,6 +319,30 @@ func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPR
 	return &resp, &errors, err
 }
 
+// CreateAPIKey
+// Creates an API key. You can optionally specify a unique Id for the key, if not provided one will be generated.
+// an API key can only be created with equal or lesser authority. An API key cannot create another API key unless it is granted
+// to that API key.
+//
+// If an API key is locked to a tenant, it can only create API Keys for that same tenant.
+//   string keyId (Optional) The unique Id of the API key. If not provided a secure random Id will be generated.
+//   APIKeyRequest request The request object that contains all of the information needed to create the APIKey.
+func (c *FusionAuthClient) CreateAPIKey(keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateApplication
 // Creates an application. You can optionally specify an Id for the application, if not provided one will be generated.
 //   string applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
@@ -908,6 +932,24 @@ func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteRe
 		WithParameter("userId", userIds).
 		WithParameter("dryRun", strconv.FormatBool(false)).
 		WithParameter("hardDelete", strconv.FormatBool(false)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteAPIKey
+// Deletes the API key for the given Id.
+//   string keyId The Id of the authentication API key to delete.
+func (c *FusionAuthClient) DeleteAPIKey(keyId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1993,6 +2035,26 @@ func (c *FusionAuthClient) PasswordlessLogin(request PasswordlessLoginRequest) (
 	return &resp, &errors, err
 }
 
+// PatchAPIKey
+// Updates an authentication API key by given id
+//   string keyId The Id of the authentication key. If not provided a secure random api key will be generated.
+//   APIKeyRequest request The request object that contains all of the information needed to create the APIKey.
+func (c *FusionAuthClient) PatchAPIKey(keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchApplication
 // Updates, via PATCH, the application with the given Id.
 //   string applicationId The Id of the application to update.
@@ -2605,6 +2667,24 @@ func (c *FusionAuthClient) ResendRegistrationVerification(email string, applicat
 		WithParameter("email", email).
 		WithParameter("applicationId", applicationId).
 		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveAPIKey
+// Retrieves an authentication API key for the given id
+//   string keyId The Id of the API key to retrieve.
+func (c *FusionAuthClient) RetrieveAPIKey(keyId string) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithMethod(http.MethodGet).
 		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
@@ -4560,6 +4640,26 @@ func (c *FusionAuthClient) TwoFactorLogin(request TwoFactorLoginRequest) (*Login
 	err := restClient.WithUri("/api/two-factor/login").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateAPIKey
+// Updates an API key by given id
+//   string apiKeyId The Id of the API key to update.
+//   APIKeyRequest request The request object that contains all of the information used to create the API Key.
+func (c *FusionAuthClient) UpdateAPIKey(apiKeyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(apiKeyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
 		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err

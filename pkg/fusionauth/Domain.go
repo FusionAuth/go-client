@@ -115,6 +115,54 @@ const (
 )
 
 /**
+ * domain POJO to represent AuthenticationKey
+ *
+ * @author sanjay
+ */
+type APIKey struct {
+	Id                string            `json:"id,omitempty"`
+	InsertInstant     int64             `json:"insertInstant,omitempty"`
+	Key               string            `json:"key,omitempty"`
+	KeyManager        bool              `json:"keyManager"`
+	LastUpdateInstant int64             `json:"lastUpdateInstant,omitempty"`
+	MetaData          APIKeyMetaData    `json:"metaData,omitempty"`
+	Permissions       APIKeyPermissions `json:"permissions,omitempty"`
+	TenantId          string            `json:"tenantId,omitempty"`
+}
+
+type APIKeyMetaData struct {
+	Attributes map[string]string `json:"attributes,omitempty"`
+}
+
+type APIKeyPermissions struct {
+	Endpoints map[string][]string `json:"endpoints,omitempty"`
+}
+
+/**
+ * Authentication key request object.
+ *
+ * @author Sanjay
+ */
+type APIKeyRequest struct {
+	ApiKey      APIKey `json:"apiKey,omitempty"`
+	SourceKeyId string `json:"sourceKeyId,omitempty"`
+}
+
+/**
+ * Authentication key response object.
+ *
+ * @author Sanjay
+ */
+type APIKeyResponse struct {
+	BaseHTTPResponse
+	ApiKey APIKey `json:"apiKey,omitempty"`
+}
+
+func (b *APIKeyResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Daniel DeGroff
  */
 type AppleApplicationConfiguration struct {
