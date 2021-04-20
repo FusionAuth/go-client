@@ -1437,12 +1437,12 @@ type ExternalJWTIdentityProvider struct {
  */
 type FacebookApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	AppId        string      `json:"appId,omitempty"`
-	ButtonText   string      `json:"buttonText,omitempty"`
-	ClientSecret string      `json:"client_secret,omitempty"`
-	Fields       string      `json:"fields,omitempty"`
-	LoginMethod  LoginMethod `json:"loginMethod,omitempty"`
-	Permissions  string      `json:"permissions,omitempty"`
+	AppId        string                      `json:"appId,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	Fields       string                      `json:"fields,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Permissions  string                      `json:"permissions,omitempty"`
 }
 
 /**
@@ -1452,12 +1452,12 @@ type FacebookApplicationConfiguration struct {
  */
 type FacebookIdentityProvider struct {
 	BaseIdentityProvider
-	AppId        string      `json:"appId,omitempty"`
-	ButtonText   string      `json:"buttonText,omitempty"`
-	ClientSecret string      `json:"client_secret,omitempty"`
-	Fields       string      `json:"fields,omitempty"`
-	LoginMethod  LoginMethod `json:"loginMethod,omitempty"`
-	Permissions  string      `json:"permissions,omitempty"`
+	AppId        string                      `json:"appId,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	Fields       string                      `json:"fields,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Permissions  string                      `json:"permissions,omitempty"`
 }
 
 /**
@@ -1777,11 +1777,11 @@ type GenericMessengerConfiguration struct {
  */
 type GoogleApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	ButtonText   string      `json:"buttonText,omitempty"`
-	ClientId     string      `json:"client_id,omitempty"`
-	ClientSecret string      `json:"client_secret,omitempty"`
-	LoginMethod  LoginMethod `json:"loginMethod,omitempty"`
-	Scope        string      `json:"scope,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientId     string                      `json:"client_id,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Scope        string                      `json:"scope,omitempty"`
 }
 
 /**
@@ -1791,11 +1791,11 @@ type GoogleApplicationConfiguration struct {
  */
 type GoogleIdentityProvider struct {
 	BaseIdentityProvider
-	ButtonText   string      `json:"buttonText,omitempty"`
-	ClientId     string      `json:"client_id,omitempty"`
-	ClientSecret string      `json:"client_secret,omitempty"`
-	LoginMethod  LoginMethod `json:"loginMethod,omitempty"`
-	Scope        string      `json:"scope,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientId     string                      `json:"client_id,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Scope        string                      `json:"scope,omitempty"`
 }
 
 /**
@@ -1918,6 +1918,16 @@ type IdentityProviderDetails struct {
 	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
 	Type           IdentityProviderType                `json:"type,omitempty"`
 }
+
+/**
+ * @author Brett Pontarelli
+ */
+type IdentityProviderLoginMethod string
+
+const (
+	IdentityProviderLoginMethod_UsePopup    IdentityProviderLoginMethod = "UsePopup"
+	IdentityProviderLoginMethod_UseRedirect IdentityProviderLoginMethod = "UseRedirect"
+)
 
 /**
  * Login API request object used for login to third-party systems (i.e. Login with Facebook).
@@ -2475,16 +2485,6 @@ type LoginIdType string
 const (
 	LoginIdType_Email    LoginIdType = "email"
 	LoginIdType_Username LoginIdType = "username"
-)
-
-/**
- * @author Brett Pontarelli
- */
-type LoginMethod string
-
-const (
-	LoginMethod_UsePopup    LoginMethod = "UsePopup"
-	LoginMethod_UseRedirect LoginMethod = "UseRedirect"
 )
 
 /**
