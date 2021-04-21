@@ -2813,6 +2813,7 @@ type OAuth2Configuration struct {
 	LogoutBehavior              LogoutBehavior `json:"logoutBehavior,omitempty"`
 	LogoutURL                   string         `json:"logoutURL,omitempty"`
 	RequireClientAuthentication bool           `json:"requireClientAuthentication"`
+	RequireRegistration         bool           `json:"requireRegistration"`
 }
 
 /**
@@ -3731,6 +3732,7 @@ type Templates struct {
 	Helpers                                   string `json:"helpers,omitempty"`
 	Index                                     string `json:"index,omitempty"`
 	Oauth2Authorize                           string `json:"oauth2Authorize,omitempty"`
+	Oauth2AuthorizedNotRegistered             string `json:"oauth2AuthorizedNotRegistered,omitempty"`
 	Oauth2ChildRegistrationNotAllowed         string `json:"oauth2ChildRegistrationNotAllowed,omitempty"`
 	Oauth2ChildRegistrationNotAllowedComplete string `json:"oauth2ChildRegistrationNotAllowedComplete,omitempty"`
 	Oauth2CompleteRegistration                string `json:"oauth2CompleteRegistration,omitempty"`
