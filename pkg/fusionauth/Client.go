@@ -319,6 +319,30 @@ func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPR
 	return &resp, &errors, err
 }
 
+// CreateAPIKey
+// Creates an API key. You can optionally specify a unique Id for the key, if not provided one will be generated.
+// an API key can only be created with equal or lesser authority. An API key cannot create another API key unless it is granted
+// to that API key.
+//
+// If an API key is locked to a tenant, it can only create API Keys for that same tenant.
+//   string keyId (Optional) The unique Id of the API key. If not provided a secure random Id will be generated.
+//   APIKeyRequest request The request object that contains all of the information needed to create the APIKey.
+func (c *FusionAuthClient) CreateAPIKey(keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateApplication
 // Creates an application. You can optionally specify an Id for the application, if not provided one will be generated.
 //   string applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
@@ -626,6 +650,46 @@ func (c *FusionAuthClient) CreateLambda(lambdaId string, request LambdaRequest) 
 	return &resp, &errors, err
 }
 
+// CreateMessageTemplate
+// Creates an message template. You can optionally specify an Id for the template, if not provided one will be generated.
+//   string messageTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
+//   MessageTemplateRequest request The request object that contains all of the information used to create the message template.
+func (c *FusionAuthClient) CreateMessageTemplate(messageTemplateId string, request MessageTemplateRequest) (*MessageTemplateResponse, *Errors, error) {
+	var resp MessageTemplateResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/message/template").
+		WithUriSegment(messageTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CreateMessenger
+// Creates a messenger.  You can optionally specify an Id for the messenger, if not provided one will be generated.
+//   string messengerId (Optional) The Id for the messenger. If not provided a secure random UUID will be generated.
+//   MessengerRequest request The request object that contains all of the information used to create the messenger.
+func (c *FusionAuthClient) CreateMessenger(messengerId string, request MessengerRequest) (*MessengerResponse, *Errors, error) {
+	var resp MessengerResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/messenger").
+		WithUriSegment(messengerId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateTenant
 // Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
 //   string tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -876,6 +940,24 @@ func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteRe
 	return &resp, &errors, err
 }
 
+// DeleteAPIKey
+// Deletes the API key for the given Id.
+//   string keyId The Id of the authentication API key to delete.
+func (c *FusionAuthClient) DeleteAPIKey(keyId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteApplication
 // Hard deletes an application. This is a dangerous operation and should not be used in most circumstances. This will
 // delete the application, any registrations for that application, metrics and reports for the application, all the
@@ -984,6 +1066,29 @@ func (c *FusionAuthClient) DeleteEntity(entityId string) (*BaseHTTPResponse, *Er
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/entity").
 		WithUriSegment(entityId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteEntityGrant
+// Deletes an Entity Grant for the given User or Entity.
+//   string entityId The Id of the Entity that the Entity Grant is being deleted for.
+//   string recipientEntityId (Optional) The Id of the Entity that the Entity Grant is for.
+//   string userId (Optional) The Id of the User that the Entity Grant is for.
+func (c *FusionAuthClient) DeleteEntityGrant(entityId string, recipientEntityId string, userId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithUriSegment("grant").
+		WithParameter("recipientEntityId", recipientEntityId).
+		WithParameter("userId", userId).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1150,6 +1255,42 @@ func (c *FusionAuthClient) DeleteLambda(lambdaId string) (*BaseHTTPResponse, *Er
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/lambda").
 		WithUriSegment(lambdaId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteMessageTemplate
+// Deletes the message template for the given Id.
+//   string messageTemplateId The Id of the message template to delete.
+func (c *FusionAuthClient) DeleteMessageTemplate(messageTemplateId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/message/template").
+		WithUriSegment(messageTemplateId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteMessenger
+// Deletes the messenger for the given Id.
+//   string messengerId The Id of the messenger to delete.
+func (c *FusionAuthClient) DeleteMessenger(messengerId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/messenger").
+		WithUriSegment(messengerId).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1359,14 +1500,16 @@ func (c *FusionAuthClient) DeleteWebhook(webhookId string) (*BaseHTTPResponse, *
 // DisableTwoFactor
 // Disable Two Factor authentication for a user.
 //   string userId The Id of the User for which you're disabling Two Factor authentication.
+//   string methodId The two-factor method identifier you wish to disable
 //   string code The Two Factor code used verify the the caller knows the Two Factor secret.
-func (c *FusionAuthClient) DisableTwoFactor(userId string, code string) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) DisableTwoFactor(userId string, methodId string, code string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/two-factor").
 		WithParameter("userId", userId).
+		WithParameter("methodId", methodId).
 		WithParameter("code", code).
 		WithMethod(http.MethodDelete).
 		Do()
@@ -1380,8 +1523,8 @@ func (c *FusionAuthClient) DisableTwoFactor(userId string, code string) (*BaseHT
 // Enable Two Factor authentication for a user.
 //   string userId The Id of the user to enable Two Factor authentication.
 //   TwoFactorRequest request The two factor enable request information.
-func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorRequest) (*BaseHTTPResponse, *Errors, error) {
-	var resp BaseHTTPResponse
+func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorRequest) (*TwoFactorResponse, *Errors, error) {
+	var resp TwoFactorResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
@@ -1604,6 +1747,24 @@ func (c *FusionAuthClient) GenerateRegistrationVerificationId(email string, appl
 		WithMethod(http.MethodPut).
 		Do()
 	return &resp, err
+}
+
+// GenerateTwoFactorRecoveryCodes
+// Generate two-factor recovery codes for a user. Generating two-factor recovery codes will invalidate any existing recovery codes.
+//   string userId The Id of the user to generate new Two Factor recovery codes.
+func (c *FusionAuthClient) GenerateTwoFactorRecoveryCodes(userId string) (*TwoFactorRecoveryCodeResponse, *Errors, error) {
+	var resp TwoFactorRecoveryCodeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/two-factor/recovery-code").
+		WithUriSegment(userId).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // GenerateTwoFactorSecret
@@ -1874,6 +2035,26 @@ func (c *FusionAuthClient) PasswordlessLogin(request PasswordlessLoginRequest) (
 	return &resp, &errors, err
 }
 
+// PatchAPIKey
+// Updates an authentication API key by given id
+//   string keyId The Id of the authentication key. If not provided a secure random api key will be generated.
+//   APIKeyRequest request The request object that contains all of the information needed to create the APIKey.
+func (c *FusionAuthClient) PatchAPIKey(keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchApplication
 // Updates, via PATCH, the application with the given Id.
 //   string applicationId The Id of the application to update.
@@ -2066,6 +2247,46 @@ func (c *FusionAuthClient) PatchLambda(lambdaId string, request map[string]inter
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/lambda").
 		WithUriSegment(lambdaId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchMessageTemplate
+// Updates, via PATCH, the message template with the given Id.
+//   string messageTemplateId The Id of the message template to update.
+//   MessageTemplateRequest request The request that contains just the new message template information.
+func (c *FusionAuthClient) PatchMessageTemplate(messageTemplateId string, request map[string]interface{}) (*MessageTemplateResponse, *Errors, error) {
+	var resp MessageTemplateResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/message/template").
+		WithUriSegment(messageTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchMessenger
+// Updates, via PATCH, the messenger with the given Id.
+//   string messengerId The Id of the messenger to update.
+//   MessengerRequest request The request that contains just the new messenger information.
+func (c *FusionAuthClient) PatchMessenger(messengerId string, request map[string]interface{}) (*MessengerResponse, *Errors, error) {
+	var resp MessengerResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/messenger").
+		WithUriSegment(messengerId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPatch).
 		Do()
@@ -2453,6 +2674,24 @@ func (c *FusionAuthClient) ResendRegistrationVerification(email string, applicat
 	return &resp, &errors, err
 }
 
+// RetrieveAPIKey
+// Retrieves an authentication API key for the given id
+//   string keyId The Id of the API key to retrieve.
+func (c *FusionAuthClient) RetrieveAPIKey(keyId string) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(keyId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveAction
 // Retrieves a single action log (the log of a user action that was taken on a user previously) for the given Id.
 //   string actionId The Id of the action to retrieve.
@@ -2704,6 +2943,29 @@ func (c *FusionAuthClient) RetrieveEntity(entityId string) (*EntityResponse, *Er
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/entity").
 		WithUriSegment(entityId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveEntityGrant
+// Retrieves an Entity Grant for the given Entity and User/Entity.
+//   string entityId The Id of the Entity.
+//   string recipientEntityId (Optional) The Id of the Entity that the Entity Grant is for.
+//   string userId (Optional) The Id of the User that the Entity Grant is for.
+func (c *FusionAuthClient) RetrieveEntityGrant(entityId string, recipientEntityId string, userId string) (*EntityGrantResponse, *Errors, error) {
+	var resp EntityGrantResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithUriSegment("grant").
+		WithParameter("recipientEntityId", recipientEntityId).
+		WithParameter("userId", userId).
 		WithMethod(http.MethodGet).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -3101,6 +3363,76 @@ func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start int64
 	return &resp, &errors, err
 }
 
+// RetrieveMessageTemplate
+// Retrieves the message template for the given Id. If you don't specify the id, this will return all of the message templates.
+//   string messageTemplateId (Optional) The Id of the message template.
+func (c *FusionAuthClient) RetrieveMessageTemplate(messageTemplateId string) (*MessageTemplateResponse, error) {
+	var resp MessageTemplateResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/message/template").
+		WithUriSegment(messageTemplateId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
+}
+
+// RetrieveMessageTemplatePreview
+// Creates a preview of the message template provided in the request, normalized to a given locale.
+//   PreviewMessageTemplateRequest request The request that contains the email template and optionally a locale to render it in.
+func (c *FusionAuthClient) RetrieveMessageTemplatePreview(request PreviewMessageTemplateRequest) (*PreviewMessageTemplateResponse, *Errors, error) {
+	var resp PreviewMessageTemplateResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/message/template/preview").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveMessageTemplates
+// Retrieves all of the message templates.
+func (c *FusionAuthClient) RetrieveMessageTemplates() (*MessageTemplateResponse, error) {
+	var resp MessageTemplateResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/message/template").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
+}
+
+// RetrieveMessenger
+// Retrieves the messenger with the given Id.
+//   string messengerId The Id of the messenger.
+func (c *FusionAuthClient) RetrieveMessenger(messengerId string) (*MessengerResponse, error) {
+	var resp MessengerResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/messenger").
+		WithUriSegment(messengerId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
+}
+
+// RetrieveMessengers
+// Retrieves all of the messengers.
+func (c *FusionAuthClient) RetrieveMessengers() (*MessengerResponse, error) {
+	var resp MessengerResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/messenger").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
+}
+
 // RetrieveMonthlyActiveReport
 // Retrieves the monthly active user report between the two instants. If you specify an application id, it will only
 // return the monthly active counts for that application.
@@ -3206,8 +3538,8 @@ func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*Pending
 
 // RetrieveReactorStatus
 // Retrieves the FusionAuth Reactor status.
-func (c *FusionAuthClient) RetrieveReactorStatus() (*ReactorStatus, error) {
-	var resp ReactorStatus
+func (c *FusionAuthClient) RetrieveReactorStatus() (*ReactorResponse, error) {
+	var resp ReactorResponse
 
 	err := c.Start(&resp, nil).
 		WithUri("/api/reactor").
@@ -3398,6 +3730,24 @@ func (c *FusionAuthClient) RetrieveTotalReport() (*TotalsReportResponse, error) 
 		WithMethod(http.MethodGet).
 		Do()
 	return &resp, err
+}
+
+// RetrieveTwoFactorRecoveryCodes
+// Retrieve two-factor recovery codes for a user.
+//   string userId The Id of the user to retrieve Two Factor recovery codes.
+func (c *FusionAuthClient) RetrieveTwoFactorRecoveryCodes(userId string) (*TwoFactorRecoveryCodeResponse, *Errors, error) {
+	var resp TwoFactorRecoveryCodeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/two-factor/recovery-code").
+		WithUriSegment(userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // RetrieveUser
@@ -3945,6 +4295,24 @@ func (c *FusionAuthClient) SearchEntitiesByIds(ids []string) (*EntitySearchRespo
 	return &resp, &errors, err
 }
 
+// SearchEntityGrants
+// Searches Entity Grants with the specified criteria and pagination.
+//   EntityGrantSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchEntityGrants(request EntityGrantSearchRequest) (*EntityGrantSearchResponse, *Errors, error) {
+	var resp EntityGrantSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/grant/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchEntityTypes
 // Searches the entity types with the specified criteria and pagination.
 //   EntityTypeSearchRequest request The search criteria and pagination information.
@@ -4125,7 +4493,27 @@ func (c *FusionAuthClient) SendPasswordlessCode(request PasswordlessSendRequest)
 // SendTwoFactorCode
 // Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
 //   TwoFactorSendRequest request The request object that contains all of the information used to send the code.
+//
+// Deprecated: This method has been renamed to SendTwoFactorCodeForEnableDisable, use that method instead.
 func (c *FusionAuthClient) SendTwoFactorCode(request TwoFactorSendRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/send").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SendTwoFactorCodeForEnableDisable
+// Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
+//   TwoFactorSendRequest request The request object that contains all of the information used to send the code.
+func (c *FusionAuthClient) SendTwoFactorCodeForEnableDisable(request TwoFactorSendRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
@@ -4143,6 +4531,8 @@ func (c *FusionAuthClient) SendTwoFactorCode(request TwoFactorSendRequest) (*Bas
 // SendTwoFactorCodeForLogin
 // Send a Two Factor authentication code to allow the completion of Two Factor authentication.
 //   string twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
+//
+// Deprecated: This method has been renamed to SendTwoFactorCodeForLoginUsingMethod, use that method instead.
 func (c *FusionAuthClient) SendTwoFactorCodeForLogin(twoFactorId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -4150,6 +4540,26 @@ func (c *FusionAuthClient) SendTwoFactorCodeForLogin(twoFactorId string) (*BaseH
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/api/two-factor/send").
 		WithUriSegment(twoFactorId).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SendTwoFactorCodeForLoginUsingMethod
+// Send a Two Factor authentication code to allow the completion of Two Factor authentication.
+//   string twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
+//   TwoFactorSendRequest request The Two Factor send request that contains all of the information used to send the Two Factor code to the user.
+func (c *FusionAuthClient) SendTwoFactorCodeForLoginUsingMethod(twoFactorId string, request TwoFactorSendRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/send").
+		WithUriSegment(twoFactorId).
+		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -4196,6 +4606,29 @@ func (c *FusionAuthClient) StartPasswordlessLogin(request PasswordlessStartReque
 	return &resp, &errors, err
 }
 
+// StartTwoFactorLogin
+// Start a Two-Factor login request by generating a two-factor identifier. This code can then be sent to the Two Factor Send
+// API (/api/two-factor/send)in order to send a one-time use code to a user. You can also use one-time use code returned
+// to send the code out-of-band. The Two-Factor login is completed by making a request to the Two-Factor Login
+// API (/api/two-factor/login). with the two-factor identifier and the one-time use code.
+//
+// This API is intended to allow you to begin a Two-Factor login outside of a normal login that originated from the Login API (/api/login).
+//   TwoFactorStartRequest request The Two-Factor start request that contains all of the information used to begin the Two-Factor login request.
+func (c *FusionAuthClient) StartTwoFactorLogin(request TwoFactorStartRequest) (*TwoFactorStartResponse, *Errors, error) {
+	var resp TwoFactorStartResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // TwoFactorLogin
 // Complete login using a 2FA challenge
 //   TwoFactorLoginRequest request The login request that contains the user credentials used to log them in.
@@ -4207,6 +4640,26 @@ func (c *FusionAuthClient) TwoFactorLogin(request TwoFactorLoginRequest) (*Login
 	err := restClient.WithUri("/api/two-factor/login").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateAPIKey
+// Updates an API key by given id
+//   string apiKeyId The Id of the API key to update.
+//   APIKeyRequest request The request object that contains all of the information used to create the API Key.
+func (c *FusionAuthClient) UpdateAPIKey(apiKeyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	var resp APIKeyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/api-key").
+		WithUriSegment(apiKeyId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
 		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
@@ -4498,6 +4951,46 @@ func (c *FusionAuthClient) UpdateLambda(lambdaId string, request LambdaRequest) 
 	return &resp, &errors, err
 }
 
+// UpdateMessageTemplate
+// Updates the message template with the given Id.
+//   string messageTemplateId The Id of the message template to update.
+//   MessageTemplateRequest request The request that contains all of the new message template information.
+func (c *FusionAuthClient) UpdateMessageTemplate(messageTemplateId string, request MessageTemplateRequest) (*MessageTemplateResponse, *Errors, error) {
+	var resp MessageTemplateResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/message/template").
+		WithUriSegment(messageTemplateId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateMessenger
+// Updates the messenger with the given Id.
+//   string messengerId The Id of the messenger to update.
+//   MessengerRequest request The request object that contains all of the new messenger information.
+func (c *FusionAuthClient) UpdateMessenger(messengerId string, request MessengerRequest) (*MessengerResponse, *Errors, error) {
+	var resp MessengerResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/messenger").
+		WithUriSegment(messengerId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // UpdateRegistration
 // Updates the registration for the user with the given id and the application defined in the request.
 //   string userId The Id of the user whose registration is going to be updated.
@@ -4669,6 +5162,27 @@ func (c *FusionAuthClient) UpdateWebhook(webhookId string, request WebhookReques
 		WithUriSegment(webhookId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpsertEntityGrant
+// Creates or updates an Entity Grant. This is when a User/Entity is granted permissions to an Entity.
+//   string entityId The Id of the Entity that the User/Entity is being granted access to.
+//   EntityGrantRequest request The request object that contains all of the information used to create the Entity Grant.
+func (c *FusionAuthClient) UpsertEntityGrant(entityId string, request EntityGrantRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithUriSegment("grant").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
 		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
