@@ -202,15 +202,13 @@ func (c *FusionAuthClient) ActionUser(request ActionRequest) (*ActionResponse, *
 
 // ActivateReactor
 // Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
-//   string licenseId The license id
 //   ReactorRequest request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
-func (c *FusionAuthClient) ActivateReactor(licenseId string, request ReactorRequest) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) ActivateReactor(request ReactorRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/reactor").
-		WithUriSegment(licenseId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()

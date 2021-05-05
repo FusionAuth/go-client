@@ -3223,7 +3223,8 @@ type ReactorMetrics struct {
  * @author Brian Pontarelli
  */
 type ReactorRequest struct {
-	License string `json:"license,omitempty"`
+	License   string `json:"license,omitempty"`
+	LicenseId string `json:"licenseId,omitempty"`
 }
 
 /**
