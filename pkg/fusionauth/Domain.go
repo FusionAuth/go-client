@@ -4058,17 +4058,6 @@ type TwitterIdentityProvider struct {
 
 /**
  * @author Daniel DeGroff
- * @deprecated Use <code>User.twoFactor.methods</code>
- */
-type TwoFactorDelivery string
-
-const (
-	TwoFactorDelivery_None        TwoFactorDelivery = "None"
-	TwoFactorDelivery_TextMessage TwoFactorDelivery = "TextMessage"
-)
-
-/**
- * @author Daniel DeGroff
  */
 type TwoFactorEnableDisableSendRequest struct {
 	Email       string `json:"email,omitempty"`
