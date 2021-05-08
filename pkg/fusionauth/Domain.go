@@ -212,7 +212,10 @@ type Application struct {
 	Samlv2Configuration              SAMLv2Configuration                 `json:"samlv2Configuration,omitempty"`
 	State                            ObjectState                         `json:"state,omitempty"`
 	TenantId                         string                              `json:"tenantId,omitempty"`
+	ThemeId                          string                              `json:"themeId,omitempty"`
+	Unverified                       RegistrationUnverifiedOptions       `json:"unverified,omitempty"`
 	VerificationEmailTemplateId      string                              `json:"verificationEmailTemplateId,omitempty"`
+	VerificationStrategy             VerificationStrategy                `json:"verificationStrategy,omitempty"`
 	VerifyRegistration               bool                                `json:"verifyRegistration"`
 }
 
@@ -288,6 +291,15 @@ type ApplicationRole struct {
 	IsSuperRole       bool   `json:"isSuperRole"`
 	LastUpdateInstant int64  `json:"lastUpdateInstant,omitempty"`
 	Name              string `json:"name,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type ApplicationUnverifiedConfiguration struct {
+	Registration         UnverifiedBehavior            `json:"registration,omitempty"`
+	VerificationStrategy VerificationStrategy          `json:"verificationStrategy,omitempty"`
+	WhenGated            RegistrationUnverifiedOptions `json:"whenGated,omitempty"`
 }
 
 /**
@@ -864,20 +876,22 @@ type EmailAddress struct {
  * @author Brian Pontarelli
  */
 type EmailConfiguration struct {
-	DefaultFromEmail              string            `json:"defaultFromEmail,omitempty"`
-	DefaultFromName               string            `json:"defaultFromName,omitempty"`
-	ForgotPasswordEmailTemplateId string            `json:"forgotPasswordEmailTemplateId,omitempty"`
-	Host                          string            `json:"host,omitempty"`
-	Password                      string            `json:"password,omitempty"`
-	PasswordlessEmailTemplateId   string            `json:"passwordlessEmailTemplateId,omitempty"`
-	Port                          int               `json:"port,omitempty"`
-	Properties                    string            `json:"properties,omitempty"`
-	Security                      EmailSecurityType `json:"security,omitempty"`
-	SetPasswordEmailTemplateId    string            `json:"setPasswordEmailTemplateId,omitempty"`
-	Username                      string            `json:"username,omitempty"`
-	VerificationEmailTemplateId   string            `json:"verificationEmailTemplateId,omitempty"`
-	VerifyEmail                   bool              `json:"verifyEmail"`
-	VerifyEmailWhenChanged        bool              `json:"verifyEmailWhenChanged"`
+	DefaultFromEmail              string                 `json:"defaultFromEmail,omitempty"`
+	DefaultFromName               string                 `json:"defaultFromName,omitempty"`
+	ForgotPasswordEmailTemplateId string                 `json:"forgotPasswordEmailTemplateId,omitempty"`
+	Host                          string                 `json:"host,omitempty"`
+	Password                      string                 `json:"password,omitempty"`
+	PasswordlessEmailTemplateId   string                 `json:"passwordlessEmailTemplateId,omitempty"`
+	Port                          int                    `json:"port,omitempty"`
+	Properties                    string                 `json:"properties,omitempty"`
+	Security                      EmailSecurityType      `json:"security,omitempty"`
+	SetPasswordEmailTemplateId    string                 `json:"setPasswordEmailTemplateId,omitempty"`
+	Unverified                    EmailUnverifiedOptions `json:"unverified,omitempty"`
+	Username                      string                 `json:"username,omitempty"`
+	VerificationEmailTemplateId   string                 `json:"verificationEmailTemplateId,omitempty"`
+	VerificationStrategy          VerificationStrategy   `json:"verificationStrategy,omitempty"`
+	VerifyEmail                   bool                   `json:"verifyEmail"`
+	VerifyEmailWhenChanged        bool                   `json:"verifyEmailWhenChanged"`
 }
 
 type EmailPlus struct {
@@ -943,6 +957,14 @@ type EmailTemplateResponse struct {
 
 func (b *EmailTemplateResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type EmailUnverifiedOptions struct {
+	AllowEmailChangeWhenGated bool               `json:"allowEmailChangeWhenGated"`
+	Behavior                  UnverifiedBehavior `json:"behavior,omitempty"`
 }
 
 /**
@@ -1395,12 +1417,14 @@ type ExternalIdentifierConfiguration struct {
 	DeviceUserCodeIdGenerator                     SecureGeneratorConfiguration `json:"deviceUserCodeIdGenerator,omitempty"`
 	EmailVerificationIdGenerator                  SecureGeneratorConfiguration `json:"emailVerificationIdGenerator,omitempty"`
 	EmailVerificationIdTimeToLiveInSeconds        int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
+	EmailVerificationOneTimeCodeGenerator         SecureGeneratorConfiguration `json:"emailVerificationOneTimeCodeGenerator,omitempty"`
 	ExternalAuthenticationIdTimeToLiveInSeconds   int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
 	OneTimePasswordTimeToLiveInSeconds            int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                    SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
 	PasswordlessLoginTimeToLiveInSeconds          int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationIdGenerator           SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
 	RegistrationVerificationIdTimeToLiveInSeconds int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
+	RegistrationVerificationOneTimeCodeGenerator  SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
 	Samlv2AuthNRequestIdTimeToLiveInSeconds       int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
 	SetupPasswordIdGenerator                      SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
 	SetupPasswordIdTimeToLiveInSeconds            int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
@@ -2589,16 +2613,18 @@ type LoginRequest struct {
  */
 type LoginResponse struct {
 	BaseHTTPResponse
-	Actions              []LoginPreventedResponse `json:"actions,omitempty"`
-	ChangePasswordId     string                   `json:"changePasswordId,omitempty"`
-	ChangePasswordReason ChangePasswordReason     `json:"changePasswordReason,omitempty"`
-	Methods              []TwoFactorMethod        `json:"methods,omitempty"`
-	RefreshToken         string                   `json:"refreshToken,omitempty"`
-	State                map[string]interface{}   `json:"state,omitempty"`
-	Token                string                   `json:"token,omitempty"`
-	TwoFactorId          string                   `json:"twoFactorId,omitempty"`
-	TwoFactorTrustId     string                   `json:"twoFactorTrustId,omitempty"`
-	User                 User                     `json:"user,omitempty"`
+	Actions                    []LoginPreventedResponse `json:"actions,omitempty"`
+	ChangePasswordId           string                   `json:"changePasswordId,omitempty"`
+	ChangePasswordReason       ChangePasswordReason     `json:"changePasswordReason,omitempty"`
+	EmailVerificationId        string                   `json:"emailVerificationId,omitempty"`
+	Methods                    []TwoFactorMethod        `json:"methods,omitempty"`
+	RefreshToken               string                   `json:"refreshToken,omitempty"`
+	RegistrationVerificationId string                   `json:"registrationVerificationId,omitempty"`
+	State                      map[string]interface{}   `json:"state,omitempty"`
+	Token                      string                   `json:"token,omitempty"`
+	TwoFactorId                string                   `json:"twoFactorId,omitempty"`
+	TwoFactorTrustId           string                   `json:"twoFactorTrustId,omitempty"`
+	User                       User                     `json:"user,omitempty"`
 }
 
 func (b *LoginResponse) SetStatus(status int) {
@@ -3211,7 +3237,8 @@ type ReactorMetrics struct {
  * @author Brian Pontarelli
  */
 type ReactorRequest struct {
-	License string `json:"license,omitempty"`
+	License   string `json:"license,omitempty"`
+	LicenseId string `json:"licenseId,omitempty"`
 }
 
 /**
@@ -3233,7 +3260,8 @@ func (b *ReactorResponse) SetStatus(status int) {
 type ReactorStatus struct {
 	AdvancedIdentityProviders         ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
 	AdvancedMultiFactorAuthentication ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
-	AdvancedRegistrationForms         ReactorFeatureStatus `json:"advancedRegistrationForms,omitempty"`
+	AdvancedRegistration              ReactorFeatureStatus `json:"advancedRegistration,omitempty"`
+	ApplicationThemes                 ReactorFeatureStatus `json:"applicationThemes,omitempty"`
 	BreachedPasswordDetection         ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
 	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
 	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
@@ -3392,10 +3420,11 @@ type RegistrationRequest struct {
  */
 type RegistrationResponse struct {
 	BaseHTTPResponse
-	RefreshToken string           `json:"refreshToken,omitempty"`
-	Registration UserRegistration `json:"registration,omitempty"`
-	Token        string           `json:"token,omitempty"`
-	User         User             `json:"user,omitempty"`
+	RefreshToken               string           `json:"refreshToken,omitempty"`
+	Registration               UserRegistration `json:"registration,omitempty"`
+	RegistrationVerificationId string           `json:"registrationVerificationId,omitempty"`
+	Token                      string           `json:"token,omitempty"`
+	User                       User             `json:"user,omitempty"`
 }
 
 func (b *RegistrationResponse) SetStatus(status int) {
@@ -3408,6 +3437,13 @@ const (
 	RegistrationType_Basic    RegistrationType = "basic"
 	RegistrationType_Advanced RegistrationType = "advanced"
 )
+
+/**
+ * @author Daniel DeGroff
+ */
+type RegistrationUnverifiedOptions struct {
+	Behavior UnverifiedBehavior `json:"behavior,omitempty"`
+}
 
 /**
  * @author Daniel DeGroff
@@ -3616,6 +3652,7 @@ type SecureIdentity struct {
 	PasswordChangeRequired             bool                   `json:"passwordChangeRequired"`
 	PasswordLastUpdateInstant          int64                  `json:"passwordLastUpdateInstant,omitempty"`
 	Salt                               string                 `json:"salt,omitempty"`
+	UniqueUsername                     string                 `json:"uniqueUsername,omitempty"`
 	Username                           string                 `json:"username,omitempty"`
 	UsernameStatus                     ContentStatus          `json:"usernameStatus,omitempty"`
 	Verified                           bool                   `json:"verified"`
@@ -3741,6 +3778,8 @@ type Templates struct {
 	AccountTwoFactorIndex                     string `json:"accountTwoFactorIndex,omitempty"`
 	EmailComplete                             string `json:"emailComplete,omitempty"`
 	EmailSend                                 string `json:"emailSend,omitempty"`
+	EmailSent                                 string `json:"emailSent,omitempty"`
+	EmailVerificationRequired                 string `json:"emailVerificationRequired,omitempty"`
 	EmailVerify                               string `json:"emailVerify,omitempty"`
 	Helpers                                   string `json:"helpers,omitempty"`
 	Index                                     string `json:"index,omitempty"`
@@ -3763,6 +3802,8 @@ type Templates struct {
 	PasswordSent                              string `json:"passwordSent,omitempty"`
 	RegistrationComplete                      string `json:"registrationComplete,omitempty"`
 	RegistrationSend                          string `json:"registrationSend,omitempty"`
+	RegistrationSent                          string `json:"registrationSent,omitempty"`
+	RegistrationVerificationRequired          string `json:"registrationVerificationRequired,omitempty"`
 	RegistrationVerify                        string `json:"registrationVerify,omitempty"`
 	Samlv2Logout                              string `json:"samlv2Logout,omitempty"`
 }
@@ -3797,6 +3838,7 @@ type Tenant struct {
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
 	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
+	UsernameConfiguration             TenantUsernameConfiguration       `json:"usernameConfiguration,omitempty"`
 }
 
 /**
@@ -3850,12 +3892,27 @@ func (b *TenantResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type TenantUnverifiedConfiguration struct {
+	Email     UnverifiedBehavior            `json:"email,omitempty"`
+	WhenGated RegistrationUnverifiedOptions `json:"whenGated,omitempty"`
+}
+
+/**
  * A Tenant-level policy for deleting Users.
  *
  * @author Trevor Smith
  */
 type TenantUserDeletePolicy struct {
 	Unverified TimeBasedDeletePolicy `json:"unverified,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type TenantUsernameConfiguration struct {
+	Unique UniqueUsernameConfiguration `json:"unique,omitempty"`
 }
 
 /**
@@ -4015,17 +4072,6 @@ type TwitterIdentityProvider struct {
 
 /**
  * @author Daniel DeGroff
- * @deprecated Use <code>User.twoFactor.methods</code>
- */
-type TwoFactorDelivery string
-
-const (
-	TwoFactorDelivery_None        TwoFactorDelivery = "None"
-	TwoFactorDelivery_TextMessage TwoFactorDelivery = "TextMessage"
-)
-
-/**
- * @author Daniel DeGroff
  */
 type TwoFactorEnableDisableSendRequest struct {
 	Email       string `json:"email,omitempty"`
@@ -4135,6 +4181,22 @@ type UIConfiguration struct {
 	LogoURL       string `json:"logoURL,omitempty"`
 	MenuFontColor string `json:"menuFontColor,omitempty"`
 }
+
+type UniqueUsernameConfiguration struct {
+	Enableable
+	NumberOfDigits int  `json:"numberOfDigits,omitempty"`
+	Separator      char `json:"separator,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type UnverifiedBehavior string
+
+const (
+	UnverifiedBehavior_Allow UnverifiedBehavior = "Allow"
+	UnverifiedBehavior_Gated UnverifiedBehavior = "Gated"
+)
 
 /**
  * The global view of a User. This object contains all global information about the user including birth date, registration information
@@ -4635,8 +4697,10 @@ type UserRequest struct {
  */
 type UserResponse struct {
 	BaseHTTPResponse
-	Token string `json:"token,omitempty"`
-	User  User   `json:"user,omitempty"`
+	EmailVerificationId         string            `json:"emailVerificationId,omitempty"`
+	RegistrationVerificationIds map[string]string `json:"registrationVerificationIds,omitempty"`
+	Token                       string            `json:"token,omitempty"`
+	User                        User              `json:"user,omitempty"`
 }
 
 func (b *UserResponse) SetStatus(status int) {
@@ -4658,8 +4722,10 @@ type UserSearchCriteria struct {
 type UserState string
 
 const (
-	UserState_Authenticated              UserState = "Authenticated"
-	UserState_AuthenticatedNotRegistered UserState = "AuthenticatedNotRegistered"
+	UserState_Authenticated                        UserState = "Authenticated"
+	UserState_AuthenticatedNotRegistered           UserState = "AuthenticatedNotRegistered"
+	UserState_AuthenticatedNotVerified             UserState = "AuthenticatedNotVerified"
+	UserState_AuthenticatedRegistrationNotVerified UserState = "AuthenticatedRegistrationNotVerified"
 )
 
 /**
@@ -4696,8 +4762,27 @@ func (b *ValidateResponse) SetStatus(status int) {
 /**
  * @author Daniel DeGroff
  */
+type VerificationStrategy string
+
+const (
+	VerificationStrategy_ClickableLink VerificationStrategy = "ClickableLink"
+	VerificationStrategy_FormField     VerificationStrategy = "FormField"
+)
+
+/**
+ * @author Daniel DeGroff
+ */
+type VerifyEmailRequest struct {
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type VerifyEmailResponse struct {
 	BaseHTTPResponse
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }
 
@@ -4708,12 +4793,33 @@ func (b *VerifyEmailResponse) SetStatus(status int) {
 /**
  * @author Daniel DeGroff
  */
+type VerifyRegistrationRequest struct {
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type VerifyRegistrationResponse struct {
 	BaseHTTPResponse
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }
 
 func (b *VerifyRegistrationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type VersionResponse struct {
+	BaseHTTPResponse
+	Version string `json:"version,omitempty"`
+}
+
+func (b *VersionResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
