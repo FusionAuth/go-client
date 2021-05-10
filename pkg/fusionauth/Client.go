@@ -267,7 +267,7 @@ func (c *FusionAuthClient) ChangePassword(changePasswordId string, request Chang
 	var resp ChangePasswordResponse
 	var errors Errors
 
-	restClient := c.Start(&resp, &errors)
+	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/api/user/change-password").
 		WithUriSegment(changePasswordId).
 		WithJSONBody(request).
