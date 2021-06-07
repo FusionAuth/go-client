@@ -810,6 +810,24 @@ func (c *FusionAuthClient) CreateUserConsent(userConsentId string, request UserC
 	return &resp, &errors, err
 }
 
+// CreateUserLink
+// Link an external user from a 3rd party identity provider to a FusionAuth user.
+//   IdentityProviderLinkRequest request The request object that contains all of the information used to link the FusionAuth user.
+func (c *FusionAuthClient) CreateUserLink(request IdentityProviderLinkRequest) (*IdentityProviderLinkResponse, *Errors, error) {
+	var resp IdentityProviderLinkResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/link").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateWebhook
 // Creates a webhook. You can optionally specify an Id for the webhook, if not provided one will be generated.
 //   string webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
@@ -1423,6 +1441,28 @@ func (c *FusionAuthClient) DeleteUserActionReason(userActionReasonId string) (*B
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user-action-reason").
 		WithUriSegment(userActionReasonId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteUserLink
+// Remove an existing link that has been made from a 3rd party identity provider to a FusionAuth user.
+//   string identityProviderId The unique Id of the identity provider.
+//   string identityProviderUserId The unique Id of the user in the 3rd party identity provider to unlink.
+//   string userId The unique Id of the FusionAuth user to unlink.
+func (c *FusionAuthClient) DeleteUserLink(identityProviderId string, identityProviderUserId string, userId string) (*IdentityProviderLinkResponse, *Errors, error) {
+	var resp IdentityProviderLinkResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/link").
+		WithParameter("identityProviderId", identityProviderId).
+		WithParameter("identityProviderUserId", identityProviderUserId).
+		WithParameter("userId", userId).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -2593,6 +2633,28 @@ func (c *FusionAuthClient) Register(userId string, request RegistrationRequest) 
 	return &resp, &errors, err
 }
 
+// Reindex
+// Requests Elasticsearch to delete and rebuild the index for FusionAuth users or entities. Be very careful when running this request as it will
+// increase the CPU and I/O load on your database until the operation completes. Generally speaking you do not ever need to run this operation unless
+// instructed by FusionAuth support, or if you are migrating a database another system and you are not brining along the Elasticsearch index.
+//
+// You have been warned.
+//   ReindexRequest request The request that contains the index name.
+func (c *FusionAuthClient) Reindex(request ReindexRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/reindex").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RemoveUserFromFamily
 // Removes a user from the family with the given id.
 //   string familyId The id of the family to remove the user from.
@@ -3645,6 +3707,23 @@ func (c *FusionAuthClient) RetrieveRegistrationReport(applicationId string, star
 	return &resp, &errors, err
 }
 
+// RetrieveReindexStatus
+// Retrieve the status of a re-index process. A status code of 200 indicates the re-index is in progress, a status code of
+// 404 indicates no re-index is in progress.
+func (c *FusionAuthClient) RetrieveReindexStatus() (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/reindex").
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveSystemConfiguration
 // Retrieves the system configuration.
 func (c *FusionAuthClient) RetrieveSystemConfiguration() (*SystemConfigurationResponse, error) {
@@ -3968,6 +4047,48 @@ func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/userinfo").
 		WithAuthorization("Bearer " + encodedJWT).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveUserLink
+// Retrieve a single Identity Provider user (link).
+//   string identityProviderId The unique Id of the identity provider.
+//   string identityProviderUserId The unique Id of the user in the 3rd party identity provider.
+//   string userId The unique Id of the FusionAuth user.
+func (c *FusionAuthClient) RetrieveUserLink(identityProviderId string, identityProviderUserId string, userId string) (*IdentityProviderLinkResponse, *Errors, error) {
+	var resp IdentityProviderLinkResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/link").
+		WithParameter("identityProviderId", identityProviderId).
+		WithParameter("identityProviderUserId", identityProviderUserId).
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveUserLinksByUserId
+// Retrieve all Identity Provider users (links) for the user. Specify the optional identityProviderId to retrieve links for a particular IdP.
+//   string identityProviderId (Optional) The unique Id of the identity provider. Specify this value to reduce the links returned to those for a particular IdP.
+//   string userId The unique Id of the user.
+func (c *FusionAuthClient) RetrieveUserLinksByUserId(identityProviderId string, userId string) (*IdentityProviderLinkResponse, *Errors, error) {
+	var resp IdentityProviderLinkResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/link").
+		WithParameter("identityProviderId", identityProviderId).
+		WithParameter("userId", userId).
 		WithMethod(http.MethodGet).
 		Do()
 	if restClient.ErrorRef == nil {

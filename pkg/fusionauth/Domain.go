@@ -453,15 +453,16 @@ type BaseExportRequest struct {
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseIdentityProvider struct {
 	Enableable
-	ApplicationConfiguration map[string]interface{}      `json:"applicationConfiguration,omitempty"`
-	Data                     map[string]interface{}      `json:"data,omitempty"`
-	Debug                    bool                        `json:"debug"`
-	Id                       string                      `json:"id,omitempty"`
-	InsertInstant            int64                       `json:"insertInstant,omitempty"`
-	LambdaConfiguration      ProviderLambdaConfiguration `json:"lambdaConfiguration,omitempty"`
-	LastUpdateInstant        int64                       `json:"lastUpdateInstant,omitempty"`
-	Name                     string                      `json:"name,omitempty"`
-	Type                     IdentityProviderType        `json:"type,omitempty"`
+	ApplicationConfiguration map[string]interface{}          `json:"applicationConfiguration,omitempty"`
+	Data                     map[string]interface{}          `json:"data,omitempty"`
+	Debug                    bool                            `json:"debug"`
+	Id                       string                          `json:"id,omitempty"`
+	InsertInstant            int64                           `json:"insertInstant,omitempty"`
+	LambdaConfiguration      ProviderLambdaConfiguration     `json:"lambdaConfiguration,omitempty"`
+	LastUpdateInstant        int64                           `json:"lastUpdateInstant,omitempty"`
+	LinkingStrategy          IdentityProviderLinkingStrategy `json:"linkingStrategy,omitempty"`
+	Name                     string                          `json:"name,omitempty"`
+	Type                     IdentityProviderType            `json:"type,omitempty"`
 }
 
 /**
@@ -634,6 +635,17 @@ const (
 )
 
 /**
+ * @author Brett Guy
+ */
+type ClientAuthenticationPolicy string
+
+const (
+	ClientAuthenticationPolicy_Required                 ClientAuthenticationPolicy = "Required"
+	ClientAuthenticationPolicy_NotRequired              ClientAuthenticationPolicy = "NotRequired"
+	ClientAuthenticationPolicy_NotRequiredWhenUsingPKCE ClientAuthenticationPolicy = "NotRequiredWhenUsingPKCE"
+)
+
+/**
  * @author Trevor Smith
  */
 type ConnectorPolicy struct {
@@ -779,6 +791,14 @@ type DailyActiveUserReportResponse struct {
 
 func (b *DailyActiveUserReportResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Helper for dealing with default values.
+ *
+ * @author Brian Pontarelli
+ */
+type DefaultTools struct {
 }
 
 type DeleteConfiguration struct {
@@ -1226,6 +1246,30 @@ func (b *EntityTypeSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+type EpicGamesApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Epic gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type EpicGamesIdentityProvider struct {
+	BaseIdentityProvider
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
  * Defines an error.
  *
  * @author Brian Pontarelli
@@ -1422,6 +1466,7 @@ type ExternalIdentifierConfiguration struct {
 	OneTimePasswordTimeToLiveInSeconds            int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                    SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
 	PasswordlessLoginTimeToLiveInSeconds          int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
+	PendingAccountLinkTimeToLiveInSeconds         int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationIdGenerator           SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
 	RegistrationVerificationIdTimeToLiveInSeconds int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationOneTimeCodeGenerator  SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
@@ -1461,11 +1506,12 @@ type ExternalJWTIdentityProvider struct {
  */
 type FacebookApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	AppId        string `json:"appId,omitempty"`
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Fields       string `json:"fields,omitempty"`
-	Permissions  string `json:"permissions,omitempty"`
+	AppId        string                      `json:"appId,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	Fields       string                      `json:"fields,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Permissions  string                      `json:"permissions,omitempty"`
 }
 
 /**
@@ -1475,11 +1521,12 @@ type FacebookApplicationConfiguration struct {
  */
 type FacebookIdentityProvider struct {
 	BaseIdentityProvider
-	AppId        string `json:"appId,omitempty"`
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Fields       string `json:"fields,omitempty"`
-	Permissions  string `json:"permissions,omitempty"`
+	AppId        string                      `json:"appId,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	Fields       string                      `json:"fields,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Permissions  string                      `json:"permissions,omitempty"`
 }
 
 /**
@@ -1799,10 +1846,11 @@ type GenericMessengerConfiguration struct {
  */
 type GoogleApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientId     string `json:"client_id,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Scope        string `json:"scope,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientId     string                      `json:"client_id,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Scope        string                      `json:"scope,omitempty"`
 }
 
 /**
@@ -1812,10 +1860,11 @@ type GoogleApplicationConfiguration struct {
  */
 type GoogleIdentityProvider struct {
 	BaseIdentityProvider
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientId     string `json:"client_id,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Scope        string `json:"scope,omitempty"`
+	ButtonText   string                      `json:"buttonText,omitempty"`
+	ClientId     string                      `json:"client_id,omitempty"`
+	ClientSecret string                      `json:"client_secret,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
+	Scope        string                      `json:"scope,omitempty"`
 }
 
 /**
@@ -1940,6 +1989,71 @@ type IdentityProviderDetails struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type IdentityProviderLink struct {
+	Data                   map[string]interface{} `json:"data,omitempty"`
+	DisplayName            string                 `json:"displayName,omitempty"`
+	IdentityProviderId     string                 `json:"identityProviderId,omitempty"`
+	IdentityProviderUserId string                 `json:"identityProviderUserId,omitempty"`
+	InsertInstant          int64                  `json:"insertInstant,omitempty"`
+	LastLoginInstant       int64                  `json:"lastLoginInstant,omitempty"`
+	TenantId               string                 `json:"tenantId,omitempty"`
+	Token                  string                 `json:"token,omitempty"`
+	UserId                 string                 `json:"userId,omitempty"`
+}
+
+/**
+ * The IdP behavior when no user link has been made yet.
+ *
+ * @author Daniel DeGroff
+ */
+type IdentityProviderLinkingStrategy string
+
+const (
+	IdentityProviderLinkingStrategy_CreatePendingLink             IdentityProviderLinkingStrategy = "CreatePendingLink"
+	IdentityProviderLinkingStrategy_LinkAnonymously               IdentityProviderLinkingStrategy = "LinkAnonymously"
+	IdentityProviderLinkingStrategy_LinkByEmail                   IdentityProviderLinkingStrategy = "LinkByEmail"
+	IdentityProviderLinkingStrategy_LinkByEmailForExistingUser    IdentityProviderLinkingStrategy = "LinkByEmailForExistingUser"
+	IdentityProviderLinkingStrategy_LinkByUsername                IdentityProviderLinkingStrategy = "LinkByUsername"
+	IdentityProviderLinkingStrategy_LinkByUsernameForExistingUser IdentityProviderLinkingStrategy = "LinkByUsernameForExistingUser"
+	IdentityProviderLinkingStrategy_Unsupported                   IdentityProviderLinkingStrategy = "Unsupported"
+)
+
+/**
+ * @author Daniel DeGroff
+ */
+type IdentityProviderLinkRequest struct {
+	IdentityProviderId     string `json:"identityProviderId,omitempty"`
+	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
+	PendingIdPLinkId       string `json:"pendingIdPLinkId,omitempty"`
+	UserId                 string `json:"userId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type IdentityProviderLinkResponse struct {
+	BaseHTTPResponse
+	IdentityProviderLink  IdentityProviderLink   `json:"identityProviderLink,omitempty"`
+	IdentityProviderLinks []IdentityProviderLink `json:"identityProviderLinks,omitempty"`
+}
+
+func (b *IdentityProviderLinkResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type IdentityProviderLoginMethod string
+
+const (
+	IdentityProviderLoginMethod_UsePopup    IdentityProviderLoginMethod = "UsePopup"
+	IdentityProviderLoginMethod_UseRedirect IdentityProviderLoginMethod = "UseRedirect"
+)
+
+/**
  * Login API request object used for login to third-party systems (i.e. Login with Facebook).
  *
  * @author Brian Pontarelli
@@ -1963,7 +2077,9 @@ type IdentityProviderOauth2Configuration struct {
 	Issuer                     string                     `json:"issuer,omitempty"`
 	Scope                      string                     `json:"scope,omitempty"`
 	TokenEndpoint              string                     `json:"token_endpoint,omitempty"`
+	UniqueIdClaim              string                     `json:"uniqueIdClaim,omitempty"`
 	UserinfoEndpoint           string                     `json:"userinfo_endpoint,omitempty"`
+	UsernameClaim              string                     `json:"usernameClaim,omitempty"`
 }
 
 /**
@@ -2015,16 +2131,22 @@ func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
 type IdentityProviderType string
 
 const (
+	IdentityProviderType_Apple              IdentityProviderType = "Apple"
+	IdentityProviderType_EpicGames          IdentityProviderType = "EpicGames"
 	IdentityProviderType_ExternalJWT        IdentityProviderType = "ExternalJWT"
-	IdentityProviderType_OpenIDConnect      IdentityProviderType = "OpenIDConnect"
 	IdentityProviderType_Facebook           IdentityProviderType = "Facebook"
 	IdentityProviderType_Google             IdentityProviderType = "Google"
-	IdentityProviderType_Twitter            IdentityProviderType = "Twitter"
-	IdentityProviderType_SAMLv2             IdentityProviderType = "SAMLv2"
 	IdentityProviderType_HYPR               IdentityProviderType = "HYPR"
-	IdentityProviderType_Apple              IdentityProviderType = "Apple"
 	IdentityProviderType_LinkedIn           IdentityProviderType = "LinkedIn"
+	IdentityProviderType_Nintendo           IdentityProviderType = "Nintendo"
+	IdentityProviderType_OpenIDConnect      IdentityProviderType = "OpenIDConnect"
+	IdentityProviderType_SAMLv2             IdentityProviderType = "SAMLv2"
 	IdentityProviderType_SAMLv2IdPInitiated IdentityProviderType = "SAMLv2IdPInitiated"
+	IdentityProviderType_SonyPSN            IdentityProviderType = "SonyPSN"
+	IdentityProviderType_Steam              IdentityProviderType = "Steam"
+	IdentityProviderType_Twitch             IdentityProviderType = "Twitch"
+	IdentityProviderType_Twitter            IdentityProviderType = "Twitter"
+	IdentityProviderType_Xbox               IdentityProviderType = "Xbox"
 )
 
 /**
@@ -2411,18 +2533,25 @@ func (b *LambdaResponse) SetStatus(status int) {
 type LambdaType string
 
 const (
-	LambdaType_JWTPopulate            LambdaType = "JWTPopulate"
-	LambdaType_OpenIDReconcile        LambdaType = "OpenIDReconcile"
-	LambdaType_SAMLv2Reconcile        LambdaType = "SAMLv2Reconcile"
-	LambdaType_SAMLv2Populate         LambdaType = "SAMLv2Populate"
-	LambdaType_AppleReconcile         LambdaType = "AppleReconcile"
-	LambdaType_ExternalJWTReconcile   LambdaType = "ExternalJWTReconcile"
-	LambdaType_FacebookReconcile      LambdaType = "FacebookReconcile"
-	LambdaType_GoogleReconcile        LambdaType = "GoogleReconcile"
-	LambdaType_HYPRReconcile          LambdaType = "HYPRReconcile"
-	LambdaType_TwitterReconcile       LambdaType = "TwitterReconcile"
-	LambdaType_LDAPConnectorReconcile LambdaType = "LDAPConnectorReconcile"
-	LambdaType_LinkedInReconcile      LambdaType = "LinkedInReconcile"
+	LambdaType_JWTPopulate                  LambdaType = "JWTPopulate"
+	LambdaType_OpenIDReconcile              LambdaType = "OpenIDReconcile"
+	LambdaType_SAMLv2Reconcile              LambdaType = "SAMLv2Reconcile"
+	LambdaType_SAMLv2Populate               LambdaType = "SAMLv2Populate"
+	LambdaType_AppleReconcile               LambdaType = "AppleReconcile"
+	LambdaType_ExternalJWTReconcile         LambdaType = "ExternalJWTReconcile"
+	LambdaType_FacebookReconcile            LambdaType = "FacebookReconcile"
+	LambdaType_GoogleReconcile              LambdaType = "GoogleReconcile"
+	LambdaType_HYPRReconcile                LambdaType = "HYPRReconcile"
+	LambdaType_TwitterReconcile             LambdaType = "TwitterReconcile"
+	LambdaType_LDAPConnectorReconcile       LambdaType = "LDAPConnectorReconcile"
+	LambdaType_LinkedInReconcile            LambdaType = "LinkedInReconcile"
+	LambdaType_EpicGamesReconcile           LambdaType = "EpicGamesReconcile"
+	LambdaType_NintendoReconcile            LambdaType = "NintendoReconcile"
+	LambdaType_SonyPSNReconcile             LambdaType = "SonyPSNReconcile"
+	LambdaType_SteamReconcile               LambdaType = "SteamReconcile"
+	LambdaType_TwitchReconcile              LambdaType = "TwitchReconcile"
+	LambdaType_XboxReconcile                LambdaType = "XboxReconcile"
+	LambdaType_ClientCredentialsJWTPopulate LambdaType = "ClientCredentialsJWTPopulate"
 )
 
 /**
@@ -2604,6 +2733,7 @@ type LoginResponse struct {
 	ChangePasswordReason       ChangePasswordReason     `json:"changePasswordReason,omitempty"`
 	EmailVerificationId        string                   `json:"emailVerificationId,omitempty"`
 	Methods                    []TwoFactorMethod        `json:"methods,omitempty"`
+	PendingIdPLinkId           string                   `json:"pendingIdPLinkId,omitempty"`
 	RefreshToken               string                   `json:"refreshToken,omitempty"`
 	RegistrationVerificationId string                   `json:"registrationVerificationId,omitempty"`
 	State                      map[string]interface{}   `json:"state,omitempty"`
@@ -2637,6 +2767,17 @@ type LookupResponse struct {
 
 func (b *LookupResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * This class contains the managed fields that are also put into the database during FusionAuth setup.
+ * <p>
+ * NOTE TO FUSIONAUTH DEVS: These fields are are also declared in SQL in order to boot strap the system. These need to stay in sync.
+ * - Any changes to these fields needs to also be reflected in mysql.sql and postgresql.sql
+ *
+ * @author Brian Pontarelli
+ */
+type ManagedFields struct {
 }
 
 /**
@@ -2752,6 +2893,12 @@ func (b *MessengerResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type MessengerTransport struct {
+}
+
+/**
  * @author Brett Guy
  */
 type MessengerType string
@@ -2817,6 +2964,30 @@ type MultiFactorSMSTemplate struct {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+type NintendoApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Nintendo gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type NintendoIdentityProvider struct {
+	BaseIdentityProvider
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
  * Helper methods for normalizing values.
  *
  * @author Brian Pontarelli
@@ -2828,17 +2999,20 @@ type Normalizer struct {
  * @author Daniel DeGroff
  */
 type OAuth2Configuration struct {
-	AuthorizedOriginURLs        []string       `json:"authorizedOriginURLs,omitempty"`
-	AuthorizedRedirectURLs      []string       `json:"authorizedRedirectURLs,omitempty"`
-	ClientId                    string         `json:"clientId,omitempty"`
-	ClientSecret                string         `json:"clientSecret,omitempty"`
-	Debug                       bool           `json:"debug"`
-	DeviceVerificationURL       string         `json:"deviceVerificationURL,omitempty"`
-	EnabledGrants               []GrantType    `json:"enabledGrants,omitempty"`
-	GenerateRefreshTokens       bool           `json:"generateRefreshTokens"`
-	LogoutBehavior              LogoutBehavior `json:"logoutBehavior,omitempty"`
-	LogoutURL                   string         `json:"logoutURL,omitempty"`
-	RequireClientAuthentication bool           `json:"requireClientAuthentication"`
+	AuthorizedOriginURLs          []string                      `json:"authorizedOriginURLs,omitempty"`
+	AuthorizedRedirectURLs        []string                      `json:"authorizedRedirectURLs,omitempty"`
+	ClientAuthenticationPolicy    ClientAuthenticationPolicy    `json:"clientAuthenticationPolicy,omitempty"`
+	ClientId                      string                        `json:"clientId,omitempty"`
+	ClientSecret                  string                        `json:"clientSecret,omitempty"`
+	Debug                         bool                          `json:"debug"`
+	DeviceVerificationURL         string                        `json:"deviceVerificationURL,omitempty"`
+	EnabledGrants                 []GrantType                   `json:"enabledGrants,omitempty"`
+	GenerateRefreshTokens         bool                          `json:"generateRefreshTokens"`
+	LogoutBehavior                LogoutBehavior                `json:"logoutBehavior,omitempty"`
+	LogoutURL                     string                        `json:"logoutURL,omitempty"`
+	ProofKeyForCodeExchangePolicy ProofKeyForCodeExchangePolicy `json:"proofKeyForCodeExchangePolicy,omitempty"`
+	RequireClientAuthentication   bool                          `json:"requireClientAuthentication"`
+	RequireRegistration           bool                          `json:"requireRegistration"`
 }
 
 /**
@@ -2899,6 +3073,8 @@ const (
 	OAuthErrorReason_MissingClientId                     OAuthErrorReason = "missing_client_id"
 	OAuthErrorReason_MissingClientSecret                 OAuthErrorReason = "missing_client_secret"
 	OAuthErrorReason_MissingCode                         OAuthErrorReason = "missing_code"
+	OAuthErrorReason_MissingCodeChallenge                OAuthErrorReason = "missing_code_challenge"
+	OAuthErrorReason_MissingCodeVerifier                 OAuthErrorReason = "missing_code_verifier"
 	OAuthErrorReason_MissingDeviceCode                   OAuthErrorReason = "missing_device_code"
 	OAuthErrorReason_MissingGrantType                    OAuthErrorReason = "missing_grant_type"
 	OAuthErrorReason_MissingRedirectUri                  OAuthErrorReason = "missing_redirect_uri"
@@ -3118,6 +3294,20 @@ func (b *PasswordValidationRulesResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type PendingIdPLink struct {
+	DisplayName            string `json:"displayName,omitempty"`
+	Email                  string `json:"email,omitempty"`
+	IdentityProviderId     string `json:"identityProviderId,omitempty"`
+	IdentityProviderName   string `json:"identityProviderName,omitempty"`
+	IdentityProviderType   string `json:"identityProviderType,omitempty"`
+	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
+	User                   User   `json:"user,omitempty"`
+	Username               string `json:"username,omitempty"`
+}
+
+/**
  * @author Brian Pontarelli
  */
 type PendingResponse struct {
@@ -3170,6 +3360,17 @@ type PreviewResponse struct {
 func (b *PreviewResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * @author Brett Guy
+ */
+type ProofKeyForCodeExchangePolicy string
+
+const (
+	ProofKeyForCodeExchangePolicy_Required                                 ProofKeyForCodeExchangePolicy = "Required"
+	ProofKeyForCodeExchangePolicy_NotRequired                              ProofKeyForCodeExchangePolicy = "NotRequired"
+	ProofKeyForCodeExchangePolicy_NotRequiredWhenUsingClientAuthentication ProofKeyForCodeExchangePolicy = "NotRequiredWhenUsingClientAuthentication"
+)
 
 /**
  * JWT Public Key Response Object
@@ -3432,6 +3633,15 @@ type RegistrationUnverifiedOptions struct {
 }
 
 /**
+ * Reindex API request
+ *
+ * @author Daniel DeGroff
+ */
+type ReindexRequest struct {
+	Index string `json:"index,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type ReloadRequest struct {
@@ -3511,10 +3721,13 @@ type SAMLv2IdentityProvider struct {
 	IdpEndpoint            string                 `json:"idpEndpoint,omitempty"`
 	Issuer                 string                 `json:"issuer,omitempty"`
 	KeyId                  string                 `json:"keyId,omitempty"`
+	NameIdFormat           string                 `json:"nameIdFormat,omitempty"`
 	PostRequest            bool                   `json:"postRequest"`
 	RequestSigningKeyId    string                 `json:"requestSigningKeyId,omitempty"`
 	SignRequest            bool                   `json:"signRequest"`
+	UniqueIdClaim          string                 `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail      bool                   `json:"useNameIdForEmail"`
+	UsernameClaim          string                 `json:"usernameClaim,omitempty"`
 	XmlSignatureC14nMethod CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
@@ -3535,7 +3748,9 @@ type SAMLv2IdPInitiatedIdentityProvider struct {
 	EmailClaim        string `json:"emailClaim,omitempty"`
 	Issuer            string `json:"issuer,omitempty"`
 	KeyId             string `json:"keyId,omitempty"`
+	UniqueIdClaim     string `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
+	UsernameClaim     string `json:"usernameClaim,omitempty"`
 }
 
 type SAMLv2Logout struct {
@@ -3648,10 +3863,13 @@ type SecureIdentity struct {
  * @author Daniel DeGroff
  */
 type SendRequest struct {
-	BccAddresses []string               `json:"bccAddresses,omitempty"`
-	CcAddresses  []string               `json:"ccAddresses,omitempty"`
-	RequestData  map[string]interface{} `json:"requestData,omitempty"`
-	UserIds      []string               `json:"userIds,omitempty"`
+	ApplicationId      string                 `json:"applicationId,omitempty"`
+	BccAddresses       []string               `json:"bccAddresses,omitempty"`
+	CcAddresses        []string               `json:"ccAddresses,omitempty"`
+	PreferredLanguages []string               `json:"preferredLanguages,omitempty"`
+	RequestData        map[string]interface{} `json:"requestData,omitempty"`
+	ToAddresses        []EmailAddress         `json:"toAddresses,omitempty"`
+	UserIds            []string               `json:"userIds,omitempty"`
 }
 
 /**
@@ -3659,7 +3877,8 @@ type SendRequest struct {
  */
 type SendResponse struct {
 	BaseHTTPResponse
-	Results map[string]EmailTemplateErrors `json:"results,omitempty"`
+	AnonymousResults map[string]EmailTemplateErrors `json:"anonymousResults,omitempty"`
+	Results          map[string]EmailTemplateErrors `json:"results,omitempty"`
 }
 
 func (b *SendResponse) SetStatus(status int) {
@@ -3684,6 +3903,30 @@ type SMSMessageTemplate struct {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+type SonyPSNApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * SonyPSN gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type SonyPSNIdentityProvider struct {
+	BaseIdentityProvider
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type Sort string
@@ -3700,6 +3943,30 @@ type SortField struct {
 	Missing string `json:"missing,omitempty"`
 	Name    string `json:"name,omitempty"`
 	Order   Sort   `json:"order,omitempty"`
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type SteamApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText string `json:"buttonText,omitempty"`
+	ClientId   string `json:"client_id,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	WebAPIKey  string `json:"webAPIKey,omitempty"`
+}
+
+/**
+ * Steam gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type SteamIdentityProvider struct {
+	BaseIdentityProvider
+	ButtonText string `json:"buttonText,omitempty"`
+	ClientId   string `json:"client_id,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	WebAPIKey  string `json:"webAPIKey,omitempty"`
 }
 
 /**
@@ -3770,6 +4037,7 @@ type Templates struct {
 	Helpers                                   string `json:"helpers,omitempty"`
 	Index                                     string `json:"index,omitempty"`
 	Oauth2Authorize                           string `json:"oauth2Authorize,omitempty"`
+	Oauth2AuthorizedNotRegistered             string `json:"oauth2AuthorizedNotRegistered,omitempty"`
 	Oauth2ChildRegistrationNotAllowed         string `json:"oauth2ChildRegistrationNotAllowed,omitempty"`
 	Oauth2ChildRegistrationNotAllowedComplete string `json:"oauth2ChildRegistrationNotAllowedComplete,omitempty"`
 	Oauth2CompleteRegistration                string `json:"oauth2CompleteRegistration,omitempty"`
@@ -3779,6 +4047,7 @@ type Templates struct {
 	Oauth2Logout                              string `json:"oauth2Logout,omitempty"`
 	Oauth2Passwordless                        string `json:"oauth2Passwordless,omitempty"`
 	Oauth2Register                            string `json:"oauth2Register,omitempty"`
+	Oauth2StartIdPLink                        string `json:"oauth2StartIdPLink,omitempty"`
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
@@ -3819,6 +4088,7 @@ type Tenant struct {
 	MinimumPasswordAge                MinimumPasswordAge                `json:"minimumPasswordAge,omitempty"`
 	MultiFactorConfiguration          TenantMultiFactorConfiguration    `json:"multiFactorConfiguration,omitempty"`
 	Name                              string                            `json:"name,omitempty"`
+	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
@@ -3854,6 +4124,10 @@ type TenantMultiFactorConfiguration struct {
 	Authenticator MultiFactorAuthenticatorMethod `json:"authenticator,omitempty"`
 	Email         MultiFactorEmailMethod         `json:"email,omitempty"`
 	Sms           MultiFactorSMSMethod           `json:"sms,omitempty"`
+}
+
+type TenantOAuth2Configuration struct {
+	ClientCredentialsAccessTokenPopulateLambdaId string `json:"clientCredentialsAccessTokenPopulateLambdaId,omitempty"`
 }
 
 /**
@@ -4032,6 +4306,30 @@ type TwilioMessengerConfiguration struct {
 	FromPhoneNumber     string `json:"fromPhoneNumber,omitempty"`
 	MessagingServiceSid string `json:"messagingServiceSid,omitempty"`
 	Url                 string `json:"url,omitempty"`
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type TwitchApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Twitch gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type TwitchIdentityProvider struct {
+	BaseIdentityProvider
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
 }
 
 /**
@@ -4854,6 +5152,30 @@ type WebhookResponse struct {
 
 func (b *WebhookResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type XboxApplicationConfiguration struct {
+	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Xbox gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type XboxIdentityProvider struct {
+	BaseIdentityProvider
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
 }
 
 type XMLSignatureLocation string
