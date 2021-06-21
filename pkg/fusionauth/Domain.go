@@ -2024,6 +2024,7 @@ const (
  * @author Daniel DeGroff
  */
 type IdentityProviderLinkRequest struct {
+	DisplayName            string `json:"displayName,omitempty"`
 	IdentityProviderId     string `json:"identityProviderId,omitempty"`
 	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
 	PendingIdPLinkId       string `json:"pendingIdPLinkId,omitempty"`
@@ -3297,14 +3298,14 @@ func (b *PasswordValidationRulesResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type PendingIdPLink struct {
-	DisplayName            string `json:"displayName,omitempty"`
-	Email                  string `json:"email,omitempty"`
-	IdentityProviderId     string `json:"identityProviderId,omitempty"`
-	IdentityProviderName   string `json:"identityProviderName,omitempty"`
-	IdentityProviderType   string `json:"identityProviderType,omitempty"`
-	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
-	User                   User   `json:"user,omitempty"`
-	Username               string `json:"username,omitempty"`
+	DisplayName            string               `json:"displayName,omitempty"`
+	Email                  string               `json:"email,omitempty"`
+	IdentityProviderId     string               `json:"identityProviderId,omitempty"`
+	IdentityProviderName   string               `json:"identityProviderName,omitempty"`
+	IdentityProviderType   IdentityProviderType `json:"identityProviderType,omitempty"`
+	IdentityProviderUserId string               `json:"identityProviderUserId,omitempty"`
+	User                   User                 `json:"user,omitempty"`
+	Username               string               `json:"username,omitempty"`
 }
 
 /**
