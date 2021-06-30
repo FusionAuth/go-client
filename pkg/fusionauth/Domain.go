@@ -855,8 +855,9 @@ const (
  */
 type DisplayableRawLogin struct {
 	RawLogin
-	ApplicationName string `json:"applicationName,omitempty"`
-	LoginId         string `json:"loginId,omitempty"`
+	ApplicationName string   `json:"applicationName,omitempty"`
+	Location        Location `json:"location,omitempty"`
+	LoginId         string   `json:"loginId,omitempty"`
 }
 
 /**
@@ -2060,9 +2061,10 @@ const (
  */
 type IdentityProviderLoginRequest struct {
 	BaseLoginRequest
-	Data               map[string]string `json:"data,omitempty"`
-	EncodedJWT         string            `json:"encodedJWT,omitempty"`
-	IdentityProviderId string            `json:"identityProviderId,omitempty"`
+	Data                map[string]string `json:"data,omitempty"`
+	EncodedJWT          string            `json:"encodedJWT,omitempty"`
+	IdentityProviderId  string            `json:"identityProviderId,omitempty"`
+	LoginOnlyWhenLinked bool              `json:"loginOnlyWhenLinked"`
 }
 
 /**
@@ -2602,6 +2604,20 @@ type LinkedInIdentityProvider struct {
 	ClientId     string `json:"client_id,omitempty"`
 	ClientSecret string `json:"client_secret,omitempty"`
 	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Location information. Useful for IP addresses and other displayable data objects.
+ *
+ * @author Brian Pontarelli
+ */
+type Location struct {
+	City      string `json:"city,omitempty"`
+	Country   string `json:"country,omitempty"`
+	Latitude  double `json:"latitude,omitempty"`
+	Longitude double `json:"longitude,omitempty"`
+	Region    string `json:"region,omitempty"`
+	Zipcode   string `json:"zipcode,omitempty"`
 }
 
 /**
