@@ -3468,6 +3468,7 @@ type ReactorStatus struct {
 	BreachedPasswordDetection         ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
 	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
 	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
+	IpLocation                        ReactorFeatureStatus `json:"ipLocation,omitempty"`
 	Licensed                          bool                 `json:"licensed"`
 }
 
