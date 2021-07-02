@@ -95,6 +95,16 @@ func (b *ActionResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Brett Guy
+ */
+type AddressRangeMode string
+
+const (
+	AddressRangeMode_ALLOW AddressRangeMode = "ALLOW"
+	AddressRangeMode_BLOCK AddressRangeMode = "BLOCK"
+)
+
+/**
  * Available JSON Web Algorithms (JWA) as described in RFC 7518 available for this JWT implementation.
  *
  * @author Daniel DeGroff
@@ -2217,6 +2227,62 @@ type IntervalUser struct {
 	ApplicationId string `json:"applicationId,omitempty"`
 	Period        int    `json:"period,omitempty"`
 	UserId        string `json:"userId,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IpAddressRange struct {
+	EndIpAddress      string           `json:"endIpAddress,omitempty"`
+	Id                string           `json:"id,omitempty"`
+	InsertInstant     int64            `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64            `json:"lastUpdateInstant,omitempty"`
+	Mode              AddressRangeMode `json:"mode,omitempty"`
+	StartIpAddress    string           `json:"startIpAddress,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAddressRangeNode struct {
+	EndIpAddress   int64              `json:"endIpAddress,omitempty"`
+	Left           IPAddressRangeNode `json:"left,omitempty"`
+	Right          IPAddressRangeNode `json:"right,omitempty"`
+	StartIpAddress int64              `json:"startIpAddress,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAddressRangeRequest struct {
+	IpAddressRange IpAddressRange `json:"ipAddressRange,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAddressRangeResponse struct {
+	BaseHTTPResponse
+	IpAddressRange  IpAddressRange   `json:"ipAddressRange,omitempty"`
+	IpAddressRanges []IpAddressRange `json:"ipAddressRanges,omitempty"`
+}
+
+func (b *IPAddressRangeResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAddressRangeRule struct {
+}
+
+/**
+ * An implementation of an Interval Tree used to store IP address ranges.
+ *
+ * https://en.wikipedia.org/wiki/Interval_tree
+ */
+type IPAddressRangeTree struct {
 }
 
 /**
