@@ -405,6 +405,18 @@ func (b *AuditLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+/**
+ * @author Brett Pontarelli
+ */
+type AuthenticationThreats string
+
+const (
+	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
+	AuthenticationThreats_UnusualTravel    AuthenticationThreats = "UnusualTravel"
+	AuthenticationThreats_BadCaptcha       AuthenticationThreats = "BadCaptcha"
+	AuthenticationThreats_NewDeviceLogin   AuthenticationThreats = "NewDeviceLogin"
+)
+
 type AuthenticationTokenConfiguration struct {
 	Enableable
 }
@@ -2230,6 +2242,8 @@ type IntervalUser struct {
 }
 
 /**
+ * TODO : ip-allow-block : Fix names so they are all the same. I prefer `IP`.
+ *
  * @author Brett Guy
  */
 type IpAddressRange struct {
@@ -2819,6 +2833,7 @@ type LoginResponse struct {
 	RefreshToken               string                   `json:"refreshToken,omitempty"`
 	RegistrationVerificationId string                   `json:"registrationVerificationId,omitempty"`
 	State                      map[string]interface{}   `json:"state,omitempty"`
+	ThreatsDetected            []AuthenticationThreats  `json:"threatsDetected,omitempty"`
 	Token                      string                   `json:"token,omitempty"`
 	TwoFactorId                string                   `json:"twoFactorId,omitempty"`
 	TwoFactorTrustId           string                   `json:"twoFactorTrustId,omitempty"`
@@ -3490,6 +3505,7 @@ const (
 	ReactorFeatureStatus_ACTIVE       ReactorFeatureStatus = "ACTIVE"
 	ReactorFeatureStatus_DISCONNECTED ReactorFeatureStatus = "DISCONNECTED"
 	ReactorFeatureStatus_PENDING      ReactorFeatureStatus = "PENDING"
+	ReactorFeatureStatus_DISABLED     ReactorFeatureStatus = "DISABLED"
 	ReactorFeatureStatus_UNKNOWN      ReactorFeatureStatus = "UNKNOWN"
 )
 
