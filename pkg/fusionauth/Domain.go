@@ -2064,6 +2064,7 @@ type IdentityProviderLoginRequest struct {
 	Data               map[string]string `json:"data,omitempty"`
 	EncodedJWT         string            `json:"encodedJWT,omitempty"`
 	IdentityProviderId string            `json:"identityProviderId,omitempty"`
+	NoLink             bool              `json:"noLink"`
 }
 
 /**
@@ -4469,9 +4470,17 @@ type UIConfiguration struct {
 
 type UniqueUsernameConfiguration struct {
 	Enableable
-	NumberOfDigits int    `json:"numberOfDigits,omitempty"`
-	Separator      string `json:"separator,omitempty"`
+	NumberOfDigits int                    `json:"numberOfDigits,omitempty"`
+	Separator      string                 `json:"separator,omitempty"`
+	Strategy       UniqueUsernameStrategy `json:"strategy,omitempty"`
 }
+
+type UniqueUsernameStrategy string
+
+const (
+	UniqueUsernameStrategy_Always      UniqueUsernameStrategy = "Always"
+	UniqueUsernameStrategy_OnCollision UniqueUsernameStrategy = "OnCollision"
+)
 
 /**
  * @author Daniel DeGroff
