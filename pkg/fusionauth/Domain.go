@@ -571,6 +571,22 @@ const (
 	CanonicalizationMethod_InclusiveWithComments CanonicalizationMethod = "inclusive_with_comments"
 )
 
+type CaptchaConfiguration struct {
+	Enableable
+	CaptchaMethod CaptchaMethod `json:"captchaMethod,omitempty"`
+	SecretKey     string        `json:"secretKey,omitempty"`
+	SiteKey       string        `json:"siteKey,omitempty"`
+	Threshold     double        `json:"threshold,omitempty"`
+}
+
+type CaptchaMethod string
+
+const (
+	CaptchaMethod_GoogleRecaptchaV3  CaptchaMethod = "GoogleRecaptchaV3"
+	CaptchaMethod_HCaptcha           CaptchaMethod = "HCaptcha"
+	CaptchaMethod_HCaptchaEnterprise CaptchaMethod = "HCaptchaEnterprise"
+)
+
 type CertificateInformation struct {
 	Issuer            string `json:"issuer,omitempty"`
 	Md5Fingerprint    string `json:"md5Fingerprint,omitempty"`
@@ -4179,6 +4195,7 @@ type Tenant struct {
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
+	ThreatDetectionConfiguration      ThreatDetectionConfiguration      `json:"threatDetectionConfiguration,omitempty"`
 	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
 	UsernameConfiguration             TenantUsernameConfiguration       `json:"usernameConfiguration,omitempty"`
 }
@@ -4307,6 +4324,13 @@ type ThemeResponse struct {
 
 func (b *ThemeResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type ThreatDetectionConfiguration struct {
+	Captcha CaptchaConfiguration `json:"captcha,omitempty"`
 }
 
 /**
