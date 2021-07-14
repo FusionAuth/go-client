@@ -584,6 +584,7 @@ type CaptchaConfiguration struct {
 type CaptchaMethod string
 
 const (
+	CaptchaMethod_GoogleRecaptchaV2  CaptchaMethod = "GoogleRecaptchaV2"
 	CaptchaMethod_GoogleRecaptchaV3  CaptchaMethod = "GoogleRecaptchaV3"
 	CaptchaMethod_HCaptcha           CaptchaMethod = "HCaptcha"
 	CaptchaMethod_HCaptchaEnterprise CaptchaMethod = "HCaptchaEnterprise"
