@@ -95,16 +95,6 @@ func (b *ActionResponse) SetStatus(status int) {
 }
 
 /**
- * @author Brett Guy
- */
-type AddressRangeMode string
-
-const (
-	AddressRangeMode_ALLOW AddressRangeMode = "ALLOW"
-	AddressRangeMode_BLOCK AddressRangeMode = "BLOCK"
-)
-
-/**
  * Available JSON Web Algorithms (JWA) as described in RFC 7518 available for this JWT implementation.
  *
  * @author Daniel DeGroff
@@ -404,6 +394,18 @@ type AuditLogSearchResponse struct {
 func (b *AuditLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * @author Brett Pontarelli
+ */
+type AuthenticationThreats string
+
+const (
+	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
+	AuthenticationThreats_UnusualTravel    AuthenticationThreats = "UnusualTravel"
+	AuthenticationThreats_BadCaptcha       AuthenticationThreats = "BadCaptcha"
+	AuthenticationThreats_NewDeviceLogin   AuthenticationThreats = "NewDeviceLogin"
+)
 
 type AuthenticationTokenConfiguration struct {
 	Enableable
@@ -2051,6 +2053,7 @@ const (
  * @author Daniel DeGroff
  */
 type IdentityProviderLinkRequest struct {
+	DisplayName            string `json:"displayName,omitempty"`
 	IdentityProviderId     string `json:"identityProviderId,omitempty"`
 	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
 	PendingIdPLinkId       string `json:"pendingIdPLinkId,omitempty"`
@@ -2087,10 +2090,10 @@ const (
  */
 type IdentityProviderLoginRequest struct {
 	BaseLoginRequest
-	Data                map[string]string `json:"data,omitempty"`
-	EncodedJWT          string            `json:"encodedJWT,omitempty"`
-	IdentityProviderId  string            `json:"identityProviderId,omitempty"`
-	LoginOnlyWhenLinked bool              `json:"loginOnlyWhenLinked"`
+	Data               map[string]string `json:"data,omitempty"`
+	EncodedJWT         string            `json:"encodedJWT,omitempty"`
+	IdentityProviderId string            `json:"identityProviderId,omitempty"`
+	NoLink             bool              `json:"noLink"`
 }
 
 /**
@@ -2246,61 +2249,52 @@ type IntervalUser struct {
 }
 
 /**
- * TODO : ip-allow-block : Fix names so they are all the same. I prefer `IP`.
- *
  * @author Brett Guy
  */
-type IpAddressRange struct {
-	EndIpAddress      string           `json:"endIpAddress,omitempty"`
-	Id                string           `json:"id,omitempty"`
-	InsertInstant     int64            `json:"insertInstant,omitempty"`
-	LastUpdateInstant int64            `json:"lastUpdateInstant,omitempty"`
-	Mode              AddressRangeMode `json:"mode,omitempty"`
-	StartIpAddress    string           `json:"startIpAddress,omitempty"`
+type IPAccessControlList struct {
+	Data              map[string]interface{}         `json:"data,omitempty"`
+	DefaultAction     IPAccessControlListMode        `json:"defaultAction,omitempty"`
+	Exceptions        []IPAccessControlListException `json:"exceptions,omitempty"`
+	Id                string                         `json:"id,omitempty"`
+	InsertInstant     int64                          `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                          `json:"lastUpdateInstant,omitempty"`
+	Name              string                         `json:"name,omitempty"`
+}
+
+// I think we could omit "Exception" from the name. Really this is just an IP range I think.
+type IPAccessControlListException struct {
+	EndIPAddress   string `json:"endIPAddress,omitempty"`
+	StartIPAddress string `json:"startIPAddress,omitempty"`
 }
 
 /**
  * @author Brett Guy
  */
-type IPAddressRangeNode struct {
-	EndIpAddress   int64              `json:"endIpAddress,omitempty"`
-	Left           IPAddressRangeNode `json:"left,omitempty"`
-	Right          IPAddressRangeNode `json:"right,omitempty"`
-	StartIpAddress int64              `json:"startIpAddress,omitempty"`
+type IPAccessControlListMode string
+
+const (
+	IPAccessControlListMode_Allow IPAccessControlListMode = "Allow"
+	IPAccessControlListMode_Block IPAccessControlListMode = "Block"
+)
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListRequest struct {
+	IpAccessControlList IPAccessControlList `json:"ipAccessControlList,omitempty"`
 }
 
 /**
  * @author Brett Guy
  */
-type IPAddressRangeRequest struct {
-	IpAddressRange IpAddressRange `json:"ipAddressRange,omitempty"`
-}
-
-/**
- * @author Brett Guy
- */
-type IPAddressRangeResponse struct {
+type IPAccessControlListResponse struct {
 	BaseHTTPResponse
-	IpAddressRange  IpAddressRange   `json:"ipAddressRange,omitempty"`
-	IpAddressRanges []IpAddressRange `json:"ipAddressRanges,omitempty"`
+	IpAccessControlList  IPAccessControlList   `json:"ipAccessControlList,omitempty"`
+	IpAccessControlLists []IPAccessControlList `json:"ipAccessControlLists,omitempty"`
 }
 
-func (b *IPAddressRangeResponse) SetStatus(status int) {
+func (b *IPAccessControlListResponse) SetStatus(status int) {
 	b.StatusCode = status
-}
-
-/**
- * @author Brett Guy
- */
-type IPAddressRangeRule struct {
-}
-
-/**
- * An implementation of an Interval Tree used to store IP address ranges.
- *
- * https://en.wikipedia.org/wiki/Interval_tree
- */
-type IPAddressRangeTree struct {
 }
 
 /**
@@ -2837,6 +2831,7 @@ type LoginResponse struct {
 	RefreshToken               string                   `json:"refreshToken,omitempty"`
 	RegistrationVerificationId string                   `json:"registrationVerificationId,omitempty"`
 	State                      map[string]interface{}   `json:"state,omitempty"`
+	ThreatsDetected            []AuthenticationThreats  `json:"threatsDetected,omitempty"`
 	Token                      string                   `json:"token,omitempty"`
 	TwoFactorId                string                   `json:"twoFactorId,omitempty"`
 	TwoFactorTrustId           string                   `json:"twoFactorTrustId,omitempty"`
@@ -3397,14 +3392,14 @@ func (b *PasswordValidationRulesResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type PendingIdPLink struct {
-	DisplayName            string `json:"displayName,omitempty"`
-	Email                  string `json:"email,omitempty"`
-	IdentityProviderId     string `json:"identityProviderId,omitempty"`
-	IdentityProviderName   string `json:"identityProviderName,omitempty"`
-	IdentityProviderType   string `json:"identityProviderType,omitempty"`
-	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
-	User                   User   `json:"user,omitempty"`
-	Username               string `json:"username,omitempty"`
+	DisplayName            string               `json:"displayName,omitempty"`
+	Email                  string               `json:"email,omitempty"`
+	IdentityProviderId     string               `json:"identityProviderId,omitempty"`
+	IdentityProviderName   string               `json:"identityProviderName,omitempty"`
+	IdentityProviderType   IdentityProviderType `json:"identityProviderType,omitempty"`
+	IdentityProviderUserId string               `json:"identityProviderUserId,omitempty"`
+	User                   User                 `json:"user,omitempty"`
+	Username               string               `json:"username,omitempty"`
 }
 
 /**
@@ -3553,8 +3548,8 @@ type ReactorStatus struct {
 	BreachedPasswordDetection         ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
 	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
 	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
-	IpLocation                        ReactorFeatureStatus `json:"ipLocation,omitempty"`
 	Licensed                          bool                 `json:"licensed"`
+	ThreatDetection                   ReactorFeatureStatus `json:"threatDetection,omitempty"`
 }
 
 /**
@@ -4578,9 +4573,17 @@ type UIConfiguration struct {
 
 type UniqueUsernameConfiguration struct {
 	Enableable
-	NumberOfDigits int    `json:"numberOfDigits,omitempty"`
-	Separator      string `json:"separator,omitempty"`
+	NumberOfDigits int                    `json:"numberOfDigits,omitempty"`
+	Separator      string                 `json:"separator,omitempty"`
+	Strategy       UniqueUsernameStrategy `json:"strategy,omitempty"`
 }
+
+type UniqueUsernameStrategy string
+
+const (
+	UniqueUsernameStrategy_Always      UniqueUsernameStrategy = "Always"
+	UniqueUsernameStrategy_OnCollision UniqueUsernameStrategy = "OnCollision"
+)
 
 /**
  * @author Daniel DeGroff
