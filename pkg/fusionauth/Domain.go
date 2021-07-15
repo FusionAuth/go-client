@@ -2253,19 +2253,13 @@ type IntervalUser struct {
  * @author Brett Guy
  */
 type IPAccessControlList struct {
-	Data              map[string]interface{}         `json:"data,omitempty"`
-	DefaultAction     IPAccessControlListMode        `json:"defaultAction,omitempty"`
-	Exceptions        []IPAccessControlListException `json:"exceptions,omitempty"`
-	Id                string                         `json:"id,omitempty"`
-	InsertInstant     int64                          `json:"insertInstant,omitempty"`
-	LastUpdateInstant int64                          `json:"lastUpdateInstant,omitempty"`
-	Name              string                         `json:"name,omitempty"`
-}
-
-// I think we could omit "Exception" from the name. Really this is just an IP range I think.
-type IPAccessControlListException struct {
-	EndIPAddress   string `json:"endIPAddress,omitempty"`
-	StartIPAddress string `json:"startIPAddress,omitempty"`
+	Data              map[string]interface{}  `json:"data,omitempty"`
+	DefaultAction     IPAccessControlListMode `json:"defaultAction,omitempty"`
+	Exceptions        []IPRange               `json:"exceptions,omitempty"`
+	Id                string                  `json:"id,omitempty"`
+	InsertInstant     int64                   `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                   `json:"lastUpdateInstant,omitempty"`
+	Name              string                  `json:"name,omitempty"`
 }
 
 /**
@@ -2296,6 +2290,44 @@ type IPAccessControlListResponse struct {
 
 func (b *IPAccessControlListResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for IP ACLs .
+ *
+ * @author Brett Guy
+ */
+type IPAccessControlListSearchRequest struct {
+	Search IPAccessControlListSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListSearchResponse struct {
+	BaseHTTPResponse
+	Acls  []IPAccessControlList `json:"acls,omitempty"`
+	Total int64                 `json:"total,omitempty"`
+}
+
+func (b *IPAccessControlListSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPRange struct {
+	EndIPAddress   string `json:"endIPAddress,omitempty"`
+	StartIPAddress string `json:"startIPAddress,omitempty"`
 }
 
 /**

@@ -4444,6 +4444,20 @@ func (c *FusionAuthClient) RevokeUserConsent(userConsentId string) (*BaseHTTPRes
 	return &resp, err
 }
 
+// SearchACLs
+// Searches the ACLs with the specified criteria and pagination.
+//   IPAccessControlListSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchACLs(request IPAccessControlListSearchRequest) (*IPAccessControlListSearchResponse, error) {
+	var resp IPAccessControlListSearchResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/ip-acl/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
+}
+
 // SearchAuditLogs
 // Searches the audit logs with the specified criteria and pagination.
 //   AuditLogSearchRequest request The search criteria and pagination information.
