@@ -3502,6 +3502,7 @@ type RefreshToken struct {
 	InsertInstant int64                  `json:"insertInstant,omitempty"`
 	MetaData      MetaData               `json:"metaData,omitempty"`
 	StartInstant  int64                  `json:"startInstant,omitempty"`
+	TenantId      string                 `json:"tenantId,omitempty"`
 	Token         string                 `json:"token,omitempty"`
 	UserId        string                 `json:"userId,omitempty"`
 }
