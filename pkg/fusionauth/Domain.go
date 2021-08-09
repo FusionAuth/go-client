@@ -75,6 +75,7 @@ type ActionData struct {
  * @author Brian Pontarelli
  */
 type ActionRequest struct {
+	BaseEventRequest
 	Action    ActionData `json:"action,omitempty"`
 	Broadcast bool       `json:"broadcast"`
 }
@@ -120,14 +121,15 @@ const (
  * @author sanjay
  */
 type APIKey struct {
-	Id                string            `json:"id,omitempty"`
-	InsertInstant     int64             `json:"insertInstant,omitempty"`
-	Key               string            `json:"key,omitempty"`
-	KeyManager        bool              `json:"keyManager"`
-	LastUpdateInstant int64             `json:"lastUpdateInstant,omitempty"`
-	MetaData          APIKeyMetaData    `json:"metaData,omitempty"`
-	Permissions       APIKeyPermissions `json:"permissions,omitempty"`
-	TenantId          string            `json:"tenantId,omitempty"`
+	Id                    string            `json:"id,omitempty"`
+	InsertInstant         int64             `json:"insertInstant,omitempty"`
+	IpAccessControlListId string            `json:"ipAccessControlListId,omitempty"`
+	Key                   string            `json:"key,omitempty"`
+	KeyManager            bool              `json:"keyManager"`
+	LastUpdateInstant     int64             `json:"lastUpdateInstant,omitempty"`
+	MetaData              APIKeyMetaData    `json:"metaData,omitempty"`
+	Permissions           APIKeyPermissions `json:"permissions,omitempty"`
+	TenantId              string            `json:"tenantId,omitempty"`
 }
 
 type APIKeyMetaData struct {
@@ -190,40 +192,53 @@ type AppleIdentityProvider struct {
  * @author Seth Musselman
  */
 type Application struct {
-	Active                           bool                                `json:"active"`
-	AuthenticationTokenConfiguration AuthenticationTokenConfiguration    `json:"authenticationTokenConfiguration,omitempty"`
-	CleanSpeakConfiguration          CleanSpeakConfiguration             `json:"cleanSpeakConfiguration,omitempty"`
-	Data                             map[string]interface{}              `json:"data,omitempty"`
-	EmailConfiguration               ApplicationEmailConfiguration       `json:"emailConfiguration,omitempty"`
-	FormConfiguration                ApplicationFormConfiguration        `json:"formConfiguration,omitempty"`
-	Id                               string                              `json:"id,omitempty"`
-	InsertInstant                    int64                               `json:"insertInstant,omitempty"`
-	JwtConfiguration                 JWTConfiguration                    `json:"jwtConfiguration,omitempty"`
-	LambdaConfiguration              LambdaConfiguration                 `json:"lambdaConfiguration,omitempty"`
-	LastUpdateInstant                int64                               `json:"lastUpdateInstant,omitempty"`
-	LoginConfiguration               LoginConfiguration                  `json:"loginConfiguration,omitempty"`
-	MultiFactorConfiguration         ApplicationMultiFactorConfiguration `json:"multiFactorConfiguration,omitempty"`
-	Name                             string                              `json:"name,omitempty"`
-	OauthConfiguration               OAuth2Configuration                 `json:"oauthConfiguration,omitempty"`
-	PasswordlessConfiguration        PasswordlessConfiguration           `json:"passwordlessConfiguration,omitempty"`
-	RegistrationConfiguration        RegistrationConfiguration           `json:"registrationConfiguration,omitempty"`
-	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy `json:"registrationDeletePolicy,omitempty"`
-	Roles                            []ApplicationRole                   `json:"roles,omitempty"`
-	Samlv2Configuration              SAMLv2Configuration                 `json:"samlv2Configuration,omitempty"`
-	State                            ObjectState                         `json:"state,omitempty"`
-	TenantId                         string                              `json:"tenantId,omitempty"`
-	ThemeId                          string                              `json:"themeId,omitempty"`
-	Unverified                       RegistrationUnverifiedOptions       `json:"unverified,omitempty"`
-	VerificationEmailTemplateId      string                              `json:"verificationEmailTemplateId,omitempty"`
-	VerificationStrategy             VerificationStrategy                `json:"verificationStrategy,omitempty"`
-	VerifyRegistration               bool                                `json:"verifyRegistration"`
+	AccessControlConfiguration       ApplicationAccessControlConfiguration `json:"accessControlConfiguration,omitempty"`
+	Active                           bool                                  `json:"active"`
+	AuthenticationTokenConfiguration AuthenticationTokenConfiguration      `json:"authenticationTokenConfiguration,omitempty"`
+	CleanSpeakConfiguration          CleanSpeakConfiguration               `json:"cleanSpeakConfiguration,omitempty"`
+	Data                             map[string]interface{}                `json:"data,omitempty"`
+	EmailConfiguration               ApplicationEmailConfiguration         `json:"emailConfiguration,omitempty"`
+	FormConfiguration                ApplicationFormConfiguration          `json:"formConfiguration,omitempty"`
+	Id                               string                                `json:"id,omitempty"`
+	InsertInstant                    int64                                 `json:"insertInstant,omitempty"`
+	JwtConfiguration                 JWTConfiguration                      `json:"jwtConfiguration,omitempty"`
+	LambdaConfiguration              LambdaConfiguration                   `json:"lambdaConfiguration,omitempty"`
+	LastUpdateInstant                int64                                 `json:"lastUpdateInstant,omitempty"`
+	LoginConfiguration               LoginConfiguration                    `json:"loginConfiguration,omitempty"`
+	MultiFactorConfiguration         ApplicationMultiFactorConfiguration   `json:"multiFactorConfiguration,omitempty"`
+	Name                             string                                `json:"name,omitempty"`
+	OauthConfiguration               OAuth2Configuration                   `json:"oauthConfiguration,omitempty"`
+	PasswordlessConfiguration        PasswordlessConfiguration             `json:"passwordlessConfiguration,omitempty"`
+	RegistrationConfiguration        RegistrationConfiguration             `json:"registrationConfiguration,omitempty"`
+	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy   `json:"registrationDeletePolicy,omitempty"`
+	Roles                            []ApplicationRole                     `json:"roles,omitempty"`
+	Samlv2Configuration              SAMLv2Configuration                   `json:"samlv2Configuration,omitempty"`
+	State                            ObjectState                           `json:"state,omitempty"`
+	TenantId                         string                                `json:"tenantId,omitempty"`
+	ThemeId                          string                                `json:"themeId,omitempty"`
+	Unverified                       RegistrationUnverifiedOptions         `json:"unverified,omitempty"`
+	VerificationEmailTemplateId      string                                `json:"verificationEmailTemplateId,omitempty"`
+	VerificationStrategy             VerificationStrategy                  `json:"verificationStrategy,omitempty"`
+	VerifyRegistration               bool                                  `json:"verifyRegistration"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type ApplicationAccessControlConfiguration struct {
+	UiIPAccessControlListId string `json:"uiIPAccessControlListId,omitempty"`
 }
 
 type ApplicationEmailConfiguration struct {
-	EmailVerificationEmailTemplateId string `json:"emailVerificationEmailTemplateId,omitempty"`
-	ForgotPasswordEmailTemplateId    string `json:"forgotPasswordEmailTemplateId,omitempty"`
-	PasswordlessEmailTemplateId      string `json:"passwordlessEmailTemplateId,omitempty"`
-	SetPasswordEmailTemplateId       string `json:"setPasswordEmailTemplateId,omitempty"`
+	EmailUpdateEmailTemplateId          string `json:"emailUpdateEmailTemplateId,omitempty"`
+	EmailVerificationEmailTemplateId    string `json:"emailVerificationEmailTemplateId,omitempty"`
+	EmailVerifiedEmailTemplateId        string `json:"emailVerifiedEmailTemplateId,omitempty"`
+	ForgotPasswordEmailTemplateId       string `json:"forgotPasswordEmailTemplateId,omitempty"`
+	LoginNewDeviceEmailTemplateId       string `json:"loginNewDeviceEmailTemplateId,omitempty"`
+	LoginSuspiciousEmailTemplateId      string `json:"loginSuspiciousEmailTemplateId,omitempty"`
+	PasswordlessEmailTemplateId         string `json:"passwordlessEmailTemplateId,omitempty"`
+	PasswordResetSuccessEmailTemplateId string `json:"passwordResetSuccessEmailTemplateId,omitempty"`
+	SetPasswordEmailTemplateId          string `json:"setPasswordEmailTemplateId,omitempty"`
 }
 
 /**
@@ -257,6 +272,7 @@ type ApplicationRegistrationDeletePolicy struct {
  * @author Brian Pontarelli
  */
 type ApplicationRequest struct {
+	BaseEventRequest
 	Application Application     `json:"application,omitempty"`
 	Role        ApplicationRole `json:"role,omitempty"`
 	WebhookIds  []string        `json:"webhookIds,omitempty"`
@@ -334,6 +350,16 @@ type AuditLogConfiguration struct {
 }
 
 /**
+ * Event event to an audit log was created.
+ *
+ * @author Daniel DeGroff
+ */
+type AuditLogCreateEvent struct {
+	BaseEvent
+	AuditLog AuditLog `json:"auditLog,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type AuditLogExportRequest struct {
@@ -345,6 +371,7 @@ type AuditLogExportRequest struct {
  * @author Brian Pontarelli
  */
 type AuditLogRequest struct {
+	BaseEventRequest
 	AuditLog AuditLog `json:"auditLog,omitempty"`
 }
 
@@ -367,10 +394,13 @@ func (b *AuditLogResponse) SetStatus(status int) {
  */
 type AuditLogSearchCriteria struct {
 	BaseSearchCriteria
-	End     int64  `json:"end,omitempty"`
-	Message string `json:"message,omitempty"`
-	Start   int64  `json:"start,omitempty"`
-	User    string `json:"user,omitempty"`
+	End      int64  `json:"end,omitempty"`
+	Message  string `json:"message,omitempty"`
+	NewValue string `json:"newValue,omitempty"`
+	OldValue string `json:"oldValue,omitempty"`
+	Reason   string `json:"reason,omitempty"`
+	Start    int64  `json:"start,omitempty"`
+	User     string `json:"user,omitempty"`
 }
 
 /**
@@ -394,6 +424,15 @@ type AuditLogSearchResponse struct {
 func (b *AuditLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * @author Brett Pontarelli
+ */
+type AuthenticationThreats string
+
+const (
+	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
+)
 
 type AuthenticationTokenConfiguration struct {
 	Enableable
@@ -437,9 +476,21 @@ type BaseElasticSearchCriteria struct {
  * @author Brian Pontarelli
  */
 type BaseEvent struct {
-	CreateInstant int64  `json:"createInstant,omitempty"`
-	Id            string `json:"id,omitempty"`
-	TenantId      string `json:"tenantId,omitempty"`
+	CreateInstant int64     `json:"createInstant,omitempty"`
+	Id            string    `json:"id,omitempty"`
+	Info          EventInfo `json:"info,omitempty"`
+	TenantId      string    `json:"tenantId,omitempty"`
+	Type          EventType `json:"type,omitempty"`
+}
+
+/**
+ * Base class for requests that can contain event information. This event information is used when sending Webhooks or emails
+ * during the transaction. The caller is responsible for ensuring that the event information is correct.
+ *
+ * @author Brian Pontarelli
+ */
+type BaseEventRequest struct {
+	EventInfo EventInfo `json:"eventInfo,omitempty"`
 }
 
 /**
@@ -478,9 +529,11 @@ type BaseIdentityProviderApplicationConfiguration struct {
  * @author Daniel DeGroff
  */
 type BaseLoginRequest struct {
+	BaseEventRequest
 	ApplicationId string   `json:"applicationId,omitempty"`
 	IpAddress     string   `json:"ipAddress,omitempty"`
 	MetaData      MetaData `json:"metaData,omitempty"`
+	NewDevice     bool     `json:"newDevice"`
 	NoJWT         bool     `json:"noJWT"`
 }
 
@@ -561,6 +614,18 @@ const (
 	CanonicalizationMethod_InclusiveWithComments CanonicalizationMethod = "inclusive_with_comments"
 )
 
+/**
+ * @author Brett Pontarelli
+ */
+type CaptchaMethod string
+
+const (
+	CaptchaMethod_GoogleRecaptchaV2  CaptchaMethod = "GoogleRecaptchaV2"
+	CaptchaMethod_GoogleRecaptchaV3  CaptchaMethod = "GoogleRecaptchaV3"
+	CaptchaMethod_HCaptcha           CaptchaMethod = "HCaptcha"
+	CaptchaMethod_HCaptchaEnterprise CaptchaMethod = "HCaptchaEnterprise"
+)
+
 type CertificateInformation struct {
 	Issuer            string `json:"issuer,omitempty"`
 	Md5Fingerprint    string `json:"md5Fingerprint,omitempty"`
@@ -592,6 +657,8 @@ const (
  * @author Brian Pontarelli
  */
 type ChangePasswordRequest struct {
+	BaseEventRequest
+	ApplicationId   string `json:"applicationId,omitempty"`
 	CurrentPassword string `json:"currentPassword,omitempty"`
 	LoginId         string `json:"loginId,omitempty"`
 	Password        string `json:"password,omitempty"`
@@ -793,14 +860,6 @@ func (b *DailyActiveUserReportResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
-/**
- * Helper for dealing with default values.
- *
- * @author Brian Pontarelli
- */
-type DefaultTools struct {
-}
-
 type DeleteConfiguration struct {
 	Enableable
 	NumberOfDaysToRetain int `json:"numberOfDaysToRetain,omitempty"`
@@ -855,8 +914,9 @@ const (
  */
 type DisplayableRawLogin struct {
 	RawLogin
-	ApplicationName string `json:"applicationName,omitempty"`
-	LoginId         string `json:"loginId,omitempty"`
+	ApplicationName string   `json:"applicationName,omitempty"`
+	Location        Location `json:"location,omitempty"`
+	LoginId         string   `json:"loginId,omitempty"`
 }
 
 /**
@@ -896,22 +956,32 @@ type EmailAddress struct {
  * @author Brian Pontarelli
  */
 type EmailConfiguration struct {
-	DefaultFromEmail              string                 `json:"defaultFromEmail,omitempty"`
-	DefaultFromName               string                 `json:"defaultFromName,omitempty"`
-	ForgotPasswordEmailTemplateId string                 `json:"forgotPasswordEmailTemplateId,omitempty"`
-	Host                          string                 `json:"host,omitempty"`
-	Password                      string                 `json:"password,omitempty"`
-	PasswordlessEmailTemplateId   string                 `json:"passwordlessEmailTemplateId,omitempty"`
-	Port                          int                    `json:"port,omitempty"`
-	Properties                    string                 `json:"properties,omitempty"`
-	Security                      EmailSecurityType      `json:"security,omitempty"`
-	SetPasswordEmailTemplateId    string                 `json:"setPasswordEmailTemplateId,omitempty"`
-	Unverified                    EmailUnverifiedOptions `json:"unverified,omitempty"`
-	Username                      string                 `json:"username,omitempty"`
-	VerificationEmailTemplateId   string                 `json:"verificationEmailTemplateId,omitempty"`
-	VerificationStrategy          VerificationStrategy   `json:"verificationStrategy,omitempty"`
-	VerifyEmail                   bool                   `json:"verifyEmail"`
-	VerifyEmailWhenChanged        bool                   `json:"verifyEmailWhenChanged"`
+	DefaultFromEmail                     string                 `json:"defaultFromEmail,omitempty"`
+	DefaultFromName                      string                 `json:"defaultFromName,omitempty"`
+	EmailUpdateEmailTemplateId           string                 `json:"emailUpdateEmailTemplateId,omitempty"`
+	EmailVerifiedEmailTemplateId         string                 `json:"emailVerifiedEmailTemplateId,omitempty"`
+	ForgotPasswordEmailTemplateId        string                 `json:"forgotPasswordEmailTemplateId,omitempty"`
+	Host                                 string                 `json:"host,omitempty"`
+	LoginIdInUseOnCreateEmailTemplateId  string                 `json:"loginIdInUseOnCreateEmailTemplateId,omitempty"`
+	LoginIdInUseOnUpdateEmailTemplateId  string                 `json:"loginIdInUseOnUpdateEmailTemplateId,omitempty"`
+	LoginNewDeviceEmailTemplateId        string                 `json:"loginNewDeviceEmailTemplateId,omitempty"`
+	LoginSuspiciousEmailTemplateId       string                 `json:"loginSuspiciousEmailTemplateId,omitempty"`
+	Password                             string                 `json:"password,omitempty"`
+	PasswordlessEmailTemplateId          string                 `json:"passwordlessEmailTemplateId,omitempty"`
+	PasswordResetSuccessEmailTemplateId  string                 `json:"passwordResetSuccessEmailTemplateId,omitempty"`
+	PasswordUpdateEmailTemplateId        string                 `json:"passwordUpdateEmailTemplateId,omitempty"`
+	Port                                 int                    `json:"port,omitempty"`
+	Properties                           string                 `json:"properties,omitempty"`
+	Security                             EmailSecurityType      `json:"security,omitempty"`
+	SetPasswordEmailTemplateId           string                 `json:"setPasswordEmailTemplateId,omitempty"`
+	TwoFactorMethodAddEmailTemplateId    string                 `json:"twoFactorMethodAddEmailTemplateId,omitempty"`
+	TwoFactorMethodRemoveEmailTemplateId string                 `json:"twoFactorMethodRemoveEmailTemplateId,omitempty"`
+	Unverified                           EmailUnverifiedOptions `json:"unverified,omitempty"`
+	Username                             string                 `json:"username,omitempty"`
+	VerificationEmailTemplateId          string                 `json:"verificationEmailTemplateId,omitempty"`
+	VerificationStrategy                 VerificationStrategy   `json:"verificationStrategy,omitempty"`
+	VerifyEmail                          bool                   `json:"verifyEmail"`
+	VerifyEmailWhenChanged               bool                   `json:"verifyEmailWhenChanged"`
 }
 
 type EmailPlus struct {
@@ -1321,6 +1391,22 @@ type EventConfigurationData struct {
 }
 
 /**
+ * Information about a user event (login, register, etc) that helps identify the source of the event (location, device type, OS, etc).
+ *
+ * @author Brian Pontarelli
+ */
+type EventInfo struct {
+	Data              map[string]interface{} `json:"data,omitempty"`
+	DeviceDescription string                 `json:"deviceDescription,omitempty"`
+	DeviceName        string                 `json:"deviceName,omitempty"`
+	DeviceType        string                 `json:"deviceType,omitempty"`
+	IpAddress         string                 `json:"ipAddress,omitempty"`
+	Location          Location               `json:"location,omitempty"`
+	Os                string                 `json:"os,omitempty"`
+	UserAgent         string                 `json:"userAgent,omitempty"`
+}
+
+/**
  * Event log used internally by FusionAuth to help developers debug hooks, Webhooks, email templates, etc.
  *
  * @author Brian Pontarelli
@@ -1334,6 +1420,16 @@ type EventLog struct {
 
 type EventLogConfiguration struct {
 	NumberToRetain int `json:"numberToRetain,omitempty"`
+}
+
+/**
+ * Event event to an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+type EventLogCreateEvent struct {
+	BaseEvent
+	EventLog EventLog `json:"eventLog,omitempty"`
 }
 
 /**
@@ -1415,25 +1511,45 @@ type EventRequest struct {
 type EventType string
 
 const (
-	EventType_UserDelete               EventType = "user.delete"
-	EventType_UserCreate               EventType = "user.create"
-	EventType_UserUpdate               EventType = "user.update"
-	EventType_UserDeactivate           EventType = "user.deactivate"
-	EventType_UserBulkCreate           EventType = "user.bulk.create"
-	EventType_UserReactivate           EventType = "user.reactivate"
-	EventType_UserAction               EventType = "user.action"
-	EventType_JWTRefreshTokenRevoke    EventType = "jwt.refresh-token.revoke"
-	EventType_JWTRefresh               EventType = "jwt.refresh"
-	EventType_JWTPublicKeyUpdate       EventType = "jwt.public-key.update"
-	EventType_UserLoginSuccess         EventType = "user.login.success"
-	EventType_UserLoginFailed          EventType = "user.login.failed"
-	EventType_UserRegistrationCreate   EventType = "user.registration.create"
-	EventType_UserRegistrationUpdate   EventType = "user.registration.update"
-	EventType_UserRegistrationDelete   EventType = "user.registration.delete"
-	EventType_UserRegistrationVerified EventType = "user.registration.verified"
-	EventType_UserEmailVerified        EventType = "user.email.verified"
-	EventType_UserPasswordBreach       EventType = "user.password.breach"
-	EventType_Test                     EventType = "test"
+	EventType_JWTPublicKeyUpdate             EventType = "jwt.public-key.update"
+	EventType_JWTRefreshTokenRevoke          EventType = "jwt.refresh-token.revoke"
+	EventType_JWTRefresh                     EventType = "jwt.refresh"
+	EventType_AuditLogCreate                 EventType = "audit-log.create"
+	EventType_EventLogCreate                 EventType = "event-log.create"
+	EventType_KickstartSuccess               EventType = "kickstart.success"
+	EventType_UserAction                     EventType = "user.action"
+	EventType_UserBulkCreate                 EventType = "user.bulk.create"
+	EventType_UserCreate                     EventType = "user.create"
+	EventType_UserCreateComplete             EventType = "user.create.complete"
+	EventType_UserDeactivate                 EventType = "user.deactivate"
+	EventType_UserDelete                     EventType = "user.delete"
+	EventType_UserDeleteComplete             EventType = "user.delete.complete"
+	EventType_UserLoginIdDuplicateOnCreate   EventType = "user.loginId.duplicate.create"
+	EventType_UserLoginIdDuplicateOnUpdate   EventType = "user.loginId.duplicate.update"
+	EventType_UserEmailUpdate                EventType = "user.email.update"
+	EventType_UserEmailVerified              EventType = "user.email.verified"
+	EventType_UserLoginFailed                EventType = "user.login.failed"
+	EventType_UserLoginNewDevice             EventType = "user.login.new-device"
+	EventType_UserLoginSuccess               EventType = "user.login.success"
+	EventType_UserLoginSuspicious            EventType = "user.login.suspicious"
+	EventType_UserPasswordBreach             EventType = "user.password.breach"
+	EventType_UserPasswordResetSend          EventType = "user.password.reset.send"
+	EventType_UserPasswordResetStart         EventType = "user.password.reset.start"
+	EventType_UserPasswordResetSuccess       EventType = "user.password.reset.success"
+	EventType_UserPasswordUpdate             EventType = "user.password.update"
+	EventType_UserReactivate                 EventType = "user.reactivate"
+	EventType_UserRegistrationCreate         EventType = "user.registration.create"
+	EventType_UserRegistrationCreateComplete EventType = "user.registration.create.complete"
+	EventType_UserRegistrationDelete         EventType = "user.registration.delete"
+	EventType_UserRegistrationDeleteComplete EventType = "user.registration.delete.complete"
+	EventType_UserRegistrationUpdate         EventType = "user.registration.update"
+	EventType_UserRegistrationUpdateComplete EventType = "user.registration.update.complete"
+	EventType_UserRegistrationVerified       EventType = "user.registration.verified"
+	EventType_UserTwoFactorMethodAdd         EventType = "user.two-factor.method.add"
+	EventType_UserTwoFactorMethodRemove      EventType = "user.two-factor.method.remove"
+	EventType_UserUpdate                     EventType = "user.update"
+	EventType_UserUpdateComplete             EventType = "user.update.complete"
+	EventType_Test                           EventType = "test"
 )
 
 /**
@@ -1631,6 +1747,7 @@ const (
  * @author Brian Pontarelli
  */
 type ForgotPasswordRequest struct {
+	BaseEventRequest
 	ApplicationId           string                 `json:"applicationId,omitempty"`
 	ChangePasswordId        string                 `json:"changePasswordId,omitempty"`
 	Email                   string                 `json:"email,omitempty"`
@@ -2157,10 +2274,20 @@ const (
  * @author Brian Pontarelli
  */
 type ImportRequest struct {
+	BaseEventRequest
 	EncryptionScheme      string `json:"encryptionScheme,omitempty"`
 	Factor                int    `json:"factor,omitempty"`
 	Users                 []User `json:"users,omitempty"`
 	ValidateDbConstraints bool   `json:"validateDbConstraints"`
+}
+
+/**
+ * A marker interface indicating this event is not scoped to a tenant and will be sent to all webhooks.
+ *
+ * @author Daniel DeGroff
+ */
+type InstanceEvent struct {
+	NonTransactionalEvent
 }
 
 /**
@@ -2217,6 +2344,87 @@ type IntervalUser struct {
 	ApplicationId string `json:"applicationId,omitempty"`
 	Period        int    `json:"period,omitempty"`
 	UserId        string `json:"userId,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlEntry struct {
+	Action         IPAccessControlEntryAction `json:"action,omitempty"`
+	EndIPAddress   string                     `json:"endIPAddress,omitempty"`
+	StartIPAddress string                     `json:"startIPAddress,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlEntryAction string
+
+const (
+	IPAccessControlEntryAction_Allow IPAccessControlEntryAction = "Allow"
+	IPAccessControlEntryAction_Block IPAccessControlEntryAction = "Block"
+)
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlList struct {
+	Data              map[string]interface{} `json:"data,omitempty"`
+	Entries           []IPAccessControlEntry `json:"entries,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	Name              string                 `json:"name,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListRequest struct {
+	IpAccessControlList IPAccessControlList `json:"ipAccessControlList,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListResponse struct {
+	BaseHTTPResponse
+	IpAccessControlList  IPAccessControlList   `json:"ipAccessControlList,omitempty"`
+	IpAccessControlLists []IPAccessControlList `json:"ipAccessControlLists,omitempty"`
+}
+
+func (b *IPAccessControlListResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for IP ACLs .
+ *
+ * @author Brett Guy
+ */
+type IPAccessControlListSearchRequest struct {
+	Search IPAccessControlListSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * @author Brett Guy
+ */
+type IPAccessControlListSearchResponse struct {
+	BaseHTTPResponse
+	IpAccessControlLists []IPAccessControlList `json:"ipAccessControlLists,omitempty"`
+	Total                int64                 `json:"total,omitempty"`
+}
+
+func (b *IPAccessControlListSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -2375,6 +2583,27 @@ type JWTRefreshTokenRevokeEvent struct {
 /**
  * @author Daniel DeGroff
  */
+type JWTVendRequest struct {
+	Claims              map[string]interface{} `json:"claims,omitempty"`
+	KeyId               string                 `json:"keyId,omitempty"`
+	TimeToLiveInSeconds int                    `json:"timeToLiveInSeconds,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type JWTVendResponse struct {
+	BaseHTTPResponse
+	Token string `json:"token,omitempty"`
+}
+
+func (b *JWTVendResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type KafkaConfiguration struct {
 	Enableable
 	DefaultTopic string            `json:"defaultTopic,omitempty"`
@@ -2474,10 +2703,16 @@ const (
 )
 
 /**
- * A JavaScript lambda function that is executed during certain events inside FusionAuth.
+ * Event event to indicate kickstart has been successfully completed.
  *
- * @author Brian Pontarelli
+ * @author Daniel DeGroff
  */
+type KickstartSuccessEvent struct {
+	BaseEvent
+	InstanceId string `json:"instanceId,omitempty"`
+}
+
+// TODO : Future : This shouldn't be enableable
 type Lambda struct {
 	Enableable
 	Body              string     `json:"body,omitempty"`
@@ -2604,6 +2839,21 @@ type LinkedInIdentityProvider struct {
 	ClientId     string `json:"client_id,omitempty"`
 	ClientSecret string `json:"client_secret,omitempty"`
 	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Location information. Useful for IP addresses and other displayable data objects.
+ *
+ * @author Brian Pontarelli
+ */
+type Location struct {
+	City          string `json:"city,omitempty"`
+	Country       string `json:"country,omitempty"`
+	DisplayString string `json:"displayString,omitempty"`
+	Latitude      double `json:"latitude,omitempty"`
+	Longitude     double `json:"longitude,omitempty"`
+	Region        string `json:"region,omitempty"`
+	Zipcode       string `json:"zipcode,omitempty"`
 }
 
 /**
@@ -2739,6 +2989,7 @@ type LoginResponse struct {
 	RefreshToken               string                   `json:"refreshToken,omitempty"`
 	RegistrationVerificationId string                   `json:"registrationVerificationId,omitempty"`
 	State                      map[string]interface{}   `json:"state,omitempty"`
+	ThreatsDetected            []AuthenticationThreats  `json:"threatsDetected,omitempty"`
 	Token                      string                   `json:"token,omitempty"`
 	TwoFactorId                string                   `json:"twoFactorId,omitempty"`
 	TwoFactorTrustId           string                   `json:"twoFactorTrustId,omitempty"`
@@ -2758,6 +3009,17 @@ const (
 	LogoutBehavior_RedirectOnly    LogoutBehavior = "RedirectOnly"
 	LogoutBehavior_AllApplications LogoutBehavior = "AllApplications"
 )
+
+/**
+ * Request for the Logout API that can be used as an alternative to URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+type LogoutRequest struct {
+	BaseEventRequest
+	Global       bool   `json:"global"`
+	RefreshToken string `json:"refreshToken,omitempty"`
+}
 
 /**
  * @author Daniel DeGroff
@@ -2990,11 +3252,11 @@ type NintendoIdentityProvider struct {
 }
 
 /**
- * Helper methods for normalizing values.
+ * A marker interface indicating this event cannot be made transactional.
  *
- * @author Brian Pontarelli
+ * @author Daniel DeGroff
  */
-type Normalizer struct {
+type NonTransactionalEvent struct {
 }
 
 /**
@@ -3390,6 +3652,29 @@ func (b *PublicKeyResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type RateLimitedRequestConfiguration struct {
+	Enableable
+	Limit               int `json:"limit,omitempty"`
+	TimePeriodInSeconds int `json:"timePeriodInSeconds,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type RateLimitedRequestType string
+
+const (
+	RateLimitedRequestType_FailedLogin                  RateLimitedRequestType = "FailedLogin"
+	RateLimitedRequestType_ForgotPassword               RateLimitedRequestType = "ForgotPassword"
+	RateLimitedRequestType_SendEmailVerification        RateLimitedRequestType = "SendEmailVerification"
+	RateLimitedRequestType_SendPasswordless             RateLimitedRequestType = "SendPasswordless"
+	RateLimitedRequestType_SendRegistrationVerification RateLimitedRequestType = "SendRegistrationVerification"
+	RateLimitedRequestType_SendTwoFactor                RateLimitedRequestType = "SendTwoFactor"
+)
+
+/**
  * Raw login information for each time a user logs into an application.
  *
  * @author Brian Pontarelli
@@ -3410,6 +3695,7 @@ const (
 	ReactorFeatureStatus_ACTIVE       ReactorFeatureStatus = "ACTIVE"
 	ReactorFeatureStatus_DISCONNECTED ReactorFeatureStatus = "DISCONNECTED"
 	ReactorFeatureStatus_PENDING      ReactorFeatureStatus = "PENDING"
+	ReactorFeatureStatus_DISABLED     ReactorFeatureStatus = "DISABLED"
 	ReactorFeatureStatus_UNKNOWN      ReactorFeatureStatus = "UNKNOWN"
 )
 
@@ -3455,6 +3741,7 @@ type ReactorStatus struct {
 	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
 	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
 	Licensed                          bool                 `json:"licensed"`
+	ThreatDetection                   ReactorFeatureStatus `json:"threatDetection,omitempty"`
 }
 
 /**
@@ -3475,6 +3762,7 @@ func (b *RecentLoginResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type RefreshRequest struct {
+	BaseEventRequest
 	RefreshToken string `json:"refreshToken,omitempty"`
 	Token        string `json:"token,omitempty"`
 }
@@ -3551,6 +3839,18 @@ type RefreshTokenRevocationPolicy struct {
 }
 
 /**
+ * Request for the Refresh Token API to revoke a refresh token rather than using the URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+type RefreshTokenRevokeRequest struct {
+	BaseEventRequest
+	ApplicationId string `json:"applicationId,omitempty"`
+	Token         string `json:"token,omitempty"`
+	UserId        string `json:"userId,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type RefreshTokenUsagePolicy string
@@ -3575,6 +3875,15 @@ type RegistrationConfiguration struct {
 }
 
 /**
+ * Registration delete API request object.
+ *
+ * @author Brian Pontarelli
+ */
+type RegistrationDeleteRequest struct {
+	BaseEventRequest
+}
+
+/**
  * Response for the registration report.
  *
  * @author Brian Pontarelli
@@ -3595,6 +3904,8 @@ func (b *RegistrationReportResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type RegistrationRequest struct {
+	BaseEventRequest
+	DisableDomainBlock           bool             `json:"disableDomainBlock"`
 	GenerateAuthenticationToken  bool             `json:"generateAuthenticationToken"`
 	Registration                 UserRegistration `json:"registration,omitempty"`
 	SendSetPasswordEmail         bool             `json:"sendSetPasswordEmail"`
@@ -3992,6 +4303,7 @@ type SystemConfiguration struct {
 	LastUpdateInstant        int64                    `json:"lastUpdateInstant,omitempty"`
 	LoginRecordConfiguration LoginRecordConfiguration `json:"loginRecordConfiguration,omitempty"`
 	ReportTimezone           string                   `json:"reportTimezone,omitempty"`
+	SsoConfiguration         SystemSSOConfiguration   `json:"ssoConfiguration,omitempty"`
 	UiConfiguration          UIConfiguration          `json:"uiConfiguration,omitempty"`
 }
 
@@ -4024,6 +4336,13 @@ func (b *SystemConfigurationResponse) SetStatus(status int) {
 type SystemLogsExportRequest struct {
 	BaseExportRequest
 	LastNBytes int `json:"lastNBytes,omitempty"`
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type SystemSSOConfiguration struct {
+	DeviceTrustTimeToLiveInSeconds int `json:"deviceTrustTimeToLiveInSeconds,omitempty"`
 }
 
 type Templates struct {
@@ -4064,12 +4383,15 @@ type Templates struct {
 	RegistrationVerificationRequired          string `json:"registrationVerificationRequired,omitempty"`
 	RegistrationVerify                        string `json:"registrationVerify,omitempty"`
 	Samlv2Logout                              string `json:"samlv2Logout,omitempty"`
+	Unauthorized                              string `json:"unauthorized,omitempty"`
 }
 
 /**
  * @author Daniel DeGroff
  */
 type Tenant struct {
+	AccessControlConfiguration        TenantAccessControlConfiguration  `json:"accessControlConfiguration,omitempty"`
+	CaptchaConfiguration              TenantCaptchaConfiguration        `json:"captchaConfiguration,omitempty"`
 	Configured                        bool                              `json:"configured"`
 	ConnectorPolicies                 []ConnectorPolicy                 `json:"connectorPolicies,omitempty"`
 	Data                              map[string]interface{}            `json:"data,omitempty"`
@@ -4094,6 +4416,8 @@ type Tenant struct {
 	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
+	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
+	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
 	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
@@ -4104,6 +4428,34 @@ type Tenant struct {
  * @author Brian Pontarelli
  */
 type Tenantable struct {
+}
+
+/**
+ * @author Brett Guy
+ */
+type TenantAccessControlConfiguration struct {
+	UiIPAccessControlListId string `json:"uiIPAccessControlListId,omitempty"`
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type TenantCaptchaConfiguration struct {
+	Enableable
+	CaptchaMethod CaptchaMethod `json:"captchaMethod,omitempty"`
+	SecretKey     string        `json:"secretKey,omitempty"`
+	SiteKey       string        `json:"siteKey,omitempty"`
+	Threshold     double        `json:"threshold,omitempty"`
+}
+
+/**
+ * Request for the Tenant API to delete a tenant rather than using the URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+type TenantDeleteRequest struct {
+	BaseEventRequest
+	Async bool `json:"async"`
 }
 
 /**
@@ -4136,7 +4488,27 @@ type TenantOAuth2Configuration struct {
 /**
  * @author Daniel DeGroff
  */
+type TenantRateLimitConfiguration struct {
+	FailedLogin                  RateLimitedRequestConfiguration `json:"failedLogin,omitempty"`
+	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
+	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
+	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
+	SendRegistrationVerification RateLimitedRequestConfiguration `json:"sendRegistrationVerification,omitempty"`
+	SendTwoFactor                RateLimitedRequestConfiguration `json:"sendTwoFactor,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type TenantRegistrationConfiguration struct {
+	BlockedDomains []string `json:"blockedDomains,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type TenantRequest struct {
+	BaseEventRequest
 	SourceTenantId string `json:"sourceTenantId,omitempty"`
 	Tenant         Tenant `json:"tenant,omitempty"`
 }
@@ -4358,6 +4730,15 @@ type TwitterIdentityProvider struct {
 }
 
 /**
+ * @author Brian Pontarelli
+ */
+type TwoFactorDisableRequest struct {
+	BaseEventRequest
+	Code     string `json:"code,omitempty"`
+	MethodId string `json:"methodId,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type TwoFactorEnableDisableSendRequest struct {
@@ -4407,6 +4788,7 @@ func (b *TwoFactorRecoveryCodeResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type TwoFactorRequest struct {
+	BaseEventRequest
 	AuthenticatorId     string `json:"authenticatorId,omitempty"`
 	Code                string `json:"code,omitempty"`
 	Email               string `json:"email,omitempty"`
@@ -4778,6 +5160,18 @@ func (b *UserConsentResponse) SetStatus(status int) {
 }
 
 /**
+ * Models the User Created Event (and can be converted to JSON).
+ * <p>
+ * This is different than the user.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ *
+ * @author Daniel DeGroff
+ */
+type UserCreateCompleteEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
  * Models the User Create Event (and can be converted to JSON).
  *
  * @author Brian Pontarelli
@@ -4800,6 +5194,19 @@ type UserDeactivateEvent struct {
 /**
  * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
  * delete).
+ * <p>
+ * This is different than user.delete because it is sent after the tx is committed, this cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+type UserDeleteCompleteEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
+ * delete).
  *
  * @author Brian Pontarelli
  */
@@ -4814,6 +5221,7 @@ type UserDeleteEvent struct {
  * @author Daniel DeGroff
  */
 type UserDeleteRequest struct {
+	BaseEventRequest
 	DryRun      bool     `json:"dryRun"`
 	HardDelete  bool     `json:"hardDelete"`
 	Query       string   `json:"query,omitempty"`
@@ -4836,6 +5244,27 @@ type UserDeleteResponse struct {
 
 func (b *UserDeleteResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * User API delete request object for a single user.
+ *
+ * @author Brian Pontarelli
+ */
+type UserDeleteSingleRequest struct {
+	BaseEventRequest
+	HardDelete bool `json:"hardDelete"`
+}
+
+/**
+ * Models an event where a user's email is updated outside of a forgot / change password workflow.
+ *
+ * @author Daniel DeGroff
+ */
+type UserEmailUpdateEvent struct {
+	BaseEvent
+	PreviousEmail string `json:"previousEmail,omitempty"`
+	User          User   `json:"user,omitempty"`
 }
 
 /**
@@ -4862,6 +5291,38 @@ type UserLoginFailedEvent struct {
 }
 
 /**
+ * Models an event where a user is being created with an "in-use" login Id (email or username).
+ *
+ * @author Daniel DeGroff
+ */
+type UserLoginIdDuplicateOnCreateEvent struct {
+	BaseEvent
+	ApplicationId     string `json:"applicationId,omitempty"`
+	DuplicateEmail    string `json:"duplicateEmail,omitempty"`
+	DuplicateUsername string `json:"duplicateUsername,omitempty"`
+	Existing          User   `json:"existing,omitempty"`
+	User              User   `json:"user,omitempty"`
+}
+
+/**
+ * Models an event where a user is being updated and tries to use an "in-use" login Id (email or username).
+ *
+ * @author Daniel DeGroff
+ */
+type UserLoginIdDuplicateOnUpdateEvent struct {
+	UserLoginIdDuplicateOnCreateEvent
+}
+
+/**
+ * Models the User Login event for a new device (un-recognized)
+ *
+ * @author Daniel DeGroff
+ */
+type UserLoginNewDeviceEvent struct {
+	UserLoginSuccessEvent
+}
+
+/**
  * Models the User Login Success Event.
  *
  * @author Daniel DeGroff
@@ -4877,6 +5338,15 @@ type UserLoginSuccessEvent struct {
 	User                 User   `json:"user,omitempty"`
 }
 
+/**
+ * Models the User Login event that is suspicious.
+ *
+ * @author Daniel DeGroff
+ */
+type UserLoginSuspiciousEvent struct {
+	UserLoginSuccessEvent
+}
+
 type UsernameModeration struct {
 	Enableable
 	ApplicationId string `json:"applicationId,omitempty"`
@@ -4888,6 +5358,46 @@ type UsernameModeration struct {
  * @author Matthew Altman
  */
 type UserPasswordBreachEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Password Reset Send Event.
+ *
+ * @author Daniel DeGroff
+ */
+type UserPasswordResetSendEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Password Reset Start Event.
+ *
+ * @author Daniel DeGroff
+ */
+type UserPasswordResetStartEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Password Reset Success Event.
+ *
+ * @author Daniel DeGroff
+ */
+type UserPasswordResetSuccessEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Password Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+type UserPasswordUpdateEvent struct {
 	BaseEvent
 	User User `json:"user,omitempty"`
 }
@@ -4926,11 +5436,39 @@ type UserRegistration struct {
 }
 
 /**
+ * Models the User Created Registration Event (and can be converted to JSON).
+ * <p>
+ * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ *
+ * @author Daniel DeGroff
+ */
+type UserRegistrationCreateCompleteEvent struct {
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
+}
+
+/**
  * Models the User Create Registration Event (and can be converted to JSON).
  *
  * @author Daniel DeGroff
  */
 type UserRegistrationCreateEvent struct {
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Deleted Registration Event (and can be converted to JSON).
+ * <p>
+ * This is different than user.registration.delete in that it is sent after the TX has been committed. This event cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+type UserRegistrationDeleteCompleteEvent struct {
 	BaseEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
@@ -4945,6 +5483,21 @@ type UserRegistrationCreateEvent struct {
 type UserRegistrationDeleteEvent struct {
 	BaseEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
+	Registration  UserRegistration `json:"registration,omitempty"`
+	User          User             `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Update Registration Event (and can be converted to JSON).
+ * <p>
+ * This is different than user.registration.update in that it is sent after this event completes, this cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+type UserRegistrationUpdateCompleteEvent struct {
+	BaseEvent
+	ApplicationId string           `json:"applicationId,omitempty"`
+	Original      UserRegistration `json:"original,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
 	User          User             `json:"user,omitempty"`
 }
@@ -4980,9 +5533,12 @@ type UserRegistrationVerifiedEvent struct {
  * @author Brian Pontarelli
  */
 type UserRequest struct {
-	SendSetPasswordEmail bool `json:"sendSetPasswordEmail"`
-	SkipVerification     bool `json:"skipVerification"`
-	User                 User `json:"user,omitempty"`
+	BaseEventRequest
+	ApplicationId        string `json:"applicationId,omitempty"`
+	DisableDomainBlock   bool   `json:"disableDomainBlock"`
+	SendSetPasswordEmail bool   `json:"sendSetPasswordEmail"`
+	SkipVerification     bool   `json:"skipVerification"`
+	User                 User   `json:"user,omitempty"`
 }
 
 /**
@@ -5032,6 +5588,39 @@ type UserTwoFactorConfiguration struct {
 }
 
 /**
+ * Model a user event when a two-factor method has been removed.
+ *
+ * @author Daniel DeGroff
+ */
+type UserTwoFactorMethodAddEvent struct {
+	BaseEvent
+	Method TwoFactorMethod `json:"method,omitempty"`
+	User   User            `json:"user,omitempty"`
+}
+
+/**
+ * Model a user event when a two-factor method has been added.
+ *
+ * @author Daniel DeGroff
+ */
+type UserTwoFactorMethodRemoveEvent struct {
+	BaseEvent
+	Method TwoFactorMethod `json:"method,omitempty"`
+	User   User            `json:"user,omitempty"`
+}
+
+/**
+ * Models the User Update Event once it is completed. This cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+type UserUpdateCompleteEvent struct {
+	BaseEvent
+	Original User `json:"original,omitempty"`
+	User     User `json:"user,omitempty"`
+}
+
+/**
  * Models the User Update Event (and can be converted to JSON).
  *
  * @author Brian Pontarelli
@@ -5068,6 +5657,7 @@ const (
  * @author Daniel DeGroff
  */
 type VerifyEmailRequest struct {
+	BaseEventRequest
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }
@@ -5089,6 +5679,7 @@ func (b *VerifyEmailResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type VerifyRegistrationRequest struct {
+	BaseEventRequest
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }

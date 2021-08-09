@@ -628,6 +628,26 @@ func (c *FusionAuthClient) CreateGroupMembers(request MemberRequest) (*MemberRes
 	return &resp, &errors, err
 }
 
+// CreateIPAccessControlList
+// Creates an IP Access Control List. You can optionally specify an Id on this create request, if one is not provided one will be generated.
+//   string accessControlListId (Optional) The Id for the IP Access Control List. If not provided a secure random UUID will be generated.
+//   IPAccessControlListRequest request The request object that contains all of the information used to create the IP Access Control List.
+func (c *FusionAuthClient) CreateIPAccessControlList(accessControlListId string, request IPAccessControlListRequest) (*IPAccessControlListResponse, *Errors, error) {
+	var resp IPAccessControlListResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/ip-acl").
+		WithUriSegment(accessControlListId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateLambda
 // Creates a Lambda. You can optionally specify an Id for the lambda, if not provided one will be generated.
 //   string lambdaId (Optional) The Id for the lambda. If not provided a secure random UUID will be generated.
@@ -1225,6 +1245,24 @@ func (c *FusionAuthClient) DeleteGroupMembers(request MemberDeleteRequest) (*Bas
 	return &resp, &errors, err
 }
 
+// DeleteIPAccessControlList
+// Deletes the IP Access Control List for the given Id.
+//   string ipAccessControlListId The Id of the IP Access Control List to delete.
+func (c *FusionAuthClient) DeleteIPAccessControlList(ipAccessControlListId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/ip-acl").
+		WithUriSegment(ipAccessControlListId).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteIdentityProvider
 // Deletes the identity provider for the given Id.
 //   string identityProviderId The Id of the identity provider to delete.
@@ -1335,8 +1373,31 @@ func (c *FusionAuthClient) DeleteRegistration(userId string, applicationId strin
 	return &resp, &errors, err
 }
 
+// DeleteRegistrationWithRequest
+// Deletes the user registration for the given user and application along with the given JSON body that contains the event information.
+//   string userId The Id of the user whose registration is being deleted.
+//   string applicationId The Id of the application to remove the registration for.
+//   RegistrationDeleteRequest request The request body that contains the event information.
+func (c *FusionAuthClient) DeleteRegistrationWithRequest(userId string, applicationId string, request RegistrationDeleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/registration").
+		WithUriSegment(userId).
+		WithUriSegment(applicationId).
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteTenant
-// Deletes the tenant for the given Id.
+// Deletes the tenant based on the given Id on the URL. This permanently deletes all information, metrics, reports and data associated
+// with the tenant and everything under the tenant (applications, users, etc).
 //   string tenantId The Id of the tenant to delete.
 func (c *FusionAuthClient) DeleteTenant(tenantId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
@@ -1365,6 +1426,27 @@ func (c *FusionAuthClient) DeleteTenantAsync(tenantId string) (*BaseHTTPResponse
 	err := restClient.WithUri("/api/tenant").
 		WithUriSegment(tenantId).
 		WithParameter("async", strconv.FormatBool(true)).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteTenantWithRequest
+// Deletes the tenant based on the given request (sent to the API as JSON). This permanently deletes all information, metrics, reports and data associated
+// with the tenant and everything under the tenant (applications, users, etc).
+//   string tenantId The Id of the tenant to delete.
+//   TenantDeleteRequest request The request object that contains all of the information used to delete the user.
+func (c *FusionAuthClient) DeleteTenantWithRequest(tenantId string, request TenantDeleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant").
+		WithUriSegment(tenantId).
+		WithJSONBody(request).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -1471,6 +1553,27 @@ func (c *FusionAuthClient) DeleteUserLink(identityProviderId string, identityPro
 	return &resp, &errors, err
 }
 
+// DeleteUserWithRequest
+// Deletes the user based on the given request (sent to the API as JSON). This permanently deletes all information, metrics, reports and data associated
+// with the user.
+//   string userId The Id of the user to delete (required).
+//   UserDeleteSingleRequest request The request object that contains all of the information used to delete the user.
+func (c *FusionAuthClient) DeleteUserWithRequest(userId string, request UserDeleteSingleRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteUsers
 // Deletes the users with the given ids, or users matching the provided JSON query or queryString.
 // The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
@@ -1546,9 +1649,29 @@ func (c *FusionAuthClient) DisableTwoFactor(userId string, methodId string, code
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/two-factor").
-		WithParameter("userId", userId).
+		WithUriSegment(userId).
 		WithParameter("methodId", methodId).
 		WithParameter("code", code).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DisableTwoFactorWithRequest
+// Disable Two Factor authentication for a user using a JSON body rather than URL parameters.
+//   string userId The Id of the User for which you're disabling Two Factor authentication.
+//   TwoFactorDisableRequest request The request information that contains the code and methodId along with any event information.
+func (c *FusionAuthClient) DisableTwoFactorWithRequest(userId string, request TwoFactorDisableRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/two-factor").
+		WithUriSegment(userId).
+		WithJSONBody(request).
 		WithMethod(http.MethodDelete).
 		Do()
 	if restClient.ErrorRef == nil {
@@ -2014,6 +2137,21 @@ func (c *FusionAuthClient) Logout(global bool, refreshToken string) (*BaseHTTPRe
 		WithUri("/api/logout").
 		WithParameter("global", strconv.FormatBool(global)).
 		WithParameter("refreshToken", refreshToken).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
+}
+
+// LogoutWithRequest
+// The Logout API is intended to be used to remove the refresh token and access token cookies if they exist on the
+// client and revoke the refresh token stored. This API takes the refresh token in the JSON body.
+//   LogoutRequest request The request object that contains all of the information used to logout the user.
+func (c *FusionAuthClient) LogoutWithRequest(request LogoutRequest) (*BaseHTTPResponse, error) {
+	var resp BaseHTTPResponse
+
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/logout").
+		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
 	return &resp, err
@@ -3196,6 +3334,20 @@ func (c *FusionAuthClient) RetrieveGroups() (*GroupResponse, error) {
 	return &resp, err
 }
 
+// RetrieveIPAccessControlList
+// Retrieves the IP Access Control List with the given Id.
+//   string ipAccessControlListId The Id of the IP Access Control List.
+func (c *FusionAuthClient) RetrieveIPAccessControlList(ipAccessControlListId string) (*IPAccessControlListResponse, error) {
+	var resp IPAccessControlListResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/ip-acl").
+		WithUriSegment(ipAccessControlListId).
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
+}
+
 // RetrieveIdentityProviderByType
 // Retrieves one or more identity provider for the given type. For types such as Google, Facebook, Twitter and LinkedIn, only a single
 // identity provider can exist. For types such as OpenID Connect and SAMLv2 more than one identity provider can be configured so this request
@@ -4366,6 +4518,25 @@ func (c *FusionAuthClient) RevokeRefreshTokensByUserIdForApplication(userId stri
 	return &resp, &errors, err
 }
 
+// RevokeRefreshTokensWithRequest
+// Revokes refresh tokens using the information in the JSON body. The handling for this method is the same as the revokeRefreshToken method
+// and is based on the information you provide in the RefreshDeleteRequest object. See that method for additional information.
+//   RefreshTokenRevokeRequest request The request information used to revoke the refresh tokens.
+func (c *FusionAuthClient) RevokeRefreshTokensWithRequest(request RefreshTokenRevokeRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/refresh").
+		WithJSONBody(request).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RevokeUserConsent
 // Revokes a single User consent by Id.
 //   string userConsentId The User Consent Id
@@ -4470,6 +4641,20 @@ func (c *FusionAuthClient) SearchEventLogs(request EventLogSearchRequest) (*Even
 
 	err := c.Start(&resp, nil).
 		WithUri("/api/system/event-log/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	return &resp, err
+}
+
+// SearchIPAccessControlLists
+// Searches the IP Access Control Lists with the specified criteria and pagination.
+//   IPAccessControlListSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchIPAccessControlLists(request IPAccessControlListSearchRequest) (*IPAccessControlListSearchResponse, error) {
+	var resp IPAccessControlListSearchResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/ip-acl/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
@@ -5028,6 +5213,26 @@ func (c *FusionAuthClient) UpdateGroup(groupId string, request GroupRequest) (*G
 	return &resp, &errors, err
 }
 
+// UpdateIPAccessControlList
+// Updates the IP Access Control List with the given Id.
+//   string accessControlListId The Id of the IP Access Control List to update.
+//   IPAccessControlListRequest request The request that contains all of the new IP Access Control List information.
+func (c *FusionAuthClient) UpdateIPAccessControlList(accessControlListId string, request IPAccessControlListRequest) (*IPAccessControlListResponse, *Errors, error) {
+	var resp IPAccessControlListResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/ip-acl").
+		WithUriSegment(accessControlListId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // UpdateIntegrations
 // Updates the available integrations.
 //   IntegrationRequest request The request that contains all of the new integration information.
@@ -5357,6 +5562,32 @@ func (c *FusionAuthClient) ValidateJWT(encodedJWT string) (*ValidateResponse, er
 		WithMethod(http.MethodGet).
 		Do()
 	return &resp, err
+}
+
+// VendJWT
+// It's a JWT vending machine!
+//
+// Issue a new access token (JWT) with the provided claims in the request. This JWT is not scoped to a tenant or user, it is a free form
+// token that will contain what claims you provide.
+// <p>
+// The iat, exp and jti claims will be added by FusionAuth, all other claims must be provided by the caller.
+//
+// If a TTL is not provided in the request, the TTL will be retrieved from the default Tenant or the Tenant specified on the request either
+// by way of the X-FusionAuth-TenantId request header, or a tenant scoped API key.
+//   JWTVendRequest request The request that contains all of the claims for this JWT.
+func (c *FusionAuthClient) VendJWT(request JWTVendRequest) (*JWTVendResponse, *Errors, error) {
+	var resp JWTVendResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/jwt/vend").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // VerifyEmail
