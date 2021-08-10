@@ -230,15 +230,20 @@ type ApplicationAccessControlConfiguration struct {
 }
 
 type ApplicationEmailConfiguration struct {
-	EmailUpdateEmailTemplateId          string `json:"emailUpdateEmailTemplateId,omitempty"`
-	EmailVerificationEmailTemplateId    string `json:"emailVerificationEmailTemplateId,omitempty"`
-	EmailVerifiedEmailTemplateId        string `json:"emailVerifiedEmailTemplateId,omitempty"`
-	ForgotPasswordEmailTemplateId       string `json:"forgotPasswordEmailTemplateId,omitempty"`
-	LoginNewDeviceEmailTemplateId       string `json:"loginNewDeviceEmailTemplateId,omitempty"`
-	LoginSuspiciousEmailTemplateId      string `json:"loginSuspiciousEmailTemplateId,omitempty"`
-	PasswordlessEmailTemplateId         string `json:"passwordlessEmailTemplateId,omitempty"`
-	PasswordResetSuccessEmailTemplateId string `json:"passwordResetSuccessEmailTemplateId,omitempty"`
-	SetPasswordEmailTemplateId          string `json:"setPasswordEmailTemplateId,omitempty"`
+	EmailUpdateEmailTemplateId           string `json:"emailUpdateEmailTemplateId,omitempty"`
+	EmailVerificationEmailTemplateId     string `json:"emailVerificationEmailTemplateId,omitempty"`
+	EmailVerifiedEmailTemplateId         string `json:"emailVerifiedEmailTemplateId,omitempty"`
+	ForgotPasswordEmailTemplateId        string `json:"forgotPasswordEmailTemplateId,omitempty"`
+	LoginIdInUseOnCreateEmailTemplateId  string `json:"loginIdInUseOnCreateEmailTemplateId,omitempty"`
+	LoginIdInUseOnUpdateEmailTemplateId  string `json:"loginIdInUseOnUpdateEmailTemplateId,omitempty"`
+	LoginNewDeviceEmailTemplateId        string `json:"loginNewDeviceEmailTemplateId,omitempty"`
+	LoginSuspiciousEmailTemplateId       string `json:"loginSuspiciousEmailTemplateId,omitempty"`
+	PasswordlessEmailTemplateId          string `json:"passwordlessEmailTemplateId,omitempty"`
+	PasswordResetSuccessEmailTemplateId  string `json:"passwordResetSuccessEmailTemplateId,omitempty"`
+	PasswordUpdateEmailTemplateId        string `json:"passwordUpdateEmailTemplateId,omitempty"`
+	SetPasswordEmailTemplateId           string `json:"setPasswordEmailTemplateId,omitempty"`
+	TwoFactorMethodAddEmailTemplateId    string `json:"twoFactorMethodAddEmailTemplateId,omitempty"`
+	TwoFactorMethodRemoveEmailTemplateId string `json:"twoFactorMethodRemoveEmailTemplateId,omitempty"`
 }
 
 /**
@@ -4734,8 +4739,9 @@ type TwitterIdentityProvider struct {
  */
 type TwoFactorDisableRequest struct {
 	BaseEventRequest
-	Code     string `json:"code,omitempty"`
-	MethodId string `json:"methodId,omitempty"`
+	ApplicationId string `json:"applicationId,omitempty"`
+	Code          string `json:"code,omitempty"`
+	MethodId      string `json:"methodId,omitempty"`
 }
 
 /**
@@ -4789,6 +4795,7 @@ func (b *TwoFactorRecoveryCodeResponse) SetStatus(status int) {
  */
 type TwoFactorRequest struct {
 	BaseEventRequest
+	ApplicationId       string `json:"applicationId,omitempty"`
 	AuthenticatorId     string `json:"authenticatorId,omitempty"`
 	Code                string `json:"code,omitempty"`
 	Email               string `json:"email,omitempty"`
@@ -5297,7 +5304,6 @@ type UserLoginFailedEvent struct {
  */
 type UserLoginIdDuplicateOnCreateEvent struct {
 	BaseEvent
-	ApplicationId     string `json:"applicationId,omitempty"`
 	DuplicateEmail    string `json:"duplicateEmail,omitempty"`
 	DuplicateUsername string `json:"duplicateUsername,omitempty"`
 	Existing          User   `json:"existing,omitempty"`
