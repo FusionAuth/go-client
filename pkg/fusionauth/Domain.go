@@ -5351,6 +5351,7 @@ type UserLoginSuccessEvent struct {
  */
 type UserLoginSuspiciousEvent struct {
 	UserLoginSuccessEvent
+	ThreatsDetected []AuthenticationThreats `json:"threatsDetected,omitempty"`
 }
 
 type UsernameModeration struct {
