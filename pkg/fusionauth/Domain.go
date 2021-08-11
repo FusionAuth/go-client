@@ -2852,13 +2852,13 @@ type LinkedInIdentityProvider struct {
  * @author Brian Pontarelli
  */
 type Location struct {
-	City          string `json:"city,omitempty"`
-	Country       string `json:"country,omitempty"`
-	DisplayString string `json:"displayString,omitempty"`
-	Latitude      double `json:"latitude,omitempty"`
-	Longitude     double `json:"longitude,omitempty"`
-	Region        string `json:"region,omitempty"`
-	Zipcode       string `json:"zipcode,omitempty"`
+	City          string  `json:"city,omitempty"`
+	Country       string  `json:"country,omitempty"`
+	DisplayString string  `json:"displayString,omitempty"`
+	Latitude      float64 `json:"latitude,omitempty"`
+	Longitude     float64 `json:"longitude,omitempty"`
+	Region        string  `json:"region,omitempty"`
+	Zipcode       string  `json:"zipcode,omitempty"`
 }
 
 /**
@@ -4450,7 +4450,7 @@ type TenantCaptchaConfiguration struct {
 	CaptchaMethod CaptchaMethod `json:"captchaMethod,omitempty"`
 	SecretKey     string        `json:"secretKey,omitempty"`
 	SiteKey       string        `json:"siteKey,omitempty"`
-	Threshold     double        `json:"threshold,omitempty"`
+	Threshold     float64       `json:"threshold,omitempty"`
 }
 
 /**
