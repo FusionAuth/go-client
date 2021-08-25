@@ -3748,6 +3748,18 @@ func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*Pending
 	return &resp, &errors, err
 }
 
+// RetrieveReactorMetrics
+// Retrieves the FusionAuth Reactor metrics.
+func (c *FusionAuthClient) RetrieveReactorMetrics() (*ReactorMetricsResponse, error) {
+	var resp ReactorMetricsResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/reactor/metrics").
+		WithMethod(http.MethodGet).
+		Do()
+	return &resp, err
+}
+
 // RetrieveReactorStatus
 // Retrieves the FusionAuth Reactor status.
 func (c *FusionAuthClient) RetrieveReactorStatus() (*ReactorResponse, error) {

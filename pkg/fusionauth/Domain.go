@@ -3712,6 +3712,18 @@ type ReactorMetrics struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type ReactorMetricsResponse struct {
+	BaseHTTPResponse
+	Metrics ReactorMetrics `json:"metrics,omitempty"`
+}
+
+func (b *ReactorMetricsResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * Request for managing FusionAuth Reactor and licenses.
  *
  * @author Brian Pontarelli
@@ -3726,8 +3738,7 @@ type ReactorRequest struct {
  */
 type ReactorResponse struct {
 	BaseHTTPResponse
-	Metrics ReactorMetrics `json:"metrics,omitempty"`
-	Status  ReactorStatus  `json:"status,omitempty"`
+	Status ReactorStatus `json:"status,omitempty"`
 }
 
 func (b *ReactorResponse) SetStatus(status int) {
