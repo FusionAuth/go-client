@@ -102,6 +102,10 @@ func (b *ActionResponse) SetStatus(status int) {
  */
 type Algorithm string
 
+func (a Algorithm) String() string {
+	return string(a)
+}
+
 const (
 	Algorithm_ES256 Algorithm = "ES256"
 	Algorithm_ES384 Algorithm = "ES384"
@@ -435,6 +439,10 @@ func (b *AuditLogSearchResponse) SetStatus(status int) {
  */
 type AuthenticationThreats string
 
+func (a AuthenticationThreats) String() string {
+	return string(a)
+}
+
 const (
 	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
 )
@@ -565,6 +573,10 @@ type BaseSearchCriteria struct {
 
 type BreachAction string
 
+func (b BreachAction) String() string {
+	return string(b)
+}
+
 const (
 	BreachAction_Off           BreachAction = "Off"
 	BreachAction_RecordOnly    BreachAction = "RecordOnly"
@@ -576,6 +588,10 @@ const (
  * @author Daniel DeGroff
  */
 type BreachedPasswordStatus string
+
+func (b BreachedPasswordStatus) String() string {
+	return string(b)
+}
 
 const (
 	BreachedPasswordStatus_None            BreachedPasswordStatus = "None"
@@ -599,6 +615,10 @@ type BreachedPasswordTenantMetric struct {
 
 type BreachMatchMode string
 
+func (b BreachMatchMode) String() string {
+	return string(b)
+}
+
 const (
 	BreachMatchMode_Low    BreachMatchMode = "Low"
 	BreachMatchMode_Medium BreachMatchMode = "Medium"
@@ -612,6 +632,10 @@ const (
  */
 type CanonicalizationMethod string
 
+func (c CanonicalizationMethod) String() string {
+	return string(c)
+}
+
 const (
 	CanonicalizationMethod_Exclusive             CanonicalizationMethod = "exclusive"
 	CanonicalizationMethod_ExclusiveWithComments CanonicalizationMethod = "exclusive_with_comments"
@@ -623,6 +647,10 @@ const (
  * @author Brett Pontarelli
  */
 type CaptchaMethod string
+
+func (c CaptchaMethod) String() string {
+	return string(c)
+}
 
 const (
 	CaptchaMethod_GoogleRecaptchaV2  CaptchaMethod = "GoogleRecaptchaV2"
@@ -648,6 +676,10 @@ type CertificateInformation struct {
  * @author Trevor Smith
  */
 type ChangePasswordReason string
+
+func (c ChangePasswordReason) String() string {
+	return string(c)
+}
 
 const (
 	ChangePasswordReason_Administrative ChangePasswordReason = "Administrative"
@@ -700,6 +732,10 @@ type CleanSpeakConfiguration struct {
 
 type ClientAuthenticationMethod string
 
+func (c ClientAuthenticationMethod) String() string {
+	return string(c)
+}
+
 const (
 	ClientAuthenticationMethod_None              ClientAuthenticationMethod = "none"
 	ClientAuthenticationMethod_ClientSecretBasic ClientAuthenticationMethod = "client_secret_basic"
@@ -710,6 +746,10 @@ const (
  * @author Brett Guy
  */
 type ClientAuthenticationPolicy string
+
+func (c ClientAuthenticationPolicy) String() string {
+	return string(c)
+}
 
 const (
 	ClientAuthenticationPolicy_Required                 ClientAuthenticationPolicy = "Required"
@@ -753,6 +793,10 @@ func (b *ConnectorResponse) SetStatus(status int) {
  * @author Trevor Smith
  */
 type ConnectorType string
+
+func (c ConnectorType) String() string {
+	return string(c)
+}
 
 const (
 	ConnectorType_FusionAuth ConnectorType = "FusionAuth"
@@ -810,6 +854,10 @@ func (b *ConsentResponse) SetStatus(status int) {
  */
 type ConsentStatus string
 
+func (c ConsentStatus) String() string {
+	return string(c)
+}
+
 const (
 	ConsentStatus_Active  ConsentStatus = "Active"
 	ConsentStatus_Revoked ConsentStatus = "Revoked"
@@ -821,6 +869,10 @@ const (
  * @author Brian Pontarelli
  */
 type ContentStatus string
+
+func (c ContentStatus) String() string {
+	return string(c)
+}
 
 const (
 	ContentStatus_ACTIVE   ContentStatus = "ACTIVE"
@@ -899,6 +951,10 @@ func (b *DeviceResponse) SetStatus(status int) {
 }
 
 type DeviceType string
+
+func (d DeviceType) String() string {
+	return string(d)
+}
 
 const (
 	DeviceType_BROWSER DeviceType = "BROWSER"
@@ -997,6 +1053,10 @@ type EmailPlus struct {
 }
 
 type EmailSecurityType string
+
+func (e EmailSecurityType) String() string {
+	return string(e)
+}
 
 const (
 	EmailSecurityType_NONE EmailSecurityType = "NONE"
@@ -1493,6 +1553,10 @@ func (b *EventLogSearchResponse) SetStatus(status int) {
  */
 type EventLogType string
 
+func (e EventLogType) String() string {
+	return string(e)
+}
+
 const (
 	EventLogType_Information EventLogType = "Information"
 	EventLogType_Debug       EventLogType = "Debug"
@@ -1514,6 +1578,10 @@ type EventRequest struct {
  * @author Brian Pontarelli
  */
 type EventType string
+
+func (e EventType) String() string {
+	return string(e)
+}
 
 const (
 	EventType_JWTPublicKeyUpdate             EventType = "jwt.public-key.update"
@@ -1561,6 +1629,10 @@ const (
  * @author Brian Pontarelli
  */
 type ExpiryUnit string
+
+func (e ExpiryUnit) String() string {
+	return string(e)
+}
 
 const (
 	ExpiryUnit_MINUTES ExpiryUnit = "MINUTES"
@@ -1740,6 +1812,10 @@ func (b *FamilyResponse) SetStatus(status int) {
 
 type FamilyRole string
 
+func (f FamilyRole) String() string {
+	return string(f)
+}
+
 const (
 	FamilyRole_Child FamilyRole = "Child"
 	FamilyRole_Teen  FamilyRole = "Teen"
@@ -1794,6 +1870,10 @@ type Form struct {
  */
 type FormControl string
 
+func (f FormControl) String() string {
+	return string(f)
+}
+
 const (
 	FormControl_Checkbox FormControl = "checkbox"
 	FormControl_Number   FormControl = "number"
@@ -1808,6 +1888,10 @@ const (
  * @author Daniel DeGroff
  */
 type FormDataType string
+
+func (f FormDataType) String() string {
+	return string(f)
+}
 
 const (
 	FormDataType_Bool    FormDataType = "bool"
@@ -1842,6 +1926,10 @@ type FormField struct {
  * @author Daniel DeGroff
  */
 type FormFieldAdminPolicy string
+
+func (f FormFieldAdminPolicy) String() string {
+	return string(f)
+}
 
 const (
 	FormFieldAdminPolicy_Edit FormFieldAdminPolicy = "Edit"
@@ -1916,6 +2004,10 @@ type FormStep struct {
  * @author Daniel DeGroff
  */
 type FormType string
+
+func (f FormType) String() string {
+	return string(f)
+}
 
 const (
 	FormType_Registration      FormType = "registration"
@@ -2000,6 +2092,10 @@ type GoogleIdentityProvider struct {
  */
 type GrantType string
 
+func (g GrantType) String() string {
+	return string(g)
+}
+
 const (
 	GrantType_AuthorizationCode GrantType = "authorization_code"
 	GrantType_Implicit          GrantType = "implicit"
@@ -2073,6 +2169,10 @@ type HistoryItem struct {
  */
 type HTTPMethod string
 
+func (h HTTPMethod) String() string {
+	return string(h)
+}
+
 const (
 	HTTPMethod_GET     HTTPMethod = "GET"
 	HTTPMethod_POST    HTTPMethod = "POST"
@@ -2132,6 +2232,10 @@ type IdentityProviderLink struct {
  */
 type IdentityProviderLinkingStrategy string
 
+func (i IdentityProviderLinkingStrategy) String() string {
+	return string(i)
+}
+
 const (
 	IdentityProviderLinkingStrategy_CreatePendingLink             IdentityProviderLinkingStrategy = "CreatePendingLink"
 	IdentityProviderLinkingStrategy_LinkAnonymously               IdentityProviderLinkingStrategy = "LinkAnonymously"
@@ -2170,6 +2274,10 @@ func (b *IdentityProviderLinkResponse) SetStatus(status int) {
  * @author Brett Pontarelli
  */
 type IdentityProviderLoginMethod string
+
+func (i IdentityProviderLoginMethod) String() string {
+	return string(i)
+}
 
 const (
 	IdentityProviderLoginMethod_UsePopup    IdentityProviderLoginMethod = "UsePopup"
@@ -2253,6 +2361,10 @@ func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type IdentityProviderType string
+
+func (i IdentityProviderType) String() string {
+	return string(i)
+}
 
 const (
 	IdentityProviderType_Apple              IdentityProviderType = "Apple"
@@ -2364,6 +2476,10 @@ type IPAccessControlEntry struct {
  * @author Brett Guy
  */
 type IPAccessControlEntryAction string
+
+func (i IPAccessControlEntryAction) String() string {
+	return string(i)
+}
 
 const (
 	IPAccessControlEntryAction_Allow IPAccessControlEntryAction = "Allow"
@@ -2650,6 +2766,10 @@ type Key struct {
 
 type KeyAlgorithm string
 
+func (k KeyAlgorithm) String() string {
+	return string(k)
+}
+
 const (
 	KeyAlgorithm_ES256 KeyAlgorithm = "ES256"
 	KeyAlgorithm_ES384 KeyAlgorithm = "ES384"
@@ -2688,6 +2808,10 @@ func (b *KeyResponse) SetStatus(status int) {
 
 type KeyType string
 
+func (k KeyType) String() string {
+	return string(k)
+}
+
 const (
 	KeyType_EC   KeyType = "EC"
 	KeyType_RSA  KeyType = "RSA"
@@ -2700,6 +2824,10 @@ const (
  * @author Daniel DeGroff
  */
 type KeyUse string
+
+func (k KeyUse) String() string {
+	return string(k)
+}
 
 const (
 	KeyUse_SignOnly      KeyUse = "SignOnly"
@@ -2774,6 +2902,10 @@ func (b *LambdaResponse) SetStatus(status int) {
  */
 type LambdaType string
 
+func (l LambdaType) String() string {
+	return string(l)
+}
+
 const (
 	LambdaType_JWTPopulate                  LambdaType = "JWTPopulate"
 	LambdaType_OpenIDReconcile              LambdaType = "OpenIDReconcile"
@@ -2817,6 +2949,10 @@ type LDAPConnectorConfiguration struct {
 }
 
 type LDAPSecurityMethod string
+
+func (l LDAPSecurityMethod) String() string {
+	return string(l)
+}
 
 const (
 	LDAPSecurityMethod_None     LDAPSecurityMethod = "None"
@@ -2877,6 +3013,10 @@ type LoginConfiguration struct {
 }
 
 type LoginIdType string
+
+func (l LoginIdType) String() string {
+	return string(l)
+}
 
 const (
 	LoginIdType_Email    LoginIdType = "email"
@@ -3010,6 +3150,10 @@ func (b *LoginResponse) SetStatus(status int) {
  */
 type LogoutBehavior string
 
+func (l LogoutBehavior) String() string {
+	return string(l)
+}
+
 const (
 	LogoutBehavior_RedirectOnly    LogoutBehavior = "RedirectOnly"
 	LogoutBehavior_AllApplications LogoutBehavior = "AllApplications"
@@ -3137,6 +3281,10 @@ func (b *MessageTemplateResponse) SetStatus(status int) {
  */
 type MessageType string
 
+func (m MessageType) String() string {
+	return string(m)
+}
+
 const (
 	MessageType_SMS MessageType = "SMS"
 )
@@ -3171,6 +3319,10 @@ type MessengerTransport struct {
  * @author Brett Guy
  */
 type MessengerType string
+
+func (m MessengerType) String() string {
+	return string(m)
+}
 
 const (
 	MessengerType_Generic MessengerType = "Generic"
@@ -3312,6 +3464,10 @@ type OAuthError struct {
 
 type OAuthErrorReason string
 
+func (o OAuthErrorReason) String() string {
+	return string(o)
+}
+
 const (
 	OAuthErrorReason_AuthCodeNotFound                    OAuthErrorReason = "auth_code_not_found"
 	OAuthErrorReason_AccessTokenMalformed                OAuthErrorReason = "access_token_malformed"
@@ -3371,6 +3527,10 @@ const (
 
 type OAuthErrorType string
 
+func (o OAuthErrorType) String() string {
+	return string(o)
+}
+
 const (
 	OAuthErrorType_InvalidRequest          OAuthErrorType = "invalid_request"
 	OAuthErrorType_InvalidClient           OAuthErrorType = "invalid_client"
@@ -3404,6 +3564,10 @@ func (b *OAuthResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type ObjectState string
+
+func (o ObjectState) String() string {
+	return string(o)
+}
 
 const (
 	ObjectState_Active        ObjectState = "Active"
@@ -3635,6 +3799,10 @@ func (b *PreviewResponse) SetStatus(status int) {
  */
 type ProofKeyForCodeExchangePolicy string
 
+func (p ProofKeyForCodeExchangePolicy) String() string {
+	return string(p)
+}
+
 const (
 	ProofKeyForCodeExchangePolicy_Required                                 ProofKeyForCodeExchangePolicy = "Required"
 	ProofKeyForCodeExchangePolicy_NotRequired                              ProofKeyForCodeExchangePolicy = "NotRequired"
@@ -3670,6 +3838,10 @@ type RateLimitedRequestConfiguration struct {
  */
 type RateLimitedRequestType string
 
+func (r RateLimitedRequestType) String() string {
+	return string(r)
+}
+
 const (
 	RateLimitedRequestType_FailedLogin                  RateLimitedRequestType = "FailedLogin"
 	RateLimitedRequestType_ForgotPassword               RateLimitedRequestType = "ForgotPassword"
@@ -3695,6 +3867,10 @@ type RawLogin struct {
  * @author Brian Pontarelli
  */
 type ReactorFeatureStatus string
+
+func (r ReactorFeatureStatus) String() string {
+	return string(r)
+}
 
 const (
 	ReactorFeatureStatus_ACTIVE       ReactorFeatureStatus = "ACTIVE"
@@ -3816,6 +3992,10 @@ type RefreshToken struct {
  */
 type RefreshTokenExpirationPolicy string
 
+func (r RefreshTokenExpirationPolicy) String() string {
+	return string(r)
+}
+
 const (
 	RefreshTokenExpirationPolicy_Fixed         RefreshTokenExpirationPolicy = "Fixed"
 	RefreshTokenExpirationPolicy_SlidingWindow RefreshTokenExpirationPolicy = "SlidingWindow"
@@ -3870,6 +4050,10 @@ type RefreshTokenRevokeRequest struct {
  * @author Daniel DeGroff
  */
 type RefreshTokenUsagePolicy string
+
+func (r RefreshTokenUsagePolicy) String() string {
+	return string(r)
+}
 
 const (
 	RefreshTokenUsagePolicy_Reusable   RefreshTokenUsagePolicy = "Reusable"
@@ -3950,6 +4134,10 @@ func (b *RegistrationResponse) SetStatus(status int) {
 
 type RegistrationType string
 
+func (r RegistrationType) String() string {
+	return string(r)
+}
+
 const (
 	RegistrationType_Basic    RegistrationType = "basic"
 	RegistrationType_Advanced RegistrationType = "advanced"
@@ -4006,6 +4194,10 @@ type RequiresCORSConfiguration struct {
 }
 
 type SAMLLogoutBehavior string
+
+func (s SAMLLogoutBehavior) String() string {
+	return string(s)
+}
 
 const (
 	SAMLLogoutBehavior_AllParticipants SAMLLogoutBehavior = "AllParticipants"
@@ -4160,6 +4352,10 @@ type SecureGeneratorConfiguration struct {
  */
 type SecureGeneratorType string
 
+func (s SecureGeneratorType) String() string {
+	return string(s)
+}
+
 const (
 	SecureGeneratorType_RandomDigits       SecureGeneratorType = "randomDigits"
 	SecureGeneratorType_RandomBytes        SecureGeneratorType = "randomBytes"
@@ -4260,6 +4456,10 @@ type SonyPSNIdentityProvider struct {
  * @author Daniel DeGroff
  */
 type Sort string
+
+func (s Sort) String() string {
+	return string(s)
+}
 
 const (
 	Sort_Asc  Sort = "asc"
@@ -4637,6 +4837,10 @@ type TimeBasedDeletePolicy struct {
  */
 type TokenType string
 
+func (t TokenType) String() string {
+	return string(t)
+}
+
 const (
 	TokenType_Bearer TokenType = "Bearer"
 	TokenType_MAC    TokenType = "MAC"
@@ -4666,6 +4870,10 @@ func (b *TotalsReportResponse) SetStatus(status int) {
 
 type TOTPAlgorithm string
 
+func (t TOTPAlgorithm) String() string {
+	return string(t)
+}
+
 const (
 	TOTPAlgorithm_HmacSHA1   TOTPAlgorithm = "HmacSHA1"
 	TOTPAlgorithm_HmacSHA256 TOTPAlgorithm = "HmacSHA256"
@@ -4678,6 +4886,10 @@ const (
  * @author Brian Pontarelli
  */
 type TransactionType string
+
+func (t TransactionType) String() string {
+	return string(t)
+}
 
 const (
 	TransactionType_None             TransactionType = "None"
@@ -4878,6 +5090,10 @@ type UniqueUsernameConfiguration struct {
 
 type UniqueUsernameStrategy string
 
+func (u UniqueUsernameStrategy) String() string {
+	return string(u)
+}
+
 const (
 	UniqueUsernameStrategy_Always      UniqueUsernameStrategy = "Always"
 	UniqueUsernameStrategy_OnCollision UniqueUsernameStrategy = "OnCollision"
@@ -4887,6 +5103,10 @@ const (
  * @author Daniel DeGroff
  */
 type UnverifiedBehavior string
+
+func (u UnverifiedBehavior) String() string {
+	return string(u)
+}
 
 const (
 	UnverifiedBehavior_Allow UnverifiedBehavior = "Allow"
@@ -5020,6 +5240,10 @@ type UserActionOption struct {
  * @author Brian Pontarelli
  */
 type UserActionPhase string
+
+func (u UserActionPhase) String() string {
+	return string(u)
+}
 
 const (
 	UserActionPhase_Start  UserActionPhase = "start"
@@ -5590,6 +5814,10 @@ type UserSearchCriteria struct {
  */
 type UserState string
 
+func (u UserState) String() string {
+	return string(u)
+}
+
 const (
 	UserState_Authenticated                        UserState = "Authenticated"
 	UserState_AuthenticatedNotRegistered           UserState = "AuthenticatedNotRegistered"
@@ -5665,6 +5893,10 @@ func (b *ValidateResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type VerificationStrategy string
+
+func (v VerificationStrategy) String() string {
+	return string(v)
+}
 
 const (
 	VerificationStrategy_ClickableLink VerificationStrategy = "ClickableLink"
@@ -5799,6 +6031,10 @@ type XboxIdentityProvider struct {
 }
 
 type XMLSignatureLocation string
+
+func (x XMLSignatureLocation) String() string {
+	return string(x)
+}
 
 const (
 	XMLSignatureLocation_Assertion XMLSignatureLocation = "Assertion"
