@@ -2329,29 +2329,6 @@ type Integrations struct {
 }
 
 /**
- * Counts for a period.
- *
- * @author Brian Pontarelli
- */
-type IntervalCount struct {
-	ApplicationId    string `json:"applicationId,omitempty"`
-	Count            int    `json:"count,omitempty"`
-	DecrementedCount int    `json:"decrementedCount,omitempty"`
-	Period           int    `json:"period,omitempty"`
-}
-
-/**
- * A user over an period (for daily and monthly active user calculations).
- *
- * @author Brian Pontarelli
- */
-type IntervalUser struct {
-	ApplicationId string `json:"applicationId,omitempty"`
-	Period        int    `json:"period,omitempty"`
-	UserId        string `json:"userId,omitempty"`
-}
-
-/**
  * @author Brett Guy
  */
 type IPAccessControlEntry struct {
