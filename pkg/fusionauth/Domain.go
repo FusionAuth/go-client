@@ -4296,7 +4296,6 @@ type SystemConfiguration struct {
 	LastUpdateInstant        int64                    `json:"lastUpdateInstant,omitempty"`
 	LoginRecordConfiguration LoginRecordConfiguration `json:"loginRecordConfiguration,omitempty"`
 	ReportTimezone           string                   `json:"reportTimezone,omitempty"`
-	SsoConfiguration         SystemSSOConfiguration   `json:"ssoConfiguration,omitempty"`
 	UiConfiguration          UIConfiguration          `json:"uiConfiguration,omitempty"`
 }
 
@@ -4329,13 +4328,6 @@ func (b *SystemConfigurationResponse) SetStatus(status int) {
 type SystemLogsExportRequest struct {
 	BaseExportRequest
 	LastNBytes int `json:"lastNBytes,omitempty"`
-}
-
-/**
- * @author Brett Pontarelli
- */
-type SystemSSOConfiguration struct {
-	DeviceTrustTimeToLiveInSeconds int `json:"deviceTrustTimeToLiveInSeconds,omitempty"`
 }
 
 type Templates struct {
@@ -4411,6 +4403,7 @@ type Tenant struct {
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
 	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
+	SsoConfiguration                  TenantSSOConfiguration            `json:"ssoConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
 	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
@@ -4517,6 +4510,13 @@ type TenantResponse struct {
 
 func (b *TenantResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+type TenantSSOConfiguration struct {
+	DeviceTrustTimeToLiveInSeconds int `json:"deviceTrustTimeToLiveInSeconds,omitempty"`
 }
 
 /**
