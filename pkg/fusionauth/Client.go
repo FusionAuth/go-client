@@ -221,7 +221,7 @@ func (c *FusionAuthClient) ActivateReactor(request ReactorRequest) (*BaseHTTPRes
 // AddUserToFamily
 // Adds a user to an existing family. The family id must be specified.
 //   string familyId The id of the family.
-//   FamilyRequest request The request object that contains all of the information used to determine which user to add to the family.
+//   FamilyRequest request The request object that contains all the information used to determine which user to add to the family.
 func (c *FusionAuthClient) AddUserToFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
 	var resp FamilyResponse
 	var errors Errors
@@ -301,7 +301,7 @@ func (c *FusionAuthClient) ChangePasswordByIdentity(request ChangePasswordReques
 
 // CommentOnUser
 // Adds a comment to the user's account.
-//   UserCommentRequest request The request object that contains all of the information used to create the user comment.
+//   UserCommentRequest request The request object that contains all the information used to create the user comment.
 func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -344,7 +344,7 @@ func (c *FusionAuthClient) CreateAPIKey(keyId string, request APIKeyRequest) (*A
 // CreateApplication
 // Creates an application. You can optionally specify an Id for the application, if not provided one will be generated.
 //   string applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
-//   ApplicationRequest request The request object that contains all of the information used to create the application.
+//   ApplicationRequest request The request object that contains all the information used to create the application.
 func (c *FusionAuthClient) CreateApplication(applicationId string, request ApplicationRequest) (*ApplicationResponse, *Errors, error) {
 	var resp ApplicationResponse
 	var errors Errors
@@ -366,7 +366,7 @@ func (c *FusionAuthClient) CreateApplication(applicationId string, request Appli
 // You can optionally specify an Id for the role inside the ApplicationRole object itself, if not provided one will be generated.
 //   string applicationId The Id of the application to create the role on.
 //   string roleId (Optional) The Id of the role. If not provided a secure random UUID will be generated.
-//   ApplicationRequest request The request object that contains all of the information used to create the application role.
+//   ApplicationRequest request The request object that contains all the information used to create the application role.
 func (c *FusionAuthClient) CreateApplicationRole(applicationId string, roleId string, request ApplicationRequest) (*ApplicationResponse, *Errors, error) {
 	var resp ApplicationResponse
 	var errors Errors
@@ -389,7 +389,7 @@ func (c *FusionAuthClient) CreateApplicationRole(applicationId string, roleId st
 // Creates an audit log with the message and user name (usually an email). Audit logs should be written anytime you
 // make changes to the FusionAuth database. When using the FusionAuth App web interface, any changes are automatically
 // written to the audit log. However, if you are accessing the API, you must write the audit logs yourself.
-//   AuditLogRequest request The request object that contains all of the information used to create the audit log entry.
+//   AuditLogRequest request The request object that contains all the information used to create the audit log entry.
 func (c *FusionAuthClient) CreateAuditLog(request AuditLogRequest) (*AuditLogResponse, *Errors, error) {
 	var resp AuditLogResponse
 	var errors Errors
@@ -408,7 +408,7 @@ func (c *FusionAuthClient) CreateAuditLog(request AuditLogRequest) (*AuditLogRes
 // CreateConnector
 // Creates a connector.  You can optionally specify an Id for the connector, if not provided one will be generated.
 //   string connectorId (Optional) The Id for the connector. If not provided a secure random UUID will be generated.
-//   ConnectorRequest request The request object that contains all of the information used to create the connector.
+//   ConnectorRequest request The request object that contains all the information used to create the connector.
 func (c *FusionAuthClient) CreateConnector(connectorId string, request ConnectorRequest) (*ConnectorResponse, *Errors, error) {
 	var resp ConnectorResponse
 	var errors Errors
@@ -428,7 +428,7 @@ func (c *FusionAuthClient) CreateConnector(connectorId string, request Connector
 // CreateConsent
 // Creates a user consent type. You can optionally specify an Id for the consent type, if not provided one will be generated.
 //   string consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
-//   ConsentRequest request The request object that contains all of the information used to create the consent.
+//   ConsentRequest request The request object that contains all the information used to create the consent.
 func (c *FusionAuthClient) CreateConsent(consentId string, request ConsentRequest) (*ConsentResponse, *Errors, error) {
 	var resp ConsentResponse
 	var errors Errors
@@ -448,7 +448,7 @@ func (c *FusionAuthClient) CreateConsent(consentId string, request ConsentReques
 // CreateEmailTemplate
 // Creates an email template. You can optionally specify an Id for the template, if not provided one will be generated.
 //   string emailTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
-//   EmailTemplateRequest request The request object that contains all of the information used to create the email template.
+//   EmailTemplateRequest request The request object that contains all the information used to create the email template.
 func (c *FusionAuthClient) CreateEmailTemplate(emailTemplateId string, request EmailTemplateRequest) (*EmailTemplateResponse, *Errors, error) {
 	var resp EmailTemplateResponse
 	var errors Errors
@@ -468,7 +468,7 @@ func (c *FusionAuthClient) CreateEmailTemplate(emailTemplateId string, request E
 // CreateEntity
 // Creates an Entity. You can optionally specify an Id for the Entity. If not provided one will be generated.
 //   string entityId (Optional) The Id for the Entity. If not provided a secure random UUID will be generated.
-//   EntityRequest request The request object that contains all of the information used to create the Entity.
+//   EntityRequest request The request object that contains all the information used to create the Entity.
 func (c *FusionAuthClient) CreateEntity(entityId string, request EntityRequest) (*EntityResponse, *Errors, error) {
 	var resp EntityResponse
 	var errors Errors
@@ -488,7 +488,7 @@ func (c *FusionAuthClient) CreateEntity(entityId string, request EntityRequest) 
 // CreateEntityType
 // Creates a Entity Type. You can optionally specify an Id for the Entity Type, if not provided one will be generated.
 //   string entityTypeId (Optional) The Id for the Entity Type. If not provided a secure random UUID will be generated.
-//   EntityTypeRequest request The request object that contains all of the information used to create the Entity Type.
+//   EntityTypeRequest request The request object that contains all the information used to create the Entity Type.
 func (c *FusionAuthClient) CreateEntityType(entityTypeId string, request EntityTypeRequest) (*EntityTypeResponse, *Errors, error) {
 	var resp EntityTypeResponse
 	var errors Errors
@@ -510,7 +510,7 @@ func (c *FusionAuthClient) CreateEntityType(entityTypeId string, request EntityT
 // You can optionally specify an Id for the permission inside the EntityTypePermission object itself, if not provided one will be generated.
 //   string entityTypeId The Id of the entity type to create the permission on.
 //   string permissionId (Optional) The Id of the permission. If not provided a secure random UUID will be generated.
-//   EntityTypeRequest request The request object that contains all of the information used to create the permission.
+//   EntityTypeRequest request The request object that contains all the information used to create the permission.
 func (c *FusionAuthClient) CreateEntityTypePermission(entityTypeId string, permissionId string, request EntityTypeRequest) (*EntityTypeResponse, *Errors, error) {
 	var resp EntityTypeResponse
 	var errors Errors
@@ -533,7 +533,7 @@ func (c *FusionAuthClient) CreateEntityTypePermission(entityTypeId string, permi
 // Creates a family with the user id in the request as the owner and sole member of the family. You can optionally specify an id for the
 // family, if not provided one will be generated.
 //   string familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
-//   FamilyRequest request The request object that contains all of the information used to create the family.
+//   FamilyRequest request The request object that contains all the information used to create the family.
 func (c *FusionAuthClient) CreateFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
 	var resp FamilyResponse
 	var errors Errors
@@ -553,7 +553,7 @@ func (c *FusionAuthClient) CreateFamily(familyId string, request FamilyRequest) 
 // CreateForm
 // Creates a form.  You can optionally specify an Id for the form, if not provided one will be generated.
 //   string formId (Optional) The Id for the form. If not provided a secure random UUID will be generated.
-//   FormRequest request The request object that contains all of the information used to create the form.
+//   FormRequest request The request object that contains all the information used to create the form.
 func (c *FusionAuthClient) CreateForm(formId string, request FormRequest) (*FormResponse, *Errors, error) {
 	var resp FormResponse
 	var errors Errors
@@ -573,7 +573,7 @@ func (c *FusionAuthClient) CreateForm(formId string, request FormRequest) (*Form
 // CreateFormField
 // Creates a form field.  You can optionally specify an Id for the form, if not provided one will be generated.
 //   string fieldId (Optional) The Id for the form field. If not provided a secure random UUID will be generated.
-//   FormFieldRequest request The request object that contains all of the information used to create the form field.
+//   FormFieldRequest request The request object that contains all the information used to create the form field.
 func (c *FusionAuthClient) CreateFormField(fieldId string, request FormFieldRequest) (*FormFieldResponse, *Errors, error) {
 	var resp FormFieldResponse
 	var errors Errors
@@ -593,7 +593,7 @@ func (c *FusionAuthClient) CreateFormField(fieldId string, request FormFieldRequ
 // CreateGroup
 // Creates a group. You can optionally specify an Id for the group, if not provided one will be generated.
 //   string groupId (Optional) The Id for the group. If not provided a secure random UUID will be generated.
-//   GroupRequest request The request object that contains all of the information used to create the group.
+//   GroupRequest request The request object that contains all the information used to create the group.
 func (c *FusionAuthClient) CreateGroup(groupId string, request GroupRequest) (*GroupResponse, *Errors, error) {
 	var resp GroupResponse
 	var errors Errors
@@ -612,7 +612,7 @@ func (c *FusionAuthClient) CreateGroup(groupId string, request GroupRequest) (*G
 
 // CreateGroupMembers
 // Creates a member in a group.
-//   MemberRequest request The request object that contains all of the information used to create the group member(s).
+//   MemberRequest request The request object that contains all the information used to create the group member(s).
 func (c *FusionAuthClient) CreateGroupMembers(request MemberRequest) (*MemberResponse, *Errors, error) {
 	var resp MemberResponse
 	var errors Errors
@@ -631,7 +631,7 @@ func (c *FusionAuthClient) CreateGroupMembers(request MemberRequest) (*MemberRes
 // CreateIPAccessControlList
 // Creates an IP Access Control List. You can optionally specify an Id on this create request, if one is not provided one will be generated.
 //   string accessControlListId (Optional) The Id for the IP Access Control List. If not provided a secure random UUID will be generated.
-//   IPAccessControlListRequest request The request object that contains all of the information used to create the IP Access Control List.
+//   IPAccessControlListRequest request The request object that contains all the information used to create the IP Access Control List.
 func (c *FusionAuthClient) CreateIPAccessControlList(accessControlListId string, request IPAccessControlListRequest) (*IPAccessControlListResponse, *Errors, error) {
 	var resp IPAccessControlListResponse
 	var errors Errors
@@ -651,7 +651,7 @@ func (c *FusionAuthClient) CreateIPAccessControlList(accessControlListId string,
 // CreateLambda
 // Creates a Lambda. You can optionally specify an Id for the lambda, if not provided one will be generated.
 //   string lambdaId (Optional) The Id for the lambda. If not provided a secure random UUID will be generated.
-//   LambdaRequest request The request object that contains all of the information used to create the lambda.
+//   LambdaRequest request The request object that contains all the information used to create the lambda.
 func (c *FusionAuthClient) CreateLambda(lambdaId string, request LambdaRequest) (*LambdaResponse, *Errors, error) {
 	var resp LambdaResponse
 	var errors Errors
@@ -671,7 +671,7 @@ func (c *FusionAuthClient) CreateLambda(lambdaId string, request LambdaRequest) 
 // CreateMessageTemplate
 // Creates an message template. You can optionally specify an Id for the template, if not provided one will be generated.
 //   string messageTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
-//   MessageTemplateRequest request The request object that contains all of the information used to create the message template.
+//   MessageTemplateRequest request The request object that contains all the information used to create the message template.
 func (c *FusionAuthClient) CreateMessageTemplate(messageTemplateId string, request MessageTemplateRequest) (*MessageTemplateResponse, *Errors, error) {
 	var resp MessageTemplateResponse
 	var errors Errors
@@ -691,7 +691,7 @@ func (c *FusionAuthClient) CreateMessageTemplate(messageTemplateId string, reque
 // CreateMessenger
 // Creates a messenger.  You can optionally specify an Id for the messenger, if not provided one will be generated.
 //   string messengerId (Optional) The Id for the messenger. If not provided a secure random UUID will be generated.
-//   MessengerRequest request The request object that contains all of the information used to create the messenger.
+//   MessengerRequest request The request object that contains all the information used to create the messenger.
 func (c *FusionAuthClient) CreateMessenger(messengerId string, request MessengerRequest) (*MessengerResponse, *Errors, error) {
 	var resp MessengerResponse
 	var errors Errors
@@ -711,7 +711,7 @@ func (c *FusionAuthClient) CreateMessenger(messengerId string, request Messenger
 // CreateTenant
 // Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
 //   string tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
-//   TenantRequest request The request object that contains all of the information used to create the tenant.
+//   TenantRequest request The request object that contains all the information used to create the tenant.
 func (c *FusionAuthClient) CreateTenant(tenantId string, request TenantRequest) (*TenantResponse, *Errors, error) {
 	var resp TenantResponse
 	var errors Errors
@@ -731,7 +731,7 @@ func (c *FusionAuthClient) CreateTenant(tenantId string, request TenantRequest) 
 // CreateTheme
 // Creates a Theme. You can optionally specify an Id for the theme, if not provided one will be generated.
 //   string themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
-//   ThemeRequest request The request object that contains all of the information used to create the theme.
+//   ThemeRequest request The request object that contains all the information used to create the theme.
 func (c *FusionAuthClient) CreateTheme(themeId string, request ThemeRequest) (*ThemeResponse, *Errors, error) {
 	var resp ThemeResponse
 	var errors Errors
@@ -751,7 +751,7 @@ func (c *FusionAuthClient) CreateTheme(themeId string, request ThemeRequest) (*T
 // CreateUser
 // Creates a user. You can optionally specify an Id for the user, if not provided one will be generated.
 //   string userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
-//   UserRequest request The request object that contains all of the information used to create the user.
+//   UserRequest request The request object that contains all the information used to create the user.
 func (c *FusionAuthClient) CreateUser(userId string, request UserRequest) (*UserResponse, *Errors, error) {
 	var resp UserResponse
 	var errors Errors
@@ -772,7 +772,7 @@ func (c *FusionAuthClient) CreateUser(userId string, request UserRequest) (*User
 // Creates a user action. This action cannot be taken on a user until this call successfully returns. Anytime after
 // that the user action can be applied to any user.
 //   string userActionId (Optional) The Id for the user action. If not provided a secure random UUID will be generated.
-//   UserActionRequest request The request object that contains all of the information used to create the user action.
+//   UserActionRequest request The request object that contains all the information used to create the user action.
 func (c *FusionAuthClient) CreateUserAction(userActionId string, request UserActionRequest) (*UserActionResponse, *Errors, error) {
 	var resp UserActionResponse
 	var errors Errors
@@ -793,7 +793,7 @@ func (c *FusionAuthClient) CreateUserAction(userActionId string, request UserAct
 // Creates a user reason. This user action reason cannot be used when actioning a user until this call completes
 // successfully. Anytime after that the user action reason can be used.
 //   string userActionReasonId (Optional) The Id for the user action reason. If not provided a secure random UUID will be generated.
-//   UserActionReasonRequest request The request object that contains all of the information used to create the user action reason.
+//   UserActionReasonRequest request The request object that contains all the information used to create the user action reason.
 func (c *FusionAuthClient) CreateUserActionReason(userActionReasonId string, request UserActionReasonRequest) (*UserActionReasonResponse, *Errors, error) {
 	var resp UserActionReasonResponse
 	var errors Errors
@@ -832,7 +832,7 @@ func (c *FusionAuthClient) CreateUserConsent(userConsentId string, request UserC
 
 // CreateUserLink
 // Link an external user from a 3rd party identity provider to a FusionAuth user.
-//   IdentityProviderLinkRequest request The request object that contains all of the information used to link the FusionAuth user.
+//   IdentityProviderLinkRequest request The request object that contains all the information used to link the FusionAuth user.
 func (c *FusionAuthClient) CreateUserLink(request IdentityProviderLinkRequest) (*IdentityProviderLinkResponse, *Errors, error) {
 	var resp IdentityProviderLinkResponse
 	var errors Errors
@@ -851,7 +851,7 @@ func (c *FusionAuthClient) CreateUserLink(request IdentityProviderLinkRequest) (
 // CreateWebhook
 // Creates a webhook. You can optionally specify an Id for the webhook, if not provided one will be generated.
 //   string webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
-//   WebhookRequest request The request object that contains all of the information used to create the webhook.
+//   WebhookRequest request The request object that contains all the information used to create the webhook.
 func (c *FusionAuthClient) CreateWebhook(webhookId string, request WebhookRequest) (*WebhookResponse, *Errors, error) {
 	var resp WebhookResponse
 	var errors Errors
@@ -1438,7 +1438,7 @@ func (c *FusionAuthClient) DeleteTenantAsync(tenantId string) (*BaseHTTPResponse
 // Deletes the tenant based on the given request (sent to the API as JSON). This permanently deletes all information, metrics, reports and data associated
 // with the tenant and everything under the tenant (applications, users, etc).
 //   string tenantId The Id of the tenant to delete.
-//   TenantDeleteRequest request The request object that contains all of the information used to delete the user.
+//   TenantDeleteRequest request The request object that contains all the information used to delete the user.
 func (c *FusionAuthClient) DeleteTenantWithRequest(tenantId string, request TenantDeleteRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -1557,7 +1557,7 @@ func (c *FusionAuthClient) DeleteUserLink(identityProviderId string, identityPro
 // Deletes the user based on the given request (sent to the API as JSON). This permanently deletes all information, metrics, reports and data associated
 // with the user.
 //   string userId The Id of the user to delete (required).
-//   UserDeleteSingleRequest request The request object that contains all of the information used to delete the user.
+//   UserDeleteSingleRequest request The request object that contains all the information used to delete the user.
 func (c *FusionAuthClient) DeleteUserWithRequest(userId string, request UserDeleteSingleRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -1875,7 +1875,7 @@ func (c *FusionAuthClient) GenerateEmailVerificationId(email string) (*VerifyEma
 // GenerateKey
 // Generate a new RSA or EC key pair or an HMAC secret.
 //   string keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
-//   KeyRequest request The request object that contains all of the information used to create the key.
+//   KeyRequest request The request object that contains all the information used to create the key.
 func (c *FusionAuthClient) GenerateKey(keyId string, request KeyRequest) (*KeyResponse, *Errors, error) {
 	var resp KeyResponse
 	var errors Errors
@@ -1981,7 +1981,7 @@ func (c *FusionAuthClient) IdentityProviderLogin(request IdentityProviderLoginRe
 // ImportKey
 // Import an existing RSA or EC key pair or an HMAC secret.
 //   string keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
-//   KeyRequest request The request object that contains all of the information used to create the key.
+//   KeyRequest request The request object that contains all the information used to create the key.
 func (c *FusionAuthClient) ImportKey(keyId string, request KeyRequest) (*KeyResponse, *Errors, error) {
 	var resp KeyResponse
 	var errors Errors
@@ -2145,7 +2145,7 @@ func (c *FusionAuthClient) Logout(global bool, refreshToken string) (*BaseHTTPRe
 // LogoutWithRequest
 // The Logout API is intended to be used to remove the refresh token and access token cookies if they exist on the
 // client and revoke the refresh token stored. This API takes the refresh token in the JSON body.
-//   LogoutRequest request The request object that contains all of the information used to logout the user.
+//   LogoutRequest request The request object that contains all the information used to logout the user.
 func (c *FusionAuthClient) LogoutWithRequest(request LogoutRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 
@@ -4824,7 +4824,7 @@ func (c *FusionAuthClient) SendPasswordlessCode(request PasswordlessSendRequest)
 
 // SendTwoFactorCode
 // Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
-//   TwoFactorSendRequest request The request object that contains all of the information used to send the code.
+//   TwoFactorSendRequest request The request object that contains all the information used to send the code.
 //
 // Deprecated: This method has been renamed to SendTwoFactorCodeForEnableDisable, use that method instead.
 func (c *FusionAuthClient) SendTwoFactorCode(request TwoFactorSendRequest) (*BaseHTTPResponse, *Errors, error) {
@@ -4844,7 +4844,7 @@ func (c *FusionAuthClient) SendTwoFactorCode(request TwoFactorSendRequest) (*Bas
 
 // SendTwoFactorCodeForEnableDisable
 // Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
-//   TwoFactorSendRequest request The request object that contains all of the information used to send the code.
+//   TwoFactorSendRequest request The request object that contains all the information used to send the code.
 func (c *FusionAuthClient) SendTwoFactorCodeForEnableDisable(request TwoFactorSendRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -4982,7 +4982,7 @@ func (c *FusionAuthClient) TwoFactorLogin(request TwoFactorLoginRequest) (*Login
 // UpdateAPIKey
 // Updates an API key by given id
 //   string apiKeyId The Id of the API key to update.
-//   APIKeyRequest request The request object that contains all of the information used to create the API Key.
+//   APIKeyRequest request The request object that contains all the information used to create the API Key.
 func (c *FusionAuthClient) UpdateAPIKey(apiKeyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
 	var resp APIKeyResponse
 	var errors Errors
@@ -5524,7 +5524,7 @@ func (c *FusionAuthClient) UpdateWebhook(webhookId string, request WebhookReques
 // UpsertEntityGrant
 // Creates or updates an Entity Grant. This is when a User/Entity is granted permissions to an Entity.
 //   string entityId The Id of the Entity that the User/Entity is being granted access to.
-//   EntityGrantRequest request The request object that contains all of the information used to create the Entity Grant.
+//   EntityGrantRequest request The request object that contains all the information used to create the Entity Grant.
 func (c *FusionAuthClient) UpsertEntityGrant(entityId string, request EntityGrantRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors

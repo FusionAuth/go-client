@@ -509,16 +509,17 @@ type BaseExportRequest struct {
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseIdentityProvider struct {
 	Enableable
-	ApplicationConfiguration map[string]interface{}          `json:"applicationConfiguration,omitempty"`
-	Data                     map[string]interface{}          `json:"data,omitempty"`
-	Debug                    bool                            `json:"debug"`
-	Id                       string                          `json:"id,omitempty"`
-	InsertInstant            int64                           `json:"insertInstant,omitempty"`
-	LambdaConfiguration      ProviderLambdaConfiguration     `json:"lambdaConfiguration,omitempty"`
-	LastUpdateInstant        int64                           `json:"lastUpdateInstant,omitempty"`
-	LinkingStrategy          IdentityProviderLinkingStrategy `json:"linkingStrategy,omitempty"`
-	Name                     string                          `json:"name,omitempty"`
-	Type                     IdentityProviderType            `json:"type,omitempty"`
+	ApplicationConfiguration map[string]interface{}                         `json:"applicationConfiguration,omitempty"`
+	Data                     map[string]interface{}                         `json:"data,omitempty"`
+	Debug                    bool                                           `json:"debug"`
+	Id                       string                                         `json:"id,omitempty"`
+	InsertInstant            int64                                          `json:"insertInstant,omitempty"`
+	LambdaConfiguration      ProviderLambdaConfiguration                    `json:"lambdaConfiguration,omitempty"`
+	LastUpdateInstant        int64                                          `json:"lastUpdateInstant,omitempty"`
+	LinkingStrategy          IdentityProviderLinkingStrategy                `json:"linkingStrategy,omitempty"`
+	Name                     string                                         `json:"name,omitempty"`
+	TenantConfiguration      map[string]IdentityProviderTenantConfiguration `json:"tenantConfiguration,omitempty"`
+	Type                     IdentityProviderType                           `json:"type,omitempty"`
 }
 
 /**
@@ -961,12 +962,14 @@ type EmailAddress struct {
  * @author Brian Pontarelli
  */
 type EmailConfiguration struct {
+	AdditionalHeaders                    []EmailHeader          `json:"additionalHeaders,omitempty"`
 	DefaultFromEmail                     string                 `json:"defaultFromEmail,omitempty"`
 	DefaultFromName                      string                 `json:"defaultFromName,omitempty"`
 	EmailUpdateEmailTemplateId           string                 `json:"emailUpdateEmailTemplateId,omitempty"`
 	EmailVerifiedEmailTemplateId         string                 `json:"emailVerifiedEmailTemplateId,omitempty"`
 	ForgotPasswordEmailTemplateId        string                 `json:"forgotPasswordEmailTemplateId,omitempty"`
 	Host                                 string                 `json:"host,omitempty"`
+	ImplicitEmailVerificationAllowed     bool                   `json:"implicitEmailVerificationAllowed"`
 	LoginIdInUseOnCreateEmailTemplateId  string                 `json:"loginIdInUseOnCreateEmailTemplateId,omitempty"`
 	LoginIdInUseOnUpdateEmailTemplateId  string                 `json:"loginIdInUseOnUpdateEmailTemplateId,omitempty"`
 	LoginNewDeviceEmailTemplateId        string                 `json:"loginNewDeviceEmailTemplateId,omitempty"`
@@ -987,6 +990,14 @@ type EmailConfiguration struct {
 	VerificationStrategy                 VerificationStrategy   `json:"verificationStrategy,omitempty"`
 	VerifyEmail                          bool                   `json:"verifyEmail"`
 	VerifyEmailWhenChanged               bool                   `json:"verifyEmailWhenChanged"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type EmailHeader struct {
+	Name  string `json:"name,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type EmailPlus struct {
@@ -1350,8 +1361,9 @@ type EpicGamesIdentityProvider struct {
  * @author Brian Pontarelli
  */
 type Error struct {
-	Code    string `json:"code,omitempty"`
-	Message string `json:"message,omitempty"`
+	Code    string                 `json:"code,omitempty"`
+	Data    map[string]interface{} `json:"data,omitempty"`
+	Message string                 `json:"message,omitempty"`
 }
 
 /**
@@ -2113,6 +2125,14 @@ type IdentityProviderDetails struct {
 /**
  * @author Daniel DeGroff
  */
+type IdentityProviderLimitUserLinkingPolicy struct {
+	Enableable
+	MaximumLinks int `json:"maximumLinks,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type IdentityProviderLink struct {
 	Data                   map[string]interface{} `json:"data,omitempty"`
 	DisplayName            string                 `json:"displayName,omitempty"`
@@ -2247,6 +2267,14 @@ type IdentityProviderStartLoginResponse struct {
 
 func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type IdentityProviderTenantConfiguration struct {
+	Data               map[string]interface{}                 `json:"data,omitempty"`
+	LimitUserLinkCount IdentityProviderLimitUserLinkingPolicy `json:"limitUserLinkCount,omitempty"`
 }
 
 /**
@@ -3543,14 +3571,16 @@ func (b *PasswordValidationRulesResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type PendingIdPLink struct {
-	DisplayName            string               `json:"displayName,omitempty"`
-	Email                  string               `json:"email,omitempty"`
-	IdentityProviderId     string               `json:"identityProviderId,omitempty"`
-	IdentityProviderName   string               `json:"identityProviderName,omitempty"`
-	IdentityProviderType   IdentityProviderType `json:"identityProviderType,omitempty"`
-	IdentityProviderUserId string               `json:"identityProviderUserId,omitempty"`
-	User                   User                 `json:"user,omitempty"`
-	Username               string               `json:"username,omitempty"`
+	DisplayName                         string                              `json:"displayName,omitempty"`
+	Email                               string                              `json:"email,omitempty"`
+	IdentityProviderId                  string                              `json:"identityProviderId,omitempty"`
+	IdentityProviderLinks               []IdentityProviderLink              `json:"identityProviderLinks,omitempty"`
+	IdentityProviderName                string                              `json:"identityProviderName,omitempty"`
+	IdentityProviderTenantConfiguration IdentityProviderTenantConfiguration `json:"identityProviderTenantConfiguration,omitempty"`
+	IdentityProviderType                IdentityProviderType                `json:"identityProviderType,omitempty"`
+	IdentityProviderUserId              string                              `json:"identityProviderUserId,omitempty"`
+	User                                User                                `json:"user,omitempty"`
+	Username                            string                              `json:"username,omitempty"`
 }
 
 /**
