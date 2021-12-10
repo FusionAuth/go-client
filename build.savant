@@ -27,7 +27,7 @@ project(group: "io.fusionauth", name: "go-client", version: "1.32.0", licenses: 
   }
 
   publishWorkflow {
-    subversion(repository: "https://external.svn.fusionauth.io")
+    subversion(repository: "https://external.svn.fusionauth.io", username: global.internalRepositoryUsername, password: global.internalRepositoryPassword)
   }
 }
 
