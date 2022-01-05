@@ -7,6 +7,7 @@ Use this client to access the FusionAuth APIs in your Go application. For additi
 - [@medhir](https://github.com/medhir) Thank you for the initial commit and initial implementation of the Go client!
 - [@markschmid](https://github.com/markschmid) Thank you for your PRs, feedback and suggestions! 
 - [@MCBrandenburg](https://github.com/MCBrandenburg) Thank you for the feedback and PRs!
+- [@matthewhartstonge](https://github.com/matthewhartstonge) Thank you for the PR!
 - The FusionAuth team - couldn't have done it without you!
 
 ## Installation
@@ -106,6 +107,36 @@ func main() {
     fmt.Print(len(tenantResponse.Tenants))
 }
 ```
+
+## Testing source builds
+
+If you are modifying the go client and want to test it locally, follow these steps:
+
+go to directory where you have go code checked out.
+
+```
+mkdir test2
+cd test2
+go mod init example.com/test/fusionauth
+go mod tidy
+vi test.go # put in your test code, in the main package
+```
+
+Then edit `go.mod` and add these lines at the bottom:
+
+```
+require (
+        github.com/FusionAuth/go-client v1.0.0
+)
+
+replace (
+        github.com/FusionAuth/go-client v1.0.0 => ../go-client
+)
+```
+
+Then you can run it: `go run test.go # or go build`
+
+HT https://levelup.gitconnected.com/import-and-use-local-packages-in-your-go-application-885c35e5624 for these.
 
 ## Questions and support
 
