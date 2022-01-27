@@ -696,11 +696,12 @@ const (
  */
 type ChangePasswordRequest struct {
 	BaseEventRequest
-	ApplicationId   string `json:"applicationId,omitempty"`
-	CurrentPassword string `json:"currentPassword,omitempty"`
-	LoginId         string `json:"loginId,omitempty"`
-	Password        string `json:"password,omitempty"`
-	RefreshToken    string `json:"refreshToken,omitempty"`
+	ApplicationId    string `json:"applicationId,omitempty"`
+	ChangePasswordId string `json:"changePasswordId,omitempty"`
+	CurrentPassword  string `json:"currentPassword,omitempty"`
+	LoginId          string `json:"loginId,omitempty"`
+	Password         string `json:"password,omitempty"`
+	RefreshToken     string `json:"refreshToken,omitempty"`
 }
 
 /**
@@ -5068,6 +5069,7 @@ type TwoFactorStartRequest struct {
 	Code          string                 `json:"code,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
+	UserId        string                 `json:"userId,omitempty"`
 }
 
 /**
