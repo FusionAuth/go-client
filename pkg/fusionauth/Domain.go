@@ -3141,6 +3141,7 @@ type LoginResponse struct {
 	State                      map[string]interface{}   `json:"state,omitempty"`
 	ThreatsDetected            []AuthenticationThreats  `json:"threatsDetected,omitempty"`
 	Token                      string                   `json:"token,omitempty"`
+	TokenExpirationInstant     int64                    `json:"tokenExpirationInstant,omitempty"`
 	TwoFactorId                string                   `json:"twoFactorId,omitempty"`
 	TwoFactorTrustId           string                   `json:"twoFactorTrustId,omitempty"`
 	User                       User                     `json:"user,omitempty"`
@@ -4132,6 +4133,7 @@ type RegistrationResponse struct {
 	Registration               UserRegistration `json:"registration,omitempty"`
 	RegistrationVerificationId string           `json:"registrationVerificationId,omitempty"`
 	Token                      string           `json:"token,omitempty"`
+	TokenExpirationInstant     int64            `json:"tokenExpirationInstant,omitempty"`
 	User                       User             `json:"user,omitempty"`
 }
 
@@ -5800,6 +5802,7 @@ type UserResponse struct {
 	EmailVerificationId         string            `json:"emailVerificationId,omitempty"`
 	RegistrationVerificationIds map[string]string `json:"registrationVerificationIds,omitempty"`
 	Token                       string            `json:"token,omitempty"`
+	TokenExpirationInstant      int64             `json:"tokenExpirationInstant,omitempty"`
 	User                        User              `json:"user,omitempty"`
 }
 
