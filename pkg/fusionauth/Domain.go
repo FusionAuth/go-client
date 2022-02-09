@@ -4124,7 +4124,7 @@ type RegistrationRequest struct {
 	SendSetPasswordEmail         bool             `json:"sendSetPasswordEmail"`
 	SkipRegistrationVerification bool             `json:"skipRegistrationVerification"`
 	SkipVerification             bool             `json:"skipVerification"`
-	User                         User             `json:"user,omitempty"`
+	User                         *User            `json:"user,omitempty"`
 }
 
 /**
