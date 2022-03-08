@@ -2854,16 +2854,20 @@ type KickstartSuccessEvent struct {
 	InstanceId string `json:"instanceId,omitempty"`
 }
 
-// TODO : Future : This shouldn't be enableable
+/**
+ * A JavaScript lambda function that is executed during certain events inside FusionAuth.
+ *
+ * @author Brian Pontarelli
+ */
 type Lambda struct {
-	Enableable
-	Body              string     `json:"body,omitempty"`
-	Debug             bool       `json:"debug"`
-	Id                string     `json:"id,omitempty"`
-	InsertInstant     int64      `json:"insertInstant,omitempty"`
-	LastUpdateInstant int64      `json:"lastUpdateInstant,omitempty"`
-	Name              string     `json:"name,omitempty"`
-	Type              LambdaType `json:"type,omitempty"`
+	Body              string           `json:"body,omitempty"`
+	Debug             bool             `json:"debug"`
+	EngineType        LambdaEngineType `json:"engineType,omitempty"`
+	Id                string           `json:"id,omitempty"`
+	InsertInstant     int64            `json:"insertInstant,omitempty"`
+	LastUpdateInstant int64            `json:"lastUpdateInstant,omitempty"`
+	Name              string           `json:"name,omitempty"`
+	Type              LambdaType       `json:"type,omitempty"`
 }
 
 type LambdaConfiguration struct {
@@ -2879,6 +2883,20 @@ type ConnectorLambdaConfiguration struct {
 type ProviderLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
 }
+
+/**
+ * @author Daniel DeGroff
+ */
+type LambdaEngineType string
+
+func (e LambdaEngineType) String() string {
+	return string(e)
+}
+
+const (
+	LambdaEngineType_GraalJS LambdaEngineType = "GraalJS"
+	LambdaEngineType_Nashorn LambdaEngineType = "Nashorn"
+)
 
 /**
  * Lambda API request object.
@@ -3939,6 +3957,7 @@ func (b *ReactorResponse) SetStatus(status int) {
  */
 type ReactorStatus struct {
 	AdvancedIdentityProviders         ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
+	AdvancedLambdas                   ReactorFeatureStatus `json:"advancedLambdas,omitempty"`
 	AdvancedMultiFactorAuthentication ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
 	AdvancedRegistration              ReactorFeatureStatus `json:"advancedRegistration,omitempty"`
 	ApplicationThemes                 ReactorFeatureStatus `json:"applicationThemes,omitempty"`

@@ -245,6 +245,13 @@ func Test_KeyUseImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_LambdaEngineTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = LambdaEngineType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("LambdaEngineType does not implement stringer interface\n")
+	}
+}
+
 func Test_LambdaTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = LambdaType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
