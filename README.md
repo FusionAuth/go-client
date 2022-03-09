@@ -142,7 +142,7 @@ HT https://levelup.gitconnected.com/import-and-use-local-packages-in-your-go-app
 
 If you have a question or support issue regarding this client library, we'd love to hear from you.
 
-If you have a paid edition with support included, please [open a ticket in your account portal](https://account.fusionauth.io/account/support/). Learn more about [paid editions here](https://fusionauth.io/pricing/).
+If you have a paid edition with support included, please [open a ticket in your account portal](https://account.fusionauth.io/account/support/). Learn more about [paid editions here](https://fusionauth.io/pricing).
 
 Otherwise, please [post your question in the community forum](https://fusionauth.io/community/forum/).
 
