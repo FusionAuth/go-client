@@ -1380,7 +1380,7 @@ type EntityTypeSearchRequest struct {
 }
 
 /**
- * Search request for entity types.
+ * Search response for entity types.
  *
  * @author Brian Pontarelli
  */
@@ -2145,7 +2145,43 @@ type GroupMember struct {
 	GroupId       string                 `json:"groupId,omitempty"`
 	Id            string                 `json:"id,omitempty"`
 	InsertInstant int64                  `json:"insertInstant,omitempty"`
+	User          User                   `json:"user,omitempty"`
 	UserId        string                 `json:"userId,omitempty"`
+}
+
+/**
+ * Search criteria for Group Members
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberSearchCriteria struct {
+	BaseSearchCriteria
+	GroupId string `json:"groupId,omitempty"`
+	UserId  string `json:"userId,omitempty"`
+}
+
+/**
+ * Search request for Group Members.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberSearchRequest struct {
+	Search GroupMemberSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search response for Group Members
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberSearchResponse struct {
+	BaseHTTPResponse
+	Members []GroupMember `json:"members,omitempty"`
+	Total   int64         `json:"total,omitempty"`
+}
+
+func (b *GroupMemberSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -2934,25 +2970,29 @@ func (e LambdaType) String() string {
 }
 
 const (
-	LambdaType_JWTPopulate                  LambdaType = "JWTPopulate"
-	LambdaType_OpenIDReconcile              LambdaType = "OpenIDReconcile"
-	LambdaType_SAMLv2Reconcile              LambdaType = "SAMLv2Reconcile"
-	LambdaType_SAMLv2Populate               LambdaType = "SAMLv2Populate"
-	LambdaType_AppleReconcile               LambdaType = "AppleReconcile"
-	LambdaType_ExternalJWTReconcile         LambdaType = "ExternalJWTReconcile"
-	LambdaType_FacebookReconcile            LambdaType = "FacebookReconcile"
-	LambdaType_GoogleReconcile              LambdaType = "GoogleReconcile"
-	LambdaType_HYPRReconcile                LambdaType = "HYPRReconcile"
-	LambdaType_TwitterReconcile             LambdaType = "TwitterReconcile"
-	LambdaType_LDAPConnectorReconcile       LambdaType = "LDAPConnectorReconcile"
-	LambdaType_LinkedInReconcile            LambdaType = "LinkedInReconcile"
-	LambdaType_EpicGamesReconcile           LambdaType = "EpicGamesReconcile"
-	LambdaType_NintendoReconcile            LambdaType = "NintendoReconcile"
-	LambdaType_SonyPSNReconcile             LambdaType = "SonyPSNReconcile"
-	LambdaType_SteamReconcile               LambdaType = "SteamReconcile"
-	LambdaType_TwitchReconcile              LambdaType = "TwitchReconcile"
-	LambdaType_XboxReconcile                LambdaType = "XboxReconcile"
-	LambdaType_ClientCredentialsJWTPopulate LambdaType = "ClientCredentialsJWTPopulate"
+	LambdaType_JWTPopulate                      LambdaType = "JWTPopulate"
+	LambdaType_OpenIDReconcile                  LambdaType = "OpenIDReconcile"
+	LambdaType_SAMLv2Reconcile                  LambdaType = "SAMLv2Reconcile"
+	LambdaType_SAMLv2Populate                   LambdaType = "SAMLv2Populate"
+	LambdaType_AppleReconcile                   LambdaType = "AppleReconcile"
+	LambdaType_ExternalJWTReconcile             LambdaType = "ExternalJWTReconcile"
+	LambdaType_FacebookReconcile                LambdaType = "FacebookReconcile"
+	LambdaType_GoogleReconcile                  LambdaType = "GoogleReconcile"
+	LambdaType_HYPRReconcile                    LambdaType = "HYPRReconcile"
+	LambdaType_TwitterReconcile                 LambdaType = "TwitterReconcile"
+	LambdaType_LDAPConnectorReconcile           LambdaType = "LDAPConnectorReconcile"
+	LambdaType_LinkedInReconcile                LambdaType = "LinkedInReconcile"
+	LambdaType_EpicGamesReconcile               LambdaType = "EpicGamesReconcile"
+	LambdaType_NintendoReconcile                LambdaType = "NintendoReconcile"
+	LambdaType_SonyPSNReconcile                 LambdaType = "SonyPSNReconcile"
+	LambdaType_SteamReconcile                   LambdaType = "SteamReconcile"
+	LambdaType_TwitchReconcile                  LambdaType = "TwitchReconcile"
+	LambdaType_XboxReconcile                    LambdaType = "XboxReconcile"
+	LambdaType_ClientCredentialsJWTPopulate     LambdaType = "ClientCredentialsJWTPopulate"
+	LambdaType_SCIMServerGroupRequestConverter  LambdaType = "SCIMServerGroupRequestConverter"
+	LambdaType_SCIMServerGroupResponseConverter LambdaType = "SCIMServerGroupResponseConverter"
+	LambdaType_SCIMServerUserRequestConverter   LambdaType = "SCIMServerUserRequestConverter"
+	LambdaType_SCIMServerUserResponseConverter  LambdaType = "SCIMServerUserResponseConverter"
 )
 
 /**
@@ -3965,6 +4005,7 @@ type ReactorStatus struct {
 	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
 	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
 	Licensed                          bool                 `json:"licensed"`
+	ScimServer                        ReactorFeatureStatus `json:"scimServer,omitempty"`
 	ThreatDetection                   ReactorFeatureStatus `json:"threatDetection,omitempty"`
 }
 
@@ -4552,6 +4593,7 @@ type SystemConfiguration struct {
 	LastUpdateInstant        int64                    `json:"lastUpdateInstant,omitempty"`
 	LoginRecordConfiguration LoginRecordConfiguration `json:"loginRecordConfiguration,omitempty"`
 	ReportTimezone           string                   `json:"reportTimezone,omitempty"`
+	State                    map[string]string        `json:"state,omitempty"`
 	UiConfiguration          UIConfiguration          `json:"uiConfiguration,omitempty"`
 }
 
@@ -4647,6 +4689,7 @@ type Tenant struct {
 	InsertInstant                     int64                             `json:"insertInstant,omitempty"`
 	Issuer                            string                            `json:"issuer,omitempty"`
 	JwtConfiguration                  JWTConfiguration                  `json:"jwtConfiguration,omitempty"`
+	LambdaConfiguration               TenantLambdaConfiguration         `json:"lambdaConfiguration,omitempty"`
 	LastUpdateInstant                 int64                             `json:"lastUpdateInstant,omitempty"`
 	LoginConfiguration                TenantLoginConfiguration          `json:"loginConfiguration,omitempty"`
 	LogoutURL                         string                            `json:"logoutURL,omitempty"`
@@ -4659,6 +4702,7 @@ type Tenant struct {
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
 	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
+	ScimServerConfiguration           TenantSCIMServerConfiguration     `json:"scimServerConfiguration,omitempty"`
 	SsoConfiguration                  TenantSSOConfiguration            `json:"ssoConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
@@ -4705,6 +4749,18 @@ type TenantDeleteRequest struct {
  */
 type TenantFormConfiguration struct {
 	AdminUserFormId string `json:"adminUserFormId,omitempty"`
+}
+
+/**
+ * @author Rob Davis
+ */
+type TenantLambdaConfiguration struct {
+	ScimEnterpriseUserRequestConverterId  string `json:"scimEnterpriseUserRequestConverterId,omitempty"`
+	ScimEnterpriseUserResponseConverterId string `json:"scimEnterpriseUserResponseConverterId,omitempty"`
+	ScimGroupRequestConverterId           string `json:"scimGroupRequestConverterId,omitempty"`
+	ScimGroupResponseConverterId          string `json:"scimGroupResponseConverterId,omitempty"`
+	ScimUserRequestConverterId            string `json:"scimUserRequestConverterId,omitempty"`
+	ScimUserResponseConverterId           string `json:"scimUserResponseConverterId,omitempty"`
 }
 
 /**
@@ -4766,6 +4822,16 @@ type TenantResponse struct {
 
 func (b *TenantResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Rob Davis
+ */
+type TenantSCIMServerConfiguration struct {
+	Enableable
+	ClientEntityTypeId string                 `json:"clientEntityTypeId,omitempty"`
+	Schemas            map[string]interface{} `json:"schemas,omitempty"`
+	ServerEntityTypeId string                 `json:"serverEntityTypeId,omitempty"`
 }
 
 /**

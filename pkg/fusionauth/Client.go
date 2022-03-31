@@ -2978,7 +2978,7 @@ func (c *FusionAuthClient) RetrieveAction(actionId string) (*ActionResponse, *Er
 }
 
 // RetrieveActions
-// Retrieves all of the actions for the user with the given Id. This will return all time based actions that are active,
+// Retrieves all the actions for the user with the given Id. This will return all time based actions that are active,
 // and inactive as well as non-time based actions.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveActions(userId string) (*ActionResponse, *Errors, error) {
@@ -2997,7 +2997,7 @@ func (c *FusionAuthClient) RetrieveActions(userId string) (*ActionResponse, *Err
 }
 
 // RetrieveActionsPreventingLogin
-// Retrieves all of the actions for the user with the given Id that are currently preventing the User from logging in.
+// Retrieves all the actions for the user with the given Id that are currently preventing the User from logging in.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveActionsPreventingLogin(userId string) (*ActionResponse, *Errors, error) {
 	var resp ActionResponse
@@ -3016,7 +3016,7 @@ func (c *FusionAuthClient) RetrieveActionsPreventingLogin(userId string) (*Actio
 }
 
 // RetrieveActiveActions
-// Retrieves all of the actions for the user with the given Id that are currently active.
+// Retrieves all the actions for the user with the given Id that are currently active.
 // An active action means one that is time based and has not been canceled, and has not ended.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveActiveActions(userId string) (*ActionResponse, *Errors, error) {
@@ -3050,7 +3050,7 @@ func (c *FusionAuthClient) RetrieveApplication(applicationId string) (*Applicati
 }
 
 // RetrieveApplications
-// Retrieves all of the applications.
+// Retrieves all the applications.
 func (c *FusionAuthClient) RetrieveApplications() (*ApplicationResponse, error) {
 	var resp ApplicationResponse
 
@@ -3094,7 +3094,7 @@ func (c *FusionAuthClient) RetrieveConnector(connectorId string) (*ConnectorResp
 }
 
 // RetrieveConnectors
-// Retrieves all of the connectors.
+// Retrieves all the connectors.
 func (c *FusionAuthClient) RetrieveConnectors() (*ConnectorResponse, error) {
 	var resp ConnectorResponse
 
@@ -3120,7 +3120,7 @@ func (c *FusionAuthClient) RetrieveConsent(consentId string) (*ConsentResponse, 
 }
 
 // RetrieveConsents
-// Retrieves all of the consent.
+// Retrieves all the consent.
 func (c *FusionAuthClient) RetrieveConsents() (*ConsentResponse, error) {
 	var resp ConsentResponse
 
@@ -3189,7 +3189,7 @@ func (c *FusionAuthClient) RetrieveEmailTemplatePreview(request PreviewRequest) 
 }
 
 // RetrieveEmailTemplates
-// Retrieves all of the email templates.
+// Retrieves all the email templates.
 func (c *FusionAuthClient) RetrieveEmailTemplates() (*EmailTemplateResponse, error) {
 	var resp EmailTemplateResponse
 
@@ -3260,7 +3260,7 @@ func (c *FusionAuthClient) RetrieveEntityType(entityTypeId string) (*EntityTypeR
 }
 
 // RetrieveEntityTypes
-// Retrieves all of the Entity Types.
+// Retrieves all the Entity Types.
 func (c *FusionAuthClient) RetrieveEntityTypes() (*EntityTypeResponse, *Errors, error) {
 	var resp EntityTypeResponse
 	var errors Errors
@@ -3294,7 +3294,7 @@ func (c *FusionAuthClient) RetrieveEventLog(eventLogId int) (*EventLogResponse, 
 }
 
 // RetrieveFamilies
-// Retrieves all of the families that a user belongs to.
+// Retrieves all the families that a user belongs to.
 //   string userId The User's id
 func (c *FusionAuthClient) RetrieveFamilies(userId string) (*FamilyResponse, error) {
 	var resp FamilyResponse
@@ -3308,7 +3308,7 @@ func (c *FusionAuthClient) RetrieveFamilies(userId string) (*FamilyResponse, err
 }
 
 // RetrieveFamilyMembersByFamilyId
-// Retrieves all of the members of a family by the unique Family Id.
+// Retrieves all the members of a family by the unique Family Id.
 //   string familyId The unique Id of the Family.
 func (c *FusionAuthClient) RetrieveFamilyMembersByFamilyId(familyId string) (*FamilyResponse, error) {
 	var resp FamilyResponse
@@ -3350,7 +3350,7 @@ func (c *FusionAuthClient) RetrieveFormField(fieldId string) (*FormFieldResponse
 }
 
 // RetrieveFormFields
-// Retrieves all of the forms fields
+// Retrieves all the forms fields
 func (c *FusionAuthClient) RetrieveFormFields() (*FormFieldResponse, error) {
 	var resp FormFieldResponse
 
@@ -3362,7 +3362,7 @@ func (c *FusionAuthClient) RetrieveFormFields() (*FormFieldResponse, error) {
 }
 
 // RetrieveForms
-// Retrieves all of the forms.
+// Retrieves all the forms.
 func (c *FusionAuthClient) RetrieveForms() (*FormResponse, error) {
 	var resp FormResponse
 
@@ -3392,7 +3392,7 @@ func (c *FusionAuthClient) RetrieveGroup(groupId string) (*GroupResponse, *Error
 }
 
 // RetrieveGroups
-// Retrieves all of the groups.
+// Retrieves all the groups.
 func (c *FusionAuthClient) RetrieveGroups() (*GroupResponse, error) {
 	var resp GroupResponse
 
@@ -3438,7 +3438,7 @@ func (c *FusionAuthClient) RetrieveIdentityProviderByType(_type IdentityProvider
 }
 
 // RetrieveInactiveActions
-// Retrieves all of the actions for the user with the given Id that are currently inactive.
+// Retrieves all the actions for the user with the given Id that are currently inactive.
 // An inactive action means one that is time based and has been canceled or has expired, or is not time based.
 //   string userId The Id of the user to fetch the actions for.
 func (c *FusionAuthClient) RetrieveInactiveActions(userId string) (*ActionResponse, *Errors, error) {
@@ -3458,7 +3458,7 @@ func (c *FusionAuthClient) RetrieveInactiveActions(userId string) (*ActionRespon
 }
 
 // RetrieveInactiveApplications
-// Retrieves all of the applications that are currently inactive.
+// Retrieves all the applications that are currently inactive.
 func (c *FusionAuthClient) RetrieveInactiveApplications() (*ApplicationResponse, error) {
 	var resp ApplicationResponse
 
@@ -3471,7 +3471,7 @@ func (c *FusionAuthClient) RetrieveInactiveApplications() (*ApplicationResponse,
 }
 
 // RetrieveInactiveUserActions
-// Retrieves all of the user actions that are currently inactive.
+// Retrieves all the user actions that are currently inactive.
 func (c *FusionAuthClient) RetrieveInactiveUserActions() (*UserActionResponse, error) {
 	var resp UserActionResponse
 
@@ -3566,7 +3566,7 @@ func (c *FusionAuthClient) RetrieveKey(keyId string) (*KeyResponse, *Errors, err
 }
 
 // RetrieveKeys
-// Retrieves all of the keys.
+// Retrieves all the keys.
 func (c *FusionAuthClient) RetrieveKeys() (*KeyResponse, error) {
 	var resp KeyResponse
 
@@ -3596,7 +3596,7 @@ func (c *FusionAuthClient) RetrieveLambda(lambdaId string) (*LambdaResponse, *Er
 }
 
 // RetrieveLambdas
-// Retrieves all of the lambdas.
+// Retrieves all the lambdas.
 func (c *FusionAuthClient) RetrieveLambdas() (*LambdaResponse, error) {
 	var resp LambdaResponse
 
@@ -3608,7 +3608,7 @@ func (c *FusionAuthClient) RetrieveLambdas() (*LambdaResponse, error) {
 }
 
 // RetrieveLambdasByType
-// Retrieves all of the lambdas for the provided type.
+// Retrieves all the lambdas for the provided type.
 //   LambdaType _type The type of the lambda to return.
 func (c *FusionAuthClient) RetrieveLambdasByType(_type LambdaType) (*LambdaResponse, error) {
 	var resp LambdaResponse
@@ -3677,7 +3677,7 @@ func (c *FusionAuthClient) RetrieveMessageTemplatePreview(request PreviewMessage
 }
 
 // RetrieveMessageTemplates
-// Retrieves all of the message templates.
+// Retrieves all the message templates.
 func (c *FusionAuthClient) RetrieveMessageTemplates() (*MessageTemplateResponse, error) {
 	var resp MessageTemplateResponse
 
@@ -3703,7 +3703,7 @@ func (c *FusionAuthClient) RetrieveMessenger(messengerId string) (*MessengerResp
 }
 
 // RetrieveMessengers
-// Retrieves all of the messengers.
+// Retrieves all the messengers.
 func (c *FusionAuthClient) RetrieveMessengers() (*MessengerResponse, error) {
 	var resp MessengerResponse
 
@@ -3800,7 +3800,7 @@ func (c *FusionAuthClient) RetrievePasswordValidationRulesWithTenantId(tenantId 
 }
 
 // RetrievePendingChildren
-// Retrieves all of the children for the given parent email address.
+// Retrieves all the children for the given parent email address.
 //   string parentEmail The email of the parent.
 func (c *FusionAuthClient) RetrievePendingChildren(parentEmail string) (*PendingResponse, *Errors, error) {
 	var resp PendingResponse
@@ -3988,7 +3988,7 @@ func (c *FusionAuthClient) RetrieveTenant(tenantId string) (*TenantResponse, *Er
 }
 
 // RetrieveTenants
-// Retrieves all of the tenants.
+// Retrieves all the tenants.
 func (c *FusionAuthClient) RetrieveTenants() (*TenantResponse, error) {
 	var resp TenantResponse
 
@@ -4018,7 +4018,7 @@ func (c *FusionAuthClient) RetrieveTheme(themeId string) (*ThemeResponse, *Error
 }
 
 // RetrieveThemes
-// Retrieves all of the themes.
+// Retrieves all the themes.
 func (c *FusionAuthClient) RetrieveThemes() (*ThemeResponse, error) {
 	var resp ThemeResponse
 
@@ -4121,7 +4121,7 @@ func (c *FusionAuthClient) RetrieveUserActionReasons() (*UserActionReasonRespons
 }
 
 // RetrieveUserActions
-// Retrieves all of the user actions.
+// Retrieves all the user actions.
 func (c *FusionAuthClient) RetrieveUserActions() (*UserActionResponse, error) {
 	var resp UserActionResponse
 
@@ -4225,7 +4225,7 @@ func (c *FusionAuthClient) RetrieveUserByVerificationId(verificationId string) (
 }
 
 // RetrieveUserComments
-// Retrieves all of the comments for the user with the given Id.
+// Retrieves all the comments for the user with the given Id.
 //   string userId The Id of the user.
 func (c *FusionAuthClient) RetrieveUserComments(userId string) (*UserCommentResponse, *Errors, error) {
 	var resp UserCommentResponse
@@ -4257,7 +4257,7 @@ func (c *FusionAuthClient) RetrieveUserConsent(userConsentId string) (*UserConse
 }
 
 // RetrieveUserConsents
-// Retrieves all of the consents for a User.
+// Retrieves all the consents for a User.
 //   string userId The User's Id
 func (c *FusionAuthClient) RetrieveUserConsents(userId string) (*UserConsentResponse, error) {
 	var resp UserConsentResponse
@@ -4635,15 +4635,19 @@ func (c *FusionAuthClient) RevokeUserConsent(userConsentId string) (*BaseHTTPRes
 // SearchAuditLogs
 // Searches the audit logs with the specified criteria and pagination.
 //   AuditLogSearchRequest request The search criteria and pagination information.
-func (c *FusionAuthClient) SearchAuditLogs(request AuditLogSearchRequest) (*AuditLogSearchResponse, error) {
+func (c *FusionAuthClient) SearchAuditLogs(request AuditLogSearchRequest) (*AuditLogSearchResponse, *Errors, error) {
 	var resp AuditLogSearchResponse
+	var errors Errors
 
-	err := c.Start(&resp, nil).
-		WithUri("/api/system/audit-log/search").
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/audit-log/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
-	return &resp, err
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchEntities
@@ -4703,57 +4707,91 @@ func (c *FusionAuthClient) SearchEntityGrants(request EntityGrantSearchRequest) 
 // SearchEntityTypes
 // Searches the entity types with the specified criteria and pagination.
 //   EntityTypeSearchRequest request The search criteria and pagination information.
-func (c *FusionAuthClient) SearchEntityTypes(request EntityTypeSearchRequest) (*EntityTypeSearchResponse, error) {
+func (c *FusionAuthClient) SearchEntityTypes(request EntityTypeSearchRequest) (*EntityTypeSearchResponse, *Errors, error) {
 	var resp EntityTypeSearchResponse
+	var errors Errors
 
-	err := c.Start(&resp, nil).
-		WithUri("/api/entity/type/search").
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
-	return &resp, err
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchEventLogs
 // Searches the event logs with the specified criteria and pagination.
 //   EventLogSearchRequest request The search criteria and pagination information.
-func (c *FusionAuthClient) SearchEventLogs(request EventLogSearchRequest) (*EventLogSearchResponse, error) {
+func (c *FusionAuthClient) SearchEventLogs(request EventLogSearchRequest) (*EventLogSearchResponse, *Errors, error) {
 	var resp EventLogSearchResponse
+	var errors Errors
 
-	err := c.Start(&resp, nil).
-		WithUri("/api/system/event-log/search").
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/event-log/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
-	return &resp, err
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchGroupMembers
+// Searches group members with the specified criteria and pagination.
+//   GroupMemberSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchGroupMembers(request GroupMemberSearchRequest) (*GroupMemberSearchResponse, *Errors, error) {
+	var resp GroupMemberSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group/member/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchIPAccessControlLists
 // Searches the IP Access Control Lists with the specified criteria and pagination.
 //   IPAccessControlListSearchRequest request The search criteria and pagination information.
-func (c *FusionAuthClient) SearchIPAccessControlLists(request IPAccessControlListSearchRequest) (*IPAccessControlListSearchResponse, error) {
+func (c *FusionAuthClient) SearchIPAccessControlLists(request IPAccessControlListSearchRequest) (*IPAccessControlListSearchResponse, *Errors, error) {
 	var resp IPAccessControlListSearchResponse
+	var errors Errors
 
-	err := c.Start(&resp, nil).
-		WithUri("/api/ip-acl/search").
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/ip-acl/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
-	return &resp, err
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchLoginRecords
 // Searches the login records with the specified criteria and pagination.
 //   LoginRecordSearchRequest request The search criteria and pagination information.
-func (c *FusionAuthClient) SearchLoginRecords(request LoginRecordSearchRequest) (*LoginRecordSearchResponse, error) {
+func (c *FusionAuthClient) SearchLoginRecords(request LoginRecordSearchRequest) (*LoginRecordSearchResponse, *Errors, error) {
 	var resp LoginRecordSearchResponse
+	var errors Errors
 
-	err := c.Start(&resp, nil).
-		WithUri("/api/system/login-record/search").
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/login-record/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
-	return &resp, err
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
 }
 
 // SearchUsers
@@ -5285,6 +5323,24 @@ func (c *FusionAuthClient) UpdateGroup(groupId string, request GroupRequest) (*G
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/group").
 		WithUriSegment(groupId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateGroupMembers
+// Creates a member in a group.
+//   MemberRequest request The request object that contains all the information used to create the group member(s).
+func (c *FusionAuthClient) UpdateGroupMembers(request MemberRequest) (*MemberResponse, *Errors, error) {
+	var resp MemberResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group/member").
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do()
