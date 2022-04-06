@@ -3458,10 +3458,13 @@ type MultiFactorSMSTemplate struct {
  */
 type NintendoApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientId     string `json:"client_id,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Scope        string `json:"scope,omitempty"`
+	ButtonText    string `json:"buttonText,omitempty"`
+	ClientId      string `json:"client_id,omitempty"`
+	ClientSecret  string `json:"client_secret,omitempty"`
+	EmailClaim    string `json:"emailClaim,omitempty"`
+	Scope         string `json:"scope,omitempty"`
+	UniqueIdClaim string `json:"uniqueIdClaim,omitempty"`
+	UsernameClaim string `json:"usernameClaim,omitempty"`
 }
 
 /**
@@ -3471,10 +3474,13 @@ type NintendoApplicationConfiguration struct {
  */
 type NintendoIdentityProvider struct {
 	BaseIdentityProvider
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientId     string `json:"client_id,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Scope        string `json:"scope,omitempty"`
+	ButtonText    string `json:"buttonText,omitempty"`
+	ClientId      string `json:"client_id,omitempty"`
+	ClientSecret  string `json:"client_secret,omitempty"`
+	EmailClaim    string `json:"emailClaim,omitempty"`
+	Scope         string `json:"scope,omitempty"`
+	UniqueIdClaim string `json:"uniqueIdClaim,omitempty"`
+	UsernameClaim string `json:"usernameClaim,omitempty"`
 }
 
 /**
@@ -3523,12 +3529,13 @@ func (b *OAuthConfigurationResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type OAuthError struct {
-	ChangePasswordId string           `json:"change_password_id,omitempty"`
-	Error            OAuthErrorType   `json:"error,omitempty"`
-	ErrorDescription string           `json:"error_description,omitempty"`
-	ErrorReason      OAuthErrorReason `json:"error_reason,omitempty"`
-	ErrorUri         string           `json:"error_uri,omitempty"`
-	TwoFactorId      string           `json:"two_factor_id,omitempty"`
+	ChangePasswordId string            `json:"change_password_id,omitempty"`
+	Error            OAuthErrorType    `json:"error,omitempty"`
+	ErrorDescription string            `json:"error_description,omitempty"`
+	ErrorReason      OAuthErrorReason  `json:"error_reason,omitempty"`
+	ErrorUri         string            `json:"error_uri,omitempty"`
+	TwoFactorId      string            `json:"two_factor_id,omitempty"`
+	TwoFactorMethods []TwoFactorMethod `json:"two_factor_methods,omitempty"`
 }
 
 type OAuthErrorReason string
@@ -4004,6 +4011,7 @@ type ReactorStatus struct {
 	BreachedPasswordDetection         ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
 	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
 	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
+	Expiration                        string               `json:"expiration,omitempty"`
 	Licensed                          bool                 `json:"licensed"`
 	ScimServer                        ReactorFeatureStatus `json:"scimServer,omitempty"`
 	ThreatDetection                   ReactorFeatureStatus `json:"threatDetection,omitempty"`
