@@ -704,6 +704,7 @@ type ChangePasswordRequest struct {
 	RefreshToken     string `json:"refreshToken,omitempty"`
 	TrustChallenge   string `json:"trustChallenge,omitempty"`
 	TrustToken       string `json:"trustToken,omitempty"`
+	TenantId         string `json:"tenantId,omitempty"`
 }
 
 /**
