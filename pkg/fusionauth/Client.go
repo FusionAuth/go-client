@@ -293,7 +293,7 @@ func (c *FusionAuthClient) ChangePasswordByIdentity(request ChangePasswordReques
 
 	restClient := c.Start(&resp, &errors)
 	if request.TenantId != "" {
-		restClient.WithHeader("X-FusionAuth-TenantId", c.TenantId)
+		restClient.WithHeader("X-FusionAuth-TenantId", request.TenantId)
 	}
 	err := restClient.WithUri("/api/user/change-password").
 		WithJSONBody(request).
