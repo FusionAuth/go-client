@@ -1604,6 +1604,8 @@ const (
 	EventType_JWTRefresh                     EventType = "jwt.refresh"
 	EventType_AuditLogCreate                 EventType = "audit-log.create"
 	EventType_EventLogCreate                 EventType = "event-log.create"
+	EventType_GroupMembershipAdd             EventType = "group.membership.add"
+	EventType_GroupMembershipRemove          EventType = "group.membership.remove"
 	EventType_KickstartSuccess               EventType = "kickstart.success"
 	EventType_UserAction                     EventType = "user.action"
 	EventType_UserBulkCreate                 EventType = "user.bulk.create"
@@ -2184,6 +2186,28 @@ type GroupMemberSearchResponse struct {
 
 func (b *GroupMemberSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Model the Group Membership Add event
+ *
+ * @author Spencer Witt
+ */
+type GroupMembershipAddEvent struct {
+	BaseEvent
+	Group        Group         `json:"group,omitempty"`
+	GroupMembers []GroupMember `json:"groupMembers,omitempty"`
+}
+
+/**
+ * Model the Group Membership Remove event
+ *
+ * @author Spencer Witt
+ */
+type GroupMembershipRemoveEvent struct {
+	BaseEvent
+	Group        Group         `json:"group,omitempty"`
+	GroupMembers []GroupMember `json:"groupMembers,omitempty"`
 }
 
 /**
@@ -3289,6 +3313,7 @@ type MemberDeleteRequest struct {
  * @author Daniel DeGroff
  */
 type MemberRequest struct {
+	BaseEventRequest
 	Members map[string][]GroupMember `json:"members,omitempty"`
 }
 
