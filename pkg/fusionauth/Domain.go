@@ -6043,6 +6043,7 @@ const (
 type VerifyEmailRequest struct {
 	BaseEventRequest
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	UserId         string `json:"userId,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }
 

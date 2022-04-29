@@ -5770,6 +5770,26 @@ func (c *FusionAuthClient) VerifyEmailAddress(request VerifyEmailRequest) (*Base
 	return &resp, &errors, err
 }
 
+// VerifyEmailAddressByUserId
+// Administratively verify a user's email address. Use this method to bypass email verification for the user.
+//
+// The request body will contain the userId to be verified. An API key is required when sending the userId in the request body.
+//   VerifyEmailRequest request The request that contains the userId to verify.
+func (c *FusionAuthClient) VerifyEmailAddressByUserId(request VerifyEmailRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/verify-email").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // VerifyRegistration
 // Confirms an application registration. The Id given is usually from an email sent to the user.
 //   string verificationId The registration verification Id sent to the user.
