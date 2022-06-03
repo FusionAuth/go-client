@@ -1022,6 +1022,7 @@ type EmailAddress struct {
  */
 type EmailConfiguration struct {
 	AdditionalHeaders                    []EmailHeader          `json:"additionalHeaders,omitempty"`
+	Debug                                bool                   `json:"debug"`
 	DefaultFromEmail                     string                 `json:"defaultFromEmail,omitempty"`
 	DefaultFromName                      string                 `json:"defaultFromName,omitempty"`
 	EmailUpdateEmailTemplateId           string                 `json:"emailUpdateEmailTemplateId,omitempty"`
