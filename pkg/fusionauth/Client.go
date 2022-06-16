@@ -3862,15 +3862,15 @@ func (c *FusionAuthClient) RetrieveRecentLogins(offset int, limit int) (*RecentL
 }
 
 // RetrieveRefreshTokenById
-// Retrieves a single refresh token by unique Id. This is not the same thing as the string value of the refresh token, if you have that, you already have what you need..
-//   string userId The Id of the user.
-func (c *FusionAuthClient) RetrieveRefreshTokenById(userId string) (*RefreshTokenResponse, *Errors, error) {
+// Retrieves a single refresh token by unique Id. This is not the same thing as the string value of the refresh token. If you have that, you already have what you need.
+//   string tokenId The Id of the token.
+func (c *FusionAuthClient) RetrieveRefreshTokenById(tokenId string) (*RefreshTokenResponse, *Errors, error) {
 	var resp RefreshTokenResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/jwt/refresh").
-		WithUriSegment(userId).
+		WithUriSegment(tokenId).
 		WithMethod(http.MethodGet).
 		Do()
 	if restClient.ErrorRef == nil {
