@@ -386,6 +386,42 @@ func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPR
 	return &resp, &errors, err
 }
 
+// CompleteWebAuthnLogin
+// Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge
+//   WebAuthnLoginRequest request An object containing data necessary for completing the authentication ceremony
+func (c *FusionAuthClient) CompleteWebAuthnLogin(request WebAuthnLoginRequest) (*LoginResponse, *Errors, error) {
+	var resp LoginResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/login").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CompleteWebAuthnRegistration
+// Complete a WebAuthn registration ceremony by validating the client request and saving the new credential
+//   WebAuthnCompleteRequest request An object containing data necessary for completing the registration ceremony
+func (c *FusionAuthClient) CompleteWebAuthnRegistration(request WebAuthnCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/complete").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateAPIKey
 // Creates an API key. You can optionally specify a unique Id for the key, if not provided one will be generated.
 // an API key can only be created with equal or lesser authority. An API key cannot create another API key unless it is granted
@@ -5059,6 +5095,42 @@ func (c *FusionAuthClient) StartTwoFactorLogin(request TwoFactorStartRequest) (*
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/two-factor/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// StartWebAuthnLogin
+// Start a WebAuthn authentication ceremony by generating a new challenge for the user
+//   WebAuthnStartRequest request An object containing data necessary for starting the authentication ceremony
+func (c *FusionAuthClient) StartWebAuthnLogin(request WebAuthnStartRequest) (*PublicKeyCredentialRequestOptions, *Errors, error) {
+	var resp PublicKeyCredentialRequestOptions
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// StartWebAuthnRegistration
+// Start a WebAuthn registration ceremony by generating a new challenge for the user
+//   WebAuthnStartRequest request An object containing data necessary for starting the registration ceremony
+func (c *FusionAuthClient) StartWebAuthnRegistration(request WebAuthnStartRequest) (*PublicKeyCredentialCreationOptions, *Errors, error) {
+	var resp PublicKeyCredentialCreationOptions
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/register").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()

@@ -339,6 +339,24 @@ type Attachment struct {
 }
 
 /**
+ * Used to communicate whether and how authenticator attestation should be delivered to the Relying Party
+ *
+ * @author Spencer Witt
+ */
+type AttestationConveyancePreference string
+
+func (e AttestationConveyancePreference) String() string {
+	return string(e)
+}
+
+const (
+	AttestationConveyancePreference_None       AttestationConveyancePreference = "none"
+	AttestationConveyancePreference_Indirect   AttestationConveyancePreference = "indirect"
+	AttestationConveyancePreference_Direct     AttestationConveyancePreference = "direct"
+	AttestationConveyancePreference_Enterprise AttestationConveyancePreference = "enterprise"
+)
+
+/**
  * An audit log.
  *
  * @author Brian Pontarelli
@@ -452,6 +470,39 @@ type AuthenticationTokenConfiguration struct {
 }
 
 /**
+ * Describes the <a href="https://www.w3.org/TR/webauthn-2/#authenticator-attachment-modality">authenticator attachment modality</a>.
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorAttachment string
+
+func (e AuthenticatorAttachment) String() string {
+	return string(e)
+}
+
+const (
+	AuthenticatorAttachment_PLATFORM      AuthenticatorAttachment = "PLATFORM"
+	AuthenticatorAttachment_CROSSPLATFORM AuthenticatorAttachment = "CROSS_PLATFORM"
+)
+
+/**
+ * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorAuthenticationResponse struct {
+	BaseHTTPResponse
+	AuthenticatorData string `json:"authenticatorData,omitempty"`
+	ClientDataJSON    string `json:"clientDataJSON,omitempty"`
+	Signature         string `json:"signature,omitempty"`
+	UserHandle        string `json:"userHandle,omitempty"`
+}
+
+func (b *AuthenticatorAuthenticationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Daniel DeGroff
  */
 type AuthenticatorConfiguration struct {
@@ -459,6 +510,53 @@ type AuthenticatorConfiguration struct {
 	CodeLength int           `json:"codeLength,omitempty"`
 	TimeStep   int           `json:"timeStep,omitempty"`
 }
+
+/**
+ * The <i>authenticator's</i> response for the registration ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorRegistrationResponse struct {
+	BaseHTTPResponse
+	AttestationObject string `json:"attestationObject,omitempty"`
+	ClientDataJSON    string `json:"clientDataJSON,omitempty"`
+}
+
+func (b *AuthenticatorRegistrationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Used by the Relying Party to specify their requirements for authenticator attributes. Fields use the deprecated "resident key" terminology to refer
+ * to client-side discoverable credentials to maintain backwards compatibility with WebAuthn Level 1.
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorSelectionCriteria struct {
+	AuthenticatorAttachment AuthenticatorAttachment     `json:"authenticatorAttachment,omitempty"`
+	RequireResidentKey      bool                        `json:"requireResidentKey"`
+	ResidentKey             ResidentKeyRequirement      `json:"residentKey,omitempty"`
+	UserVerification        UserVerificationRequirement `json:"userVerification,omitempty"`
+}
+
+/**
+ * Describes how the authenticator communicates with a client. This can be used by the client as a hint to locate the
+ * appropriate authenticator.
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorTransport string
+
+func (e AuthenticatorTransport) String() string {
+	return string(e)
+}
+
+const (
+	AuthenticatorTransport_Usb      AuthenticatorTransport = "usb"
+	AuthenticatorTransport_Nfc      AuthenticatorTransport = "nfc"
+	AuthenticatorTransport_Ble      AuthenticatorTransport = "ble"
+	AuthenticatorTransport_Internal AuthenticatorTransport = "internal"
+)
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseConnectorConfiguration struct {
@@ -897,6 +995,67 @@ type CORSConfiguration struct {
 	ExposedHeaders           []string     `json:"exposedHeaders,omitempty"`
 	PreflightMaxAgeInSeconds int          `json:"preflightMaxAgeInSeconds,omitempty"`
 }
+
+/**
+ * A number identifying a cryptographic algorithm. Values should be registered with the <a
+ * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
+ *
+ * @author Spencer Witt
+ */
+type CoseAlgorithmIdentifier string
+
+func (e CoseAlgorithmIdentifier) String() string {
+	return string(e)
+}
+
+const (
+	CoseAlgorithmIdentifier_ES256 CoseAlgorithmIdentifier = "ES256"
+	CoseAlgorithmIdentifier_ES384 CoseAlgorithmIdentifier = "ES384"
+	CoseAlgorithmIdentifier_ES512 CoseAlgorithmIdentifier = "ES512"
+	CoseAlgorithmIdentifier_RS256 CoseAlgorithmIdentifier = "RS256"
+	CoseAlgorithmIdentifier_RS384 CoseAlgorithmIdentifier = "RS384"
+	CoseAlgorithmIdentifier_RS512 CoseAlgorithmIdentifier = "RS512"
+	CoseAlgorithmIdentifier_PS256 CoseAlgorithmIdentifier = "PS256"
+	CoseAlgorithmIdentifier_PS384 CoseAlgorithmIdentifier = "PS384"
+	CoseAlgorithmIdentifier_PS512 CoseAlgorithmIdentifier = "PS512"
+)
+
+/**
+ * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
+ *
+ * @author Spencer Witt
+ */
+type CoseEllipticCurve string
+
+func (e CoseEllipticCurve) String() string {
+	return string(e)
+}
+
+const (
+	CoseEllipticCurve_Reserved  CoseEllipticCurve = "Reserved"
+	CoseEllipticCurve_P256      CoseEllipticCurve = "P256"
+	CoseEllipticCurve_P384      CoseEllipticCurve = "P384"
+	CoseEllipticCurve_P521      CoseEllipticCurve = "P521"
+	CoseEllipticCurve_X25519    CoseEllipticCurve = "X25519"
+	CoseEllipticCurve_X448      CoseEllipticCurve = "X448"
+	CoseEllipticCurve_Ed25519   CoseEllipticCurve = "Ed25519"
+	CoseEllipticCurve_Ed448     CoseEllipticCurve = "Ed448"
+	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
+)
+
+type CoseKeyType string
+
+func (e CoseKeyType) String() string {
+	return string(e)
+}
+
+const (
+	CoseKeyType_Reserved  CoseKeyType = "Reserved"
+	CoseKeyType_OKP       CoseKeyType = "OKP"
+	CoseKeyType_EC2       CoseKeyType = "EC2"
+	CoseKeyType_RSA       CoseKeyType = "RSA"
+	CoseKeyType_Symmetric CoseKeyType = "Symmetric"
+)
 
 /**
  * @author Brian Pontarelli
@@ -3891,6 +4050,126 @@ const (
 )
 
 /**
+ * Request to authenticate with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyAuthenticationRequest struct {
+	ClientExtensionResults map[string]string                   `json:"clientExtensionResults,omitempty"`
+	Id                     string                              `json:"id,omitempty"`
+	Response               AuthenticatorAuthenticationResponse `json:"response,omitempty"`
+	RpId                   string                              `json:"rpId,omitempty"`
+	Type                   string                              `json:"type,omitempty"`
+}
+
+/**
+ * Allows the Relying Party to specify desired attributes of a new credential.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialCreationOptions struct {
+	Attestation            AttestationConveyancePreference `json:"attestation,omitempty"`
+	AuthenticatorSelection AuthenticatorSelectionCriteria  `json:"authenticatorSelection,omitempty"`
+	Challenge              string                          `json:"challenge,omitempty"`
+	ExcludeCredentials     []PublicKeyCredentialDescriptor `json:"excludeCredentials,omitempty"`
+	PubKeyCredParams       []PublicKeyCredentialParameters `json:"pubKeyCredParams,omitempty"`
+	Rp                     PublicKeyCredentialRpEntity     `json:"rp,omitempty"`
+	Timeout                int64                           `json:"timeout,omitempty"`
+	User                   PublicKeyCredentialUserEntity   `json:"user,omitempty"`
+}
+
+/**
+ * Contains attributes for the Relying Party to refer to an existing public key credential as an input parameter.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialDescriptor struct {
+	Id         string                   `json:"id,omitempty"`
+	Transports []AuthenticatorTransport `json:"transports,omitempty"`
+	Type       PublicKeyCredentialType  `json:"type,omitempty"`
+}
+
+/**
+ * Describes a user account or WebAuthn Relying Party associated with a public key credential
+ */
+type PublicKeyCredentialEntity struct {
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Supply information on credential type and algorithm to the <i>authenticator</i>.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialParameters struct {
+	Alg  CoseAlgorithmIdentifier `json:"alg,omitempty"`
+	Type PublicKeyCredentialType `json:"type,omitempty"`
+}
+
+/**
+ * Provides the <i>authenticator</i> with the data it needs to generate an assertion.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialRequestOptions struct {
+	AllowCredentials []PublicKeyCredentialDescriptor `json:"allowCredentials,omitempty"`
+	Challenge        string                          `json:"challenge,omitempty"`
+	RpId             string                          `json:"rpId,omitempty"`
+	Timeout          int64                           `json:"timeout,omitempty"`
+	UserVerification UserVerificationRequirement     `json:"userVerification,omitempty"`
+}
+
+/**
+ * Supply additional information about the Relying Party when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialRpEntity struct {
+	PublicKeyCredentialEntity
+	Id string `json:"id,omitempty"`
+}
+
+/**
+ * Defines valid credential types. This is an extension point in the WebAuthn spec. The only defined value at this time is "public-key"
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialType string
+
+func (e PublicKeyCredentialType) String() string {
+	return string(e)
+}
+
+const (
+	PublicKeyCredentialType_PUBLICKEY PublicKeyCredentialType = "PUBLIC_KEY"
+)
+
+/**
+ * Supply additional information about the user account when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialUserEntity struct {
+	PublicKeyCredentialEntity
+	DisplayName string `json:"displayName,omitempty"`
+	Id          string `json:"id,omitempty"`
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyRegistrationRequest struct {
+	ClientExtensionResults map[string]string                 `json:"clientExtensionResults,omitempty"`
+	Id                     string                            `json:"id,omitempty"`
+	Response               AuthenticatorRegistrationResponse `json:"response,omitempty"`
+	RpId                   string                            `json:"rpId,omitempty"`
+	Transports             []AuthenticatorTransport          `json:"transports,omitempty"`
+	Type                   string                            `json:"type,omitempty"`
+}
+
+/**
  * JWT Public Key Response Object
  *
  * @author Daniel DeGroff
@@ -4277,6 +4556,24 @@ type Requirable struct {
  */
 type RequiresCORSConfiguration struct {
 }
+
+/**
+ * Describes the Relying Party's requirements for <a href="https://www.w3.org/TR/webauthn-2/#client-side-discoverable-credential">client-side
+ * discoverable credentials</a> (formerly known as "resident keys")
+ *
+ * @author Spencer Witt
+ */
+type ResidentKeyRequirement string
+
+func (e ResidentKeyRequirement) String() string {
+	return string(e)
+}
+
+const (
+	ResidentKeyRequirement_Discouraged ResidentKeyRequirement = "Discouraged"
+	ResidentKeyRequirement_Preferred   ResidentKeyRequirement = "Preferred"
+	ResidentKeyRequirement_Required    ResidentKeyRequirement = "Required"
+)
 
 type SAMLLogoutBehavior string
 
@@ -6012,6 +6309,24 @@ type UserUpdateEvent struct {
 }
 
 /**
+ * Used to express whether the Relying Party requires <a href="https://www.w3.org/TR/webauthn-2/#user-verification">user verification</a> for the
+ * current operation.
+ *
+ * @author Spencer Witt
+ */
+type UserVerificationRequirement string
+
+func (e UserVerificationRequirement) String() string {
+	return string(e)
+}
+
+const (
+	UserVerificationRequirement_Required    UserVerificationRequirement = "required"
+	UserVerificationRequirement_Preferred   UserVerificationRequirement = "preferred"
+	UserVerificationRequirement_Discouraged UserVerificationRequirement = "discouraged"
+)
+
+/**
  * @author Daniel DeGroff
  */
 type ValidateResponse struct {
@@ -6092,6 +6407,58 @@ type VersionResponse struct {
 
 func (b *VersionResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony for a new credential
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCompleteRequest struct {
+	Credential PublicKeyRegistrationRequest `json:"credential,omitempty"`
+	LoginId    string                       `json:"loginId,omitempty"`
+	Origin     string                       `json:"origin,omitempty"`
+	RpId       string                       `json:"rpId,omitempty"`
+}
+
+/**
+ * A User's WebAuthnCredential. Contains all data required to complete WebAuthn authentication ceremonies.
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCredential struct {
+	Alg            CoseAlgorithmIdentifier  `json:"alg,omitempty"`
+	CredentialId   string                   `json:"credentialId,omitempty"`
+	Data           map[string]interface{}   `json:"data,omitempty"`
+	Id             string                   `json:"id,omitempty"`
+	InsertInstant  int64                    `json:"insertInstant,omitempty"`
+	LastUseInstant int64                    `json:"lastUseInstant,omitempty"`
+	PublicKey      string                   `json:"publicKey,omitempty"`
+	SignCount      int                      `json:"signCount,omitempty"`
+	TenantId       string                   `json:"tenantId,omitempty"`
+	Transports     []AuthenticatorTransport `json:"transports,omitempty"`
+	UserId         string                   `json:"userId,omitempty"`
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnLoginRequest struct {
+	BaseLoginRequest
+	Credential PublicKeyAuthenticationRequest `json:"credential,omitempty"`
+	Origin     string                         `json:"origin,omitempty"`
+	RpId       string                         `json:"rpId,omitempty"`
+}
+
+/**
+ * @author Spencer Witt
+ */
+type WebAuthnStartRequest struct {
+	ApplicationId string                 `json:"applicationId,omitempty"`
+	LoginId       string                 `json:"loginId,omitempty"`
+	State         map[string]interface{} `json:"state,omitempty"`
 }
 
 /**
