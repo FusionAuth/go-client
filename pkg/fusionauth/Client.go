@@ -1725,6 +1725,24 @@ func (c *FusionAuthClient) DeleteUsersByQuery(request UserDeleteRequest) (*UserD
 	return &resp, &errors, err
 }
 
+// DeleteWebAuthnCredential
+// Deletes the WebAuthn credential for the given Id.
+//   string id The Id of the WebAuthn credential to delete.
+func (c *FusionAuthClient) DeleteWebAuthnCredential(id string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn").
+		WithUriSegment(id).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteWebhook
 // Deletes the webhook for the given Id.
 //   string webhookId The Id of the webhook to delete.
