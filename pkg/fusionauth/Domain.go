@@ -6443,6 +6443,21 @@ type WebAuthnCredential struct {
 }
 
 /**
+ * WebAuthn Credential API response
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCredentialResponse struct {
+	BaseHTTPResponse
+	WebauthnCredential  WebAuthnCredential   `json:"webauthnCredential,omitempty"`
+	WebauthnCredentials []WebAuthnCredential `json:"webauthnCredentials,omitempty"`
+}
+
+func (b *WebAuthnCredentialResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * Request to complete the WebAuthn registration ceremony
  *
  * @author Spencer Witt

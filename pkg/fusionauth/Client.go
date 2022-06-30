@@ -4472,6 +4472,24 @@ func (c *FusionAuthClient) RetrieveVersion() (*VersionResponse, *Errors, error) 
 	return &resp, &errors, err
 }
 
+// RetrieveWebAuthnCredential
+// Retrieves the WebAuthn credential for the given Id.
+//   string id The Id of the WebAuthn credential.
+func (c *FusionAuthClient) RetrieveWebAuthnCredential(id string) (*WebAuthnCredentialResponse, *Errors, error) {
+	var resp WebAuthnCredentialResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn").
+		WithUriSegment(id).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveWebhook
 // Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
 //   string webhookId (Optional) The Id of the webhook.
