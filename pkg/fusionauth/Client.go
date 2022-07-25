@@ -5143,8 +5143,8 @@ func (c *FusionAuthClient) StartTwoFactorLogin(request TwoFactorStartRequest) (*
 // StartWebAuthnLogin
 // Start a WebAuthn authentication ceremony by generating a new challenge for the user
 //   WebAuthnStartRequest request An object containing data necessary for starting the authentication ceremony
-func (c *FusionAuthClient) StartWebAuthnLogin(request WebAuthnStartRequest) (*PublicKeyCredentialRequestOptions, *Errors, error) {
-	var resp PublicKeyCredentialRequestOptions
+func (c *FusionAuthClient) StartWebAuthnLogin(request WebAuthnStartRequest) (*WebAuthnStartResponse, *Errors, error) {
+	var resp WebAuthnStartResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
@@ -5160,9 +5160,9 @@ func (c *FusionAuthClient) StartWebAuthnLogin(request WebAuthnStartRequest) (*Pu
 
 // StartWebAuthnRegistration
 // Start a WebAuthn registration ceremony by generating a new challenge for the user
-//   WebAuthnStartRequest request An object containing data necessary for starting the registration ceremony
-func (c *FusionAuthClient) StartWebAuthnRegistration(request WebAuthnStartRequest) (*PublicKeyCredentialCreationOptions, *Errors, error) {
-	var resp PublicKeyCredentialCreationOptions
+//   WebAuthnRegisterRequest request An object containing data necessary for starting the registration ceremony
+func (c *FusionAuthClient) StartWebAuthnRegistration(request WebAuthnRegisterRequest) (*WebAuthnRegisterResponse, *Errors, error) {
+	var resp WebAuthnRegisterResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
