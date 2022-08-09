@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2022, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -43,13 +43,14 @@ func (b *BaseHTTPResponse) SetStatus(status int) {
  */
 type AccessToken struct {
 	BaseHTTPResponse
-	AccessToken  string    `json:"access_token,omitempty"`
-	ExpiresIn    int       `json:"expires_in,omitempty"`
-	IdToken      string    `json:"id_token,omitempty"`
-	RefreshToken string    `json:"refresh_token,omitempty"`
-	Scope        string    `json:"scope,omitempty"`
-	TokenType    TokenType `json:"token_type,omitempty"`
-	UserId       string    `json:"userId,omitempty"`
+	AccessToken    string    `json:"access_token,omitempty"`
+	ExpiresIn      int       `json:"expires_in,omitempty"`
+	IdToken        string    `json:"id_token,omitempty"`
+	RefreshToken   string    `json:"refresh_token,omitempty"`
+	RefreshTokenId string    `json:"refresh_token_id,omitempty"`
+	Scope          string    `json:"scope,omitempty"`
+	TokenType      TokenType `json:"token_type,omitempty"`
+	UserId         string    `json:"userId,omitempty"`
 }
 
 func (b *AccessToken) SetStatus(status int) {
@@ -113,6 +114,9 @@ const (
 	Algorithm_HS256 Algorithm = "HS256"
 	Algorithm_HS384 Algorithm = "HS384"
 	Algorithm_HS512 Algorithm = "HS512"
+	Algorithm_PS256 Algorithm = "PS256"
+	Algorithm_PS384 Algorithm = "PS384"
+	Algorithm_PS512 Algorithm = "PS512"
 	Algorithm_RS256 Algorithm = "RS256"
 	Algorithm_RS384 Algorithm = "RS384"
 	Algorithm_RS512 Algorithm = "RS512"
@@ -196,34 +200,35 @@ type AppleIdentityProvider struct {
  * @author Seth Musselman
  */
 type Application struct {
-	AccessControlConfiguration       ApplicationAccessControlConfiguration `json:"accessControlConfiguration,omitempty"`
-	Active                           bool                                  `json:"active"`
-	AuthenticationTokenConfiguration AuthenticationTokenConfiguration      `json:"authenticationTokenConfiguration,omitempty"`
-	CleanSpeakConfiguration          CleanSpeakConfiguration               `json:"cleanSpeakConfiguration,omitempty"`
-	Data                             map[string]interface{}                `json:"data,omitempty"`
-	EmailConfiguration               ApplicationEmailConfiguration         `json:"emailConfiguration,omitempty"`
-	FormConfiguration                ApplicationFormConfiguration          `json:"formConfiguration,omitempty"`
-	Id                               string                                `json:"id,omitempty"`
-	InsertInstant                    int64                                 `json:"insertInstant,omitempty"`
-	JwtConfiguration                 JWTConfiguration                      `json:"jwtConfiguration,omitempty"`
-	LambdaConfiguration              LambdaConfiguration                   `json:"lambdaConfiguration,omitempty"`
-	LastUpdateInstant                int64                                 `json:"lastUpdateInstant,omitempty"`
-	LoginConfiguration               LoginConfiguration                    `json:"loginConfiguration,omitempty"`
-	MultiFactorConfiguration         ApplicationMultiFactorConfiguration   `json:"multiFactorConfiguration,omitempty"`
-	Name                             string                                `json:"name,omitempty"`
-	OauthConfiguration               OAuth2Configuration                   `json:"oauthConfiguration,omitempty"`
-	PasswordlessConfiguration        PasswordlessConfiguration             `json:"passwordlessConfiguration,omitempty"`
-	RegistrationConfiguration        RegistrationConfiguration             `json:"registrationConfiguration,omitempty"`
-	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy   `json:"registrationDeletePolicy,omitempty"`
-	Roles                            []ApplicationRole                     `json:"roles,omitempty"`
-	Samlv2Configuration              SAMLv2Configuration                   `json:"samlv2Configuration,omitempty"`
-	State                            ObjectState                           `json:"state,omitempty"`
-	TenantId                         string                                `json:"tenantId,omitempty"`
-	ThemeId                          string                                `json:"themeId,omitempty"`
-	Unverified                       RegistrationUnverifiedOptions         `json:"unverified,omitempty"`
-	VerificationEmailTemplateId      string                                `json:"verificationEmailTemplateId,omitempty"`
-	VerificationStrategy             VerificationStrategy                  `json:"verificationStrategy,omitempty"`
-	VerifyRegistration               bool                                  `json:"verifyRegistration"`
+	AccessControlConfiguration       ApplicationAccessControlConfiguration      `json:"accessControlConfiguration,omitempty"`
+	Active                           bool                                       `json:"active"`
+	AuthenticationTokenConfiguration AuthenticationTokenConfiguration           `json:"authenticationTokenConfiguration,omitempty"`
+	CleanSpeakConfiguration          CleanSpeakConfiguration                    `json:"cleanSpeakConfiguration,omitempty"`
+	Data                             map[string]interface{}                     `json:"data,omitempty"`
+	EmailConfiguration               ApplicationEmailConfiguration              `json:"emailConfiguration,omitempty"`
+	ExternalIdentifierConfiguration  ApplicationExternalIdentifierConfiguration `json:"externalIdentifierConfiguration,omitempty"`
+	FormConfiguration                ApplicationFormConfiguration               `json:"formConfiguration,omitempty"`
+	Id                               string                                     `json:"id,omitempty"`
+	InsertInstant                    int64                                      `json:"insertInstant,omitempty"`
+	JwtConfiguration                 JWTConfiguration                           `json:"jwtConfiguration,omitempty"`
+	LambdaConfiguration              LambdaConfiguration                        `json:"lambdaConfiguration,omitempty"`
+	LastUpdateInstant                int64                                      `json:"lastUpdateInstant,omitempty"`
+	LoginConfiguration               LoginConfiguration                         `json:"loginConfiguration,omitempty"`
+	MultiFactorConfiguration         ApplicationMultiFactorConfiguration        `json:"multiFactorConfiguration,omitempty"`
+	Name                             string                                     `json:"name,omitempty"`
+	OauthConfiguration               OAuth2Configuration                        `json:"oauthConfiguration,omitempty"`
+	PasswordlessConfiguration        PasswordlessConfiguration                  `json:"passwordlessConfiguration,omitempty"`
+	RegistrationConfiguration        RegistrationConfiguration                  `json:"registrationConfiguration,omitempty"`
+	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy        `json:"registrationDeletePolicy,omitempty"`
+	Roles                            []ApplicationRole                          `json:"roles,omitempty"`
+	Samlv2Configuration              SAMLv2Configuration                        `json:"samlv2Configuration,omitempty"`
+	State                            ObjectState                                `json:"state,omitempty"`
+	TenantId                         string                                     `json:"tenantId,omitempty"`
+	ThemeId                          string                                     `json:"themeId,omitempty"`
+	Unverified                       RegistrationUnverifiedOptions              `json:"unverified,omitempty"`
+	VerificationEmailTemplateId      string                                     `json:"verificationEmailTemplateId,omitempty"`
+	VerificationStrategy             VerificationStrategy                       `json:"verificationStrategy,omitempty"`
+	VerifyRegistration               bool                                       `json:"verifyRegistration"`
 }
 
 /**
@@ -253,6 +258,13 @@ type ApplicationEmailConfiguration struct {
 /**
  * @author Daniel DeGroff
  */
+type ApplicationExternalIdentifierConfiguration struct {
+	TwoFactorTrustIdTimeToLiveInSeconds int `json:"twoFactorTrustIdTimeToLiveInSeconds,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 type ApplicationFormConfiguration struct {
 	AdminRegistrationFormId string `json:"adminRegistrationFormId,omitempty"`
 	SelfServiceFormId       string `json:"selfServiceFormId,omitempty"`
@@ -262,9 +274,26 @@ type ApplicationFormConfiguration struct {
  * @author Daniel DeGroff
  */
 type ApplicationMultiFactorConfiguration struct {
-	Email MultiFactorEmailTemplate `json:"email,omitempty"`
-	Sms   MultiFactorSMSTemplate   `json:"sms,omitempty"`
+	Email       MultiFactorEmailTemplate          `json:"email,omitempty"`
+	LoginPolicy MultiFactorLoginPolicy            `json:"loginPolicy,omitempty"`
+	Sms         MultiFactorSMSTemplate            `json:"sms,omitempty"`
+	TrustPolicy ApplicationMultiFactorTrustPolicy `json:"trustPolicy,omitempty"`
 }
+
+/**
+ * @author Daniel DeGroff
+ */
+type ApplicationMultiFactorTrustPolicy string
+
+func (e ApplicationMultiFactorTrustPolicy) String() string {
+	return string(e)
+}
+
+const (
+	ApplicationMultiFactorTrustPolicy_Any  ApplicationMultiFactorTrustPolicy = "Any"
+	ApplicationMultiFactorTrustPolicy_This ApplicationMultiFactorTrustPolicy = "This"
+	ApplicationMultiFactorTrustPolicy_None ApplicationMultiFactorTrustPolicy = "None"
+)
 
 /**
  * A Application-level policy for deleting Users.
@@ -284,7 +313,6 @@ type ApplicationRequest struct {
 	BaseEventRequest
 	Application Application     `json:"application,omitempty"`
 	Role        ApplicationRole `json:"role,omitempty"`
-	WebhookIds  []string        `json:"webhookIds,omitempty"`
 }
 
 /**
@@ -489,11 +517,12 @@ type BaseElasticSearchCriteria struct {
  * @author Brian Pontarelli
  */
 type BaseEvent struct {
-	CreateInstant int64     `json:"createInstant,omitempty"`
-	Id            string    `json:"id,omitempty"`
-	Info          EventInfo `json:"info,omitempty"`
-	TenantId      string    `json:"tenantId,omitempty"`
-	Type          EventType `json:"type,omitempty"`
+	ApplicationIds []string  `json:"applicationIds,omitempty"`
+	CreateInstant  int64     `json:"createInstant,omitempty"`
+	Id             string    `json:"id,omitempty"`
+	Info           EventInfo `json:"info,omitempty"`
+	TenantId       string    `json:"tenantId,omitempty"`
+	Type           EventType `json:"type,omitempty"`
 }
 
 /**
@@ -1022,6 +1051,7 @@ type EmailAddress struct {
  */
 type EmailConfiguration struct {
 	AdditionalHeaders                    []EmailHeader          `json:"additionalHeaders,omitempty"`
+	Debug                                bool                   `json:"debug"`
 	DefaultFromEmail                     string                 `json:"defaultFromEmail,omitempty"`
 	DefaultFromName                      string                 `json:"defaultFromName,omitempty"`
 	EmailUpdateEmailTemplateId           string                 `json:"emailUpdateEmailTemplateId,omitempty"`
@@ -2300,6 +2330,7 @@ func (e IdentityProviderLinkingStrategy) String() string {
 
 const (
 	IdentityProviderLinkingStrategy_CreatePendingLink             IdentityProviderLinkingStrategy = "CreatePendingLink"
+	IdentityProviderLinkingStrategy_Disabled                      IdentityProviderLinkingStrategy = "Disabled"
 	IdentityProviderLinkingStrategy_LinkAnonymously               IdentityProviderLinkingStrategy = "LinkAnonymously"
 	IdentityProviderLinkingStrategy_LinkByEmail                   IdentityProviderLinkingStrategy = "LinkByEmail"
 	IdentityProviderLinkingStrategy_LinkByEmailForExistingUser    IdentityProviderLinkingStrategy = "LinkByEmailForExistingUser"
@@ -2701,7 +2732,6 @@ type JWTConfiguration struct {
  */
 type JWTPublicKeyUpdateEvent struct {
 	BaseEvent
-	ApplicationIds []string `json:"applicationIds,omitempty"`
 }
 
 /**
@@ -2721,14 +2751,16 @@ type JWTRefreshEvent struct {
 /**
  * API response for refreshing a JWT with a Refresh Token.
  * <p>
- * Using a different response object from RefreshTokenResponse because the retrieve response will return an object for refreshToken, and this is a string.
+ * Using a different response object from RefreshTokenResponse because the retrieve response will return an object for refreshToken, and this is a
+ * string.
  *
  * @author Daniel DeGroff
  */
 type JWTRefreshResponse struct {
 	BaseHTTPResponse
-	RefreshToken string `json:"refreshToken,omitempty"`
-	Token        string `json:"token,omitempty"`
+	RefreshToken   string `json:"refreshToken,omitempty"`
+	RefreshTokenId string `json:"refreshTokenId,omitempty"`
+	Token          string `json:"token,omitempty"`
 }
 
 func (b *JWTRefreshResponse) SetStatus(status int) {
@@ -2745,6 +2777,7 @@ type JWTRefreshTokenRevokeEvent struct {
 	BaseEvent
 	ApplicationId                  string         `json:"applicationId,omitempty"`
 	ApplicationTimeToLiveInSeconds map[string]int `json:"applicationTimeToLiveInSeconds,omitempty"`
+	RefreshToken                   RefreshToken   `json:"refreshToken,omitempty"`
 	User                           User           `json:"user,omitempty"`
 	UserId                         string         `json:"userId,omitempty"`
 }
@@ -3094,6 +3127,16 @@ const (
 )
 
 /**
+ * Login Ping API request object.
+ *
+ * @author Daniel DeGroff
+ */
+type LoginPingRequest struct {
+	BaseLoginRequest
+	UserId string `json:"userId,omitempty"`
+}
+
+/**
  * The summary of the action that is preventing login to be returned on the login response.
  *
  * @author Daniel DeGroff
@@ -3202,6 +3245,7 @@ type LoginResponse struct {
 	Methods                    []TwoFactorMethod        `json:"methods,omitempty"`
 	PendingIdPLinkId           string                   `json:"pendingIdPLinkId,omitempty"`
 	RefreshToken               string                   `json:"refreshToken,omitempty"`
+	RefreshTokenId             string                   `json:"refreshTokenId,omitempty"`
 	RegistrationVerificationId string                   `json:"registrationVerificationId,omitempty"`
 	State                      map[string]interface{}   `json:"state,omitempty"`
 	ThreatsDetected            []AuthenticationThreats  `json:"threatsDetected,omitempty"`
@@ -3445,6 +3489,20 @@ type MultiFactorEmailMethod struct {
 type MultiFactorEmailTemplate struct {
 	TemplateId string `json:"templateId,omitempty"`
 }
+
+/**
+ * @author Daniel DeGroff
+ */
+type MultiFactorLoginPolicy string
+
+func (e MultiFactorLoginPolicy) String() string {
+	return string(e)
+}
+
+const (
+	MultiFactorLoginPolicy_Disabled MultiFactorLoginPolicy = "Disabled"
+	MultiFactorLoginPolicy_Enabled  MultiFactorLoginPolicy = "Enabled"
+)
 
 type MultiFactorSMSMethod struct {
 	Enableable
@@ -4006,18 +4064,20 @@ func (b *ReactorResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type ReactorStatus struct {
-	AdvancedIdentityProviders         ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
-	AdvancedLambdas                   ReactorFeatureStatus `json:"advancedLambdas,omitempty"`
-	AdvancedMultiFactorAuthentication ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
-	AdvancedRegistration              ReactorFeatureStatus `json:"advancedRegistration,omitempty"`
-	ApplicationThemes                 ReactorFeatureStatus `json:"applicationThemes,omitempty"`
-	BreachedPasswordDetection         ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
-	Connectors                        ReactorFeatureStatus `json:"connectors,omitempty"`
-	EntityManagement                  ReactorFeatureStatus `json:"entityManagement,omitempty"`
-	Expiration                        string               `json:"expiration,omitempty"`
-	Licensed                          bool                 `json:"licensed"`
-	ScimServer                        ReactorFeatureStatus `json:"scimServer,omitempty"`
-	ThreatDetection                   ReactorFeatureStatus `json:"threatDetection,omitempty"`
+	AdvancedIdentityProviders            ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
+	AdvancedLambdas                      ReactorFeatureStatus `json:"advancedLambdas,omitempty"`
+	AdvancedMultiFactorAuthentication    ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
+	AdvancedRegistration                 ReactorFeatureStatus `json:"advancedRegistration,omitempty"`
+	ApplicationMultiFactorAuthentication ReactorFeatureStatus `json:"applicationMultiFactorAuthentication,omitempty"`
+	ApplicationThemes                    ReactorFeatureStatus `json:"applicationThemes,omitempty"`
+	BreachedPasswordDetection            ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
+	Connectors                           ReactorFeatureStatus `json:"connectors,omitempty"`
+	EntityManagement                     ReactorFeatureStatus `json:"entityManagement,omitempty"`
+	Expiration                           string               `json:"expiration,omitempty"`
+	LicenseAttributes                    map[string]string    `json:"licenseAttributes,omitempty"`
+	Licensed                             bool                 `json:"licensed"`
+	ScimServer                           ReactorFeatureStatus `json:"scimServer,omitempty"`
+	ThreatDetection                      ReactorFeatureStatus `json:"threatDetection,omitempty"`
 }
 
 /**
@@ -4786,6 +4846,7 @@ type TenantLoginConfiguration struct {
 type TenantMultiFactorConfiguration struct {
 	Authenticator MultiFactorAuthenticatorMethod `json:"authenticator,omitempty"`
 	Email         MultiFactorEmailMethod         `json:"email,omitempty"`
+	LoginPolicy   MultiFactorLoginPolicy         `json:"loginPolicy,omitempty"`
 	Sms           MultiFactorSMSMethod           `json:"sms,omitempty"`
 }
 
@@ -4817,8 +4878,9 @@ type TenantRegistrationConfiguration struct {
  */
 type TenantRequest struct {
 	BaseEventRequest
-	SourceTenantId string `json:"sourceTenantId,omitempty"`
-	Tenant         Tenant `json:"tenant,omitempty"`
+	SourceTenantId string   `json:"sourceTenantId,omitempty"`
+	Tenant         Tenant   `json:"tenant,omitempty"`
+	WebhookIds     []string `json:"webhookIds,omitempty"`
 }
 
 /**
@@ -5186,6 +5248,25 @@ func (b *TwoFactorStartResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+type TwoFactorStatusResponse struct {
+	BaseHTTPResponse
+	Trusts           []TwoFactorTrust `json:"trusts,omitempty"`
+	TwoFactorTrustId string           `json:"twoFactorTrustId,omitempty"`
+}
+
+func (b *TwoFactorStatusResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+type TwoFactorTrust struct {
+	ApplicationId string `json:"applicationId,omitempty"`
+	Expiration    int64  `json:"expiration,omitempty"`
+	StartInstant  int64  `json:"startInstant,omitempty"`
+}
+
 type UIConfiguration struct {
 	HeaderColor   string `json:"headerColor,omitempty"`
 	LogoURL       string `json:"logoURL,omitempty"`
@@ -5292,7 +5373,6 @@ type UserActionEvent struct {
 	ActioneeUserId    string          `json:"actioneeUserId,omitempty"`
 	ActionerUserId    string          `json:"actionerUserId,omitempty"`
 	ActionId          string          `json:"actionId,omitempty"`
-	ApplicationIds    []string        `json:"applicationIds,omitempty"`
 	Comment           string          `json:"comment,omitempty"`
 	Email             Email           `json:"email,omitempty"`
 	EmailedUser       bool            `json:"emailedUser"`
@@ -6100,7 +6180,6 @@ func (b *VersionResponse) SetStatus(status int) {
  * @author Brian Pontarelli
  */
 type Webhook struct {
-	ApplicationIds             []string               `json:"applicationIds,omitempty"`
 	ConnectTimeout             int                    `json:"connectTimeout,omitempty"`
 	Data                       map[string]interface{} `json:"data,omitempty"`
 	Description                string                 `json:"description,omitempty"`
@@ -6114,6 +6193,7 @@ type Webhook struct {
 	LastUpdateInstant          int64                  `json:"lastUpdateInstant,omitempty"`
 	ReadTimeout                int                    `json:"readTimeout,omitempty"`
 	SslCertificate             string                 `json:"sslCertificate,omitempty"`
+	TenantIds                  []string               `json:"tenantIds,omitempty"`
 	Url                        string                 `json:"url,omitempty"`
 }
 

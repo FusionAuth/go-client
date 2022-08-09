@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2022, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,6 +25,13 @@ func Test_AlgorithmImplementsStringer(t *testing.T) {
 	var enum interface{} = Algorithm("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("Algorithm does not implement stringer interface\n")
+	}
+}
+
+func Test_ApplicationMultiFactorTrustPolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = ApplicationMultiFactorTrustPolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("ApplicationMultiFactorTrustPolicy does not implement stringer interface\n")
 	}
 }
 
@@ -291,6 +298,13 @@ func Test_MessengerTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = MessengerType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("MessengerType does not implement stringer interface\n")
+	}
+}
+
+func Test_MultiFactorLoginPolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = MultiFactorLoginPolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("MultiFactorLoginPolicy does not implement stringer interface\n")
 	}
 }
 
