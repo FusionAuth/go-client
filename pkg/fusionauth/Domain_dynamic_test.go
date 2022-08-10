@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2022, FusionAuth, All Rights Reserved
+* Copyright (c) 2019, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -28,6 +28,13 @@ func Test_AlgorithmImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_ApplicationMultiFactorTrustPolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = ApplicationMultiFactorTrustPolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("ApplicationMultiFactorTrustPolicy does not implement stringer interface\n")
+	}
+}
+
 func Test_AttestationConveyancePreferenceImplementsStringer(t *testing.T) {
 	var enum interface{} = AttestationConveyancePreference("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -39,20 +46,6 @@ func Test_AuthenticationThreatsImplementsStringer(t *testing.T) {
 	var enum interface{} = AuthenticationThreats("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("AuthenticationThreats does not implement stringer interface\n")
-	}
-}
-
-func Test_AuthenticatorAttachmentImplementsStringer(t *testing.T) {
-	var enum interface{} = AuthenticatorAttachment("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("AuthenticatorAttachment does not implement stringer interface\n")
-	}
-}
-
-func Test_AuthenticatorTransportImplementsStringer(t *testing.T) {
-	var enum interface{} = AuthenticatorTransport("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("AuthenticatorTransport does not implement stringer interface\n")
 	}
 }
 
@@ -130,27 +123,6 @@ func Test_ContentStatusImplementsStringer(t *testing.T) {
 	var enum interface{} = ContentStatus("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("ContentStatus does not implement stringer interface\n")
-	}
-}
-
-func Test_CoseAlgorithmIdentifierImplementsStringer(t *testing.T) {
-	var enum interface{} = CoseAlgorithmIdentifier("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("CoseAlgorithmIdentifier does not implement stringer interface\n")
-	}
-}
-
-func Test_CoseEllipticCurveImplementsStringer(t *testing.T) {
-	var enum interface{} = CoseEllipticCurve("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("CoseEllipticCurve does not implement stringer interface\n")
-	}
-}
-
-func Test_CoseKeyTypeImplementsStringer(t *testing.T) {
-	var enum interface{} = CoseKeyType("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("CoseKeyType does not implement stringer interface\n")
 	}
 }
 
@@ -364,13 +336,6 @@ func Test_ProofKeyForCodeExchangePolicyImplementsStringer(t *testing.T) {
 	}
 }
 
-func Test_PublicKeyCredentialTypeImplementsStringer(t *testing.T) {
-	var enum interface{} = PublicKeyCredentialType("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("PublicKeyCredentialType does not implement stringer interface\n")
-	}
-}
-
 func Test_RateLimitedRequestTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = RateLimitedRequestType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -403,13 +368,6 @@ func Test_RegistrationTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = RegistrationType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("RegistrationType does not implement stringer interface\n")
-	}
-}
-
-func Test_ResidentKeyRequirementImplementsStringer(t *testing.T) {
-	var enum interface{} = ResidentKeyRequirement("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("ResidentKeyRequirement does not implement stringer interface\n")
 	}
 }
 
@@ -480,13 +438,6 @@ func Test_UserStateImplementsStringer(t *testing.T) {
 	var enum interface{} = UserState("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("UserState does not implement stringer interface\n")
-	}
-}
-
-func Test_UserVerificationRequirementImplementsStringer(t *testing.T) {
-	var enum interface{} = UserVerificationRequirement("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("UserVerificationRequirement does not implement stringer interface\n")
 	}
 }
 
