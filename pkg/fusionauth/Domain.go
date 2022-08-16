@@ -6699,7 +6699,7 @@ const (
 
 type WebAuthnWorkflowConfiguration struct {
 	Enableable
-x	AuthenticatorAttachmentPreference AuthenticatorAttachmentPreference `json:"authenticatorAttachmentPreference,omitempty"`
+	AuthenticatorAttachmentPreference AuthenticatorAttachmentPreference `json:"authenticatorAttachmentPreference,omitempty"`
 	UserVerificationRequirement       UserVerificationRequirement       `json:"userVerificationRequirement,omitempty"`
 }
 
