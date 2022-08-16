@@ -5291,6 +5291,8 @@ type TenantUsernameConfiguration struct {
 type TenantWebAuthnConfiguration struct {
 	Enableable
 	ReauthenticationWorkflowConfiguration WebAuthnWorkflowConfiguration `json:"reauthenticationWorkflowConfiguration,omitempty"`
+	RpId                                  string                        `json:"rpId,omitempty"`
+	RpName                                string                        `json:"rpName,omitempty"`
 }
 
 /**
