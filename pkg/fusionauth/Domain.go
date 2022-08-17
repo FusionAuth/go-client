@@ -517,12 +517,11 @@ type BaseElasticSearchCriteria struct {
  * @author Brian Pontarelli
  */
 type BaseEvent struct {
-	ApplicationIds []string  `json:"applicationIds,omitempty"`
-	CreateInstant  int64     `json:"createInstant,omitempty"`
-	Id             string    `json:"id,omitempty"`
-	Info           EventInfo `json:"info,omitempty"`
-	TenantId       string    `json:"tenantId,omitempty"`
-	Type           EventType `json:"type,omitempty"`
+	CreateInstant int64     `json:"createInstant,omitempty"`
+	Id            string    `json:"id,omitempty"`
+	Info          EventInfo `json:"info,omitempty"`
+	TenantId      string    `json:"tenantId,omitempty"`
+	Type          EventType `json:"type,omitempty"`
 }
 
 /**
@@ -1635,6 +1634,16 @@ const (
 	EventType_AuditLogCreate                 EventType = "audit-log.create"
 	EventType_EventLogCreate                 EventType = "event-log.create"
 	EventType_KickstartSuccess               EventType = "kickstart.success"
+	EventType_GroupCreate                    EventType = "group.create"
+	EventType_GroupCreateComplete            EventType = "group.create.complete"
+	EventType_GroupDelete                    EventType = "group.delete"
+	EventType_GroupDeleteComplete            EventType = "group.delete.complete"
+	EventType_GroupMemberAdd                 EventType = "group.member.add"
+	EventType_GroupMemberAddComplete         EventType = "group.member.add.complete"
+	EventType_GroupMemberRemove              EventType = "group.member.remove"
+	EventType_GroupMemberRemoveComplete      EventType = "group.member.remove.complete"
+	EventType_GroupUpdate                    EventType = "group.update"
+	EventType_GroupUpdateComplete            EventType = "group.update.complete"
 	EventType_UserAction                     EventType = "user.action"
 	EventType_UserBulkCreate                 EventType = "user.bulk.create"
 	EventType_UserCreate                     EventType = "user.create"
@@ -2168,6 +2177,46 @@ type Group struct {
 }
 
 /**
+ * Models the Group Created Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupCreateCompleteEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupCreateEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupDeleteCompleteEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupDeleteEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
  * A User's membership into a Group
  *
  * @author Daniel DeGroff
@@ -2182,14 +2231,59 @@ type GroupMember struct {
 }
 
 /**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberAddCompleteEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberAddEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberRemoveCompleteEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberRemoveEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
  * Search criteria for Group Members
  *
  * @author Daniel DeGroff
  */
 type GroupMemberSearchCriteria struct {
 	BaseSearchCriteria
-	GroupId string `json:"groupId,omitempty"`
-	UserId  string `json:"userId,omitempty"`
+	GroupId  string `json:"groupId,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+	UserId   string `json:"userId,omitempty"`
 }
 
 /**
@@ -2239,6 +2333,28 @@ type GroupResponse struct {
 
 func (b *GroupResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupUpdateCompleteEvent struct {
+	BaseEvent
+	Group    Group `json:"group,omitempty"`
+	Original Group `json:"original,omitempty"`
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+type GroupUpdateEvent struct {
+	BaseEvent
+	Group    Group `json:"group,omitempty"`
+	Original Group `json:"original,omitempty"`
 }
 
 type HistoryItem struct {
@@ -2732,6 +2848,7 @@ type JWTConfiguration struct {
  */
 type JWTPublicKeyUpdateEvent struct {
 	BaseEvent
+	ApplicationIds []string `json:"applicationIds,omitempty"`
 }
 
 /**
@@ -2942,18 +3059,18 @@ type Lambda struct {
 	Type              LambdaType       `json:"type,omitempty"`
 }
 
+type LambdaConfiguration struct {
+	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
+	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
+	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
+}
+
 type ConnectorLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
 }
 
 type ProviderLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
-}
-
-type LambdaConfiguration struct {
-	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
-	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
-	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
 }
 
 /**
@@ -5373,6 +5490,7 @@ type UserActionEvent struct {
 	ActioneeUserId    string          `json:"actioneeUserId,omitempty"`
 	ActionerUserId    string          `json:"actionerUserId,omitempty"`
 	ActionId          string          `json:"actionId,omitempty"`
+	ApplicationIds    []string        `json:"applicationIds,omitempty"`
 	Comment           string          `json:"comment,omitempty"`
 	Email             Email           `json:"email,omitempty"`
 	EmailedUser       bool            `json:"emailedUser"`
