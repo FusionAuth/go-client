@@ -5070,7 +5070,6 @@ type Templates struct {
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
 	Oauth2WebAuthN                            string `json:"oauth2WebAuthN,omitempty"`
-	Oauth2WebAuthNComplete                    string `json:"oauth2WebAuthNComplete,omitempty"`
 	PasswordChange                            string `json:"passwordChange,omitempty"`
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
