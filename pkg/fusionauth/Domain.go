@@ -2360,6 +2360,42 @@ func (b *GroupResponse) SetStatus(status int) {
 }
 
 /**
+ * Search criteria for Groups
+ *
+ * @author Daniel DeGroff
+ */
+type GroupSearchCriteria struct {
+	BaseSearchCriteria
+	Id       string `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Search request for Groups.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupSearchRequest struct {
+	Search GroupSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search response for Groups
+ *
+ * @author Daniel DeGroff
+ */
+type GroupSearchResponse struct {
+	BaseHTTPResponse
+	Groups []Group `json:"groups,omitempty"`
+	Total  int64   `json:"total,omitempty"`
+}
+
+func (b *GroupSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * Models the Group Update Complete Event.
  *
  * @author Daniel DeGroff
@@ -3083,18 +3119,18 @@ type Lambda struct {
 	Type              LambdaType       `json:"type,omitempty"`
 }
 
+type LambdaConfiguration struct {
+	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
+	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
+	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
+}
+
 type ConnectorLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
 }
 
 type ProviderLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
-}
-
-type LambdaConfiguration struct {
-	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
-	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
-	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
 }
 
 /**
