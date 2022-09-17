@@ -2366,7 +2366,6 @@ func (b *GroupResponse) SetStatus(status int) {
  */
 type GroupSearchCriteria struct {
 	BaseSearchCriteria
-	Id       string `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
 	TenantId string `json:"tenantId,omitempty"`
 }
