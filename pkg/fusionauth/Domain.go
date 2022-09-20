@@ -620,6 +620,7 @@ const (
 	AuthenticatorTransport_Nfc      AuthenticatorTransport = "nfc"
 	AuthenticatorTransport_Ble      AuthenticatorTransport = "ble"
 	AuthenticatorTransport_Internal AuthenticatorTransport = "internal"
+	AuthenticatorTransport_Cable    AuthenticatorTransport = "cable"
 )
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
@@ -6575,11 +6576,13 @@ type WebAuthnCredential struct {
 	InsertInstant                         int64                    `json:"insertInstant,omitempty"`
 	IsDiscoverableCredential              bool                     `json:"isDiscoverableCredential"`
 	LastUseInstant                        int64                    `json:"lastUseInstant,omitempty"`
+	Name                                  string                   `json:"name,omitempty"`
 	PublicKey                             string                   `json:"publicKey,omitempty"`
 	RpId                                  string                   `json:"rpId,omitempty"`
 	SignCount                             int                      `json:"signCount,omitempty"`
 	TenantId                              string                   `json:"tenantId,omitempty"`
 	Transports                            []AuthenticatorTransport `json:"transports,omitempty"`
+	UserAgent                             string                   `json:"userAgent,omitempty"`
 	UserId                                string                   `json:"userId,omitempty"`
 }
 
@@ -6625,9 +6628,10 @@ type WebAuthnLoginRequest struct {
  * @author Spencer Witt
  */
 type WebAuthnRegisterRequest struct {
-	State    map[string]interface{} `json:"state,omitempty"`
-	UserId   string                 `json:"userId,omitempty"`
-	Workflow WebAuthnWorkflow       `json:"workflow,omitempty"`
+	CredentialName string           `json:"credentialName,omitempty"`
+	UserAgent      string           `json:"userAgent,omitempty"`
+	UserId         string           `json:"userId,omitempty"`
+	Workflow       WebAuthnWorkflow `json:"workflow,omitempty"`
 }
 
 /**
