@@ -1109,6 +1109,11 @@ const (
 	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
 )
 
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
 type CoseKeyType string
 
 func (e CoseKeyType) String() string {
@@ -6572,11 +6577,11 @@ type WebAuthnCredential struct {
 	AttestationType                       AttestationType          `json:"attestationType,omitempty"`
 	AuthenticatorSupportsUserVerification bool                     `json:"authenticatorSupportsUserVerification"`
 	CredentialId                          string                   `json:"credentialId,omitempty"`
+	DisplayName                           string                   `json:"displayName,omitempty"`
 	Id                                    string                   `json:"id,omitempty"`
 	InsertInstant                         int64                    `json:"insertInstant,omitempty"`
 	IsDiscoverableCredential              bool                     `json:"isDiscoverableCredential"`
 	LastUseInstant                        int64                    `json:"lastUseInstant,omitempty"`
-	Name                                  string                   `json:"name,omitempty"`
 	PublicKey                             string                   `json:"publicKey,omitempty"`
 	RpId                                  string                   `json:"rpId,omitempty"`
 	SignCount                             int                      `json:"signCount,omitempty"`
