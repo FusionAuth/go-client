@@ -2171,6 +2171,24 @@ func (c *FusionAuthClient) ImportUsers(request ImportRequest) (*BaseHTTPResponse
 	return &resp, &errors, err
 }
 
+// ImportWebAuthnCredential
+// Import a WebAuthn credential
+//   WebAuthnImportRequest request An object containing data necessary for importing the credential
+func (c *FusionAuthClient) ImportWebAuthnCredential(request WebAuthnImportRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/import").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // IssueJWT
 // Issue a new access token (JWT) for the requested Application after ensuring the provided JWT is valid. A valid
 // access token is properly signed and not expired.

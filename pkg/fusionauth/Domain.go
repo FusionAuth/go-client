@@ -6616,6 +6616,15 @@ type WebAuthnExtensionsClientOutputs struct {
 }
 
 /**
+ * API request to import an existing WebAuthn credential
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnImportRequest struct {
+	Credential WebAuthnCredential `json:"credential,omitempty"`
+}
+
+/**
  * Request to complete the WebAuthn registration ceremony
  *
  * @author Spencer Witt
