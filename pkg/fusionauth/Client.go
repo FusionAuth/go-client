@@ -407,8 +407,8 @@ func (c *FusionAuthClient) CompleteWebAuthnLogin(request WebAuthnLoginRequest) (
 // CompleteWebAuthnRegistration
 // Complete a WebAuthn registration ceremony by validating the client request and saving the new credential
 //   WebAuthnCompleteRequest request An object containing data necessary for completing the registration ceremony
-func (c *FusionAuthClient) CompleteWebAuthnRegistration(request WebAuthnCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
-	var resp BaseHTTPResponse
+func (c *FusionAuthClient) CompleteWebAuthnRegistration(request WebAuthnCompleteRequest) (*WebAuthnCompleteResponse, *Errors, error) {
+	var resp WebAuthnCompleteResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)

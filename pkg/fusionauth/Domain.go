@@ -6568,6 +6568,20 @@ type WebAuthnCompleteRequest struct {
 }
 
 /**
+ * API response for completing WebAuthn credential registration
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCompleteResponse struct {
+	BaseHTTPResponse
+	CredentialId string `json:"credentialId,omitempty"`
+}
+
+func (b *WebAuthnCompleteResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * A User's WebAuthnCredential. Contains all data required to complete WebAuthn authentication ceremonies.
  *
  * @author Spencer Witt
