@@ -528,8 +528,8 @@ func (e AuthenticatorAttachment) String() string {
 }
 
 const (
-	AuthenticatorAttachment_PLATFORM      AuthenticatorAttachment = "PLATFORM"
-	AuthenticatorAttachment_CROSSPLATFORM AuthenticatorAttachment = "CROSS_PLATFORM"
+	AuthenticatorAttachment_Platform      AuthenticatorAttachment = "platform"
+	AuthenticatorAttachment_CrossPlatform AuthenticatorAttachment = "crossPlatform"
 )
 
 /**
@@ -544,9 +544,9 @@ func (e AuthenticatorAttachmentPreference) String() string {
 }
 
 const (
-	AuthenticatorAttachmentPreference_PLATFORM      AuthenticatorAttachmentPreference = "PLATFORM"
-	AuthenticatorAttachmentPreference_CROSSPLATFORM AuthenticatorAttachmentPreference = "CROSS_PLATFORM"
-	AuthenticatorAttachmentPreference_EITHER        AuthenticatorAttachmentPreference = "EITHER"
+	AuthenticatorAttachmentPreference_Platform      AuthenticatorAttachmentPreference = "platform"
+	AuthenticatorAttachmentPreference_CrossPlatform AuthenticatorAttachmentPreference = "crossPlatform"
+	AuthenticatorAttachmentPreference_Either        AuthenticatorAttachmentPreference = "either"
 )
 
 /**
@@ -4251,7 +4251,7 @@ func (e PublicKeyCredentialType) String() string {
 }
 
 const (
-	PublicKeyCredentialType_PUBLICKEY PublicKeyCredentialType = "PUBLIC_KEY"
+	PublicKeyCredentialType_PublicKey PublicKeyCredentialType = "publicKey"
 )
 
 /**
@@ -4682,9 +4682,9 @@ func (e ResidentKeyRequirement) String() string {
 }
 
 const (
-	ResidentKeyRequirement_Discouraged ResidentKeyRequirement = "Discouraged"
-	ResidentKeyRequirement_Preferred   ResidentKeyRequirement = "Preferred"
-	ResidentKeyRequirement_Required    ResidentKeyRequirement = "Required"
+	ResidentKeyRequirement_Discouraged ResidentKeyRequirement = "discouraged"
+	ResidentKeyRequirement_Preferred   ResidentKeyRequirement = "preferred"
+	ResidentKeyRequirement_Required    ResidentKeyRequirement = "required"
 )
 
 type SAMLLogoutBehavior string
@@ -6724,10 +6724,10 @@ func (e WebAuthnWorkflow) String() string {
 }
 
 const (
-	WebAuthnWorkflow_REAUTH    WebAuthnWorkflow = "REAUTH"
-	WebAuthnWorkflow_BOOTSTRAP WebAuthnWorkflow = "BOOTSTRAP"
-	WebAuthnWorkflow_TWOFACTOR WebAuthnWorkflow = "TWO_FACTOR"
-	WebAuthnWorkflow_GENERAL   WebAuthnWorkflow = "GENERAL"
+	WebAuthnWorkflow_ReAuthentication WebAuthnWorkflow = "reAuthentication"
+	WebAuthnWorkflow_Bootstrap        WebAuthnWorkflow = "bootstrap"
+	WebAuthnWorkflow_TwoFactor        WebAuthnWorkflow = "twoFactor"
+	WebAuthnWorkflow_General          WebAuthnWorkflow = "general"
 )
 
 type WebAuthnWorkflowConfiguration struct {
