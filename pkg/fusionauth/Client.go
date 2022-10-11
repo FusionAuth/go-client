@@ -386,8 +386,26 @@ func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPR
 	return &resp, &errors, err
 }
 
+// CompleteWebAuthnAssertion
+// Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
+//   WebAuthnLoginRequest request An object containing data necessary for completing the authentication ceremony
+func (c *FusionAuthClient) CompleteWebAuthnAssertion(request WebAuthnLoginRequest) (*WebAuthnCompleteResponse, *Errors, error) {
+	var resp WebAuthnCompleteResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/assertion").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CompleteWebAuthnLogin
-// Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge
+// Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge and then login the user in
 //   WebAuthnLoginRequest request An object containing data necessary for completing the authentication ceremony
 func (c *FusionAuthClient) CompleteWebAuthnLogin(request WebAuthnLoginRequest) (*LoginResponse, *Errors, error) {
 	var resp LoginResponse

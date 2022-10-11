@@ -6568,7 +6568,7 @@ type WebAuthnCompleteRequest struct {
 }
 
 /**
- * API response for completing WebAuthn credential registration
+ * API response for completing WebAuthn credential registration or assertion
  *
  * @author Spencer Witt
  */
@@ -6692,8 +6692,10 @@ type WebAuthnRegistrationExtensionOptions struct {
  */
 type WebAuthnStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
+	CredentialId  string                 `json:"credentialId,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
+	UserId        string                 `json:"userId,omitempty"`
 	Workflow      WebAuthnWorkflow       `json:"workflow,omitempty"`
 }
 
