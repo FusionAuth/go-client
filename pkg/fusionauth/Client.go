@@ -88,7 +88,7 @@ func (c *FusionAuthClient) StartAnonymous(responseRef interface{}, errorRef inte
 	if c.TenantId != "" {
 		rc.WithHeader("X-FusionAuth-TenantId", c.TenantId)
 	}
-	rc.WithHeader("Content-Type", "text/plain")
+
 	rc.WithHeader("Accept", "application/json")
 	return rc
 }
@@ -4921,6 +4921,24 @@ func (c *FusionAuthClient) SearchGroupMembers(request GroupMemberSearchRequest) 
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/group/member/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchGroups
+// Searches groups with the specified criteria and pagination.
+//   GroupSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchGroups(request GroupSearchRequest) (*GroupSearchResponse, *Errors, error) {
+	var resp GroupSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/group/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()

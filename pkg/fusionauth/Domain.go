@@ -652,12 +652,11 @@ type BaseElasticSearchCriteria struct {
  * @author Brian Pontarelli
  */
 type BaseEvent struct {
-	ApplicationIds []string  `json:"applicationIds,omitempty"`
-	CreateInstant  int64     `json:"createInstant,omitempty"`
-	Id             string    `json:"id,omitempty"`
-	Info           EventInfo `json:"info,omitempty"`
-	TenantId       string    `json:"tenantId,omitempty"`
-	Type           EventType `json:"type,omitempty"`
+	CreateInstant int64     `json:"createInstant,omitempty"`
+	Id            string    `json:"id,omitempty"`
+	Info          EventInfo `json:"info,omitempty"`
+	TenantId      string    `json:"tenantId,omitempty"`
+	Type          EventType `json:"type,omitempty"`
 }
 
 /**
@@ -1845,6 +1844,18 @@ const (
 	EventType_AuditLogCreate                 EventType = "audit-log.create"
 	EventType_EventLogCreate                 EventType = "event-log.create"
 	EventType_KickstartSuccess               EventType = "kickstart.success"
+	EventType_GroupCreate                    EventType = "group.create"
+	EventType_GroupCreateComplete            EventType = "group.create.complete"
+	EventType_GroupDelete                    EventType = "group.delete"
+	EventType_GroupDeleteComplete            EventType = "group.delete.complete"
+	EventType_GroupMemberAdd                 EventType = "group.member.add"
+	EventType_GroupMemberAddComplete         EventType = "group.member.add.complete"
+	EventType_GroupMemberRemove              EventType = "group.member.remove"
+	EventType_GroupMemberRemoveComplete      EventType = "group.member.remove.complete"
+	EventType_GroupMemberUpdate              EventType = "group.member.update"
+	EventType_GroupMemberUpdateComplete      EventType = "group.member.update.complete"
+	EventType_GroupUpdate                    EventType = "group.update"
+	EventType_GroupUpdateComplete            EventType = "group.update.complete"
 	EventType_UserAction                     EventType = "user.action"
 	EventType_UserBulkCreate                 EventType = "user.bulk.create"
 	EventType_UserCreate                     EventType = "user.create"
@@ -2378,6 +2389,46 @@ type Group struct {
 }
 
 /**
+ * Models the Group Created Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupCreateCompleteEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
+ * Models the Group Create Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupCreateEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
+ * Models the Group Create Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupDeleteCompleteEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
+ * Models the Group Delete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupDeleteEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
  * A User's membership into a Group
  *
  * @author Daniel DeGroff
@@ -2392,14 +2443,59 @@ type GroupMember struct {
 }
 
 /**
+ * Models the Group Member Add Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberAddCompleteEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Member Add Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberAddEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Member Remove Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberRemoveCompleteEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Member Remove Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberRemoveEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
  * Search criteria for Group Members
  *
  * @author Daniel DeGroff
  */
 type GroupMemberSearchCriteria struct {
 	BaseSearchCriteria
-	GroupId string `json:"groupId,omitempty"`
-	UserId  string `json:"userId,omitempty"`
+	GroupId  string `json:"groupId,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+	UserId   string `json:"userId,omitempty"`
 }
 
 /**
@@ -2427,6 +2523,28 @@ func (b *GroupMemberSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * Models the Group Member Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberUpdateCompleteEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * Models the Group Member Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberUpdateEvent struct {
+	BaseEvent
+	Group   Group         `json:"group,omitempty"`
+	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
  * Group API request object.
  *
  * @author Daniel DeGroff
@@ -2449,6 +2567,63 @@ type GroupResponse struct {
 
 func (b *GroupResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Search criteria for Groups
+ *
+ * @author Daniel DeGroff
+ */
+type GroupSearchCriteria struct {
+	BaseSearchCriteria
+	Name     string `json:"name,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Search request for Groups.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupSearchRequest struct {
+	Search GroupSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search response for Groups
+ *
+ * @author Daniel DeGroff
+ */
+type GroupSearchResponse struct {
+	BaseHTTPResponse
+	Groups []Group `json:"groups,omitempty"`
+	Total  int64   `json:"total,omitempty"`
+}
+
+func (b *GroupSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Models the Group Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupUpdateCompleteEvent struct {
+	BaseEvent
+	Group    Group `json:"group,omitempty"`
+	Original Group `json:"original,omitempty"`
+}
+
+/**
+ * Models the Group Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupUpdateEvent struct {
+	BaseEvent
+	Group    Group `json:"group,omitempty"`
+	Original Group `json:"original,omitempty"`
 }
 
 type HistoryItem struct {
@@ -2935,13 +3110,14 @@ type JWTConfiguration struct {
 }
 
 /**
- * Models the JWT public key Refresh Token Revoke Event (and can be converted to JSON). This event might be for a single
+ * Models the JWT public key Refresh Token Revoke Event. This event might be for a single
  * token, a user or an entire application.
  *
  * @author Brian Pontarelli
  */
 type JWTPublicKeyUpdateEvent struct {
 	BaseEvent
+	ApplicationIds []string `json:"applicationIds,omitempty"`
 }
 
 /**
@@ -2978,7 +3154,7 @@ func (b *JWTRefreshResponse) SetStatus(status int) {
 }
 
 /**
- * Models the Refresh Token Revoke Event (and can be converted to JSON). This event might be for a single token, a user
+ * Models the Refresh Token Revoke Event. This event might be for a single token, a user
  * or an entire application.
  *
  * @author Brian Pontarelli
@@ -5731,7 +5907,7 @@ type UserAction struct {
 }
 
 /**
- * Models the user action event (and can be converted to JSON).
+ * Models the user action Event.
  *
  * @author Brian Pontarelli
  */
@@ -5741,6 +5917,7 @@ type UserActionEvent struct {
 	ActioneeUserId    string          `json:"actioneeUserId,omitempty"`
 	ActionerUserId    string          `json:"actionerUserId,omitempty"`
 	ActionId          string          `json:"actionId,omitempty"`
+	ApplicationIds    []string        `json:"applicationIds,omitempty"`
 	Comment           string          `json:"comment,omitempty"`
 	Email             Email           `json:"email,omitempty"`
 	EmailedUser       bool            `json:"emailedUser"`
@@ -5874,7 +6051,7 @@ func (b *UserActionResponse) SetStatus(status int) {
 }
 
 /**
- * Models the User Bulk Create Event (and can be converted to JSON).
+ * Models the User Bulk Create Event.
  *
  * @author Brian Pontarelli
  */
@@ -5961,7 +6138,7 @@ func (b *UserConsentResponse) SetStatus(status int) {
 }
 
 /**
- * Models the User Created Event (and can be converted to JSON).
+ * Models the User Created Event.
  * <p>
  * This is different than the user.create event in that it will be sent after the user has been created. This event cannot be made transactional.
  *
@@ -5973,7 +6150,7 @@ type UserCreateCompleteEvent struct {
 }
 
 /**
- * Models the User Create Event (and can be converted to JSON).
+ * Models the User Create Event.
  *
  * @author Brian Pontarelli
  */
@@ -5983,7 +6160,7 @@ type UserCreateEvent struct {
 }
 
 /**
- * Models the User Deactivate Event (and can be converted to JSON).
+ * Models the User Deactivate Event.
  *
  * @author Brian Pontarelli
  */
@@ -6069,7 +6246,7 @@ type UserEmailUpdateEvent struct {
 }
 
 /**
- * Models the User Email Verify Event (and can be converted to JSON).
+ * Models the User Email Verify Event.
  *
  * @author Trevor Smith
  */
@@ -6226,7 +6403,7 @@ type UserPasswordUpdateEvent struct {
 }
 
 /**
- * Models the User Reactivate Event (and can be converted to JSON).
+ * Models the User Reactivate Event.
  *
  * @author Brian Pontarelli
  */
@@ -6259,9 +6436,10 @@ type UserRegistration struct {
 }
 
 /**
- * Models the User Created Registration Event (and can be converted to JSON).
+ * Models the User Created Registration Event.
  * <p>
- * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made
+ * transactional.
  *
  * @author Daniel DeGroff
  */
@@ -6273,7 +6451,7 @@ type UserRegistrationCreateCompleteEvent struct {
 }
 
 /**
- * Models the User Create Registration Event (and can be converted to JSON).
+ * Models the User Create Registration Event.
  *
  * @author Daniel DeGroff
  */
@@ -6285,7 +6463,7 @@ type UserRegistrationCreateEvent struct {
 }
 
 /**
- * Models the User Deleted Registration Event (and can be converted to JSON).
+ * Models the User Deleted Registration Event.
  * <p>
  * This is different than user.registration.delete in that it is sent after the TX has been committed. This event cannot be transactional.
  *
@@ -6299,7 +6477,7 @@ type UserRegistrationDeleteCompleteEvent struct {
 }
 
 /**
- * Models the User Delete Registration Event (and can be converted to JSON).
+ * Models the User Delete Registration Event.
  *
  * @author Daniel DeGroff
  */
@@ -6311,7 +6489,7 @@ type UserRegistrationDeleteEvent struct {
 }
 
 /**
- * Models the User Update Registration Event (and can be converted to JSON).
+ * Models the User Update Registration Event.
  * <p>
  * This is different than user.registration.update in that it is sent after this event completes, this cannot be transactional.
  *
@@ -6326,7 +6504,7 @@ type UserRegistrationUpdateCompleteEvent struct {
 }
 
 /**
- * Models the User Update Registration Event (and can be converted to JSON).
+ * Models the User Update Registration Event.
  *
  * @author Daniel DeGroff
  */
@@ -6339,7 +6517,7 @@ type UserRegistrationUpdateEvent struct {
 }
 
 /**
- * Models the User Registration Verified Event (and can be converted to JSON).
+ * Models the User Registration Verified Event.
  *
  * @author Trevor Smith
  */
@@ -6449,7 +6627,7 @@ type UserUpdateCompleteEvent struct {
 }
 
 /**
- * Models the User Update Event (and can be converted to JSON).
+ * Models the User Update Event.
  *
  * @author Brian Pontarelli
  */
