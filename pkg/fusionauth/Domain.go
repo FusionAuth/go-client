@@ -499,19 +499,6 @@ func (b *AuditLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
-/**
- * @author Brett Pontarelli
- */
-type AuthenticationThreats string
-
-func (e AuthenticationThreats) String() string {
-	return string(e)
-}
-
-const (
-	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
-)
-
 type AuthenticationTokenConfiguration struct {
 	Enableable
 }
@@ -4342,8 +4329,8 @@ const (
 type PublicKeyAuthenticationRequest struct {
 	ClientExtensionResults WebAuthnExtensionsClientOutputs     `json:"clientExtensionResults,omitempty"`
 	Id                     string                              `json:"id,omitempty"`
-	RelyingPartyId         string                              `json:"relyingPartyId,omitempty"`
 	Response               AuthenticatorAuthenticationResponse `json:"response,omitempty"`
+	RpId                   string                              `json:"rpId,omitempty"`
 	Type                   string                              `json:"type,omitempty"`
 }
 
@@ -5110,19 +5097,6 @@ type SonyPSNApplicationConfiguration struct {
 }
 
 /**
- * SonyPSN gaming login provider.
- *
- * @author Brett Pontarelli
- */
-type SonyPSNIdentityProvider struct {
-	BaseIdentityProvider
-	ButtonText   string `json:"buttonText,omitempty"`
-	ClientId     string `json:"client_id,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	Scope        string `json:"scope,omitempty"`
-}
-
-/**
  * @author Daniel DeGroff
  */
 type Sort string
@@ -5229,6 +5203,9 @@ type Templates struct {
 	AccountTwoFactorDisable                   string `json:"accountTwoFactorDisable,omitempty"`
 	AccountTwoFactorEnable                    string `json:"accountTwoFactorEnable,omitempty"`
 	AccountTwoFactorIndex                     string `json:"accountTwoFactorIndex,omitempty"`
+	AccountWebAuthnAdd                        string `json:"accountWebAuthnAdd,omitempty"`
+	AccountWebAuthnDelete                     string `json:"accountWebAuthnDelete,omitempty"`
+	AccountWebAuthnIndex                      string `json:"accountWebAuthnIndex,omitempty"`
 	EmailComplete                             string `json:"emailComplete,omitempty"`
 	EmailSend                                 string `json:"emailSend,omitempty"`
 	EmailSent                                 string `json:"emailSent,omitempty"`
@@ -5251,7 +5228,7 @@ type Templates struct {
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
-	Oauth2WebAuthN                            string `json:"oauth2WebAuthN,omitempty"`
+	Oauth2WebAuthn                            string `json:"oauth2WebAuthn,omitempty"`
 	PasswordChange                            string `json:"passwordChange,omitempty"`
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
@@ -5472,9 +5449,7 @@ type TenantWebAuthnConfiguration struct {
 	RelyingPartyName                      string                              `json:"relyingPartyName,omitempty"`
 }
 
-/**
- * @author Spencer Witt
- */
+// TODO : WebAuthn : Daniel Review : If this also ends up living in the Application, we should rename to WebAuthnWorkflowConfiguration
 type TenantWebAuthnWorkflowConfiguration struct {
 	Enableable
 	AuthenticatorAttachmentPreference AuthenticatorAttachmentPreference `json:"authenticatorAttachmentPreference,omitempty"`
@@ -6744,10 +6719,10 @@ func (b *VersionResponse) SetStatus(status int) {
  * @author Spencer Witt
  */
 type WebAuthnCompleteRequest struct {
-	Credential     PublicKeyRegistrationRequest `json:"credential,omitempty"`
-	Origin         string                       `json:"origin,omitempty"`
-	RelyingPartyId string                       `json:"relyingPartyId,omitempty"`
-	UserId         string                       `json:"userId,omitempty"`
+	Credential PublicKeyRegistrationRequest `json:"credential,omitempty"`
+	Origin     string                       `json:"origin,omitempty"`
+	RpId       string                       `json:"rpId,omitempty"`
+	UserId     string                       `json:"userId,omitempty"`
 }
 
 /**
@@ -6828,9 +6803,9 @@ type WebAuthnImportRequest struct {
  */
 type WebAuthnLoginRequest struct {
 	BaseLoginRequest
-	Credential     PublicKeyAuthenticationRequest `json:"credential,omitempty"`
-	Origin         string                         `json:"origin,omitempty"`
-	RelyingPartyId string                         `json:"relyingPartyId,omitempty"`
+	Credential PublicKeyAuthenticationRequest `json:"credential,omitempty"`
+	Origin     string                         `json:"origin,omitempty"`
+	RpId       string                         `json:"rpId,omitempty"`
 }
 
 /**

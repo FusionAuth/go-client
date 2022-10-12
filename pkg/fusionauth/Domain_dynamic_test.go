@@ -49,13 +49,6 @@ func Test_AttestationTypeImplementsStringer(t *testing.T) {
 	}
 }
 
-func Test_AuthenticationThreatsImplementsStringer(t *testing.T) {
-	var enum interface{} = AuthenticationThreats("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("AuthenticationThreats does not implement stringer interface\n")
-	}
-}
-
 func Test_AuthenticatorAttachmentImplementsStringer(t *testing.T) {
 	var enum interface{} = AuthenticatorAttachment("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
