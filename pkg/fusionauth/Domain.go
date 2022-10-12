@@ -499,6 +499,19 @@ func (b *AuditLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+/**
+ * @author Brett Pontarelli
+ */
+type AuthenticationThreats string
+
+func (e AuthenticationThreats) String() string {
+	return string(e)
+}
+
+const (
+	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
+)
+
 type AuthenticationTokenConfiguration struct {
 	Enableable
 }
@@ -5090,6 +5103,19 @@ type SMSMessageTemplate struct {
  */
 type SonyPSNApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
+	ButtonText   string `json:"buttonText,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * SonyPSN gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+type SonyPSNIdentityProvider struct {
+	BaseIdentityProvider
 	ButtonText   string `json:"buttonText,omitempty"`
 	ClientId     string `json:"client_id,omitempty"`
 	ClientSecret string `json:"client_secret,omitempty"`
