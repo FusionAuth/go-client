@@ -619,7 +619,7 @@ const (
 	AuthenticatorTransport_Usb      AuthenticatorTransport = "usb"
 	AuthenticatorTransport_Nfc      AuthenticatorTransport = "nfc"
 	AuthenticatorTransport_Ble      AuthenticatorTransport = "ble"
-	AuthenticatorTransport_Internal AuthenticatorTransport = "internal"
+	AuthenticatorTransport_Platform AuthenticatorTransport = "platform"
 	AuthenticatorTransport_Cable    AuthenticatorTransport = "cable"
 )
 
