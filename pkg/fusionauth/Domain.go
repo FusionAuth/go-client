@@ -4585,6 +4585,9 @@ type ReactorStatus struct {
 	Licensed                             bool                 `json:"licensed"`
 	ScimServer                           ReactorFeatureStatus `json:"scimServer,omitempty"`
 	ThreatDetection                      ReactorFeatureStatus `json:"threatDetection,omitempty"`
+	WebAuthn                             ReactorFeatureStatus `json:"webAuthn,omitempty"`
+	WebAuthnPlatformAuthenticators       ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
+	WebAuthnRoamingAuthenticators        ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
 }
 
 /**
