@@ -6783,6 +6783,7 @@ type WebAuthnCredential struct {
 	InsertInstant                         int64                    `json:"insertInstant,omitempty"`
 	IsDiscoverableCredential              bool                     `json:"isDiscoverableCredential"`
 	LastUseInstant                        int64                    `json:"lastUseInstant,omitempty"`
+	Name                                  string                   `json:"name,omitempty"`
 	PublicKey                             string                   `json:"publicKey,omitempty"`
 	RelyingPartyId                        string                   `json:"relyingPartyId,omitempty"`
 	SignCount                             int                      `json:"signCount,omitempty"`
@@ -6843,10 +6844,11 @@ type WebAuthnLoginRequest struct {
  * @author Spencer Witt
  */
 type WebAuthnRegisterRequest struct {
-	CredentialName string           `json:"credentialName,omitempty"`
-	UserAgent      string           `json:"userAgent,omitempty"`
-	UserId         string           `json:"userId,omitempty"`
-	Workflow       WebAuthnWorkflow `json:"workflow,omitempty"`
+	DisplayName string           `json:"displayName,omitempty"`
+	Name        string           `json:"name,omitempty"`
+	UserAgent   string           `json:"userAgent,omitempty"`
+	UserId      string           `json:"userId,omitempty"`
+	Workflow    WebAuthnWorkflow `json:"workflow,omitempty"`
 }
 
 /**
