@@ -1939,6 +1939,8 @@ type ExternalIdentifierConfiguration struct {
 	TwoFactorOneTimeCodeIdGenerator               SecureGeneratorConfiguration `json:"twoFactorOneTimeCodeIdGenerator,omitempty"`
 	TwoFactorOneTimeCodeIdTimeToLiveInSeconds     int                          `json:"twoFactorOneTimeCodeIdTimeToLiveInSeconds,omitempty"`
 	TwoFactorTrustIdTimeToLiveInSeconds           int                          `json:"twoFactorTrustIdTimeToLiveInSeconds,omitempty"`
+	WebAuthnAuthenticationChallenge               int                          `json:"webAuthnAuthenticationChallenge,omitempty"`
+	WebAuthnRegistrationChallenge                 int                          `json:"webAuthnRegistrationChallenge,omitempty"`
 }
 
 /**
@@ -5258,6 +5260,8 @@ type Templates struct {
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
 	Oauth2WebAuthn                            string `json:"oauth2WebAuthn,omitempty"`
+	Oauth2WebAuthnReauth                      string `json:"oauth2WebAuthnReauth,omitempty"`
+	Oauth2WebAuthnReauthEnable                string `json:"oauth2WebAuthnReauthEnable,omitempty"`
 	PasswordChange                            string `json:"passwordChange,omitempty"`
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
@@ -5473,9 +5477,10 @@ type TenantUsernameConfiguration struct {
 // TODO : WebAuthn : Daniel Review : Do we need this Enableable
 type TenantWebAuthnConfiguration struct {
 	Enableable
-	ReauthenticationWorkflowConfiguration TenantWebAuthnWorkflowConfiguration `json:"reauthenticationWorkflowConfiguration,omitempty"`
-	RelyingPartyId                        string                              `json:"relyingPartyId,omitempty"`
-	RelyingPartyName                      string                              `json:"relyingPartyName,omitempty"`
+	BootstrapWorkflow        TenantWebAuthnWorkflowConfiguration `json:"bootstrapWorkflow,omitempty"`
+	ReauthenticationWorkflow TenantWebAuthnWorkflowConfiguration `json:"reauthenticationWorkflow,omitempty"`
+	RelyingPartyId           string                              `json:"relyingPartyId,omitempty"`
+	RelyingPartyName         string                              `json:"relyingPartyName,omitempty"`
 }
 
 // TODO : WebAuthn : Daniel Review : If this also ends up living in the Application, we should rename to WebAuthnWorkflowConfiguration
