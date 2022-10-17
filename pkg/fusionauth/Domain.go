@@ -6766,7 +6766,7 @@ type WebAuthnCompleteRequest struct {
  */
 type WebAuthnCompleteResponse struct {
 	BaseHTTPResponse
-	CredentialId string `json:"credentialId,omitempty"`
+	Credential WebAuthnCredential `json:"credential,omitempty"`
 }
 
 func (b *WebAuthnCompleteResponse) SetStatus(status int) {
