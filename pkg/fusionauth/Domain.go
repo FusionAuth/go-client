@@ -6783,10 +6783,10 @@ type WebAuthnCredential struct {
 	AttestationType                       AttestationType          `json:"attestationType,omitempty"`
 	AuthenticatorSupportsUserVerification bool                     `json:"authenticatorSupportsUserVerification"`
 	CredentialId                          string                   `json:"credentialId,omitempty"`
+	Discoverable                          bool                     `json:"discoverable"`
 	DisplayName                           string                   `json:"displayName,omitempty"`
 	Id                                    string                   `json:"id,omitempty"`
 	InsertInstant                         int64                    `json:"insertInstant,omitempty"`
-	IsDiscoverableCredential              bool                     `json:"isDiscoverableCredential"`
 	LastUseInstant                        int64                    `json:"lastUseInstant,omitempty"`
 	Name                                  string                   `json:"name,omitempty"`
 	PublicKey                             string                   `json:"publicKey,omitempty"`
