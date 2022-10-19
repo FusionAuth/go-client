@@ -6783,6 +6783,7 @@ type WebAuthnCredential struct {
 	AttestationType                       AttestationType          `json:"attestationType,omitempty"`
 	AuthenticatorSupportsUserVerification bool                     `json:"authenticatorSupportsUserVerification"`
 	CredentialId                          string                   `json:"credentialId,omitempty"`
+	Data                                  map[string]interface{}   `json:"data,omitempty"`
 	Discoverable                          bool                     `json:"discoverable"`
 	DisplayName                           string                   `json:"displayName,omitempty"`
 	Id                                    string                   `json:"id,omitempty"`
@@ -6805,8 +6806,8 @@ type WebAuthnCredential struct {
  */
 type WebAuthnCredentialResponse struct {
 	BaseHTTPResponse
-	WebauthnCredential  WebAuthnCredential   `json:"webauthnCredential,omitempty"`
-	WebauthnCredentials []WebAuthnCredential `json:"webauthnCredentials,omitempty"`
+	Credential  WebAuthnCredential   `json:"credential,omitempty"`
+	Credentials []WebAuthnCredential `json:"credentials,omitempty"`
 }
 
 func (b *WebAuthnCredentialResponse) SetStatus(status int) {
@@ -6823,12 +6824,13 @@ type WebAuthnExtensionsClientOutputs struct {
 }
 
 /**
- * API request to import an existing WebAuthn credential
+ * API request to import an existing WebAuthn credential(s)
  *
  * @author Spencer Witt
  */
 type WebAuthnImportRequest struct {
-	Credential WebAuthnCredential `json:"credential,omitempty"`
+	Credentials           []WebAuthnCredential `json:"credentials,omitempty"`
+	ValidateDbConstraints bool                 `json:"validateDbConstraints"`
 }
 
 /**
