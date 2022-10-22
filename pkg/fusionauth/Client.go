@@ -368,6 +368,31 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string) (*Bas
 	return &resp, &errors, err
 }
 
+// ClientCredentialsGrant
+// Make a Client Credentials grant request to obtain an access token.
+//   string clientId The client identifier. The client Id is the Id of the FusionAuth Entity in which you you are attempting to authenticate.
+//   string clientSecret The client secret used to authenticate this request.
+//   string scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:<target-entity-id>:<roles>. Roles are an optional comma separated list.
+func (c *FusionAuthClient) ClientCredentialsGrant(clientId string, clientSecret string, scope string) (*AccessToken, *OAuthError, error) {
+	var resp AccessToken
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", clientId)
+	formBody.Set("client_secret", clientSecret)
+	formBody.Set("grant_type", "client_credentials")
+	formBody.Set("scope", scope)
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/token").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CommentOnUser
 // Adds a comment to the user's account.
 //   UserCommentRequest request The request object that contains all the information used to create the user comment.
