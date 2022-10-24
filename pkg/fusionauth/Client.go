@@ -419,7 +419,7 @@ func (c *FusionAuthClient) CompleteWebAuthnAssertion(request WebAuthnLoginReques
 	var errors Errors
 
 	restClient := c.StartAnonymous(&resp, &errors)
-	err := restClient.WithUri("/api/webauthn/assertion").
+	err := restClient.WithUri("/api/webauthn/assert").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
@@ -455,7 +455,7 @@ func (c *FusionAuthClient) CompleteWebAuthnRegistration(request WebAuthnComplete
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/webauthn/complete").
+	err := restClient.WithUri("/api/webauthn/register/complete").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
@@ -5309,7 +5309,7 @@ func (c *FusionAuthClient) StartWebAuthnRegistration(request WebAuthnRegisterReq
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
-	err := restClient.WithUri("/api/webauthn/register").
+	err := restClient.WithUri("/api/webauthn/register/start").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do()
