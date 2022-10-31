@@ -6922,7 +6922,7 @@ func (e WebAuthnWorkflow) String() string {
 }
 
 const (
-	WebAuthnWorkflow_ReAuthentication WebAuthnWorkflow = "reAuthentication"
+	WebAuthnWorkflow_Reauthentication WebAuthnWorkflow = "reauthentication"
 	WebAuthnWorkflow_Bootstrap        WebAuthnWorkflow = "bootstrap"
 	WebAuthnWorkflow_TwoFactor        WebAuthnWorkflow = "twoFactor"
 	WebAuthnWorkflow_General          WebAuthnWorkflow = "general"

@@ -370,9 +370,9 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string) (*Bas
 
 // ClientCredentialsGrant
 // Make a Client Credentials grant request to obtain an access token.
-//   string clientId The client identifier. The client Id is the Id of the FusionAuth Entity in which you you are attempting to authenticate.
+//   string clientId The client identifier. The client Id is the Id of the FusionAuth Entity in which you are attempting to authenticate.
 //   string clientSecret The client secret used to authenticate this request.
-//   string scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:<target-entity-id>:<roles>. Roles are an optional comma separated list.
+//   string scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:&lt;target-entity-id&gt;:&lt;roles&gt;. Roles are an optional comma separated list.
 func (c *FusionAuthClient) ClientCredentialsGrant(clientId string, clientSecret string, scope string) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
