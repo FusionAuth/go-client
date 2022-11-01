@@ -161,6 +161,13 @@ func Test_CoseAlgorithmIdentifierImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_CoseEllipticCurveImplementsStringer(t *testing.T) {
+	var enum interface{} = CoseEllipticCurve("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CoseEllipticCurve does not implement stringer interface\n")
+	}
+}
+
 func Test_CoseKeyTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = CoseKeyType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {

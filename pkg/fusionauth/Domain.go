@@ -1085,6 +1085,29 @@ const (
 	CoseAlgorithmIdentifier_PS512 CoseAlgorithmIdentifier = "PS512"
 )
 
+/**
+ * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
+ *
+ * @author Spencer Witt
+ */
+type CoseEllipticCurve string
+
+func (e CoseEllipticCurve) String() string {
+	return string(e)
+}
+
+const (
+	CoseEllipticCurve_Reserved  CoseEllipticCurve = "Reserved"
+	CoseEllipticCurve_P256      CoseEllipticCurve = "P256"
+	CoseEllipticCurve_P384      CoseEllipticCurve = "P384"
+	CoseEllipticCurve_P521      CoseEllipticCurve = "P521"
+	CoseEllipticCurve_X25519    CoseEllipticCurve = "X25519"
+	CoseEllipticCurve_X448      CoseEllipticCurve = "X448"
+	CoseEllipticCurve_Ed25519   CoseEllipticCurve = "Ed25519"
+	CoseEllipticCurve_Ed448     CoseEllipticCurve = "Ed448"
+	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
+)
+
 // TODO : WebAuthn/Domain - this type is only used internally, but it is referenced in CoseAlgorithmIdentifier which is required in public domain
 type CoseKeyType string
 
