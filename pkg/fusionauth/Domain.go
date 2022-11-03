@@ -603,26 +603,6 @@ type AuthenticatorSelectionCriteria struct {
 	UserVerification        UserVerificationRequirement `json:"userVerification,omitempty"`
 }
 
-/**
- * Describes how the authenticator communicates with a client. This can be used by the client as a hint to locate the
- * appropriate authenticator.
- *
- * @author Spencer Witt
- */
-type AuthenticatorTransport string
-
-func (e AuthenticatorTransport) String() string {
-	return string(e)
-}
-
-const (
-	AuthenticatorTransport_Usb      AuthenticatorTransport = "usb"
-	AuthenticatorTransport_Nfc      AuthenticatorTransport = "nfc"
-	AuthenticatorTransport_Ble      AuthenticatorTransport = "ble"
-	AuthenticatorTransport_Platform AuthenticatorTransport = "platform"
-	AuthenticatorTransport_Cable    AuthenticatorTransport = "cable"
-)
-
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseConnectorConfiguration struct {
 	Data              map[string]interface{} `json:"data,omitempty"`
@@ -4368,9 +4348,9 @@ type PublicKeyCredentialCreationOptions struct {
  * @author Spencer Witt
  */
 type PublicKeyCredentialDescriptor struct {
-	Id         string                   `json:"id,omitempty"`
-	Transports []AuthenticatorTransport `json:"transports,omitempty"`
-	Type       PublicKeyCredentialType  `json:"type,omitempty"`
+	Id         string                  `json:"id,omitempty"`
+	Transports []string                `json:"transports,omitempty"`
+	Type       PublicKeyCredentialType `json:"type,omitempty"`
 }
 
 /**
@@ -4408,7 +4388,7 @@ type PublicKeyCredentialRelyingPartyEntity struct {
 type PublicKeyCredentialRequestOptions struct {
 	AllowCredentials []PublicKeyCredentialDescriptor `json:"allowCredentials,omitempty"`
 	Challenge        string                          `json:"challenge,omitempty"`
-	RelyingPartyId   string                          `json:"relyingPartyId,omitempty"`
+	RpId             string                          `json:"rpId,omitempty"`
 	Timeout          int64                           `json:"timeout,omitempty"`
 	UserVerification UserVerificationRequirement     `json:"userVerification,omitempty"`
 }
@@ -4449,7 +4429,7 @@ type PublicKeyRegistrationRequest struct {
 	Id                     string                            `json:"id,omitempty"`
 	Response               AuthenticatorRegistrationResponse `json:"response,omitempty"`
 	RpId                   string                            `json:"rpId,omitempty"`
-	Transports             []AuthenticatorTransport          `json:"transports,omitempty"`
+	Transports             []string                          `json:"transports,omitempty"`
 	Type                   string                            `json:"type,omitempty"`
 }
 
@@ -6775,24 +6755,24 @@ func (b *WebAuthnCompleteResponse) SetStatus(status int) {
  * @author Spencer Witt
  */
 type WebAuthnCredential struct {
-	Algorithm                             CoseAlgorithmIdentifier  `json:"algorithm,omitempty"`
-	AttestationType                       AttestationType          `json:"attestationType,omitempty"`
-	AuthenticatorSupportsUserVerification bool                     `json:"authenticatorSupportsUserVerification"`
-	CredentialId                          string                   `json:"credentialId,omitempty"`
-	Data                                  map[string]interface{}   `json:"data,omitempty"`
-	Discoverable                          bool                     `json:"discoverable"`
-	DisplayName                           string                   `json:"displayName,omitempty"`
-	Id                                    string                   `json:"id,omitempty"`
-	InsertInstant                         int64                    `json:"insertInstant,omitempty"`
-	LastUseInstant                        int64                    `json:"lastUseInstant,omitempty"`
-	Name                                  string                   `json:"name,omitempty"`
-	PublicKey                             string                   `json:"publicKey,omitempty"`
-	RelyingPartyId                        string                   `json:"relyingPartyId,omitempty"`
-	SignCount                             int                      `json:"signCount,omitempty"`
-	TenantId                              string                   `json:"tenantId,omitempty"`
-	Transports                            []AuthenticatorTransport `json:"transports,omitempty"`
-	UserAgent                             string                   `json:"userAgent,omitempty"`
-	UserId                                string                   `json:"userId,omitempty"`
+	Algorithm                             CoseAlgorithmIdentifier `json:"algorithm,omitempty"`
+	AttestationType                       AttestationType         `json:"attestationType,omitempty"`
+	AuthenticatorSupportsUserVerification bool                    `json:"authenticatorSupportsUserVerification"`
+	CredentialId                          string                  `json:"credentialId,omitempty"`
+	Data                                  map[string]interface{}  `json:"data,omitempty"`
+	Discoverable                          bool                    `json:"discoverable"`
+	DisplayName                           string                  `json:"displayName,omitempty"`
+	Id                                    string                  `json:"id,omitempty"`
+	InsertInstant                         int64                   `json:"insertInstant,omitempty"`
+	LastUseInstant                        int64                   `json:"lastUseInstant,omitempty"`
+	Name                                  string                  `json:"name,omitempty"`
+	PublicKey                             string                  `json:"publicKey,omitempty"`
+	RelyingPartyId                        string                  `json:"relyingPartyId,omitempty"`
+	SignCount                             int                     `json:"signCount,omitempty"`
+	TenantId                              string                  `json:"tenantId,omitempty"`
+	Transports                            []string                `json:"transports,omitempty"`
+	UserAgent                             string                  `json:"userAgent,omitempty"`
+	UserId                                string                  `json:"userId,omitempty"`
 }
 
 /**
