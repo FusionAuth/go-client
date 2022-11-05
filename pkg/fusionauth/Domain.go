@@ -5454,6 +5454,7 @@ type TenantUsernameConfiguration struct {
 type TenantWebAuthnConfiguration struct {
 	Enableable
 	BootstrapWorkflow        TenantWebAuthnWorkflowConfiguration `json:"bootstrapWorkflow,omitempty"`
+	Debug                    bool                                `json:"debug"`
 	ReauthenticationWorkflow TenantWebAuthnWorkflowConfiguration `json:"reauthenticationWorkflow,omitempty"`
 	RelyingPartyId           string                              `json:"relyingPartyId,omitempty"`
 	RelyingPartyName         string                              `json:"relyingPartyName,omitempty"`
