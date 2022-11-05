@@ -544,9 +544,9 @@ func (e AuthenticatorAttachmentPreference) String() string {
 }
 
 const (
+	AuthenticatorAttachmentPreference_Any           AuthenticatorAttachmentPreference = "any"
 	AuthenticatorAttachmentPreference_Platform      AuthenticatorAttachmentPreference = "platform"
 	AuthenticatorAttachmentPreference_CrossPlatform AuthenticatorAttachmentPreference = "crossPlatform"
-	AuthenticatorAttachmentPreference_Either        AuthenticatorAttachmentPreference = "either"
 )
 
 /**
@@ -5450,7 +5450,11 @@ type TenantUsernameConfiguration struct {
 	Unique UniqueUsernameConfiguration `json:"unique,omitempty"`
 }
 
-// TODO : WebAuthn : Daniel Review : Do we need this Enableable
+/**
+ * Tenant-level configuration for WebAuthn
+ *
+ * @author Spencer Witt
+ */
 type TenantWebAuthnConfiguration struct {
 	Enableable
 	BootstrapWorkflow        TenantWebAuthnWorkflowConfiguration `json:"bootstrapWorkflow,omitempty"`
