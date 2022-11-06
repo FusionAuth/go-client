@@ -1088,7 +1088,11 @@ const (
 	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
 )
 
-// TODO : WebAuthn/Domain - this type is only used internally, but it is referenced in CoseAlgorithmIdentifier which is required in public domain
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
 type CoseKeyType string
 
 func (e CoseKeyType) String() string {
@@ -5464,7 +5468,9 @@ type TenantWebAuthnConfiguration struct {
 	RelyingPartyName         string                              `json:"relyingPartyName,omitempty"`
 }
 
-// TODO : WebAuthn : Daniel Review : If this also ends up living in the Application, we should rename to WebAuthnWorkflowConfiguration
+/**
+ * @author Spencer Witt
+ */
 type TenantWebAuthnWorkflowConfiguration struct {
 	Enableable
 	AuthenticatorAttachmentPreference AuthenticatorAttachmentPreference `json:"authenticatorAttachmentPreference,omitempty"`
@@ -6903,10 +6909,9 @@ func (e WebAuthnWorkflow) String() string {
 }
 
 const (
-	WebAuthnWorkflow_Reauthentication WebAuthnWorkflow = "reauthentication"
 	WebAuthnWorkflow_Bootstrap        WebAuthnWorkflow = "bootstrap"
-	WebAuthnWorkflow_TwoFactor        WebAuthnWorkflow = "twoFactor"
 	WebAuthnWorkflow_General          WebAuthnWorkflow = "general"
+	WebAuthnWorkflow_Reauthentication WebAuthnWorkflow = "reauthentication"
 )
 
 /**
