@@ -229,6 +229,7 @@ type Application struct {
 	VerificationEmailTemplateId      string                                     `json:"verificationEmailTemplateId,omitempty"`
 	VerificationStrategy             VerificationStrategy                       `json:"verificationStrategy,omitempty"`
 	VerifyRegistration               bool                                       `json:"verifyRegistration"`
+	WebAuthnConfiguration            ApplicationWebAuthnConfiguration           `json:"webAuthnConfiguration,omitempty"`
 }
 
 /**
@@ -353,6 +354,15 @@ type ApplicationUnverifiedConfiguration struct {
 	Registration         UnverifiedBehavior            `json:"registration,omitempty"`
 	VerificationStrategy VerificationStrategy          `json:"verificationStrategy,omitempty"`
 	WhenGated            RegistrationUnverifiedOptions `json:"whenGated,omitempty"`
+}
+
+/**
+ * Application-level configuration for WebAuthn
+ *
+ * @author Daniel DeGroff
+ */
+type ApplicationWebAuthnConfiguration struct {
+	Enableable
 }
 
 /**
@@ -4870,18 +4880,19 @@ type SAMLv2ApplicationConfiguration struct {
 
 type SAMLv2Configuration struct {
 	Enableable
-	Audience                 string                 `json:"audience,omitempty"`
-	AuthorizedRedirectURLs   []string               `json:"authorizedRedirectURLs,omitempty"`
-	CallbackURL              string                 `json:"callbackURL,omitempty"`
-	Debug                    bool                   `json:"debug"`
-	DefaultVerificationKeyId string                 `json:"defaultVerificationKeyId,omitempty"`
-	Issuer                   string                 `json:"issuer,omitempty"`
-	KeyId                    string                 `json:"keyId,omitempty"`
-	Logout                   SAMLv2Logout           `json:"logout,omitempty"`
-	LogoutURL                string                 `json:"logoutURL,omitempty"`
-	RequireSignedRequests    bool                   `json:"requireSignedRequests"`
-	XmlSignatureC14nMethod   CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
-	XmlSignatureLocation     XMLSignatureLocation   `json:"xmlSignatureLocation,omitempty"`
+	Audience                 string                               `json:"audience,omitempty"`
+	AuthorizedRedirectURLs   []string                             `json:"authorizedRedirectURLs,omitempty"`
+	CallbackURL              string                               `json:"callbackURL,omitempty"`
+	Debug                    bool                                 `json:"debug"`
+	DefaultVerificationKeyId string                               `json:"defaultVerificationKeyId,omitempty"`
+	InitiatedLogin           SAMLv2IdPInitiatedLoginConfiguration `json:"initiatedLogin,omitempty"`
+	Issuer                   string                               `json:"issuer,omitempty"`
+	KeyId                    string                               `json:"keyId,omitempty"`
+	Logout                   SAMLv2Logout                         `json:"logout,omitempty"`
+	LogoutURL                string                               `json:"logoutURL,omitempty"`
+	RequireSignedRequests    bool                                 `json:"requireSignedRequests"`
+	XmlSignatureC14nMethod   CanonicalizationMethod               `json:"xmlSignatureC14nMethod,omitempty"`
+	XmlSignatureLocation     XMLSignatureLocation                 `json:"xmlSignatureLocation,omitempty"`
 }
 
 /**
@@ -4928,6 +4939,16 @@ type SAMLv2IdPInitiatedIdentityProvider struct {
 	UniqueIdClaim     string `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
 	UsernameClaim     string `json:"usernameClaim,omitempty"`
+}
+
+/**
+ * IdP Initiated login configuration
+ *
+ * @author Daniel DeGroff
+ */
+type SAMLv2IdPInitiatedLoginConfiguration struct {
+	Enableable
+	NameIdFormat string `json:"nameIdFormat,omitempty"`
 }
 
 type SAMLv2Logout struct {
