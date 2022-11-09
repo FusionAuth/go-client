@@ -35,10 +35,38 @@ func Test_ApplicationMultiFactorTrustPolicyImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_AttestationConveyancePreferenceImplementsStringer(t *testing.T) {
+	var enum interface{} = AttestationConveyancePreference("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("AttestationConveyancePreference does not implement stringer interface\n")
+	}
+}
+
+func Test_AttestationTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = AttestationType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("AttestationType does not implement stringer interface\n")
+	}
+}
+
 func Test_AuthenticationThreatsImplementsStringer(t *testing.T) {
 	var enum interface{} = AuthenticationThreats("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("AuthenticationThreats does not implement stringer interface\n")
+	}
+}
+
+func Test_AuthenticatorAttachmentImplementsStringer(t *testing.T) {
+	var enum interface{} = AuthenticatorAttachment("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("AuthenticatorAttachment does not implement stringer interface\n")
+	}
+}
+
+func Test_AuthenticatorAttachmentPreferenceImplementsStringer(t *testing.T) {
+	var enum interface{} = AuthenticatorAttachmentPreference("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("AuthenticatorAttachmentPreference does not implement stringer interface\n")
 	}
 }
 
@@ -116,6 +144,27 @@ func Test_ContentStatusImplementsStringer(t *testing.T) {
 	var enum interface{} = ContentStatus("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("ContentStatus does not implement stringer interface\n")
+	}
+}
+
+func Test_CoseAlgorithmIdentifierImplementsStringer(t *testing.T) {
+	var enum interface{} = CoseAlgorithmIdentifier("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CoseAlgorithmIdentifier does not implement stringer interface\n")
+	}
+}
+
+func Test_CoseEllipticCurveImplementsStringer(t *testing.T) {
+	var enum interface{} = CoseEllipticCurve("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CoseEllipticCurve does not implement stringer interface\n")
+	}
+}
+
+func Test_CoseKeyTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = CoseKeyType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CoseKeyType does not implement stringer interface\n")
 	}
 }
 
@@ -336,6 +385,13 @@ func Test_ProofKeyForCodeExchangePolicyImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_PublicKeyCredentialTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = PublicKeyCredentialType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("PublicKeyCredentialType does not implement stringer interface\n")
+	}
+}
+
 func Test_RateLimitedRequestTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = RateLimitedRequestType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -368,6 +424,13 @@ func Test_RegistrationTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = RegistrationType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("RegistrationType does not implement stringer interface\n")
+	}
+}
+
+func Test_ResidentKeyRequirementImplementsStringer(t *testing.T) {
+	var enum interface{} = ResidentKeyRequirement("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("ResidentKeyRequirement does not implement stringer interface\n")
 	}
 }
 
@@ -441,10 +504,24 @@ func Test_UserStateImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_UserVerificationRequirementImplementsStringer(t *testing.T) {
+	var enum interface{} = UserVerificationRequirement("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("UserVerificationRequirement does not implement stringer interface\n")
+	}
+}
+
 func Test_VerificationStrategyImplementsStringer(t *testing.T) {
 	var enum interface{} = VerificationStrategy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("VerificationStrategy does not implement stringer interface\n")
+	}
+}
+
+func Test_WebAuthnWorkflowImplementsStringer(t *testing.T) {
+	var enum interface{} = WebAuthnWorkflow("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("WebAuthnWorkflow does not implement stringer interface\n")
 	}
 }
 
