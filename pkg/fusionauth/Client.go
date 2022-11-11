@@ -455,6 +455,31 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx contex
 	return &resp, &errors, err
 }
 
+// ClientCredentialsGrant
+// Make a Client Credentials grant request to obtain an access token.
+//   string clientId The client identifier. The client Id is the Id of the FusionAuth Entity in which you are attempting to authenticate.
+//   string clientSecret The client secret used to authenticate this request.
+//   string scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:&lt;target-entity-id&gt;:&lt;roles&gt;. Roles are an optional comma separated list.
+func (c *FusionAuthClient) ClientCredentialsGrant(clientId string, clientSecret string, scope string) (*AccessToken, *OAuthError, error) {
+	var resp AccessToken
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", clientId)
+	formBody.Set("client_secret", clientSecret)
+	formBody.Set("grant_type", "client_credentials")
+	formBody.Set("scope", scope)
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/token").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CommentOnUser
 // Adds a comment to the user's account.
 //   UserCommentRequest request The request object that contains all the information used to create the user comment.
@@ -474,6 +499,60 @@ func (c *FusionAuthClient) CommentOnUserWithContext(ctx context.Context, request
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CompleteWebAuthnAssertion
+// Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
+//   WebAuthnLoginRequest request An object containing data necessary for completing the authentication ceremony
+func (c *FusionAuthClient) CompleteWebAuthnAssertion(request WebAuthnLoginRequest) (*WebAuthnAssertResponse, *Errors, error) {
+	var resp WebAuthnAssertResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/assert").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CompleteWebAuthnLogin
+// Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge and then login the user in
+//   WebAuthnLoginRequest request An object containing data necessary for completing the authentication ceremony
+func (c *FusionAuthClient) CompleteWebAuthnLogin(request WebAuthnLoginRequest) (*LoginResponse, *Errors, error) {
+	var resp LoginResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/login").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CompleteWebAuthnRegistration
+// Complete a WebAuthn registration ceremony by validating the client request and saving the new credential
+//   WebAuthnRegisterCompleteRequest request An object containing data necessary for completing the registration ceremony
+func (c *FusionAuthClient) CompleteWebAuthnRegistration(request WebAuthnRegisterCompleteRequest) (*WebAuthnRegisterCompleteResponse, *Errors, error) {
+	var resp WebAuthnRegisterCompleteResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/register/complete").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
 	}
@@ -2315,6 +2394,24 @@ func (c *FusionAuthClient) DeleteUsersByQueryWithContext(ctx context.Context, re
 	return &resp, &errors, err
 }
 
+// DeleteWebAuthnCredential
+// Deletes the WebAuthn credential for the given Id.
+//   string id The Id of the WebAuthn credential to delete.
+func (c *FusionAuthClient) DeleteWebAuthnCredential(id string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn").
+		WithUriSegment(id).
+		WithMethod(http.MethodDelete).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteWebhook
 // Deletes the webhook for the given Id.
 //   string webhookId The Id of the webhook to delete.
@@ -2925,6 +3022,24 @@ func (c *FusionAuthClient) ImportUsersWithContext(ctx context.Context, request I
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// ImportWebAuthnCredential
+// Import a WebAuthn credential
+//   WebAuthnCredentialImportRequest request An object containing data necessary for importing the credential
+func (c *FusionAuthClient) ImportWebAuthnCredential(request WebAuthnCredentialImportRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/import").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
 	}
@@ -6335,6 +6450,42 @@ func (c *FusionAuthClient) RetrieveVersionWithContext(ctx context.Context) (*Ver
 	return &resp, &errors, err
 }
 
+// RetrieveWebAuthnCredential
+// Retrieves the WebAuthn credential for the given Id.
+//   string id The Id of the WebAuthn credential.
+func (c *FusionAuthClient) RetrieveWebAuthnCredential(id string) (*WebAuthnCredentialResponse, *Errors, error) {
+	var resp WebAuthnCredentialResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn").
+		WithUriSegment(id).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveWebAuthnCredentialsForUser
+// Retrieves all WebAuthn credentials for the given user.
+//   string userId The user's ID.
+func (c *FusionAuthClient) RetrieveWebAuthnCredentialsForUser(userId string) (*WebAuthnCredentialResponse, *Errors, error) {
+	var resp WebAuthnCredentialResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodGet).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveWebhook
 // Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
 //   string webhookId (Optional) The Id of the webhook.
@@ -7263,6 +7414,42 @@ func (c *FusionAuthClient) StartTwoFactorLoginWithContext(ctx context.Context, r
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// StartWebAuthnLogin
+// Start a WebAuthn authentication ceremony by generating a new challenge for the user
+//   WebAuthnStartRequest request An object containing data necessary for starting the authentication ceremony
+func (c *FusionAuthClient) StartWebAuthnLogin(request WebAuthnStartRequest) (*WebAuthnStartResponse, *Errors, error) {
+	var resp WebAuthnStartResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// StartWebAuthnRegistration
+// Start a WebAuthn registration ceremony by generating a new challenge for the user
+//   WebAuthnRegisterStartRequest request An object containing data necessary for starting the registration ceremony
+func (c *FusionAuthClient) StartWebAuthnRegistration(request WebAuthnRegisterStartRequest) (*WebAuthnRegisterStartResponse, *Errors, error) {
+	var resp WebAuthnRegisterStartResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn/register/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do()
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
 	}

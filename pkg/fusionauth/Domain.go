@@ -229,6 +229,7 @@ type Application struct {
 	VerificationEmailTemplateId      string                                     `json:"verificationEmailTemplateId,omitempty"`
 	VerificationStrategy             VerificationStrategy                       `json:"verificationStrategy,omitempty"`
 	VerifyRegistration               bool                                       `json:"verifyRegistration"`
+	WebAuthnConfiguration            ApplicationWebAuthnConfiguration           `json:"webAuthnConfiguration,omitempty"`
 }
 
 /**
@@ -356,6 +357,24 @@ type ApplicationUnverifiedConfiguration struct {
 }
 
 /**
+ * Application-level configuration for WebAuthn
+ *
+ * @author Daniel DeGroff
+ */
+type ApplicationWebAuthnConfiguration struct {
+	Enableable
+	BootstrapWorkflow        ApplicationWebAuthnWorkflowConfiguration `json:"bootstrapWorkflow,omitempty"`
+	ReauthenticationWorkflow ApplicationWebAuthnWorkflowConfiguration `json:"reauthenticationWorkflow,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type ApplicationWebAuthnWorkflowConfiguration struct {
+	Enableable
+}
+
+/**
  * This class is a simple attachment with a byte array, name and MIME type.
  *
  * @author Brian Pontarelli
@@ -365,6 +384,43 @@ type Attachment struct {
 	Mime       string `json:"mime,omitempty"`
 	Name       string `json:"name,omitempty"`
 }
+
+/**
+ * Used to communicate whether and how authenticator attestation should be delivered to the Relying Party
+ *
+ * @author Spencer Witt
+ */
+type AttestationConveyancePreference string
+
+func (e AttestationConveyancePreference) String() string {
+	return string(e)
+}
+
+const (
+	AttestationConveyancePreference_None       AttestationConveyancePreference = "none"
+	AttestationConveyancePreference_Indirect   AttestationConveyancePreference = "indirect"
+	AttestationConveyancePreference_Direct     AttestationConveyancePreference = "direct"
+	AttestationConveyancePreference_Enterprise AttestationConveyancePreference = "enterprise"
+)
+
+/**
+ * Used to indicate what type of attestation was included in the authenticator response for a given WebAuthn credential at the time it was created
+ *
+ * @author Spencer Witt
+ */
+type AttestationType string
+
+func (e AttestationType) String() string {
+	return string(e)
+}
+
+const (
+	AttestationType_Basic           AttestationType = "basic"
+	AttestationType_Self            AttestationType = "self"
+	AttestationType_AttestationCa   AttestationType = "attestationCa"
+	AttestationType_AnonymizationCa AttestationType = "anonymizationCa"
+	AttestationType_None            AttestationType = "none"
+)
 
 /**
  * An audit log.
@@ -480,12 +536,58 @@ type AuthenticationTokenConfiguration struct {
 }
 
 /**
+ * Describes the <a href="https://www.w3.org/TR/webauthn-2/#authenticator-attachment-modality">authenticator attachment modality</a>.
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorAttachment string
+
+func (e AuthenticatorAttachment) String() string {
+	return string(e)
+}
+
+const (
+	AuthenticatorAttachment_Platform      AuthenticatorAttachment = "platform"
+	AuthenticatorAttachment_CrossPlatform AuthenticatorAttachment = "crossPlatform"
+)
+
+/**
+ * Describes the authenticator attachment modality preference for a WebAuthn workflow. See {@link AuthenticatorAttachment}
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorAttachmentPreference string
+
+func (e AuthenticatorAttachmentPreference) String() string {
+	return string(e)
+}
+
+const (
+	AuthenticatorAttachmentPreference_Any           AuthenticatorAttachmentPreference = "any"
+	AuthenticatorAttachmentPreference_Platform      AuthenticatorAttachmentPreference = "platform"
+	AuthenticatorAttachmentPreference_CrossPlatform AuthenticatorAttachmentPreference = "crossPlatform"
+)
+
+/**
  * @author Daniel DeGroff
  */
 type AuthenticatorConfiguration struct {
 	Algorithm  TOTPAlgorithm `json:"algorithm,omitempty"`
 	CodeLength int           `json:"codeLength,omitempty"`
 	TimeStep   int           `json:"timeStep,omitempty"`
+}
+
+/**
+ * Used by the Relying Party to specify their requirements for authenticator attributes. Fields use the deprecated "resident key" terminology to refer
+ * to client-side discoverable credentials to maintain backwards compatibility with WebAuthn Level 1.
+ *
+ * @author Spencer Witt
+ */
+type AuthenticatorSelectionCriteria struct {
+	AuthenticatorAttachment AuthenticatorAttachment     `json:"authenticatorAttachment,omitempty"`
+	RequireResidentKey      bool                        `json:"requireResidentKey"`
+	ResidentKey             ResidentKeyRequirement      `json:"residentKey,omitempty"`
+	UserVerification        UserVerificationRequirement `json:"userVerification,omitempty"`
 }
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
@@ -927,11 +1029,86 @@ type CORSConfiguration struct {
 }
 
 /**
+ * A number identifying a cryptographic algorithm. Values should be registered with the <a
+ * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
+ *
+ * @author Spencer Witt
+ */
+type CoseAlgorithmIdentifier string
+
+func (e CoseAlgorithmIdentifier) String() string {
+	return string(e)
+}
+
+const (
+	CoseAlgorithmIdentifier_ES256 CoseAlgorithmIdentifier = "ES256"
+	CoseAlgorithmIdentifier_ES384 CoseAlgorithmIdentifier = "ES384"
+	CoseAlgorithmIdentifier_ES512 CoseAlgorithmIdentifier = "ES512"
+	CoseAlgorithmIdentifier_RS256 CoseAlgorithmIdentifier = "RS256"
+	CoseAlgorithmIdentifier_RS384 CoseAlgorithmIdentifier = "RS384"
+	CoseAlgorithmIdentifier_RS512 CoseAlgorithmIdentifier = "RS512"
+	CoseAlgorithmIdentifier_PS256 CoseAlgorithmIdentifier = "PS256"
+	CoseAlgorithmIdentifier_PS384 CoseAlgorithmIdentifier = "PS384"
+	CoseAlgorithmIdentifier_PS512 CoseAlgorithmIdentifier = "PS512"
+)
+
+/**
+ * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
+ *
+ * @author Spencer Witt
+ */
+type CoseEllipticCurve string
+
+func (e CoseEllipticCurve) String() string {
+	return string(e)
+}
+
+const (
+	CoseEllipticCurve_Reserved  CoseEllipticCurve = "Reserved"
+	CoseEllipticCurve_P256      CoseEllipticCurve = "P256"
+	CoseEllipticCurve_P384      CoseEllipticCurve = "P384"
+	CoseEllipticCurve_P521      CoseEllipticCurve = "P521"
+	CoseEllipticCurve_X25519    CoseEllipticCurve = "X25519"
+	CoseEllipticCurve_X448      CoseEllipticCurve = "X448"
+	CoseEllipticCurve_Ed25519   CoseEllipticCurve = "Ed25519"
+	CoseEllipticCurve_Ed448     CoseEllipticCurve = "Ed448"
+	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
+)
+
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
+type CoseKeyType string
+
+func (e CoseKeyType) String() string {
+	return string(e)
+}
+
+const (
+	CoseKeyType_Reserved  CoseKeyType = "Reserved"
+	CoseKeyType_OKP       CoseKeyType = "OKP"
+	CoseKeyType_EC2       CoseKeyType = "EC2"
+	CoseKeyType_RSA       CoseKeyType = "RSA"
+	CoseKeyType_Symmetric CoseKeyType = "Symmetric"
+)
+
+/**
  * @author Brian Pontarelli
  */
 type Count struct {
 	Count    int `json:"count,omitempty"`
 	Interval int `json:"interval,omitempty"`
+}
+
+/**
+ * Contains the output for the {@code credProps} extension
+ *
+ * @author Spencer Witt
+ */
+type CredentialPropertiesOutput struct {
+	Rk bool `json:"rk"`
 }
 
 /**
@@ -1705,30 +1882,32 @@ const (
  * @author Daniel DeGroff
  */
 type ExternalIdentifierConfiguration struct {
-	AuthorizationGrantIdTimeToLiveInSeconds       int                          `json:"authorizationGrantIdTimeToLiveInSeconds,omitempty"`
-	ChangePasswordIdGenerator                     SecureGeneratorConfiguration `json:"changePasswordIdGenerator,omitempty"`
-	ChangePasswordIdTimeToLiveInSeconds           int                          `json:"changePasswordIdTimeToLiveInSeconds,omitempty"`
-	DeviceCodeTimeToLiveInSeconds                 int                          `json:"deviceCodeTimeToLiveInSeconds,omitempty"`
-	DeviceUserCodeIdGenerator                     SecureGeneratorConfiguration `json:"deviceUserCodeIdGenerator,omitempty"`
-	EmailVerificationIdGenerator                  SecureGeneratorConfiguration `json:"emailVerificationIdGenerator,omitempty"`
-	EmailVerificationIdTimeToLiveInSeconds        int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
-	EmailVerificationOneTimeCodeGenerator         SecureGeneratorConfiguration `json:"emailVerificationOneTimeCodeGenerator,omitempty"`
-	ExternalAuthenticationIdTimeToLiveInSeconds   int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
-	OneTimePasswordTimeToLiveInSeconds            int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
-	PasswordlessLoginGenerator                    SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
-	PasswordlessLoginTimeToLiveInSeconds          int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
-	PendingAccountLinkTimeToLiveInSeconds         int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
-	RegistrationVerificationIdGenerator           SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
-	RegistrationVerificationIdTimeToLiveInSeconds int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
-	RegistrationVerificationOneTimeCodeGenerator  SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
-	Samlv2AuthNRequestIdTimeToLiveInSeconds       int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
-	SetupPasswordIdGenerator                      SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
-	SetupPasswordIdTimeToLiveInSeconds            int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
-	TrustTokenTimeToLiveInSeconds                 int                          `json:"trustTokenTimeToLiveInSeconds,omitempty"`
-	TwoFactorIdTimeToLiveInSeconds                int                          `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
-	TwoFactorOneTimeCodeIdGenerator               SecureGeneratorConfiguration `json:"twoFactorOneTimeCodeIdGenerator,omitempty"`
-	TwoFactorOneTimeCodeIdTimeToLiveInSeconds     int                          `json:"twoFactorOneTimeCodeIdTimeToLiveInSeconds,omitempty"`
-	TwoFactorTrustIdTimeToLiveInSeconds           int                          `json:"twoFactorTrustIdTimeToLiveInSeconds,omitempty"`
+	AuthorizationGrantIdTimeToLiveInSeconds            int                          `json:"authorizationGrantIdTimeToLiveInSeconds,omitempty"`
+	ChangePasswordIdGenerator                          SecureGeneratorConfiguration `json:"changePasswordIdGenerator,omitempty"`
+	ChangePasswordIdTimeToLiveInSeconds                int                          `json:"changePasswordIdTimeToLiveInSeconds,omitempty"`
+	DeviceCodeTimeToLiveInSeconds                      int                          `json:"deviceCodeTimeToLiveInSeconds,omitempty"`
+	DeviceUserCodeIdGenerator                          SecureGeneratorConfiguration `json:"deviceUserCodeIdGenerator,omitempty"`
+	EmailVerificationIdGenerator                       SecureGeneratorConfiguration `json:"emailVerificationIdGenerator,omitempty"`
+	EmailVerificationIdTimeToLiveInSeconds             int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
+	EmailVerificationOneTimeCodeGenerator              SecureGeneratorConfiguration `json:"emailVerificationOneTimeCodeGenerator,omitempty"`
+	ExternalAuthenticationIdTimeToLiveInSeconds        int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
+	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
+	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
+	PasswordlessLoginTimeToLiveInSeconds               int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
+	PendingAccountLinkTimeToLiveInSeconds              int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
+	RegistrationVerificationIdGenerator                SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
+	RegistrationVerificationIdTimeToLiveInSeconds      int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
+	RegistrationVerificationOneTimeCodeGenerator       SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
+	Samlv2AuthNRequestIdTimeToLiveInSeconds            int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
+	SetupPasswordIdGenerator                           SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
+	SetupPasswordIdTimeToLiveInSeconds                 int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
+	TrustTokenTimeToLiveInSeconds                      int                          `json:"trustTokenTimeToLiveInSeconds,omitempty"`
+	TwoFactorIdTimeToLiveInSeconds                     int                          `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
+	TwoFactorOneTimeCodeIdGenerator                    SecureGeneratorConfiguration `json:"twoFactorOneTimeCodeIdGenerator,omitempty"`
+	TwoFactorOneTimeCodeIdTimeToLiveInSeconds          int                          `json:"twoFactorOneTimeCodeIdTimeToLiveInSeconds,omitempty"`
+	TwoFactorTrustIdTimeToLiveInSeconds                int                          `json:"twoFactorTrustIdTimeToLiveInSeconds,omitempty"`
+	WebAuthnAuthenticationChallengeTimeToLiveInSeconds int                          `json:"webAuthnAuthenticationChallengeTimeToLiveInSeconds,omitempty"`
+	WebAuthnRegistrationChallengeTimeToLiveInSeconds   int                          `json:"webAuthnRegistrationChallengeTimeToLiveInSeconds,omitempty"`
 }
 
 /**
@@ -3623,8 +3802,9 @@ const (
 )
 
 type MetaData struct {
-	Device DeviceInfo `json:"device,omitempty"`
-	Scopes []string   `json:"scopes,omitempty"`
+	Data   map[string]interface{} `json:"data,omitempty"`
+	Device DeviceInfo             `json:"device,omitempty"`
+	Scopes []string               `json:"scopes,omitempty"`
 }
 
 /**
@@ -4125,6 +4305,100 @@ const (
 )
 
 /**
+ * Allows the Relying Party to specify desired attributes of a new credential.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialCreationOptions struct {
+	Attestation            AttestationConveyancePreference       `json:"attestation,omitempty"`
+	AuthenticatorSelection AuthenticatorSelectionCriteria        `json:"authenticatorSelection,omitempty"`
+	Challenge              string                                `json:"challenge,omitempty"`
+	ExcludeCredentials     []PublicKeyCredentialDescriptor       `json:"excludeCredentials,omitempty"`
+	Extensions             WebAuthnRegistrationExtensionOptions  `json:"extensions,omitempty"`
+	PubKeyCredParams       []PublicKeyCredentialParameters       `json:"pubKeyCredParams,omitempty"`
+	Rp                     PublicKeyCredentialRelyingPartyEntity `json:"rp,omitempty"`
+	Timeout                int64                                 `json:"timeout,omitempty"`
+	User                   PublicKeyCredentialUserEntity         `json:"user,omitempty"`
+}
+
+/**
+ * Contains attributes for the Relying Party to refer to an existing public key credential as an input parameter.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialDescriptor struct {
+	Id         string                  `json:"id,omitempty"`
+	Transports []string                `json:"transports,omitempty"`
+	Type       PublicKeyCredentialType `json:"type,omitempty"`
+}
+
+/**
+ * Describes a user account or WebAuthn Relying Party associated with a public key credential
+ */
+type PublicKeyCredentialEntity struct {
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Supply information on credential type and algorithm to the <i>authenticator</i>.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialParameters struct {
+	Alg  CoseAlgorithmIdentifier `json:"alg,omitempty"`
+	Type PublicKeyCredentialType `json:"type,omitempty"`
+}
+
+/**
+ * Supply additional information about the Relying Party when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialRelyingPartyEntity struct {
+	PublicKeyCredentialEntity
+	Id string `json:"id,omitempty"`
+}
+
+/**
+ * Provides the <i>authenticator</i> with the data it needs to generate an assertion.
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialRequestOptions struct {
+	AllowCredentials []PublicKeyCredentialDescriptor `json:"allowCredentials,omitempty"`
+	Challenge        string                          `json:"challenge,omitempty"`
+	RpId             string                          `json:"rpId,omitempty"`
+	Timeout          int64                           `json:"timeout,omitempty"`
+	UserVerification UserVerificationRequirement     `json:"userVerification,omitempty"`
+}
+
+/**
+ * Defines valid credential types. This is an extension point in the WebAuthn spec. The only defined value at this time is "public-key"
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialType string
+
+func (e PublicKeyCredentialType) String() string {
+	return string(e)
+}
+
+const (
+	PublicKeyCredentialType_PublicKey PublicKeyCredentialType = "publicKey"
+)
+
+/**
+ * Supply additional information about the user account when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+type PublicKeyCredentialUserEntity struct {
+	PublicKeyCredentialEntity
+	DisplayName string `json:"displayName,omitempty"`
+	Id          string `json:"id,omitempty"`
+}
+
+/**
  * JWT Public Key Response Object
  *
  * @author Daniel DeGroff
@@ -4254,6 +4528,9 @@ type ReactorStatus struct {
 	Licensed                             bool                 `json:"licensed"`
 	ScimServer                           ReactorFeatureStatus `json:"scimServer,omitempty"`
 	ThreatDetection                      ReactorFeatureStatus `json:"threatDetection,omitempty"`
+	WebAuthn                             ReactorFeatureStatus `json:"webAuthn,omitempty"`
+	WebAuthnPlatformAuthenticators       ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
+	WebAuthnRoamingAuthenticators        ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
 }
 
 /**
@@ -4514,6 +4791,24 @@ type Requirable struct {
 type RequiresCORSConfiguration struct {
 }
 
+/**
+ * Describes the Relying Party's requirements for <a href="https://www.w3.org/TR/webauthn-2/#client-side-discoverable-credential">client-side
+ * discoverable credentials</a> (formerly known as "resident keys")
+ *
+ * @author Spencer Witt
+ */
+type ResidentKeyRequirement string
+
+func (e ResidentKeyRequirement) String() string {
+	return string(e)
+}
+
+const (
+	ResidentKeyRequirement_Discouraged ResidentKeyRequirement = "discouraged"
+	ResidentKeyRequirement_Preferred   ResidentKeyRequirement = "preferred"
+	ResidentKeyRequirement_Required    ResidentKeyRequirement = "required"
+)
+
 type SAMLLogoutBehavior string
 
 func (e SAMLLogoutBehavior) String() string {
@@ -4536,18 +4831,19 @@ type SAMLv2ApplicationConfiguration struct {
 
 type SAMLv2Configuration struct {
 	Enableable
-	Audience                 string                 `json:"audience,omitempty"`
-	AuthorizedRedirectURLs   []string               `json:"authorizedRedirectURLs,omitempty"`
-	CallbackURL              string                 `json:"callbackURL,omitempty"`
-	Debug                    bool                   `json:"debug"`
-	DefaultVerificationKeyId string                 `json:"defaultVerificationKeyId,omitempty"`
-	Issuer                   string                 `json:"issuer,omitempty"`
-	KeyId                    string                 `json:"keyId,omitempty"`
-	Logout                   SAMLv2Logout           `json:"logout,omitempty"`
-	LogoutURL                string                 `json:"logoutURL,omitempty"`
-	RequireSignedRequests    bool                   `json:"requireSignedRequests"`
-	XmlSignatureC14nMethod   CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
-	XmlSignatureLocation     XMLSignatureLocation   `json:"xmlSignatureLocation,omitempty"`
+	Audience                 string                               `json:"audience,omitempty"`
+	AuthorizedRedirectURLs   []string                             `json:"authorizedRedirectURLs,omitempty"`
+	CallbackURL              string                               `json:"callbackURL,omitempty"`
+	Debug                    bool                                 `json:"debug"`
+	DefaultVerificationKeyId string                               `json:"defaultVerificationKeyId,omitempty"`
+	InitiatedLogin           SAMLv2IdPInitiatedLoginConfiguration `json:"initiatedLogin,omitempty"`
+	Issuer                   string                               `json:"issuer,omitempty"`
+	KeyId                    string                               `json:"keyId,omitempty"`
+	Logout                   SAMLv2Logout                         `json:"logout,omitempty"`
+	LogoutURL                string                               `json:"logoutURL,omitempty"`
+	RequireSignedRequests    bool                                 `json:"requireSignedRequests"`
+	XmlSignatureC14nMethod   CanonicalizationMethod               `json:"xmlSignatureC14nMethod,omitempty"`
+	XmlSignatureLocation     XMLSignatureLocation                 `json:"xmlSignatureLocation,omitempty"`
 }
 
 /**
@@ -4594,6 +4890,16 @@ type SAMLv2IdPInitiatedIdentityProvider struct {
 	UniqueIdClaim     string `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
 	UsernameClaim     string `json:"usernameClaim,omitempty"`
+}
+
+/**
+ * IdP Initiated login configuration
+ *
+ * @author Daniel DeGroff
+ */
+type SAMLv2IdPInitiatedLoginConfiguration struct {
+	Enableable
+	NameIdFormat string `json:"nameIdFormat,omitempty"`
 }
 
 type SAMLv2Logout struct {
@@ -4880,6 +5186,9 @@ type Templates struct {
 	AccountTwoFactorDisable                   string `json:"accountTwoFactorDisable,omitempty"`
 	AccountTwoFactorEnable                    string `json:"accountTwoFactorEnable,omitempty"`
 	AccountTwoFactorIndex                     string `json:"accountTwoFactorIndex,omitempty"`
+	AccountWebAuthnAdd                        string `json:"accountWebAuthnAdd,omitempty"`
+	AccountWebAuthnDelete                     string `json:"accountWebAuthnDelete,omitempty"`
+	AccountWebAuthnIndex                      string `json:"accountWebAuthnIndex,omitempty"`
 	EmailComplete                             string `json:"emailComplete,omitempty"`
 	EmailSend                                 string `json:"emailSend,omitempty"`
 	EmailSent                                 string `json:"emailSent,omitempty"`
@@ -4902,6 +5211,9 @@ type Templates struct {
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
+	Oauth2WebAuthn                            string `json:"oauth2WebAuthn,omitempty"`
+	Oauth2WebAuthnReauth                      string `json:"oauth2WebAuthnReauth,omitempty"`
+	Oauth2WebAuthnReauthEnable                string `json:"oauth2WebAuthnReauthEnable,omitempty"`
 	PasswordChange                            string `json:"passwordChange,omitempty"`
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
@@ -4954,6 +5266,7 @@ type Tenant struct {
 	ThemeId                           string                            `json:"themeId,omitempty"`
 	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
 	UsernameConfiguration             TenantUsernameConfiguration       `json:"usernameConfiguration,omitempty"`
+	WebAuthnConfiguration             TenantWebAuthnConfiguration       `json:"webAuthnConfiguration,omitempty"`
 }
 
 /**
@@ -5111,6 +5424,29 @@ type TenantUserDeletePolicy struct {
  */
 type TenantUsernameConfiguration struct {
 	Unique UniqueUsernameConfiguration `json:"unique,omitempty"`
+}
+
+/**
+ * Tenant-level configuration for WebAuthn
+ *
+ * @author Spencer Witt
+ */
+type TenantWebAuthnConfiguration struct {
+	Enableable
+	BootstrapWorkflow        TenantWebAuthnWorkflowConfiguration `json:"bootstrapWorkflow,omitempty"`
+	Debug                    bool                                `json:"debug"`
+	ReauthenticationWorkflow TenantWebAuthnWorkflowConfiguration `json:"reauthenticationWorkflow,omitempty"`
+	RelyingPartyId           string                              `json:"relyingPartyId,omitempty"`
+	RelyingPartyName         string                              `json:"relyingPartyName,omitempty"`
+}
+
+/**
+ * @author Spencer Witt
+ */
+type TenantWebAuthnWorkflowConfiguration struct {
+	Enableable
+	AuthenticatorAttachmentPreference AuthenticatorAttachmentPreference `json:"authenticatorAttachmentPreference,omitempty"`
+	UserVerificationRequirement       UserVerificationRequirement       `json:"userVerificationRequirement,omitempty"`
 }
 
 /**
@@ -6270,6 +6606,24 @@ type UserUpdateEvent struct {
 }
 
 /**
+ * Used to express whether the Relying Party requires <a href="https://www.w3.org/TR/webauthn-2/#user-verification">user verification</a> for the
+ * current operation.
+ *
+ * @author Spencer Witt
+ */
+type UserVerificationRequirement string
+
+func (e UserVerificationRequirement) String() string {
+	return string(e)
+}
+
+const (
+	UserVerificationRequirement_Required    UserVerificationRequirement = "required"
+	UserVerificationRequirement_Preferred   UserVerificationRequirement = "preferred"
+	UserVerificationRequirement_Discouraged UserVerificationRequirement = "discouraged"
+)
+
+/**
  * @author Daniel DeGroff
  */
 type ValidateResponse struct {
@@ -6351,6 +6705,260 @@ type VersionResponse struct {
 func (b *VersionResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * API response for completing WebAuthn assertion
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnAssertResponse struct {
+	BaseHTTPResponse
+	Credential WebAuthnCredential `json:"credential,omitempty"`
+}
+
+func (b *WebAuthnAssertResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnAuthenticatorAuthenticationResponse struct {
+	BaseHTTPResponse
+	AuthenticatorData string `json:"authenticatorData,omitempty"`
+	ClientDataJSON    string `json:"clientDataJSON,omitempty"`
+	Signature         string `json:"signature,omitempty"`
+	UserHandle        string `json:"userHandle,omitempty"`
+}
+
+func (b *WebAuthnAuthenticatorAuthenticationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * The <i>authenticator's</i> response for the registration ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnAuthenticatorRegistrationResponse struct {
+	BaseHTTPResponse
+	AttestationObject string `json:"attestationObject,omitempty"`
+	ClientDataJSON    string `json:"clientDataJSON,omitempty"`
+}
+
+func (b *WebAuthnAuthenticatorRegistrationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * A User's WebAuthnCredential. Contains all data required to complete WebAuthn authentication ceremonies.
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCredential struct {
+	Algorithm                             CoseAlgorithmIdentifier `json:"algorithm,omitempty"`
+	AttestationType                       AttestationType         `json:"attestationType,omitempty"`
+	AuthenticatorSupportsUserVerification bool                    `json:"authenticatorSupportsUserVerification"`
+	CredentialId                          string                  `json:"credentialId,omitempty"`
+	Data                                  map[string]interface{}  `json:"data,omitempty"`
+	Discoverable                          bool                    `json:"discoverable"`
+	DisplayName                           string                  `json:"displayName,omitempty"`
+	Id                                    string                  `json:"id,omitempty"`
+	InsertInstant                         int64                   `json:"insertInstant,omitempty"`
+	LastUseInstant                        int64                   `json:"lastUseInstant,omitempty"`
+	Name                                  string                  `json:"name,omitempty"`
+	PublicKey                             string                  `json:"publicKey,omitempty"`
+	RelyingPartyId                        string                  `json:"relyingPartyId,omitempty"`
+	SignCount                             int                     `json:"signCount,omitempty"`
+	TenantId                              string                  `json:"tenantId,omitempty"`
+	Transports                            []string                `json:"transports,omitempty"`
+	UserAgent                             string                  `json:"userAgent,omitempty"`
+	UserId                                string                  `json:"userId,omitempty"`
+}
+
+/**
+ * API request to import an existing WebAuthn credential(s)
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCredentialImportRequest struct {
+	Credentials           []WebAuthnCredential `json:"credentials,omitempty"`
+	ValidateDbConstraints bool                 `json:"validateDbConstraints"`
+}
+
+/**
+ * WebAuthn Credential API response
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnCredentialResponse struct {
+	BaseHTTPResponse
+	Credential  WebAuthnCredential   `json:"credential,omitempty"`
+	Credentials []WebAuthnCredential `json:"credentials,omitempty"`
+}
+
+func (b *WebAuthnCredentialResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Contains extension output for requested extensions during a WebAuthn ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnExtensionsClientOutputs struct {
+	CredProps CredentialPropertiesOutput `json:"credProps,omitempty"`
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnLoginRequest struct {
+	BaseLoginRequest
+	Credential       WebAuthnPublicKeyAuthenticationRequest `json:"credential,omitempty"`
+	Origin           string                                 `json:"origin,omitempty"`
+	RpId             string                                 `json:"rpId,omitempty"`
+	TwoFactorTrustId string                                 `json:"twoFactorTrustId,omitempty"`
+}
+
+/**
+ * Request to authenticate with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnPublicKeyAuthenticationRequest struct {
+	ClientExtensionResults WebAuthnExtensionsClientOutputs             `json:"clientExtensionResults,omitempty"`
+	Id                     string                                      `json:"id,omitempty"`
+	Response               WebAuthnAuthenticatorAuthenticationResponse `json:"response,omitempty"`
+	RpId                   string                                      `json:"rpId,omitempty"`
+	Type                   string                                      `json:"type,omitempty"`
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnPublicKeyRegistrationRequest struct {
+	ClientExtensionResults WebAuthnExtensionsClientOutputs           `json:"clientExtensionResults,omitempty"`
+	Id                     string                                    `json:"id,omitempty"`
+	Response               WebAuthnAuthenticatorRegistrationResponse `json:"response,omitempty"`
+	RpId                   string                                    `json:"rpId,omitempty"`
+	Transports             []string                                  `json:"transports,omitempty"`
+	Type                   string                                    `json:"type,omitempty"`
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony for a new credential,.
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnRegisterCompleteRequest struct {
+	Credential WebAuthnPublicKeyRegistrationRequest `json:"credential,omitempty"`
+	Origin     string                               `json:"origin,omitempty"`
+	RpId       string                               `json:"rpId,omitempty"`
+	UserId     string                               `json:"userId,omitempty"`
+}
+
+/**
+ * API response for completing WebAuthn credential registration or assertion
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnRegisterCompleteResponse struct {
+	BaseHTTPResponse
+	Credential WebAuthnCredential `json:"credential,omitempty"`
+}
+
+func (b *WebAuthnRegisterCompleteResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * API request to start a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnRegisterStartRequest struct {
+	DisplayName string           `json:"displayName,omitempty"`
+	Name        string           `json:"name,omitempty"`
+	UserAgent   string           `json:"userAgent,omitempty"`
+	UserId      string           `json:"userId,omitempty"`
+	Workflow    WebAuthnWorkflow `json:"workflow,omitempty"`
+}
+
+/**
+ * API response for starting a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnRegisterStartResponse struct {
+	BaseHTTPResponse
+	Options PublicKeyCredentialCreationOptions `json:"options,omitempty"`
+}
+
+func (b *WebAuthnRegisterStartResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Options to request extensions during credential registration
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnRegistrationExtensionOptions struct {
+	CredProps bool `json:"credProps"`
+}
+
+/**
+ * API request to start a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnStartRequest struct {
+	ApplicationId string                 `json:"applicationId,omitempty"`
+	CredentialId  string                 `json:"credentialId,omitempty"`
+	LoginId       string                 `json:"loginId,omitempty"`
+	State         map[string]interface{} `json:"state,omitempty"`
+	UserId        string                 `json:"userId,omitempty"`
+	Workflow      WebAuthnWorkflow       `json:"workflow,omitempty"`
+}
+
+/**
+ * API response for starting a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnStartResponse struct {
+	BaseHTTPResponse
+	Options PublicKeyCredentialRequestOptions `json:"options,omitempty"`
+}
+
+func (b *WebAuthnStartResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
+ * and request based on the Tenant configuration.
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnWorkflow string
+
+func (e WebAuthnWorkflow) String() string {
+	return string(e)
+}
+
+const (
+	WebAuthnWorkflow_Bootstrap        WebAuthnWorkflow = "bootstrap"
+	WebAuthnWorkflow_General          WebAuthnWorkflow = "general"
+	WebAuthnWorkflow_Reauthentication WebAuthnWorkflow = "reauthentication"
+)
 
 /**
  * A server where events are sent. This includes user action events and any other events sent by FusionAuth.
