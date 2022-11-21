@@ -1961,16 +1961,25 @@ type FacebookIdentityProvider struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type FailedAuthenticationActionCancelPolicy struct {
+	OnPasswordReset bool `json:"onPasswordReset"`
+}
+
+/**
  * Configuration for the behavior of failed login attempts. This helps us protect against brute force password attacks.
  *
  * @author Daniel DeGroff
  */
 type FailedAuthenticationConfiguration struct {
-	ActionDuration      int64      `json:"actionDuration,omitempty"`
-	ActionDurationUnit  ExpiryUnit `json:"actionDurationUnit,omitempty"`
-	ResetCountInSeconds int        `json:"resetCountInSeconds,omitempty"`
-	TooManyAttempts     int        `json:"tooManyAttempts,omitempty"`
-	UserActionId        string     `json:"userActionId,omitempty"`
+	ActionCancelPolicy  FailedAuthenticationActionCancelPolicy `json:"actionCancelPolicy,omitempty"`
+	ActionDuration      int64                                  `json:"actionDuration,omitempty"`
+	ActionDurationUnit  ExpiryUnit                             `json:"actionDurationUnit,omitempty"`
+	EmailUser           bool                                   `json:"emailUser"`
+	ResetCountInSeconds int                                    `json:"resetCountInSeconds,omitempty"`
+	TooManyAttempts     int                                    `json:"tooManyAttempts,omitempty"`
+	UserActionId        string                                 `json:"userActionId,omitempty"`
 }
 
 /**
@@ -3297,18 +3306,18 @@ type Lambda struct {
 	Type              LambdaType       `json:"type,omitempty"`
 }
 
+type LambdaConfiguration struct {
+	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
+	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
+	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
+}
+
 type ConnectorLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
 }
 
 type ProviderLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
-}
-
-type LambdaConfiguration struct {
-	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
-	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
-	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
 }
 
 /**
@@ -3858,6 +3867,7 @@ func (e MultiFactorLoginPolicy) String() string {
 const (
 	MultiFactorLoginPolicy_Disabled MultiFactorLoginPolicy = "Disabled"
 	MultiFactorLoginPolicy_Enabled  MultiFactorLoginPolicy = "Enabled"
+	MultiFactorLoginPolicy_Required MultiFactorLoginPolicy = "Required"
 )
 
 type MultiFactorSMSMethod struct {
@@ -4627,8 +4637,9 @@ func (b *RefreshTokenResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type RefreshTokenRevocationPolicy struct {
-	OnLoginPrevented  bool `json:"onLoginPrevented"`
-	OnPasswordChanged bool `json:"onPasswordChanged"`
+	OnLoginPrevented    bool `json:"onLoginPrevented"`
+	OnMultiFactorEnable bool `json:"onMultiFactorEnable"`
+	OnPasswordChanged   bool `json:"onPasswordChanged"`
 }
 
 /**
@@ -5209,7 +5220,9 @@ type Templates struct {
 	Oauth2Register                            string `json:"oauth2Register,omitempty"`
 	Oauth2StartIdPLink                        string `json:"oauth2StartIdPLink,omitempty"`
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
+	Oauth2TwoFactorEnable                     string `json:"oauth2TwoFactorEnable,omitempty"`
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
+	Oauth2TwoFactorRecoveryCodes              string `json:"oauth2TwoFactorRecoveryCodes,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
 	Oauth2WebAuthn                            string `json:"oauth2WebAuthn,omitempty"`
 	Oauth2WebAuthnReauth                      string `json:"oauth2WebAuthnReauth,omitempty"`
