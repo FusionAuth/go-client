@@ -3605,6 +3605,7 @@ type LoginResponse struct {
 	Actions                    []LoginPreventedResponse `json:"actions,omitempty"`
 	ChangePasswordId           string                   `json:"changePasswordId,omitempty"`
 	ChangePasswordReason       ChangePasswordReason     `json:"changePasswordReason,omitempty"`
+	ConfigurableMethods        []string                 `json:"configurableMethods,omitempty"`
 	EmailVerificationId        string                   `json:"emailVerificationId,omitempty"`
 	Methods                    []TwoFactorMethod        `json:"methods,omitempty"`
 	PendingIdPLinkId           string                   `json:"pendingIdPLinkId,omitempty"`
@@ -5221,8 +5222,8 @@ type Templates struct {
 	Oauth2StartIdPLink                        string `json:"oauth2StartIdPLink,omitempty"`
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
 	Oauth2TwoFactorEnable                     string `json:"oauth2TwoFactorEnable,omitempty"`
+	Oauth2TwoFactorEnableComplete             string `json:"oauth2TwoFactorEnableComplete,omitempty"`
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
-	Oauth2TwoFactorRecoveryCodes              string `json:"oauth2TwoFactorRecoveryCodes,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
 	Oauth2WebAuthn                            string `json:"oauth2WebAuthn,omitempty"`
 	Oauth2WebAuthnReauth                      string `json:"oauth2WebAuthnReauth,omitempty"`
@@ -5722,6 +5723,7 @@ type TwoFactorRequest struct {
 	MobilePhone         string `json:"mobilePhone,omitempty"`
 	Secret              string `json:"secret,omitempty"`
 	SecretBase32Encoded string `json:"secretBase32Encoded,omitempty"`
+	TwoFactorId         string `json:"twoFactorId,omitempty"`
 }
 
 /**
@@ -5729,6 +5731,7 @@ type TwoFactorRequest struct {
  */
 type TwoFactorResponse struct {
 	BaseHTTPResponse
+	Code          string   `json:"code,omitempty"`
 	RecoveryCodes []string `json:"recoveryCodes,omitempty"`
 }
 
