@@ -1805,10 +1805,10 @@ func (c *FusionAuthClient) DeleteWebhook(webhookId string) (*BaseHTTPResponse, *
 }
 
 // DisableTwoFactor
-// Disable Two Factor authentication for a user.
-//   string userId The Id of the User for which you're disabling Two Factor authentication.
+// Disable two-factor authentication for a user.
+//   string userId The Id of the User for which you're disabling two-factor authentication.
 //   string methodId The two-factor method identifier you wish to disable
-//   string code The Two Factor code used verify the the caller knows the Two Factor secret.
+//   string code The two-factor code used verify the the caller knows the two-factor secret.
 func (c *FusionAuthClient) DisableTwoFactor(userId string, methodId string, code string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -1827,8 +1827,8 @@ func (c *FusionAuthClient) DisableTwoFactor(userId string, methodId string, code
 }
 
 // DisableTwoFactorWithRequest
-// Disable Two Factor authentication for a user using a JSON body rather than URL parameters.
-//   string userId The Id of the User for which you're disabling Two Factor authentication.
+// Disable two-factor authentication for a user using a JSON body rather than URL parameters.
+//   string userId The Id of the User for which you're disabling two-factor authentication.
 //   TwoFactorDisableRequest request The request information that contains the code and methodId along with any event information.
 func (c *FusionAuthClient) DisableTwoFactorWithRequest(userId string, request TwoFactorDisableRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
@@ -1847,9 +1847,9 @@ func (c *FusionAuthClient) DisableTwoFactorWithRequest(userId string, request Tw
 }
 
 // EnableTwoFactor
-// Enable Two Factor authentication for a user.
-//   string userId The Id of the user to enable Two Factor authentication.
-//   TwoFactorRequest request The two factor enable request information.
+// Enable two-factor authentication for a user.
+//   string userId The Id of the user to enable two-factor authentication.
+//   TwoFactorRequest request The two-factor enable request information.
 func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorRequest) (*TwoFactorResponse, *Errors, error) {
 	var resp TwoFactorResponse
 	var errors Errors
@@ -1870,7 +1870,7 @@ func (c *FusionAuthClient) EnableTwoFactor(userId string, request TwoFactorReque
 // Exchanges an OAuth authorization code for an access token.
 // Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
 //   string code The authorization code returned on the /oauth2/authorize response.
-//   string clientId The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate.
+//   string clientId The unique client identifier. The client Id is the Id of the FusionAuth Application in which you are attempting to authenticate.
 //   string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //   string redirectUri The URI to redirect to upon a successful request.
 func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId string, clientSecret string, redirectUri string) (*AccessToken, *OAuthError, error) {
@@ -1898,7 +1898,7 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId
 // Exchanges an OAuth authorization code and code_verifier for an access token.
 // Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint and a code_verifier for an access token.
 //   string code The authorization code returned on the /oauth2/authorize response.
-//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
 //   string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //   string redirectUri The URI to redirect to upon a successful request.
 //   string codeVerifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
@@ -1928,7 +1928,7 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string,
 // Exchange a Refresh Token for an Access Token.
 // If you will be using the Refresh Token Grant, you will make a request to the Token endpoint to exchange the user’s refresh token for an access token.
 //   string refreshToken The refresh token that you would like to use to exchange for an access token.
-//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
 //   string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //   string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //   string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
@@ -1977,7 +1977,7 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForJWT(request RefreshRequest) (*
 // If you will be using the Resource Owner Password Credential Grant, you will make a request to the Token endpoint to exchange the user’s email and password for an access token.
 //   string username The login identifier of the user. The login identifier can be either the email or the username.
 //   string password The user’s password.
-//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+//   string clientId (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
 //   string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //   string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //   string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.

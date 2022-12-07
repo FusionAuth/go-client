@@ -1961,16 +1961,27 @@ type FacebookIdentityProvider struct {
 }
 
 /**
+ * A policy to configure if and when the user-action is canceled prior to the expiration of the action.
+ *
+ * @author Daniel DeGroff
+ */
+type FailedAuthenticationActionCancelPolicy struct {
+	OnPasswordReset bool `json:"onPasswordReset"`
+}
+
+/**
  * Configuration for the behavior of failed login attempts. This helps us protect against brute force password attacks.
  *
  * @author Daniel DeGroff
  */
 type FailedAuthenticationConfiguration struct {
-	ActionDuration      int64      `json:"actionDuration,omitempty"`
-	ActionDurationUnit  ExpiryUnit `json:"actionDurationUnit,omitempty"`
-	ResetCountInSeconds int        `json:"resetCountInSeconds,omitempty"`
-	TooManyAttempts     int        `json:"tooManyAttempts,omitempty"`
-	UserActionId        string     `json:"userActionId,omitempty"`
+	ActionCancelPolicy  FailedAuthenticationActionCancelPolicy `json:"actionCancelPolicy,omitempty"`
+	ActionDuration      int64                                  `json:"actionDuration,omitempty"`
+	ActionDurationUnit  ExpiryUnit                             `json:"actionDurationUnit,omitempty"`
+	EmailUser           bool                                   `json:"emailUser"`
+	ResetCountInSeconds int                                    `json:"resetCountInSeconds,omitempty"`
+	TooManyAttempts     int                                    `json:"tooManyAttempts,omitempty"`
+	UserActionId        string                                 `json:"userActionId,omitempty"`
 }
 
 /**
@@ -3596,6 +3607,7 @@ type LoginResponse struct {
 	Actions                    []LoginPreventedResponse `json:"actions,omitempty"`
 	ChangePasswordId           string                   `json:"changePasswordId,omitempty"`
 	ChangePasswordReason       ChangePasswordReason     `json:"changePasswordReason,omitempty"`
+	ConfigurableMethods        []string                 `json:"configurableMethods,omitempty"`
 	EmailVerificationId        string                   `json:"emailVerificationId,omitempty"`
 	Methods                    []TwoFactorMethod        `json:"methods,omitempty"`
 	PendingIdPLinkId           string                   `json:"pendingIdPLinkId,omitempty"`
@@ -3858,6 +3870,7 @@ func (e MultiFactorLoginPolicy) String() string {
 const (
 	MultiFactorLoginPolicy_Disabled MultiFactorLoginPolicy = "Disabled"
 	MultiFactorLoginPolicy_Enabled  MultiFactorLoginPolicy = "Enabled"
+	MultiFactorLoginPolicy_Required MultiFactorLoginPolicy = "Required"
 )
 
 type MultiFactorSMSMethod struct {
@@ -4627,8 +4640,9 @@ func (b *RefreshTokenResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type RefreshTokenRevocationPolicy struct {
-	OnLoginPrevented  bool `json:"onLoginPrevented"`
-	OnPasswordChanged bool `json:"onPasswordChanged"`
+	OnLoginPrevented    bool `json:"onLoginPrevented"`
+	OnMultiFactorEnable bool `json:"onMultiFactorEnable"`
+	OnPasswordChanged   bool `json:"onPasswordChanged"`
 }
 
 /**
@@ -5209,6 +5223,8 @@ type Templates struct {
 	Oauth2Register                            string `json:"oauth2Register,omitempty"`
 	Oauth2StartIdPLink                        string `json:"oauth2StartIdPLink,omitempty"`
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
+	Oauth2TwoFactorEnable                     string `json:"oauth2TwoFactorEnable,omitempty"`
+	Oauth2TwoFactorEnableComplete             string `json:"oauth2TwoFactorEnableComplete,omitempty"`
 	Oauth2TwoFactorMethods                    string `json:"oauth2TwoFactorMethods,omitempty"`
 	Oauth2Wait                                string `json:"oauth2Wait,omitempty"`
 	Oauth2WebAuthn                            string `json:"oauth2WebAuthn,omitempty"`
@@ -5709,6 +5725,7 @@ type TwoFactorRequest struct {
 	MobilePhone         string `json:"mobilePhone,omitempty"`
 	Secret              string `json:"secret,omitempty"`
 	SecretBase32Encoded string `json:"secretBase32Encoded,omitempty"`
+	TwoFactorId         string `json:"twoFactorId,omitempty"`
 }
 
 /**
@@ -5716,6 +5733,7 @@ type TwoFactorRequest struct {
  */
 type TwoFactorResponse struct {
 	BaseHTTPResponse
+	Code          string   `json:"code,omitempty"`
 	RecoveryCodes []string `json:"recoveryCodes,omitempty"`
 }
 
