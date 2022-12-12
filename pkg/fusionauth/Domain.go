@@ -3481,6 +3481,14 @@ type LoginConfiguration struct {
 	RequireAuthentication bool `json:"requireAuthentication"`
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+type LoginHintConfiguration struct {
+	Enableable
+	ParameterName string `json:"parameterName,omitempty"`
+}
+
 type LoginIdType string
 
 func (e LoginIdType) String() string {
@@ -4874,6 +4882,7 @@ type SAMLv2IdentityProvider struct {
 	IdpEndpoint            string                 `json:"idpEndpoint,omitempty"`
 	Issuer                 string                 `json:"issuer,omitempty"`
 	KeyId                  string                 `json:"keyId,omitempty"`
+	LoginHintConfiguration LoginHintConfiguration `json:"loginHintConfiguration,omitempty"`
 	NameIdFormat           string                 `json:"nameIdFormat,omitempty"`
 	PostRequest            bool                   `json:"postRequest"`
 	RequestSigningKeyId    string                 `json:"requestSigningKeyId,omitempty"`
