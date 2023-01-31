@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2022, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -177,6 +177,7 @@ func (b *APIKeyResponse) SetStatus(status int) {
  */
 type AppleApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
+	BundleId   string `json:"bundleId,omitempty"`
 	ButtonText string `json:"buttonText,omitempty"`
 	KeyId      string `json:"keyId,omitempty"`
 	Scope      string `json:"scope,omitempty"`
@@ -189,6 +190,7 @@ type AppleApplicationConfiguration struct {
  */
 type AppleIdentityProvider struct {
 	BaseIdentityProvider
+	BundleId   string `json:"bundleId,omitempty"`
 	ButtonText string `json:"buttonText,omitempty"`
 	KeyId      string `json:"keyId,omitempty"`
 	Scope      string `json:"scope,omitempty"`
@@ -312,8 +314,9 @@ type ApplicationRegistrationDeletePolicy struct {
  */
 type ApplicationRequest struct {
 	BaseEventRequest
-	Application Application     `json:"application,omitempty"`
-	Role        ApplicationRole `json:"role,omitempty"`
+	Application         Application     `json:"application,omitempty"`
+	Role                ApplicationRole `json:"role,omitempty"`
+	SourceApplicationId string          `json:"sourceApplicationId,omitempty"`
 }
 
 /**
@@ -691,6 +694,18 @@ type BaseMessengerConfiguration struct {
 	Name              string                 `json:"name,omitempty"`
 	Transport         string                 `json:"transport,omitempty"`
 	Type              MessengerType          `json:"type,omitempty"`
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type BaseSAMLv2IdentityProvider struct {
+	BaseIdentityProvider
+	EmailClaim        string `json:"emailClaim,omitempty"`
+	KeyId             string `json:"keyId,omitempty"`
+	UniqueIdClaim     string `json:"uniqueIdClaim,omitempty"`
+	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
+	UsernameClaim     string `json:"usernameClaim,omitempty"`
 }
 
 /**
@@ -3309,9 +3324,10 @@ type Lambda struct {
 }
 
 type LambdaConfiguration struct {
-	AccessTokenPopulateId string `json:"accessTokenPopulateId,omitempty"`
-	IdTokenPopulateId     string `json:"idTokenPopulateId,omitempty"`
-	Samlv2PopulateId      string `json:"samlv2PopulateId,omitempty"`
+	AccessTokenPopulateId               string `json:"accessTokenPopulateId,omitempty"`
+	IdTokenPopulateId                   string `json:"idTokenPopulateId,omitempty"`
+	Samlv2PopulateId                    string `json:"samlv2PopulateId,omitempty"`
+	SelfServiceRegistrationValidationId string `json:"selfServiceRegistrationValidationId,omitempty"`
 }
 
 type ConnectorLambdaConfiguration struct {
@@ -3372,29 +3388,30 @@ func (e LambdaType) String() string {
 }
 
 const (
-	LambdaType_JWTPopulate                      LambdaType = "JWTPopulate"
-	LambdaType_OpenIDReconcile                  LambdaType = "OpenIDReconcile"
-	LambdaType_SAMLv2Reconcile                  LambdaType = "SAMLv2Reconcile"
-	LambdaType_SAMLv2Populate                   LambdaType = "SAMLv2Populate"
-	LambdaType_AppleReconcile                   LambdaType = "AppleReconcile"
-	LambdaType_ExternalJWTReconcile             LambdaType = "ExternalJWTReconcile"
-	LambdaType_FacebookReconcile                LambdaType = "FacebookReconcile"
-	LambdaType_GoogleReconcile                  LambdaType = "GoogleReconcile"
-	LambdaType_HYPRReconcile                    LambdaType = "HYPRReconcile"
-	LambdaType_TwitterReconcile                 LambdaType = "TwitterReconcile"
-	LambdaType_LDAPConnectorReconcile           LambdaType = "LDAPConnectorReconcile"
-	LambdaType_LinkedInReconcile                LambdaType = "LinkedInReconcile"
-	LambdaType_EpicGamesReconcile               LambdaType = "EpicGamesReconcile"
-	LambdaType_NintendoReconcile                LambdaType = "NintendoReconcile"
-	LambdaType_SonyPSNReconcile                 LambdaType = "SonyPSNReconcile"
-	LambdaType_SteamReconcile                   LambdaType = "SteamReconcile"
-	LambdaType_TwitchReconcile                  LambdaType = "TwitchReconcile"
-	LambdaType_XboxReconcile                    LambdaType = "XboxReconcile"
-	LambdaType_ClientCredentialsJWTPopulate     LambdaType = "ClientCredentialsJWTPopulate"
-	LambdaType_SCIMServerGroupRequestConverter  LambdaType = "SCIMServerGroupRequestConverter"
-	LambdaType_SCIMServerGroupResponseConverter LambdaType = "SCIMServerGroupResponseConverter"
-	LambdaType_SCIMServerUserRequestConverter   LambdaType = "SCIMServerUserRequestConverter"
-	LambdaType_SCIMServerUserResponseConverter  LambdaType = "SCIMServerUserResponseConverter"
+	LambdaType_JWTPopulate                       LambdaType = "JWTPopulate"
+	LambdaType_OpenIDReconcile                   LambdaType = "OpenIDReconcile"
+	LambdaType_SAMLv2Reconcile                   LambdaType = "SAMLv2Reconcile"
+	LambdaType_SAMLv2Populate                    LambdaType = "SAMLv2Populate"
+	LambdaType_AppleReconcile                    LambdaType = "AppleReconcile"
+	LambdaType_ExternalJWTReconcile              LambdaType = "ExternalJWTReconcile"
+	LambdaType_FacebookReconcile                 LambdaType = "FacebookReconcile"
+	LambdaType_GoogleReconcile                   LambdaType = "GoogleReconcile"
+	LambdaType_HYPRReconcile                     LambdaType = "HYPRReconcile"
+	LambdaType_TwitterReconcile                  LambdaType = "TwitterReconcile"
+	LambdaType_LDAPConnectorReconcile            LambdaType = "LDAPConnectorReconcile"
+	LambdaType_LinkedInReconcile                 LambdaType = "LinkedInReconcile"
+	LambdaType_EpicGamesReconcile                LambdaType = "EpicGamesReconcile"
+	LambdaType_NintendoReconcile                 LambdaType = "NintendoReconcile"
+	LambdaType_SonyPSNReconcile                  LambdaType = "SonyPSNReconcile"
+	LambdaType_SteamReconcile                    LambdaType = "SteamReconcile"
+	LambdaType_TwitchReconcile                   LambdaType = "TwitchReconcile"
+	LambdaType_XboxReconcile                     LambdaType = "XboxReconcile"
+	LambdaType_ClientCredentialsJWTPopulate      LambdaType = "ClientCredentialsJWTPopulate"
+	LambdaType_SCIMServerGroupRequestConverter   LambdaType = "SCIMServerGroupRequestConverter"
+	LambdaType_SCIMServerGroupResponseConverter  LambdaType = "SCIMServerGroupResponseConverter"
+	LambdaType_SCIMServerUserRequestConverter    LambdaType = "SCIMServerUserRequestConverter"
+	LambdaType_SCIMServerUserResponseConverter   LambdaType = "SCIMServerUserResponseConverter"
+	LambdaType_SelfServiceRegistrationValidation LambdaType = "SelfServiceRegistrationValidation"
 )
 
 /**
@@ -3930,23 +3947,38 @@ type NonTransactionalEvent struct {
 }
 
 /**
+ * @author Johnathon Wood
+ */
+type Oauth2AuthorizedURLValidationPolicy string
+
+func (e Oauth2AuthorizedURLValidationPolicy) String() string {
+	return string(e)
+}
+
+const (
+	Oauth2AuthorizedURLValidationPolicy_AllowWildcards Oauth2AuthorizedURLValidationPolicy = "AllowWildcards"
+	Oauth2AuthorizedURLValidationPolicy_ExactMatch     Oauth2AuthorizedURLValidationPolicy = "ExactMatch"
+)
+
+/**
  * @author Daniel DeGroff
  */
 type OAuth2Configuration struct {
-	AuthorizedOriginURLs          []string                      `json:"authorizedOriginURLs,omitempty"`
-	AuthorizedRedirectURLs        []string                      `json:"authorizedRedirectURLs,omitempty"`
-	ClientAuthenticationPolicy    ClientAuthenticationPolicy    `json:"clientAuthenticationPolicy,omitempty"`
-	ClientId                      string                        `json:"clientId,omitempty"`
-	ClientSecret                  string                        `json:"clientSecret,omitempty"`
-	Debug                         bool                          `json:"debug"`
-	DeviceVerificationURL         string                        `json:"deviceVerificationURL,omitempty"`
-	EnabledGrants                 []GrantType                   `json:"enabledGrants,omitempty"`
-	GenerateRefreshTokens         bool                          `json:"generateRefreshTokens"`
-	LogoutBehavior                LogoutBehavior                `json:"logoutBehavior,omitempty"`
-	LogoutURL                     string                        `json:"logoutURL,omitempty"`
-	ProofKeyForCodeExchangePolicy ProofKeyForCodeExchangePolicy `json:"proofKeyForCodeExchangePolicy,omitempty"`
-	RequireClientAuthentication   bool                          `json:"requireClientAuthentication"`
-	RequireRegistration           bool                          `json:"requireRegistration"`
+	AuthorizedOriginURLs          []string                            `json:"authorizedOriginURLs,omitempty"`
+	AuthorizedRedirectURLs        []string                            `json:"authorizedRedirectURLs,omitempty"`
+	AuthorizedURLValidationPolicy Oauth2AuthorizedURLValidationPolicy `json:"authorizedURLValidationPolicy,omitempty"`
+	ClientAuthenticationPolicy    ClientAuthenticationPolicy          `json:"clientAuthenticationPolicy,omitempty"`
+	ClientId                      string                              `json:"clientId,omitempty"`
+	ClientSecret                  string                              `json:"clientSecret,omitempty"`
+	Debug                         bool                                `json:"debug"`
+	DeviceVerificationURL         string                              `json:"deviceVerificationURL,omitempty"`
+	EnabledGrants                 []GrantType                         `json:"enabledGrants,omitempty"`
+	GenerateRefreshTokens         bool                                `json:"generateRefreshTokens"`
+	LogoutBehavior                LogoutBehavior                      `json:"logoutBehavior,omitempty"`
+	LogoutURL                     string                              `json:"logoutURL,omitempty"`
+	ProofKeyForCodeExchangePolicy ProofKeyForCodeExchangePolicy       `json:"proofKeyForCodeExchangePolicy,omitempty"`
+	RequireClientAuthentication   bool                                `json:"requireClientAuthentication"`
+	RequireRegistration           bool                                `json:"requireRegistration"`
 }
 
 /**
@@ -4851,6 +4883,13 @@ type SAMLv2ApplicationConfiguration struct {
 	ButtonText     string `json:"buttonText,omitempty"`
 }
 
+/**
+ * @author Lyle Schemmerling
+ */
+type SAMLv2AssertionConfiguration struct {
+	Destination SAMLv2DestinationAssertionConfiguration `json:"destination,omitempty"`
+}
+
 type SAMLv2Configuration struct {
 	Enableable
 	Audience                 string                               `json:"audience,omitempty"`
@@ -4869,28 +4908,48 @@ type SAMLv2Configuration struct {
 }
 
 /**
+ * @author Lyle Schemmerling
+ */
+type SAMLv2DestinationAssertionConfiguration struct {
+	Alternates []string                         `json:"alternates,omitempty"`
+	Policy     SAMLv2DestinationAssertionPolicy `json:"policy,omitempty"`
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type SAMLv2DestinationAssertionPolicy string
+
+func (e SAMLv2DestinationAssertionPolicy) String() string {
+	return string(e)
+}
+
+const (
+	SAMLv2DestinationAssertionPolicy_Enabled         SAMLv2DestinationAssertionPolicy = "Enabled"
+	SAMLv2DestinationAssertionPolicy_Disabled        SAMLv2DestinationAssertionPolicy = "Disabled"
+	SAMLv2DestinationAssertionPolicy_AllowAlternates SAMLv2DestinationAssertionPolicy = "AllowAlternates"
+)
+
+/**
  * SAML v2 identity provider configuration.
  *
  * @author Brian Pontarelli
  */
 type SAMLv2IdentityProvider struct {
-	BaseIdentityProvider
-	ButtonImageURL         string                 `json:"buttonImageURL,omitempty"`
-	ButtonText             string                 `json:"buttonText,omitempty"`
-	Domains                []string               `json:"domains,omitempty"`
-	EmailClaim             string                 `json:"emailClaim,omitempty"`
-	IdpEndpoint            string                 `json:"idpEndpoint,omitempty"`
-	Issuer                 string                 `json:"issuer,omitempty"`
-	KeyId                  string                 `json:"keyId,omitempty"`
-	LoginHintConfiguration LoginHintConfiguration `json:"loginHintConfiguration,omitempty"`
-	NameIdFormat           string                 `json:"nameIdFormat,omitempty"`
-	PostRequest            bool                   `json:"postRequest"`
-	RequestSigningKeyId    string                 `json:"requestSigningKeyId,omitempty"`
-	SignRequest            bool                   `json:"signRequest"`
-	UniqueIdClaim          string                 `json:"uniqueIdClaim,omitempty"`
-	UseNameIdForEmail      bool                   `json:"useNameIdForEmail"`
-	UsernameClaim          string                 `json:"usernameClaim,omitempty"`
-	XmlSignatureC14nMethod CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
+	BaseSAMLv2IdentityProvider
+	AssertionConfiguration    SAMLv2AssertionConfiguration    `json:"assertionConfiguration,omitempty"`
+	ButtonImageURL            string                          `json:"buttonImageURL,omitempty"`
+	ButtonText                string                          `json:"buttonText,omitempty"`
+	Domains                   []string                        `json:"domains,omitempty"`
+	IdpEndpoint               string                          `json:"idpEndpoint,omitempty"`
+	IdpInitiatedConfiguration SAMLv2IdpInitiatedConfiguration `json:"idpInitiatedConfiguration,omitempty"`
+	Issuer                    string                          `json:"issuer,omitempty"`
+	LoginHintConfiguration    LoginHintConfiguration          `json:"loginHintConfiguration,omitempty"`
+	NameIdFormat              string                          `json:"nameIdFormat,omitempty"`
+	PostRequest               bool                            `json:"postRequest"`
+	RequestSigningKeyId       string                          `json:"requestSigningKeyId,omitempty"`
+	SignRequest               bool                            `json:"signRequest"`
+	XmlSignatureC14nMethod    CanonicalizationMethod          `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
 /**
@@ -4901,18 +4960,23 @@ type SAMLv2IdPInitiatedApplicationConfiguration struct {
 }
 
 /**
+ * Config for regular SAML IDP configurations that support IDP-initiated requests
+ *
+ * @author Lyle Schemmerling
+ */
+type SAMLv2IdpInitiatedConfiguration struct {
+	Enableable
+	Issuer string `json:"issuer,omitempty"`
+}
+
+/**
  * SAML v2 IdP Initiated identity provider configuration.
  *
  * @author Daniel DeGroff
  */
 type SAMLv2IdPInitiatedIdentityProvider struct {
-	BaseIdentityProvider
-	EmailClaim        string `json:"emailClaim,omitempty"`
-	Issuer            string `json:"issuer,omitempty"`
-	KeyId             string `json:"keyId,omitempty"`
-	UniqueIdClaim     string `json:"uniqueIdClaim,omitempty"`
-	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
-	UsernameClaim     string `json:"usernameClaim,omitempty"`
+	BaseSAMLv2IdentityProvider
+	Issuer string `json:"issuer,omitempty"`
 }
 
 /**
@@ -5200,7 +5264,8 @@ func (b *SystemConfigurationResponse) SetStatus(status int) {
  */
 type SystemLogsExportRequest struct {
 	BaseExportRequest
-	LastNBytes int `json:"lastNBytes,omitempty"`
+	IncludeArchived bool `json:"includeArchived"`
+	LastNBytes      int  `json:"lastNBytes,omitempty"`
 }
 
 type Templates struct {

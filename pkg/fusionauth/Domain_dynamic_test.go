@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2022, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -357,6 +357,13 @@ func Test_MultiFactorLoginPolicyImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_Oauth2AuthorizedURLValidationPolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = Oauth2AuthorizedURLValidationPolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("Oauth2AuthorizedURLValidationPolicy does not implement stringer interface\n")
+	}
+}
+
 func Test_OAuthErrorReasonImplementsStringer(t *testing.T) {
 	var enum interface{} = OAuthErrorReason("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -438,6 +445,13 @@ func Test_SAMLLogoutBehaviorImplementsStringer(t *testing.T) {
 	var enum interface{} = SAMLLogoutBehavior("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("SAMLLogoutBehavior does not implement stringer interface\n")
+	}
+}
+
+func Test_SAMLv2DestinationAssertionPolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = SAMLv2DestinationAssertionPolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("SAMLv2DestinationAssertionPolicy does not implement stringer interface\n")
 	}
 }
 
