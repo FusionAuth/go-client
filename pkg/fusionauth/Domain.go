@@ -2724,11 +2724,8 @@ const (
  */
 type IdentityProviderLinkRequest struct {
 	BaseEventRequest
-	DisplayName            string `json:"displayName,omitempty"`
-	IdentityProviderId     string `json:"identityProviderId,omitempty"`
-	IdentityProviderUserId string `json:"identityProviderUserId,omitempty"`
-	PendingIdPLinkId       string `json:"pendingIdPLinkId,omitempty"`
-	UserId                 string `json:"userId,omitempty"`
+	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
+	PendingIdPLinkId     string               `json:"pendingIdPLinkId,omitempty"`
 }
 
 /**
