@@ -4960,7 +4960,7 @@ type SAMLv2IdPInitiatedApplicationConfiguration struct {
 }
 
 /**
- * Config for regular SAML IDP configurations that support IDP-initiated requests
+ * Config for regular SAML IDP configurations that support IdP initiated requests
  *
  * @author Lyle Schemmerling
  */
