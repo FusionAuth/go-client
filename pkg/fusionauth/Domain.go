@@ -2324,11 +2324,12 @@ type GenericMessengerConfiguration struct {
  */
 type GoogleApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	ButtonText   string                      `json:"buttonText,omitempty"`
-	ClientId     string                      `json:"client_id,omitempty"`
-	ClientSecret string                      `json:"client_secret,omitempty"`
-	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
-	Scope        string                      `json:"scope,omitempty"`
+	ButtonText   string                           `json:"buttonText,omitempty"`
+	ClientId     string                           `json:"client_id,omitempty"`
+	ClientSecret string                           `json:"client_secret,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod      `json:"loginMethod,omitempty"`
+	Properties   GoogleIdentityProviderProperties `json:"properties,omitempty"`
+	Scope        string                           `json:"scope,omitempty"`
 }
 
 /**
@@ -2338,11 +2339,22 @@ type GoogleApplicationConfiguration struct {
  */
 type GoogleIdentityProvider struct {
 	BaseIdentityProvider
-	ButtonText   string                      `json:"buttonText,omitempty"`
-	ClientId     string                      `json:"client_id,omitempty"`
-	ClientSecret string                      `json:"client_secret,omitempty"`
-	LoginMethod  IdentityProviderLoginMethod `json:"loginMethod,omitempty"`
-	Scope        string                      `json:"scope,omitempty"`
+	ButtonText   string                           `json:"buttonText,omitempty"`
+	ClientId     string                           `json:"client_id,omitempty"`
+	ClientSecret string                           `json:"client_secret,omitempty"`
+	LoginMethod  IdentityProviderLoginMethod      `json:"loginMethod,omitempty"`
+	Properties   GoogleIdentityProviderProperties `json:"properties,omitempty"`
+	Scope        string                           `json:"scope,omitempty"`
+}
+
+/**
+ * Google social login provider parameters.
+ *
+ * @author Daniel DeGroff
+ */
+type GoogleIdentityProviderProperties struct {
+	Api    string `json:"api,omitempty"`
+	Button string `json:"button,omitempty"`
 }
 
 /**
@@ -2751,8 +2763,9 @@ func (e IdentityProviderLoginMethod) String() string {
 }
 
 const (
-	IdentityProviderLoginMethod_UsePopup    IdentityProviderLoginMethod = "UsePopup"
-	IdentityProviderLoginMethod_UseRedirect IdentityProviderLoginMethod = "UseRedirect"
+	IdentityProviderLoginMethod_UsePopup            IdentityProviderLoginMethod = "UsePopup"
+	IdentityProviderLoginMethod_UseRedirect         IdentityProviderLoginMethod = "UseRedirect"
+	IdentityProviderLoginMethod_UseVendorJavaScript IdentityProviderLoginMethod = "UseVendorJavaScript"
 )
 
 /**
@@ -5187,14 +5200,31 @@ type SortField struct {
 }
 
 /**
+ * Steam API modes.
+ *
+ * @author Daniel DeGroff
+ */
+type SteamAPIMode string
+
+func (e SteamAPIMode) String() string {
+	return string(e)
+}
+
+const (
+	SteamAPIMode_Public  SteamAPIMode = "Public"
+	SteamAPIMode_Partner SteamAPIMode = "Partner"
+)
+
+/**
  * @author Brett Pontarelli
  */
 type SteamApplicationConfiguration struct {
 	BaseIdentityProviderApplicationConfiguration
-	ButtonText string `json:"buttonText,omitempty"`
-	ClientId   string `json:"client_id,omitempty"`
-	Scope      string `json:"scope,omitempty"`
-	WebAPIKey  string `json:"webAPIKey,omitempty"`
+	ApiMode    SteamAPIMode `json:"apiMode,omitempty"`
+	ButtonText string       `json:"buttonText,omitempty"`
+	ClientId   string       `json:"client_id,omitempty"`
+	Scope      string       `json:"scope,omitempty"`
+	WebAPIKey  string       `json:"webAPIKey,omitempty"`
 }
 
 /**
@@ -5204,10 +5234,11 @@ type SteamApplicationConfiguration struct {
  */
 type SteamIdentityProvider struct {
 	BaseIdentityProvider
-	ButtonText string `json:"buttonText,omitempty"`
-	ClientId   string `json:"client_id,omitempty"`
-	Scope      string `json:"scope,omitempty"`
-	WebAPIKey  string `json:"webAPIKey,omitempty"`
+	ApiMode    SteamAPIMode `json:"apiMode,omitempty"`
+	ButtonText string       `json:"buttonText,omitempty"`
+	ClientId   string       `json:"client_id,omitempty"`
+	Scope      string       `json:"scope,omitempty"`
+	WebAPIKey  string       `json:"webAPIKey,omitempty"`
 }
 
 /**

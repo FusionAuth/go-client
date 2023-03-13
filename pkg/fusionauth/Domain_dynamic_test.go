@@ -469,6 +469,13 @@ func Test_SortImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_SteamAPIModeImplementsStringer(t *testing.T) {
+	var enum interface{} = SteamAPIMode("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("SteamAPIMode does not implement stringer interface\n")
+	}
+}
+
 func Test_TokenTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = TokenType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
