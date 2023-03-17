@@ -351,6 +351,42 @@ type ApplicationRole struct {
 }
 
 /**
+ * Search criteria for Applications
+ *
+ * @author Spencer Witt
+ */
+type ApplicationSearchCriteria struct {
+	BaseSearchCriteria
+	Name     string      `json:"name,omitempty"`
+	State    ObjectState `json:"state,omitempty"`
+	TenantId string      `json:"tenantId,omitempty"`
+}
+
+/**
+ * Search request for Applications
+ *
+ * @author Spencer Witt
+ */
+type ApplicationSearchRequest struct {
+	Search ApplicationSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Application search response
+ *
+ * @author Spencer Witt
+ */
+type ApplicationSearchResponse struct {
+	BaseHTTPResponse
+	Applications []Application `json:"applications,omitempty"`
+	Total        int64         `json:"total,omitempty"`
+}
+
+func (b *ApplicationSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Daniel DeGroff
  */
 type ApplicationUnverifiedConfiguration struct {
@@ -997,6 +1033,40 @@ func (b *ConsentResponse) SetStatus(status int) {
 }
 
 /**
+ * Search criteria for Consents
+ *
+ * @author Spencer Witt
+ */
+type ConsentSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for Consents
+ *
+ * @author Spencer Witt
+ */
+type ConsentSearchRequest struct {
+	Search ConsentSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Consent search response
+ *
+ * @author Spencer Witt
+ */
+type ConsentSearchResponse struct {
+	BaseHTTPResponse
+	Consents []Consent `json:"consents,omitempty"`
+	Total    int64     `json:"total,omitempty"`
+}
+
+func (b *ConsentSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * Models a consent.
  *
  * @author Daniel DeGroff
@@ -1346,6 +1416,40 @@ type EmailTemplateResponse struct {
 }
 
 func (b *EmailTemplateResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for Email templates
+ *
+ * @author Mark Manes
+ */
+type EmailTemplateSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for email templates
+ *
+ * @author Mark Manes
+ */
+type EmailTemplateSearchRequest struct {
+	Search EmailTemplateSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Email template search response
+ *
+ * @author Mark Manes
+ */
+type EmailTemplateSearchResponse struct {
+	BaseHTTPResponse
+	EmailTemplates []EmailTemplate `json:"emailTemplates,omitempty"`
+	Total          int64           `json:"total,omitempty"`
+}
+
+func (b *EmailTemplateSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -2819,6 +2923,41 @@ func (b *IdentityProviderResponse) SetStatus(status int) {
 }
 
 /**
+ * Search criteria for Identity Providers.
+ *
+ * @author Spencer Witt
+ */
+type IdentityProviderSearchCriteria struct {
+	BaseSearchCriteria
+	ApplicationId string `json:"applicationId,omitempty"`
+	Name          string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for Identity Providers
+ *
+ * @author Spencer Witt
+ */
+type IdentityProviderSearchRequest struct {
+	Search IdentityProviderSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Identity Provider response.
+ *
+ * @author Spencer Witt
+ */
+type IdentityProviderSearchResponse struct {
+	BaseHTTPResponse
+	IdentityProviders []BaseIdentityProvider `json:"identityProviders,omitempty"`
+	Total             int64                  `json:"total,omitempty"`
+}
+
+func (b *IdentityProviderSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Daniel DeGroff
  */
 type IdentityProviderStartLoginRequest struct {
@@ -3278,6 +3417,42 @@ func (b *KeyResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+/**
+ * Search criteria for Keys
+ *
+ * @author Spencer Witt
+ */
+type KeySearchCriteria struct {
+	BaseSearchCriteria
+	Algorithm KeyAlgorithm `json:"algorithm,omitempty"`
+	Name      string       `json:"name,omitempty"`
+	Type      KeyType      `json:"type,omitempty"`
+}
+
+/**
+ * Search request for Keys
+ *
+ * @author Spencer Witt
+ */
+type KeySearchRequest struct {
+	Search KeySearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Key search response
+ *
+ * @author Spencer Witt
+ */
+type KeySearchResponse struct {
+	BaseHTTPResponse
+	Keys  []Key `json:"keys,omitempty"`
+	Total int64 `json:"total,omitempty"`
+}
+
+func (b *KeySearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
 type KeyType string
 
 func (e KeyType) String() string {
@@ -3383,6 +3558,42 @@ type LambdaResponse struct {
 }
 
 func (b *LambdaResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for Lambdas
+ *
+ * @author Mark Manes
+ */
+type LambdaSearchCriteria struct {
+	BaseSearchCriteria
+	Body string     `json:"body,omitempty"`
+	Name string     `json:"name,omitempty"`
+	Type LambdaType `json:"type,omitempty"`
+}
+
+/**
+ * Search request for Lambdas
+ *
+ * @author Mark Manes
+ */
+type LambdaSearchRequest struct {
+	Search LambdaSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Lambda search response
+ *
+ * @author Mark Manes
+ */
+type LambdaSearchResponse struct {
+	BaseHTTPResponse
+	Lambdas []Lambda `json:"lambdas,omitempty"`
+	Total   int64    `json:"total,omitempty"`
+}
+
+func (b *LambdaSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -5514,6 +5725,40 @@ type TenantSCIMServerConfiguration struct {
 }
 
 /**
+ * Search criteria for Tenants
+ *
+ * @author Mark Manes
+ */
+type TenantSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for Tenants
+ *
+ * @author Mark Manes
+ */
+type TenantSearchRequest struct {
+	Search TenantSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Tenant search response
+ *
+ * @author Mark Manes
+ */
+type TenantSearchResponse struct {
+	BaseHTTPResponse
+	Tenants []Tenant `json:"tenants,omitempty"`
+	Total   int64    `json:"total,omitempty"`
+}
+
+func (b *TenantSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Brett Pontarelli
  */
 type TenantSSOConfiguration struct {
@@ -5612,6 +5857,40 @@ type ThemeResponse struct {
 }
 
 func (b *ThemeResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for themes
+ *
+ * @author Mark Manes
+ */
+type ThemeSearchCriteria struct {
+	BaseSearchCriteria
+	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Search request for Themes.
+ *
+ * @author Mark Manes
+ */
+type ThemeSearchRequest struct {
+	Search ThemeSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Search response for Themes
+ *
+ * @author Mark Manes
+ */
+type ThemeSearchResponse struct {
+	BaseHTTPResponse
+	Themes []Theme `json:"themes,omitempty"`
+	Total  int64   `json:"total,omitempty"`
+}
+
+func (b *ThemeSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -6180,6 +6459,43 @@ type UserCommentResponse struct {
 }
 
 func (b *UserCommentResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for user comments.
+ *
+ * @author Spencer Witt
+ */
+type UserCommentSearchCriteria struct {
+	BaseSearchCriteria
+	Comment     string `json:"comment,omitempty"`
+	CommenterId string `json:"commenterId,omitempty"`
+	TenantId    string `json:"tenantId,omitempty"`
+	UserId      string `json:"userId,omitempty"`
+}
+
+/**
+ * Search request for user comments
+ *
+ * @author Spencer Witt
+ */
+type UserCommentSearchRequest struct {
+	Search UserCommentSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * User comment search response
+ *
+ * @author Spencer Witt
+ */
+type UserCommentSearchResponse struct {
+	BaseHTTPResponse
+	Total        int64         `json:"total,omitempty"`
+	UserComments []UserComment `json:"userComments,omitempty"`
+}
+
+func (b *UserCommentSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -7124,6 +7440,41 @@ type WebhookResponse struct {
 }
 
 func (b *WebhookResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for webhooks.
+ *
+ * @author Spencer Witt
+ */
+type WebhookSearchCriteria struct {
+	BaseSearchCriteria
+	Description string `json:"description,omitempty"`
+	TenantId    string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Search request for webhooks
+ *
+ * @author Spencer Witt
+ */
+type WebhookSearchRequest struct {
+	Search WebhookSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Webhook search response
+ *
+ * @author Spencer Witt
+ */
+type WebhookSearchResponse struct {
+	BaseHTTPResponse
+	Total    int64     `json:"total,omitempty"`
+	Webhooks []Webhook `json:"webhooks,omitempty"`
+}
+
+func (b *WebhookSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
