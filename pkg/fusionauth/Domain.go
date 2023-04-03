@@ -269,8 +269,9 @@ type ApplicationExternalIdentifierConfiguration struct {
  * @author Daniel DeGroff
  */
 type ApplicationFormConfiguration struct {
-	AdminRegistrationFormId string `json:"adminRegistrationFormId,omitempty"`
-	SelfServiceFormId       string `json:"selfServiceFormId,omitempty"`
+	AdminRegistrationFormId      string                       `json:"adminRegistrationFormId,omitempty"`
+	SelfServiceFormConfiguration SelfServiceFormConfiguration `json:"selfServiceFormConfiguration,omitempty"`
+	SelfServiceFormId            string                       `json:"selfServiceFormId,omitempty"`
 }
 
 /**
@@ -5321,6 +5322,13 @@ type SecureIdentity struct {
 }
 
 /**
+ * @author andrewpai
+ */
+type SelfServiceFormConfiguration struct {
+	RequireCurrentPasswordOnPasswordChange bool `json:"requireCurrentPasswordOnPasswordChange"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type SendRequest struct {
@@ -6940,6 +6948,7 @@ type UserRegistrationVerifiedEvent struct {
 type UserRequest struct {
 	BaseEventRequest
 	ApplicationId        string `json:"applicationId,omitempty"`
+	CurrentPassword      string `json:"currentPassword,omitempty"`
 	DisableDomainBlock   bool   `json:"disableDomainBlock"`
 	SendSetPasswordEmail bool   `json:"sendSetPasswordEmail"`
 	SkipVerification     bool   `json:"skipVerification"`
