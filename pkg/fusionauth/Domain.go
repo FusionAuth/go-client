@@ -2932,6 +2932,7 @@ type IdentityProviderSearchCriteria struct {
 	BaseSearchCriteria
 	ApplicationId string `json:"applicationId,omitempty"`
 	Name          string `json:"name,omitempty"`
+	Type          string `json:"type,omitempty"`
 }
 
 /**
@@ -7461,6 +7462,7 @@ type WebhookSearchCriteria struct {
 	BaseSearchCriteria
 	Description string `json:"description,omitempty"`
 	TenantId    string `json:"tenantId,omitempty"`
+	Url         string `json:"url,omitempty"`
 }
 
 /**
