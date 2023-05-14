@@ -4434,8 +4434,8 @@ func (c *FusionAuthClient) RetrieveUserConsents(userId string) (*UserConsentResp
 // RetrieveUserInfoFromAccessToken
 // Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
 //   string encodedJWT The encoded JWT (access token).
-func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*UserinfoResponse, *OAuthError, error) {
-	var resp UserinfoResponse
+func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*UserResponse, *OAuthError, error) {
+	var resp UserResponse
 	var errors OAuthError
 
 	restClient := c.StartAnonymous(&resp, &errors)
