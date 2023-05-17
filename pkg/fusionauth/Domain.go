@@ -3246,13 +3246,14 @@ type JWT struct {
  */
 type JWTConfiguration struct {
 	Enableable
-	AccessTokenKeyId                string                       `json:"accessTokenKeyId,omitempty"`
-	IdTokenKeyId                    string                       `json:"idTokenKeyId,omitempty"`
-	RefreshTokenExpirationPolicy    RefreshTokenExpirationPolicy `json:"refreshTokenExpirationPolicy,omitempty"`
-	RefreshTokenRevocationPolicy    RefreshTokenRevocationPolicy `json:"refreshTokenRevocationPolicy,omitempty"`
-	RefreshTokenTimeToLiveInMinutes int                          `json:"refreshTokenTimeToLiveInMinutes,omitempty"`
-	RefreshTokenUsagePolicy         RefreshTokenUsagePolicy      `json:"refreshTokenUsagePolicy,omitempty"`
-	TimeToLiveInSeconds             int                          `json:"timeToLiveInSeconds,omitempty"`
+	AccessTokenKeyId                       string                                 `json:"accessTokenKeyId,omitempty"`
+	IdTokenKeyId                           string                                 `json:"idTokenKeyId,omitempty"`
+	RefreshTokenExpirationPolicy           RefreshTokenExpirationPolicy           `json:"refreshTokenExpirationPolicy,omitempty"`
+	RefreshTokenRevocationPolicy           RefreshTokenRevocationPolicy           `json:"refreshTokenRevocationPolicy,omitempty"`
+	RefreshTokenSlidingWindowConfiguration RefreshTokenSlidingWindowConfiguration `json:"refreshTokenSlidingWindowConfiguration,omitempty"`
+	RefreshTokenTimeToLiveInMinutes        int                                    `json:"refreshTokenTimeToLiveInMinutes,omitempty"`
+	RefreshTokenUsagePolicy                RefreshTokenUsagePolicy                `json:"refreshTokenUsagePolicy,omitempty"`
+	TimeToLiveInSeconds                    int                                    `json:"timeToLiveInSeconds,omitempty"`
 }
 
 /**
@@ -4870,8 +4871,9 @@ func (e RefreshTokenExpirationPolicy) String() string {
 }
 
 const (
-	RefreshTokenExpirationPolicy_Fixed         RefreshTokenExpirationPolicy = "Fixed"
-	RefreshTokenExpirationPolicy_SlidingWindow RefreshTokenExpirationPolicy = "SlidingWindow"
+	RefreshTokenExpirationPolicy_Fixed                            RefreshTokenExpirationPolicy = "Fixed"
+	RefreshTokenExpirationPolicy_SlidingWindow                    RefreshTokenExpirationPolicy = "SlidingWindow"
+	RefreshTokenExpirationPolicy_SlidingWindowWithMaximumLifetime RefreshTokenExpirationPolicy = "SlidingWindowWithMaximumLifetime"
 )
 
 /**
@@ -4918,6 +4920,13 @@ type RefreshTokenRevokeRequest struct {
 	ApplicationId string `json:"applicationId,omitempty"`
 	Token         string `json:"token,omitempty"`
 	UserId        string `json:"userId,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type RefreshTokenSlidingWindowConfiguration struct {
+	MaximumTimeToLiveInMinutes int `json:"maximumTimeToLiveInMinutes,omitempty"`
 }
 
 /**
