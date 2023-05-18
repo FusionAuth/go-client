@@ -4630,25 +4630,6 @@ func (c *FusionAuthClient) RetrieveUserConsents(userId string) (*UserConsentResp
 	return &resp, err
 }
 
-// RetrieveUserInfoFromAccessToken
-// Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
-//
-//	string encodedJWT The encoded JWT (access token).
-func (c *FusionAuthClient) RetrieveUserInfoFromAccessToken(encodedJWT string) (*UserinfoResponse, *OAuthError, error) {
-	var resp UserinfoResponse
-	var errors OAuthError
-
-	restClient := c.StartAnonymous(&resp, &errors)
-	err := restClient.WithUri("/oauth2/userinfo").
-		WithAuthorization("Bearer " + encodedJWT).
-		WithMethod(http.MethodGet).
-		Do()
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
 // RetrieveUserLink
 // Retrieve a single Identity Provider user (link).
 //
