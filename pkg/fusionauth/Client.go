@@ -3340,6 +3340,35 @@ func (c *FusionAuthClient) ImportWebAuthnCredentialWithContext(ctx context.Conte
 	return &resp, &errors, err
 }
 
+// IntrospectClientCredentialsAccessToken
+// Inspect an access token issued as the result of the Client Credentials Grant.
+//
+//	string token The access token returned by this OAuth provider as the result of a successful client credentials grant.
+func (c *FusionAuthClient) IntrospectClientCredentialsAccessToken(token string) (*IntrospectResponse, *OAuthError, error) {
+	return c.IntrospectClientCredentialsAccessTokenWithContext(context.TODO(), token)
+}
+
+// IntrospectClientCredentialsAccessTokenWithContext
+// Inspect an access token issued as the result of the Client Credentials Grant.
+//
+//	string token The access token returned by this OAuth provider as the result of a successful client credentials grant.
+func (c *FusionAuthClient) IntrospectClientCredentialsAccessTokenWithContext(ctx context.Context, token string) (*IntrospectResponse, *OAuthError, error) {
+	var resp IntrospectResponse
+	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("token", token)
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/oauth2/introspect").
+		WithFormData(formBody).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // IssueJWT
 // Issue a new access token (JWT) for the requested Application after ensuring the provided JWT is valid. A valid
 // access token is properly signed and not expired.
