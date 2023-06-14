@@ -2307,6 +2307,22 @@ func (b *RefreshTokenResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type DeviceApprovalResponse struct {
+	BaseHTTPResponse
+	DeviceGrantStatus    string               `json:"deviceGrantStatus,omitempty"`
+	DeviceInfo           DeviceInfo           `json:"deviceInfo,omitempty"`
+	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
+	TenantId             string               `json:"tenantId,omitempty"`
+	UserId               string               `json:"userId,omitempty"`
+}
+
+func (b *DeviceApprovalResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * JSON Web Token (JWT) as defined by RFC 7519.
  * <pre>
  * From RFC 7519 Section 1. Introduction:
@@ -3048,11 +3064,12 @@ type OAuth2Configuration struct {
  * @author Daniel DeGroff
  */
 type TwoFactorSendRequest struct {
-	Email       string `json:"email,omitempty"`
-	Method      string `json:"method,omitempty"`
-	MethodId    string `json:"methodId,omitempty"`
-	MobilePhone string `json:"mobilePhone,omitempty"`
-	UserId      string `json:"userId,omitempty"`
+	ApplicationId string `json:"applicationId,omitempty"`
+	Email         string `json:"email,omitempty"`
+	Method        string `json:"method,omitempty"`
+	MethodId      string `json:"methodId,omitempty"`
+	MobilePhone   string `json:"mobilePhone,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
@@ -3675,11 +3692,11 @@ func (b *UserResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type DeviceInfo struct {
-	Description         string     `json:"description,omitempty"`
-	LastAccessedAddress string     `json:"lastAccessedAddress,omitempty"`
-	LastAccessedInstant int64      `json:"lastAccessedInstant,omitempty"`
-	Name                string     `json:"name,omitempty"`
-	Type                DeviceType `json:"type,omitempty"`
+	Description         string `json:"description,omitempty"`
+	LastAccessedAddress string `json:"lastAccessedAddress,omitempty"`
+	LastAccessedInstant int64  `json:"lastAccessedInstant,omitempty"`
+	Name                string `json:"name,omitempty"`
+	Type                string `json:"type,omitempty"`
 }
 
 /**
@@ -4954,6 +4971,7 @@ type IdentityProviderLink struct {
 	Data                   map[string]interface{} `json:"data,omitempty"`
 	DisplayName            string                 `json:"displayName,omitempty"`
 	IdentityProviderId     string                 `json:"identityProviderId,omitempty"`
+	IdentityProviderType   IdentityProviderType   `json:"identityProviderType,omitempty"`
 	IdentityProviderUserId string                 `json:"identityProviderUserId,omitempty"`
 	InsertInstant          int64                  `json:"insertInstant,omitempty"`
 	LastLoginInstant       int64                  `json:"lastLoginInstant,omitempty"`
@@ -6184,6 +6202,23 @@ type JWTPublicKeyUpdateEvent struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type DeviceUserCodeResponse struct {
+	BaseHTTPResponse
+	ClientId       string         `json:"client_id,omitempty"`
+	DeviceInfo     DeviceInfo     `json:"deviceInfo,omitempty"`
+	ExpiresIn      int            `json:"expires_in,omitempty"`
+	PendingIdPLink PendingIdPLink `json:"pendingIdPLink,omitempty"`
+	TenantId       string         `json:"tenantId,omitempty"`
+	UserCode       string         `json:"user_code,omitempty"`
+}
+
+func (b *DeviceUserCodeResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * Models an entity type that has a specific set of permissions. These are global objects and can be used across tenants.
  *
  * @author Brian Pontarelli
@@ -6240,7 +6275,7 @@ func (b *PreviewResponse) SetStatus(status int) {
 }
 
 /**
- * Event event to indicate kickstart has been successfully completed.
+ * Event to indicate kickstart has been successfully completed.
  *
  * @author Daniel DeGroff
  */
@@ -7250,6 +7285,7 @@ const (
 	OAuthErrorReason_AccessTokenExpired                  OAuthErrorReason = "access_token_expired"
 	OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason = "access_token_unavailable_for_processing"
 	OAuthErrorReason_AccessTokenFailedProcessing         OAuthErrorReason = "access_token_failed_processing"
+	OAuthErrorReason_AccessTokenInvalid                  OAuthErrorReason = "access_token_invalid"
 	OAuthErrorReason_RefreshTokenNotFound                OAuthErrorReason = "refresh_token_not_found"
 	OAuthErrorReason_RefreshTokenTypeNotSupported        OAuthErrorReason = "refresh_token_type_not_supported"
 	OAuthErrorReason_InvalidClientId                     OAuthErrorReason = "invalid_client_id"
@@ -7270,6 +7306,7 @@ const (
 	OAuthErrorReason_InvalidAdditionalClientId           OAuthErrorReason = "invalid_additional_client_id"
 	OAuthErrorReason_InvalidTargetEntityScope            OAuthErrorReason = "invalid_target_entity_scope"
 	OAuthErrorReason_InvalidEntityPermissionScope        OAuthErrorReason = "invalid_entity_permission_scope"
+	OAuthErrorReason_InvalidUserId                       OAuthErrorReason = "invalid_user_id"
 	OAuthErrorReason_GrantTypeDisabled                   OAuthErrorReason = "grant_type_disabled"
 	OAuthErrorReason_MissingClientId                     OAuthErrorReason = "missing_client_id"
 	OAuthErrorReason_MissingClientSecret                 OAuthErrorReason = "missing_client_secret"
@@ -7283,6 +7320,7 @@ const (
 	OAuthErrorReason_MissingResponseType                 OAuthErrorReason = "missing_response_type"
 	OAuthErrorReason_MissingToken                        OAuthErrorReason = "missing_token"
 	OAuthErrorReason_MissingUserCode                     OAuthErrorReason = "missing_user_code"
+	OAuthErrorReason_MissingUserId                       OAuthErrorReason = "missing_user_id"
 	OAuthErrorReason_MissingVerificationUri              OAuthErrorReason = "missing_verification_uri"
 	OAuthErrorReason_LoginPrevented                      OAuthErrorReason = "login_prevented"
 	OAuthErrorReason_NotLicensed                         OAuthErrorReason = "not_licensed"
@@ -7342,6 +7380,20 @@ type GroupMemberRemoveEvent struct {
 	BaseEvent
 	Group   Group         `json:"group,omitempty"`
 	Members []GroupMember `json:"members,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type IdentityProviderPendingLinkResponse struct {
+	BaseHTTPResponse
+	IdentityProviderTenantConfiguration IdentityProviderTenantConfiguration `json:"identityProviderTenantConfiguration,omitempty"`
+	LinkCount                           int                                 `json:"linkCount,omitempty"`
+	PendingIdPLink                      PendingIdPLink                      `json:"pendingIdPLink,omitempty"`
+}
+
+func (b *IdentityProviderPendingLinkResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
