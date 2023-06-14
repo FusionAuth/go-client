@@ -6729,7 +6729,7 @@ func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clie
 	return &resp, err
 }
 
-// RetrieveUserCode
+// RetrieveUserCodeUsingAPIKey
 // Retrieve a user_code that is part of an in-progress Device Authorization Grant.
 //
 // This API is useful if you want to build your own login workflow to complete a device grant.
@@ -6737,11 +6737,11 @@ func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clie
 // This request will require an API key.
 //
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCode(userCode string) (*BaseHTTPResponse, error) {
-	return c.RetrieveUserCodeWithContext(context.TODO(), userCode)
+func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKey(userCode string) (*BaseHTTPResponse, error) {
+	return c.RetrieveUserCodeUsingAPIKeyWithContext(context.TODO(), userCode)
 }
 
-// RetrieveUserCodeWithContext
+// RetrieveUserCodeUsingAPIKeyWithContext
 // Retrieve a user_code that is part of an in-progress Device Authorization Grant.
 //
 // This API is useful if you want to build your own login workflow to complete a device grant.
@@ -6749,7 +6749,7 @@ func (c *FusionAuthClient) RetrieveUserCode(userCode string) (*BaseHTTPResponse,
 // This request will require an API key.
 //
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, userCode string) (*BaseHTTPResponse, error) {
+func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithContext(ctx context.Context, userCode string) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 	formBody := url.Values{}
 	formBody.Set("user_code", userCode)
