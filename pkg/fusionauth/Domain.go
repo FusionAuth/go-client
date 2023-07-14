@@ -50,6 +50,16 @@ type TenantLambdaConfiguration struct {
 	ScimUserResponseConverterId           string `json:"scimUserResponseConverterId,omitempty"`
 }
 
+type SAMLv2AssertionEncryptionConfiguration struct {
+	Enableable
+	DigestAlgorithm             string `json:"digestAlgorithm,omitempty"`
+	EncryptionAlgorithm         string `json:"encryptionAlgorithm,omitempty"`
+	KeyLocation                 string `json:"keyLocation,omitempty"`
+	KeyTransportAlgorithm       string `json:"keyTransportAlgorithm,omitempty"`
+	KeyTransportEncryptionKeyId string `json:"keyTransportEncryptionKeyId,omitempty"`
+	MaskGenerationFunction      string `json:"maskGenerationFunction,omitempty"`
+}
+
 /**
  * Models action reasons.
  *
@@ -1676,19 +1686,20 @@ type ChangePasswordRequest struct {
 
 type SAMLv2Configuration struct {
 	Enableable
-	Audience                 string                               `json:"audience,omitempty"`
-	AuthorizedRedirectURLs   []string                             `json:"authorizedRedirectURLs,omitempty"`
-	CallbackURL              string                               `json:"callbackURL,omitempty"`
-	Debug                    bool                                 `json:"debug"`
-	DefaultVerificationKeyId string                               `json:"defaultVerificationKeyId,omitempty"`
-	InitiatedLogin           SAMLv2IdPInitiatedLoginConfiguration `json:"initiatedLogin,omitempty"`
-	Issuer                   string                               `json:"issuer,omitempty"`
-	KeyId                    string                               `json:"keyId,omitempty"`
-	Logout                   SAMLv2Logout                         `json:"logout,omitempty"`
-	LogoutURL                string                               `json:"logoutURL,omitempty"`
-	RequireSignedRequests    bool                                 `json:"requireSignedRequests"`
-	XmlSignatureC14nMethod   CanonicalizationMethod               `json:"xmlSignatureC14nMethod,omitempty"`
-	XmlSignatureLocation     XMLSignatureLocation                 `json:"xmlSignatureLocation,omitempty"`
+	AssertionEncryptionConfiguration SAMLv2AssertionEncryptionConfiguration `json:"assertionEncryptionConfiguration,omitempty"`
+	Audience                         string                                 `json:"audience,omitempty"`
+	AuthorizedRedirectURLs           []string                               `json:"authorizedRedirectURLs,omitempty"`
+	CallbackURL                      string                                 `json:"callbackURL,omitempty"`
+	Debug                            bool                                   `json:"debug"`
+	DefaultVerificationKeyId         string                                 `json:"defaultVerificationKeyId,omitempty"`
+	InitiatedLogin                   SAMLv2IdPInitiatedLoginConfiguration   `json:"initiatedLogin,omitempty"`
+	Issuer                           string                                 `json:"issuer,omitempty"`
+	KeyId                            string                                 `json:"keyId,omitempty"`
+	Logout                           SAMLv2Logout                           `json:"logout,omitempty"`
+	LogoutURL                        string                                 `json:"logoutURL,omitempty"`
+	RequireSignedRequests            bool                                   `json:"requireSignedRequests"`
+	XmlSignatureC14nMethod           CanonicalizationMethod                 `json:"xmlSignatureC14nMethod,omitempty"`
+	XmlSignatureLocation             XMLSignatureLocation                   `json:"xmlSignatureLocation,omitempty"`
 }
 
 /**
@@ -3019,16 +3030,17 @@ func (b *EntityGrantResponse) SetStatus(status int) {
 
 type RegistrationConfiguration struct {
 	Enableable
-	BirthDate       Requirable       `json:"birthDate,omitempty"`
-	ConfirmPassword bool             `json:"confirmPassword"`
-	FirstName       Requirable       `json:"firstName,omitempty"`
-	FormId          string           `json:"formId,omitempty"`
-	FullName        Requirable       `json:"fullName,omitempty"`
-	LastName        Requirable       `json:"lastName,omitempty"`
-	LoginIdType     LoginIdType      `json:"loginIdType,omitempty"`
-	MiddleName      Requirable       `json:"middleName,omitempty"`
-	MobilePhone     Requirable       `json:"mobilePhone,omitempty"`
-	Type            RegistrationType `json:"type,omitempty"`
+	BirthDate          Requirable       `json:"birthDate,omitempty"`
+	ConfirmPassword    bool             `json:"confirmPassword"`
+	FirstName          Requirable       `json:"firstName,omitempty"`
+	FormId             string           `json:"formId,omitempty"`
+	FullName           Requirable       `json:"fullName,omitempty"`
+	LastName           Requirable       `json:"lastName,omitempty"`
+	LoginIdType        LoginIdType      `json:"loginIdType,omitempty"`
+	MiddleName         Requirable       `json:"middleName,omitempty"`
+	MobilePhone        Requirable       `json:"mobilePhone,omitempty"`
+	PreferredLanguages Requirable       `json:"preferredLanguages,omitempty"`
+	Type               RegistrationType `json:"type,omitempty"`
 }
 
 /**
@@ -4971,6 +4983,7 @@ type IdentityProviderLink struct {
 	Data                   map[string]interface{} `json:"data,omitempty"`
 	DisplayName            string                 `json:"displayName,omitempty"`
 	IdentityProviderId     string                 `json:"identityProviderId,omitempty"`
+	IdentityProviderName   string                 `json:"identityProviderName,omitempty"`
 	IdentityProviderType   IdentityProviderType   `json:"identityProviderType,omitempty"`
 	IdentityProviderUserId string                 `json:"identityProviderUserId,omitempty"`
 	InsertInstant          int64                  `json:"insertInstant,omitempty"`
@@ -7541,7 +7554,7 @@ type TenantDeleteRequest struct {
 }
 
 /**
- * Event event to an event log was created.
+ * An Event "event" to indicate an event log was created.
  *
  * @author Daniel DeGroff
  */
