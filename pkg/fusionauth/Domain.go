@@ -1695,6 +1695,7 @@ type SAMLv2Configuration struct {
 	InitiatedLogin                   SAMLv2IdPInitiatedLoginConfiguration   `json:"initiatedLogin,omitempty"`
 	Issuer                           string                                 `json:"issuer,omitempty"`
 	KeyId                            string                                 `json:"keyId,omitempty"`
+	LoginHintConfiguration           LoginHintConfiguration                 `json:"loginHintConfiguration,omitempty"`
 	Logout                           SAMLv2Logout                           `json:"logout,omitempty"`
 	LogoutURL                        string                                 `json:"logoutURL,omitempty"`
 	RequireSignedRequests            bool                                   `json:"requireSignedRequests"`
