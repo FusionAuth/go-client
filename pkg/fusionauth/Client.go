@@ -185,7 +185,7 @@ func (rc *restClient) WithUriSegment(segment string) *restClient {
 // Takes an action on a user. The user being actioned is called the "actionee" and the user taking the action is called the
 // "actioner". Both user ids are required in the request object.
 //   ActionRequest request The action request that includes all the information about the action being taken including
-//   the id of the action, any options and the duration (if applicable).
+//   the Id of the action, any options and the duration (if applicable).
 func (c *FusionAuthClient) ActionUser(request ActionRequest) (*ActionResponse, *Errors, error) {
 	return c.ActionUserWithContext(context.TODO(), request)
 }
@@ -194,7 +194,7 @@ func (c *FusionAuthClient) ActionUser(request ActionRequest) (*ActionResponse, *
 // Takes an action on a user. The user being actioned is called the "actionee" and the user taking the action is called the
 // "actioner". Both user ids are required in the request object.
 //   ActionRequest request The action request that includes all the information about the action being taken including
-//   the id of the action, any options and the duration (if applicable).
+//   the Id of the action, any options and the duration (if applicable).
 func (c *FusionAuthClient) ActionUserWithContext(ctx context.Context, request ActionRequest) (*ActionResponse, *Errors, error) {
 	var resp ActionResponse
 	var errors Errors
@@ -211,14 +211,14 @@ func (c *FusionAuthClient) ActionUserWithContext(ctx context.Context, request Ac
 }
 
 // ActivateReactor
-// Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
+// Activates the FusionAuth Reactor using a license Id and optionally a license text (for air-gapped deployments)
 //   ReactorRequest request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
 func (c *FusionAuthClient) ActivateReactor(request ReactorRequest) (*BaseHTTPResponse, *Errors, error) {
 	return c.ActivateReactorWithContext(context.TODO(), request)
 }
 
 // ActivateReactorWithContext
-// Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
+// Activates the FusionAuth Reactor using a license Id and optionally a license text (for air-gapped deployments)
 //   ReactorRequest request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
 func (c *FusionAuthClient) ActivateReactorWithContext(ctx context.Context, request ReactorRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
@@ -236,16 +236,16 @@ func (c *FusionAuthClient) ActivateReactorWithContext(ctx context.Context, reque
 }
 
 // AddUserToFamily
-// Adds a user to an existing family. The family id must be specified.
-//   string familyId The id of the family.
+// Adds a user to an existing family. The family Id must be specified.
+//   string familyId The Id of the family.
 //   FamilyRequest request The request object that contains all the information used to determine which user to add to the family.
 func (c *FusionAuthClient) AddUserToFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
 	return c.AddUserToFamilyWithContext(context.TODO(), familyId, request)
 }
 
 // AddUserToFamilyWithContext
-// Adds a user to an existing family. The family id must be specified.
-//   string familyId The id of the family.
+// Adds a user to an existing family. The family Id must be specified.
+//   string familyId The Id of the family.
 //   FamilyRequest request The request object that contains all the information used to determine which user to add to the family.
 func (c *FusionAuthClient) AddUserToFamilyWithContext(ctx context.Context, familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
 	var resp FamilyResponse
@@ -301,7 +301,7 @@ func (c *FusionAuthClient) ApproveDeviceWithContext(ctx context.Context, clientI
 
 // CancelAction
 // Cancels the user action.
-//   string actionId The action id of the action to cancel.
+//   string actionId The action Id of the action to cancel.
 //   ActionRequest request The action request that contains the information about the cancellation.
 func (c *FusionAuthClient) CancelAction(actionId string, request ActionRequest) (*ActionResponse, *Errors, error) {
 	return c.CancelActionWithContext(context.TODO(), actionId, request)
@@ -309,7 +309,7 @@ func (c *FusionAuthClient) CancelAction(actionId string, request ActionRequest) 
 
 // CancelActionWithContext
 // Cancels the user action.
-//   string actionId The action id of the action to cancel.
+//   string actionId The action Id of the action to cancel.
 //   ActionRequest request The action request that contains the information about the cancellation.
 func (c *FusionAuthClient) CancelActionWithContext(ctx context.Context, actionId string, request ActionRequest) (*ActionResponse, *Errors, error) {
 	var resp ActionResponse
@@ -364,7 +364,7 @@ func (c *FusionAuthClient) ChangePasswordWithContext(ctx context.Context, change
 }
 
 // ChangePasswordByIdentity
-// Changes a user's password using their identity (login id and password). Using a loginId instead of the changePasswordId
+// Changes a user's password using their identity (loginId and password). Using a loginId instead of the changePasswordId
 // bypasses the email verification and allows a password to be changed directly without first calling the #forgotPassword
 // method.
 //   ChangePasswordRequest request The change password request that contains all the information used to change the password.
@@ -373,7 +373,7 @@ func (c *FusionAuthClient) ChangePasswordByIdentity(request ChangePasswordReques
 }
 
 // ChangePasswordByIdentityWithContext
-// Changes a user's password using their identity (login id and password). Using a loginId instead of the changePasswordId
+// Changes a user's password using their identity (loginId and password). Using a loginId instead of the changePasswordId
 // bypasses the email verification and allows a password to be changed directly without first calling the #forgotPassword
 // method.
 //   ChangePasswordRequest request The change password request that contains all the information used to change the password.
@@ -532,15 +532,15 @@ func (c *FusionAuthClient) ClientCredentialsGrantWithContext(ctx context.Context
 // CommentOnUser
 // Adds a comment to the user's account.
 //   UserCommentRequest request The request object that contains all the information used to create the user comment.
-func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) CommentOnUser(request UserCommentRequest) (*UserCommentResponse, *Errors, error) {
 	return c.CommentOnUserWithContext(context.TODO(), request)
 }
 
 // CommentOnUserWithContext
 // Adds a comment to the user's account.
 //   UserCommentRequest request The request object that contains all the information used to create the user comment.
-func (c *FusionAuthClient) CommentOnUserWithContext(ctx context.Context, request UserCommentRequest) (*BaseHTTPResponse, *Errors, error) {
-	var resp BaseHTTPResponse
+func (c *FusionAuthClient) CommentOnUserWithContext(ctx context.Context, request UserCommentRequest) (*UserCommentResponse, *Errors, error) {
+	var resp UserCommentResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
@@ -694,7 +694,7 @@ func (c *FusionAuthClient) CreateApplicationWithContext(ctx context.Context, app
 }
 
 // CreateApplicationRole
-// Creates a new role for an application. You must specify the id of the application you are creating the role for.
+// Creates a new role for an application. You must specify the Id of the application you are creating the role for.
 // You can optionally specify an Id for the role inside the ApplicationRole object itself, if not provided one will be generated.
 //   string applicationId The Id of the application to create the role on.
 //   string roleId (Optional) The Id of the role. If not provided a secure random UUID will be generated.
@@ -704,7 +704,7 @@ func (c *FusionAuthClient) CreateApplicationRole(applicationId string, roleId st
 }
 
 // CreateApplicationRoleWithContext
-// Creates a new role for an application. You must specify the id of the application you are creating the role for.
+// Creates a new role for an application. You must specify the Id of the application you are creating the role for.
 // You can optionally specify an Id for the role inside the ApplicationRole object itself, if not provided one will be generated.
 //   string applicationId The Id of the application to create the role on.
 //   string roleId (Optional) The Id of the role. If not provided a secure random UUID will be generated.
@@ -897,7 +897,7 @@ func (c *FusionAuthClient) CreateEntityTypeWithContext(ctx context.Context, enti
 }
 
 // CreateEntityTypePermission
-// Creates a new permission for an entity type. You must specify the id of the entity type you are creating the permission for.
+// Creates a new permission for an entity type. You must specify the Id of the entity type you are creating the permission for.
 // You can optionally specify an Id for the permission inside the EntityTypePermission object itself, if not provided one will be generated.
 //   string entityTypeId The Id of the entity type to create the permission on.
 //   string permissionId (Optional) The Id of the permission. If not provided a secure random UUID will be generated.
@@ -907,7 +907,7 @@ func (c *FusionAuthClient) CreateEntityTypePermission(entityTypeId string, permi
 }
 
 // CreateEntityTypePermissionWithContext
-// Creates a new permission for an entity type. You must specify the id of the entity type you are creating the permission for.
+// Creates a new permission for an entity type. You must specify the Id of the entity type you are creating the permission for.
 // You can optionally specify an Id for the permission inside the EntityTypePermission object itself, if not provided one will be generated.
 //   string entityTypeId The Id of the entity type to create the permission on.
 //   string permissionId (Optional) The Id of the permission. If not provided a secure random UUID will be generated.
@@ -931,18 +931,18 @@ func (c *FusionAuthClient) CreateEntityTypePermissionWithContext(ctx context.Con
 }
 
 // CreateFamily
-// Creates a family with the user id in the request as the owner and sole member of the family. You can optionally specify an id for the
+// Creates a family with the user Id in the request as the owner and sole member of the family. You can optionally specify an Id for the
 // family, if not provided one will be generated.
-//   string familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
+//   string familyId (Optional) The Id for the family. If not provided a secure random UUID will be generated.
 //   FamilyRequest request The request object that contains all the information used to create the family.
 func (c *FusionAuthClient) CreateFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
 	return c.CreateFamilyWithContext(context.TODO(), familyId, request)
 }
 
 // CreateFamilyWithContext
-// Creates a family with the user id in the request as the owner and sole member of the family. You can optionally specify an id for the
+// Creates a family with the user Id in the request as the owner and sole member of the family. You can optionally specify an Id for the
 // family, if not provided one will be generated.
-//   string familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
+//   string familyId (Optional) The Id for the family. If not provided a secure random UUID will be generated.
 //   FamilyRequest request The request object that contains all the information used to create the family.
 func (c *FusionAuthClient) CreateFamilyWithContext(ctx context.Context, familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
 	var resp FamilyResponse
@@ -1172,6 +1172,40 @@ func (c *FusionAuthClient) CreateMessengerWithContext(ctx context.Context, messe
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/messenger").
 		WithUriSegment(messengerId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CreateOAuthScope
+// Creates a new custom OAuth scope for an application. You must specify the Id of the application you are creating the scope for.
+// You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+//   string applicationId The Id of the application to create the OAuth scope on.
+//   string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+//   ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth OAuth scope.
+func (c *FusionAuthClient) CreateOAuthScope(applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.CreateOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
+}
+
+// CreateOAuthScopeWithContext
+// Creates a new custom OAuth scope for an application. You must specify the Id of the application you are creating the scope for.
+// You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+//   string applicationId The Id of the application to create the OAuth scope on.
+//   string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+//   ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth OAuth scope.
+func (c *FusionAuthClient) CreateOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
@@ -1617,7 +1651,7 @@ func (c *FusionAuthClient) DeleteApplicationWithContext(ctx context.Context, app
 // DeleteApplicationRole
 // Hard deletes an application role. This is a dangerous operation and should not be used in most circumstances. This
 // permanently removes the given role from all users that had it.
-//   string applicationId The Id of the application to deactivate.
+//   string applicationId The Id of the application that the role belongs to.
 //   string roleId The Id of the role to delete.
 func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId string) (*BaseHTTPResponse, *Errors, error) {
 	return c.DeleteApplicationRoleWithContext(context.TODO(), applicationId, roleId)
@@ -1626,7 +1660,7 @@ func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId st
 // DeleteApplicationRoleWithContext
 // Hard deletes an application role. This is a dangerous operation and should not be used in most circumstances. This
 // permanently removes the given role from all users that had it.
-//   string applicationId The Id of the application to deactivate.
+//   string applicationId The Id of the application that the role belongs to.
 //   string roleId The Id of the role to delete.
 func (c *FusionAuthClient) DeleteApplicationRoleWithContext(ctx context.Context, applicationId string, roleId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
@@ -2075,6 +2109,37 @@ func (c *FusionAuthClient) DeleteMessengerWithContext(ctx context.Context, messe
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/messenger").
 		WithUriSegment(messengerId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteOAuthScope
+// Hard deletes a custom OAuth scope. This action will cause tokens that contain the deleted scope to be rejected.
+// OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the application's unknown scope policy.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to delete.
+func (c *FusionAuthClient) DeleteOAuthScope(applicationId string, scopeId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteOAuthScopeWithContext(context.TODO(), applicationId, scopeId)
+}
+
+// DeleteOAuthScopeWithContext
+// Hard deletes a custom OAuth scope. This action will cause tokens that contain the deleted scope to be rejected.
+// OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the application's unknown scope policy.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to delete.
+func (c *FusionAuthClient) DeleteOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithMethod(http.MethodDelete).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -3470,7 +3535,7 @@ func (c *FusionAuthClient) PatchApplicationWithContext(ctx context.Context, appl
 }
 
 // PatchApplicationRole
-// Updates, via PATCH, the application role with the given id for the application.
+// Updates, via PATCH, the application role with the given Id for the application.
 //   string applicationId The Id of the application that the role belongs to.
 //   string roleId The Id of the role to update.
 //   ApplicationRequest request The request that contains just the new role information.
@@ -3479,7 +3544,7 @@ func (c *FusionAuthClient) PatchApplicationRole(applicationId string, roleId str
 }
 
 // PatchApplicationRoleWithContext
-// Updates, via PATCH, the application role with the given id for the application.
+// Updates, via PATCH, the application role with the given Id for the application.
 //   string applicationId The Id of the application that the role belongs to.
 //   string roleId The Id of the role to update.
 //   ApplicationRequest request The request that contains just the new role information.
@@ -3778,8 +3843,40 @@ func (c *FusionAuthClient) PatchMessengerWithContext(ctx context.Context, messen
 	return &resp, &errors, err
 }
 
+// PatchOAuthScope
+// Updates, via PATCH, the custom OAuth scope with the given Id for the application.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to update.
+//   ApplicationOAuthScopeRequest request The request that contains just the new OAuth scope information.
+func (c *FusionAuthClient) PatchOAuthScope(applicationId string, scopeId string, request map[string]interface{}) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.PatchOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
+}
+
+// PatchOAuthScopeWithContext
+// Updates, via PATCH, the custom OAuth scope with the given Id for the application.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to update.
+//   ApplicationOAuthScopeRequest request The request that contains just the new OAuth scope information.
+func (c *FusionAuthClient) PatchOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request map[string]interface{}) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchRegistration
-// Updates, via PATCH, the registration for the user with the given id and the application defined in the request.
+// Updates, via PATCH, the registration for the user with the given Id and the application defined in the request.
 //   string userId The Id of the user whose registration is going to be updated.
 //   RegistrationRequest request The request that contains just the new registration information.
 func (c *FusionAuthClient) PatchRegistration(userId string, request map[string]interface{}) (*RegistrationResponse, *Errors, error) {
@@ -3787,7 +3884,7 @@ func (c *FusionAuthClient) PatchRegistration(userId string, request map[string]i
 }
 
 // PatchRegistrationWithContext
-// Updates, via PATCH, the registration for the user with the given id and the application defined in the request.
+// Updates, via PATCH, the registration for the user with the given Id and the application defined in the request.
 //   string userId The Id of the user whose registration is going to be updated.
 //   RegistrationRequest request The request that contains just the new registration information.
 func (c *FusionAuthClient) PatchRegistrationWithContext(ctx context.Context, userId string, request map[string]interface{}) (*RegistrationResponse, *Errors, error) {
@@ -4172,7 +4269,7 @@ func (c *FusionAuthClient) RegenerateReactorKeysWithContext(ctx context.Context)
 // Registers a user for an application. If you provide the User and the UserRegistration object on this request, it
 // will create the user as well as register them for the application. This is called a Full Registration. However, if
 // you only provide the UserRegistration object, then the user must already exist and they will be registered for the
-// application. The user id can also be provided and it will either be used to look up an existing user or it will be
+// application. The user Id can also be provided and it will either be used to look up an existing user or it will be
 // used for the newly created User.
 //   string userId (Optional) The Id of the user being registered for the application and optionally created.
 //   RegistrationRequest request The request that optionally contains the User and must contain the UserRegistration.
@@ -4184,7 +4281,7 @@ func (c *FusionAuthClient) Register(userId string, request RegistrationRequest) 
 // Registers a user for an application. If you provide the User and the UserRegistration object on this request, it
 // will create the user as well as register them for the application. This is called a Full Registration. However, if
 // you only provide the UserRegistration object, then the user must already exist and they will be registered for the
-// application. The user id can also be provided and it will either be used to look up an existing user or it will be
+// application. The user Id can also be provided and it will either be used to look up an existing user or it will be
 // used for the newly created User.
 //   string userId (Optional) The Id of the user being registered for the application and optionally created.
 //   RegistrationRequest request The request that optionally contains the User and must contain the UserRegistration.
@@ -4239,16 +4336,16 @@ func (c *FusionAuthClient) ReindexWithContext(ctx context.Context, request Reind
 
 // RemoveUserFromFamily
 // Removes a user from the family with the given id.
-//   string familyId The id of the family to remove the user from.
-//   string userId The id of the user to remove from the family.
+//   string familyId The Id of the family to remove the user from.
+//   string userId The Id of the user to remove from the family.
 func (c *FusionAuthClient) RemoveUserFromFamily(familyId string, userId string) (*BaseHTTPResponse, *Errors, error) {
 	return c.RemoveUserFromFamilyWithContext(context.TODO(), familyId, userId)
 }
 
 // RemoveUserFromFamilyWithContext
 // Removes a user from the family with the given id.
-//   string familyId The id of the family to remove the user from.
-//   string userId The id of the user to remove from the family.
+//   string familyId The Id of the family to remove the user from.
+//   string userId The Id of the user to remove from the family.
 func (c *FusionAuthClient) RemoveUserFromFamilyWithContext(ctx context.Context, familyId string, userId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -4480,14 +4577,14 @@ func (c *FusionAuthClient) RetrieveActiveActionsWithContext(ctx context.Context,
 }
 
 // RetrieveApplication
-// Retrieves the application for the given id or all the applications if the id is null.
+// Retrieves the application for the given Id or all the applications if the Id is null.
 //   string applicationId (Optional) The application id.
 func (c *FusionAuthClient) RetrieveApplication(applicationId string) (*ApplicationResponse, error) {
 	return c.RetrieveApplicationWithContext(context.TODO(), applicationId)
 }
 
 // RetrieveApplicationWithContext
-// Retrieves the application for the given id or all the applications if the id is null.
+// Retrieves the application for the given Id or all the applications if the Id is null.
 //   string applicationId (Optional) The application id.
 func (c *FusionAuthClient) RetrieveApplicationWithContext(ctx context.Context, applicationId string) (*ApplicationResponse, error) {
 	var resp ApplicationResponse
@@ -5502,6 +5599,35 @@ func (c *FusionAuthClient) RetrieveMonthlyActiveReportWithContext(ctx context.Co
 	return &resp, &errors, err
 }
 
+// RetrieveOAuthScope
+// Retrieves a custom OAuth scope.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to retrieve.
+func (c *FusionAuthClient) RetrieveOAuthScope(applicationId string, scopeId string) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.RetrieveOAuthScopeWithContext(context.TODO(), applicationId, scopeId)
+}
+
+// RetrieveOAuthScopeWithContext
+// Retrieves a custom OAuth scope.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to retrieve.
+func (c *FusionAuthClient) RetrieveOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveOauthConfiguration
 // Retrieves the Oauth2 configuration for the application for the given Application Id.
 //   string applicationId The Id of the Application to retrieve OAuth configuration.
@@ -5763,7 +5889,7 @@ func (c *FusionAuthClient) RetrieveRefreshTokensWithContext(ctx context.Context,
 }
 
 // RetrieveRegistration
-// Retrieves the user registration for the user with the given id and the given application id.
+// Retrieves the user registration for the user with the given Id and the given application id.
 //   string userId The Id of the user.
 //   string applicationId The Id of the application.
 func (c *FusionAuthClient) RetrieveRegistration(userId string, applicationId string) (*RegistrationResponse, *Errors, error) {
@@ -5771,7 +5897,7 @@ func (c *FusionAuthClient) RetrieveRegistration(userId string, applicationId str
 }
 
 // RetrieveRegistrationWithContext
-// Retrieves the user registration for the user with the given id and the given application id.
+// Retrieves the user registration for the user with the given Id and the given application id.
 //   string userId The Id of the user.
 //   string applicationId The Id of the application.
 func (c *FusionAuthClient) RetrieveRegistrationWithContext(ctx context.Context, userId string, applicationId string) (*RegistrationResponse, *Errors, error) {
@@ -6724,8 +6850,8 @@ func (c *FusionAuthClient) RetrieveWebhooksWithContext(ctx context.Context) (*We
 //  - revokeRefreshTokensByApplicationId
 //  - revokeRefreshTokensByUserIdForApplication
 //   string token (Optional) The refresh token to delete.
-//   string userId (Optional) The user id whose tokens to delete.
-//   string applicationId (Optional) The application id of the tokens to delete.
+//   string userId (Optional) The user Id whose tokens to delete.
+//   string applicationId (Optional) The application Id of the tokens to delete.
 func (c *FusionAuthClient) RevokeRefreshToken(token string, userId string, applicationId string) (*BaseHTTPResponse, *Errors, error) {
 	return c.RevokeRefreshTokenWithContext(context.TODO(), token, userId, applicationId)
 }
@@ -6756,8 +6882,8 @@ func (c *FusionAuthClient) RevokeRefreshToken(token string, userId string, appli
 //  - revokeRefreshTokensByApplicationId
 //  - revokeRefreshTokensByUserIdForApplication
 //   string token (Optional) The refresh token to delete.
-//   string userId (Optional) The user id whose tokens to delete.
-//   string applicationId (Optional) The application id of the tokens to delete.
+//   string userId (Optional) The user Id whose tokens to delete.
+//   string applicationId (Optional) The application Id of the tokens to delete.
 func (c *FusionAuthClient) RevokeRefreshTokenWithContext(ctx context.Context, token string, userId string, applicationId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
@@ -7077,14 +7203,14 @@ func (c *FusionAuthClient) SearchEntitiesWithContext(ctx context.Context, reques
 }
 
 // SearchEntitiesByIds
-// Retrieves the entities for the given ids. If any id is invalid, it is ignored.
+// Retrieves the entities for the given ids. If any Id is invalid, it is ignored.
 //   []string ids The entity ids to search for.
 func (c *FusionAuthClient) SearchEntitiesByIds(ids []string) (*EntitySearchResponse, *Errors, error) {
 	return c.SearchEntitiesByIdsWithContext(context.TODO(), ids)
 }
 
 // SearchEntitiesByIdsWithContext
-// Retrieves the entities for the given ids. If any id is invalid, it is ignored.
+// Retrieves the entities for the given ids. If any Id is invalid, it is ignored.
 //   []string ids The entity ids to search for.
 func (c *FusionAuthClient) SearchEntitiesByIdsWithContext(ctx context.Context, ids []string) (*EntitySearchResponse, *Errors, error) {
 	var resp EntitySearchResponse
@@ -7427,7 +7553,7 @@ func (c *FusionAuthClient) SearchUserCommentsWithContext(ctx context.Context, re
 }
 
 // SearchUsers
-// Retrieves the users for the given ids. If any id is invalid, it is ignored.
+// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
 //   []string ids The user ids to search for.
 //
 // Deprecated: This method has been renamed to SearchUsersByIds, use that method instead.
@@ -7436,7 +7562,7 @@ func (c *FusionAuthClient) SearchUsers(ids []string) (*SearchResponse, *Errors, 
 }
 
 // SearchUsersWithContext
-// Retrieves the users for the given ids. If any id is invalid, it is ignored.
+// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
 //   []string ids The user ids to search for.
 //
 // Deprecated: This method has been renamed to SearchUsersByIdsWithContext, use that method instead.
@@ -7456,14 +7582,14 @@ func (c *FusionAuthClient) SearchUsersWithContext(ctx context.Context, ids []str
 }
 
 // SearchUsersByIds
-// Retrieves the users for the given ids. If any id is invalid, it is ignored.
+// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
 //   []string ids The user ids to search for.
 func (c *FusionAuthClient) SearchUsersByIds(ids []string) (*SearchResponse, *Errors, error) {
 	return c.SearchUsersByIdsWithContext(context.TODO(), ids)
 }
 
 // SearchUsersByIdsWithContext
-// Retrieves the users for the given ids. If any id is invalid, it is ignored.
+// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
 //   []string ids The user ids to search for.
 func (c *FusionAuthClient) SearchUsersByIdsWithContext(ctx context.Context, ids []string) (*SearchResponse, *Errors, error) {
 	var resp SearchResponse
@@ -7566,7 +7692,7 @@ func (c *FusionAuthClient) SearchWebhooksWithContext(ctx context.Context, reques
 // SendEmail
 // Send an email using an email template id. You can optionally provide <code>requestData</code> to access key value
 // pairs in the email template.
-//   string emailTemplateId The id for the template.
+//   string emailTemplateId The Id for the template.
 //   SendRequest request The send email request that contains all the information used to send the email.
 func (c *FusionAuthClient) SendEmail(emailTemplateId string, request SendRequest) (*SendResponse, *Errors, error) {
 	return c.SendEmailWithContext(context.TODO(), emailTemplateId, request)
@@ -7575,7 +7701,7 @@ func (c *FusionAuthClient) SendEmail(emailTemplateId string, request SendRequest
 // SendEmailWithContext
 // Send an email using an email template id. You can optionally provide <code>requestData</code> to access key value
 // pairs in the email template.
-//   string emailTemplateId The id for the template.
+//   string emailTemplateId The Id for the template.
 //   SendRequest request The send email request that contains all the information used to send the email.
 func (c *FusionAuthClient) SendEmailWithContext(ctx context.Context, emailTemplateId string, request SendRequest) (*SendResponse, *Errors, error) {
 	var resp SendResponse
@@ -7975,7 +8101,7 @@ func (c *FusionAuthClient) UpdateApplicationWithContext(ctx context.Context, app
 }
 
 // UpdateApplicationRole
-// Updates the application role with the given id for the application.
+// Updates the application role with the given Id for the application.
 //   string applicationId The Id of the application that the role belongs to.
 //   string roleId The Id of the role to update.
 //   ApplicationRequest request The request that contains all the new role information.
@@ -7984,7 +8110,7 @@ func (c *FusionAuthClient) UpdateApplicationRole(applicationId string, roleId st
 }
 
 // UpdateApplicationRoleWithContext
-// Updates the application role with the given id for the application.
+// Updates the application role with the given Id for the application.
 //   string applicationId The Id of the application that the role belongs to.
 //   string roleId The Id of the role to update.
 //   ApplicationRequest request The request that contains all the new role information.
@@ -8147,7 +8273,7 @@ func (c *FusionAuthClient) UpdateEntityTypeWithContext(ctx context.Context, enti
 }
 
 // UpdateEntityTypePermission
-// Updates the permission with the given id for the entity type.
+// Updates the permission with the given Id for the entity type.
 //   string entityTypeId The Id of the entityType that the permission belongs to.
 //   string permissionId The Id of the permission to update.
 //   EntityTypeRequest request The request that contains all the new permission information.
@@ -8156,7 +8282,7 @@ func (c *FusionAuthClient) UpdateEntityTypePermission(entityTypeId string, permi
 }
 
 // UpdateEntityTypePermissionWithContext
-// Updates the permission with the given id for the entity type.
+// Updates the permission with the given Id for the entity type.
 //   string entityTypeId The Id of the entityType that the permission belongs to.
 //   string permissionId The Id of the permission to update.
 //   EntityTypeRequest request The request that contains all the new permission information.
@@ -8452,8 +8578,40 @@ func (c *FusionAuthClient) UpdateMessengerWithContext(ctx context.Context, messe
 	return &resp, &errors, err
 }
 
+// UpdateOAuthScope
+// Updates the OAuth scope with the given Id for the application.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to update.
+//   ApplicationOAuthScopeRequest request The request that contains all the new OAuth scope information.
+func (c *FusionAuthClient) UpdateOAuthScope(applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.UpdateOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
+}
+
+// UpdateOAuthScopeWithContext
+// Updates the OAuth scope with the given Id for the application.
+//   string applicationId The Id of the application that the OAuth scope belongs to.
+//   string scopeId The Id of the OAuth scope to update.
+//   ApplicationOAuthScopeRequest request The request that contains all the new OAuth scope information.
+func (c *FusionAuthClient) UpdateOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // UpdateRegistration
-// Updates the registration for the user with the given id and the application defined in the request.
+// Updates the registration for the user with the given Id and the application defined in the request.
 //   string userId The Id of the user whose registration is going to be updated.
 //   RegistrationRequest request The request that contains all the new registration information.
 func (c *FusionAuthClient) UpdateRegistration(userId string, request RegistrationRequest) (*RegistrationResponse, *Errors, error) {
@@ -8461,7 +8619,7 @@ func (c *FusionAuthClient) UpdateRegistration(userId string, request Registratio
 }
 
 // UpdateRegistrationWithContext
-// Updates the registration for the user with the given id and the application defined in the request.
+// Updates the registration for the user with the given Id and the application defined in the request.
 //   string userId The Id of the user whose registration is going to be updated.
 //   RegistrationRequest request The request that contains all the new registration information.
 func (c *FusionAuthClient) UpdateRegistrationWithContext(ctx context.Context, userId string, request RegistrationRequest) (*RegistrationResponse, *Errors, error) {
@@ -8826,7 +8984,7 @@ func (c *FusionAuthClient) VendJWTWithContext(ctx context.Context, request JWTVe
 
 // VerifyEmail
 // Confirms a email verification. The Id given is usually from an email sent to the user.
-//   string verificationId The email verification id sent to the user.
+//   string verificationId The email verification Id sent to the user.
 //
 // Deprecated: This method has been renamed to VerifyEmailAddress and changed to take a JSON request body, use that method instead.
 func (c *FusionAuthClient) VerifyEmail(verificationId string) (*BaseHTTPResponse, *Errors, error) {
@@ -8835,7 +8993,7 @@ func (c *FusionAuthClient) VerifyEmail(verificationId string) (*BaseHTTPResponse
 
 // VerifyEmailWithContext
 // Confirms a email verification. The Id given is usually from an email sent to the user.
-//   string verificationId The email verification id sent to the user.
+//   string verificationId The email verification Id sent to the user.
 //
 // Deprecated: This method has been renamed to VerifyEmailAddressWithContext and changed to take a JSON request body, use that method instead.
 func (c *FusionAuthClient) VerifyEmailWithContext(ctx context.Context, verificationId string) (*BaseHTTPResponse, *Errors, error) {
