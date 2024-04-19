@@ -63,6 +63,13 @@ func Test_GrantTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_OAuthApplicationRelationshipImplementsStringer(t *testing.T) {
+	var enum interface{} = OAuthApplicationRelationship("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("OAuthApplicationRelationship does not implement stringer interface\n")
+	}
+}
+
 func Test_ReactorFeatureStatusImplementsStringer(t *testing.T) {
 	var enum interface{} = ReactorFeatureStatus("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -518,6 +525,13 @@ func Test_RateLimitedRequestTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_OAuthScopeHandlingPolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = OAuthScopeHandlingPolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("OAuthScopeHandlingPolicy does not implement stringer interface\n")
+	}
+}
+
 func Test_LogoutBehaviorImplementsStringer(t *testing.T) {
 	var enum interface{} = LogoutBehavior("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -539,6 +553,13 @@ func Test_WebAuthnWorkflowImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_UnknownScopePolicyImplementsStringer(t *testing.T) {
+	var enum interface{} = UnknownScopePolicy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("UnknownScopePolicy does not implement stringer interface\n")
+	}
+}
+
 func Test_OAuthErrorReasonImplementsStringer(t *testing.T) {
 	var enum interface{} = OAuthErrorReason("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -550,6 +571,13 @@ func Test_ClientAuthenticationMethodImplementsStringer(t *testing.T) {
 	var enum interface{} = ClientAuthenticationMethod("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("ClientAuthenticationMethod does not implement stringer interface\n")
+	}
+}
+
+func Test_OAuthScopeConsentModeImplementsStringer(t *testing.T) {
+	var enum interface{} = OAuthScopeConsentMode("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("OAuthScopeConsentMode does not implement stringer interface\n")
 	}
 }
 

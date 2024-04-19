@@ -382,6 +382,7 @@ type LambdaConfiguration struct {
 	IdTokenPopulateId                   string `json:"idTokenPopulateId,omitempty"`
 	Samlv2PopulateId                    string `json:"samlv2PopulateId,omitempty"`
 	SelfServiceRegistrationValidationId string `json:"selfServiceRegistrationValidationId,omitempty"`
+	UserinfoPopulateId                  string `json:"userinfoPopulateId,omitempty"`
 }
 
 /**
@@ -677,6 +678,7 @@ type UserIdentityProviderLinkEvent struct {
  */
 type ApplicationSearchResponse struct {
 	BaseHTTPResponse
+	ExpandableResponse
 	Applications []Application `json:"applications,omitempty"`
 	Total        int64         `json:"total,omitempty"`
 }
@@ -802,6 +804,23 @@ type UserUpdateEvent struct {
 	Original User `json:"original,omitempty"`
 	User     User `json:"user,omitempty"`
 }
+
+/**
+ * The application's relationship to the authorization server. First-party applications will be granted implicit permission for requested scopes.
+ * Third-party applications will use the {@link OAuthScopeConsentMode} policy.
+ *
+ * @author Spencer Witt
+ */
+type OAuthApplicationRelationship string
+
+func (e OAuthApplicationRelationship) String() string {
+	return string(e)
+}
+
+const (
+	OAuthApplicationRelationship_FirstParty OAuthApplicationRelationship = "FirstParty"
+	OAuthApplicationRelationship_ThirdParty OAuthApplicationRelationship = "ThirdParty"
+)
 
 /**
  * The summary of the action that is preventing login to be returned on the login response.
@@ -1337,6 +1356,18 @@ type IdentityProviderLinkResponse struct {
 
 func (b *IdentityProviderLinkResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * The handling policy for scopes provided by FusionAuth
+ *
+ * @author Spencer Witt
+ */
+type ProvidedScopePolicy struct {
+	Address Requirable `json:"address,omitempty"`
+	Email   Requirable `json:"email,omitempty"`
+	Phone   Requirable `json:"phone,omitempty"`
+	Profile Requirable `json:"profile,omitempty"`
 }
 
 type HistoryItem struct {
@@ -1879,23 +1910,26 @@ type RateLimitedRequestConfiguration struct {
  * @author Daniel DeGroff
  */
 type ReactorStatus struct {
-	AdvancedIdentityProviders            ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
-	AdvancedLambdas                      ReactorFeatureStatus `json:"advancedLambdas,omitempty"`
-	AdvancedMultiFactorAuthentication    ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
-	AdvancedRegistration                 ReactorFeatureStatus `json:"advancedRegistration,omitempty"`
-	ApplicationMultiFactorAuthentication ReactorFeatureStatus `json:"applicationMultiFactorAuthentication,omitempty"`
-	ApplicationThemes                    ReactorFeatureStatus `json:"applicationThemes,omitempty"`
-	BreachedPasswordDetection            ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
-	Connectors                           ReactorFeatureStatus `json:"connectors,omitempty"`
-	EntityManagement                     ReactorFeatureStatus `json:"entityManagement,omitempty"`
-	Expiration                           string               `json:"expiration,omitempty"`
-	LicenseAttributes                    map[string]string    `json:"licenseAttributes,omitempty"`
-	Licensed                             bool                 `json:"licensed"`
-	ScimServer                           ReactorFeatureStatus `json:"scimServer,omitempty"`
-	ThreatDetection                      ReactorFeatureStatus `json:"threatDetection,omitempty"`
-	WebAuthn                             ReactorFeatureStatus `json:"webAuthn,omitempty"`
-	WebAuthnPlatformAuthenticators       ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
-	WebAuthnRoamingAuthenticators        ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
+	AdvancedIdentityProviders                 ReactorFeatureStatus `json:"advancedIdentityProviders,omitempty"`
+	AdvancedLambdas                           ReactorFeatureStatus `json:"advancedLambdas,omitempty"`
+	AdvancedMultiFactorAuthentication         ReactorFeatureStatus `json:"advancedMultiFactorAuthentication,omitempty"`
+	AdvancedOAuthScopes                       ReactorFeatureStatus `json:"advancedOAuthScopes,omitempty"`
+	AdvancedOAuthScopesCustomScopes           ReactorFeatureStatus `json:"advancedOAuthScopesCustomScopes,omitempty"`
+	AdvancedOAuthScopesThirdPartyApplications ReactorFeatureStatus `json:"advancedOAuthScopesThirdPartyApplications,omitempty"`
+	AdvancedRegistration                      ReactorFeatureStatus `json:"advancedRegistration,omitempty"`
+	ApplicationMultiFactorAuthentication      ReactorFeatureStatus `json:"applicationMultiFactorAuthentication,omitempty"`
+	ApplicationThemes                         ReactorFeatureStatus `json:"applicationThemes,omitempty"`
+	BreachedPasswordDetection                 ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
+	Connectors                                ReactorFeatureStatus `json:"connectors,omitempty"`
+	EntityManagement                          ReactorFeatureStatus `json:"entityManagement,omitempty"`
+	Expiration                                string               `json:"expiration,omitempty"`
+	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
+	Licensed                                  bool                 `json:"licensed"`
+	ScimServer                                ReactorFeatureStatus `json:"scimServer,omitempty"`
+	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
+	WebAuthn                                  ReactorFeatureStatus `json:"webAuthn,omitempty"`
+	WebAuthnPlatformAuthenticators            ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
+	WebAuthnRoamingAuthenticators             ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
 }
 
 /**
@@ -2225,6 +2259,7 @@ const (
 	LambdaType_SCIMServerUserRequestConverter    LambdaType = "SCIMServerUserRequestConverter"
 	LambdaType_SCIMServerUserResponseConverter   LambdaType = "SCIMServerUserResponseConverter"
 	LambdaType_SelfServiceRegistrationValidation LambdaType = "SelfServiceRegistrationValidation"
+	LambdaType_UserInfoPopulate                  LambdaType = "UserInfoPopulate"
 )
 
 /**
@@ -2956,6 +2991,7 @@ type Application struct {
 	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy        `json:"registrationDeletePolicy,omitempty"`
 	Roles                            []ApplicationRole                          `json:"roles,omitempty"`
 	Samlv2Configuration              SAMLv2Configuration                        `json:"samlv2Configuration,omitempty"`
+	Scopes                           []ApplicationOAuthScope                    `json:"scopes,omitempty"`
 	State                            ObjectState                                `json:"state,omitempty"`
 	TenantId                         string                                     `json:"tenantId,omitempty"`
 	ThemeId                          string                                     `json:"themeId,omitempty"`
@@ -3085,6 +3121,7 @@ type OAuth2Configuration struct {
 	ClientAuthenticationPolicy    ClientAuthenticationPolicy          `json:"clientAuthenticationPolicy,omitempty"`
 	ClientId                      string                              `json:"clientId,omitempty"`
 	ClientSecret                  string                              `json:"clientSecret,omitempty"`
+	ConsentMode                   OAuthScopeConsentMode               `json:"consentMode,omitempty"`
 	Debug                         bool                                `json:"debug"`
 	DeviceVerificationURL         string                              `json:"deviceVerificationURL,omitempty"`
 	EnabledGrants                 []GrantType                         `json:"enabledGrants,omitempty"`
@@ -3092,8 +3129,12 @@ type OAuth2Configuration struct {
 	LogoutBehavior                LogoutBehavior                      `json:"logoutBehavior,omitempty"`
 	LogoutURL                     string                              `json:"logoutURL,omitempty"`
 	ProofKeyForCodeExchangePolicy ProofKeyForCodeExchangePolicy       `json:"proofKeyForCodeExchangePolicy,omitempty"`
+	ProvidedScopePolicy           ProvidedScopePolicy                 `json:"providedScopePolicy,omitempty"`
+	Relationship                  OAuthApplicationRelationship        `json:"relationship,omitempty"`
 	RequireClientAuthentication   bool                                `json:"requireClientAuthentication"`
 	RequireRegistration           bool                                `json:"requireRegistration"`
+	ScopeHandlingPolicy           OAuthScopeHandlingPolicy            `json:"scopeHandlingPolicy,omitempty"`
+	UnknownScopePolicy            UnknownScopePolicy                  `json:"unknownScopePolicy,omitempty"`
 }
 
 /**
@@ -3640,6 +3681,7 @@ type ExternalIdentifierConfiguration struct {
 	RegistrationVerificationIdGenerator                SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
 	RegistrationVerificationIdTimeToLiveInSeconds      int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationOneTimeCodeGenerator       SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
+	RememberOAuthScopeConsentChoiceTimeToLiveInSeconds int                          `json:"rememberOAuthScopeConsentChoiceTimeToLiveInSeconds,omitempty"`
 	Samlv2AuthNRequestIdTimeToLiveInSeconds            int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
 	SetupPasswordIdGenerator                           SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
 	SetupPasswordIdTimeToLiveInSeconds                 int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
@@ -3716,12 +3758,13 @@ type WebAuthnPublicKeyRegistrationRequest struct {
  */
 type UserResponse struct {
 	BaseHTTPResponse
-	EmailVerificationId          string            `json:"emailVerificationId,omitempty"`
-	EmailVerificationOneTimeCode string            `json:"emailVerificationOneTimeCode,omitempty"`
-	RegistrationVerificationIds  map[string]string `json:"registrationVerificationIds,omitempty"`
-	Token                        string            `json:"token,omitempty"`
-	TokenExpirationInstant       int64             `json:"tokenExpirationInstant,omitempty"`
-	User                         User              `json:"user,omitempty"`
+	EmailVerificationId                  string            `json:"emailVerificationId,omitempty"`
+	EmailVerificationOneTimeCode         string            `json:"emailVerificationOneTimeCode,omitempty"`
+	RegistrationVerificationIds          map[string]string `json:"registrationVerificationIds,omitempty"`
+	RegistrationVerificationOneTimeCodes map[string]string `json:"registrationVerificationOneTimeCodes,omitempty"`
+	Token                                string            `json:"token,omitempty"`
+	TokenExpirationInstant               int64             `json:"tokenExpirationInstant,omitempty"`
+	User                                 User              `json:"user,omitempty"`
 }
 
 func (b *UserResponse) SetStatus(status int) {
@@ -4238,6 +4281,24 @@ type UserDeleteEvent struct {
 }
 
 /**
+ * A custom OAuth scope for a specific application.
+ *
+ * @author Spencer Witt
+ */
+type ApplicationOAuthScope struct {
+	ApplicationId         string                 `json:"applicationId,omitempty"`
+	Data                  map[string]interface{} `json:"data,omitempty"`
+	DefaultConsentDetail  string                 `json:"defaultConsentDetail,omitempty"`
+	DefaultConsentMessage string                 `json:"defaultConsentMessage,omitempty"`
+	Description           string                 `json:"description,omitempty"`
+	Id                    string                 `json:"id,omitempty"`
+	InsertInstant         int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant     int64                  `json:"lastUpdateInstant,omitempty"`
+	Name                  string                 `json:"name,omitempty"`
+	Required              bool                   `json:"required"`
+}
+
+/**
  * Registration delete API request object.
  *
  * @author Brian Pontarelli
@@ -4436,6 +4497,7 @@ const (
 	OAuthErrorType_ServerError             OAuthErrorType = "server_error"
 	OAuthErrorType_UnsupportedGrantType    OAuthErrorType = "unsupported_grant_type"
 	OAuthErrorType_UnsupportedResponseType OAuthErrorType = "unsupported_response_type"
+	OAuthErrorType_AccessDenied            OAuthErrorType = "access_denied"
 	OAuthErrorType_ChangePasswordRequired  OAuthErrorType = "change_password_required"
 	OAuthErrorType_NotLicensed             OAuthErrorType = "not_licensed"
 	OAuthErrorType_TwoFactorRequired       OAuthErrorType = "two_factor_required"
@@ -5534,12 +5596,13 @@ type MemberDeleteRequest struct {
  */
 type RegistrationResponse struct {
 	BaseHTTPResponse
-	RefreshToken               string           `json:"refreshToken,omitempty"`
-	Registration               UserRegistration `json:"registration,omitempty"`
-	RegistrationVerificationId string           `json:"registrationVerificationId,omitempty"`
-	Token                      string           `json:"token,omitempty"`
-	TokenExpirationInstant     int64            `json:"tokenExpirationInstant,omitempty"`
-	User                       User             `json:"user,omitempty"`
+	RefreshToken                        string           `json:"refreshToken,omitempty"`
+	Registration                        UserRegistration `json:"registration,omitempty"`
+	RegistrationVerificationId          string           `json:"registrationVerificationId,omitempty"`
+	RegistrationVerificationOneTimeCode string           `json:"registrationVerificationOneTimeCode,omitempty"`
+	Token                               string           `json:"token,omitempty"`
+	TokenExpirationInstant              int64            `json:"tokenExpirationInstant,omitempty"`
+	User                                User             `json:"user,omitempty"`
 }
 
 func (b *RegistrationResponse) SetStatus(status int) {
@@ -5645,6 +5708,15 @@ type BaseElasticSearchCriteria struct {
  */
 type IPAccessControlListSearchRequest struct {
 	Search IPAccessControlListSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * The Application Scope API request object.
+ *
+ * @author Spencer Witt
+ */
+type ApplicationOAuthScopeRequest struct {
+	Scope ApplicationOAuthScope `json:"scope,omitempty"`
 }
 
 type LoginConfiguration struct {
@@ -5950,15 +6022,6 @@ type Enableable struct {
  */
 type EmailTemplateSearchRequest struct {
 	Search EmailTemplateSearchCriteria `json:"search,omitempty"`
-}
-
-/**
- * @author Daniel DeGroff
- */
-type ApplicationUnverifiedConfiguration struct {
-	Registration         UnverifiedBehavior            `json:"registration,omitempty"`
-	VerificationStrategy VerificationStrategy          `json:"verificationStrategy,omitempty"`
-	WhenGated            RegistrationUnverifiedOptions `json:"whenGated,omitempty"`
 }
 
 type EmailSecurityType string
@@ -6274,6 +6337,7 @@ type DeviceUserCodeResponse struct {
 	DeviceInfo     DeviceInfo     `json:"deviceInfo,omitempty"`
 	ExpiresIn      int            `json:"expires_in,omitempty"`
 	PendingIdPLink PendingIdPLink `json:"pendingIdPLink,omitempty"`
+	Scope          string         `json:"scope,omitempty"`
 	TenantId       string         `json:"tenantId,omitempty"`
 	UserCode       string         `json:"user_code,omitempty"`
 }
@@ -6558,6 +6622,7 @@ type Templates struct {
 	Oauth2ChildRegistrationNotAllowed         string `json:"oauth2ChildRegistrationNotAllowed,omitempty"`
 	Oauth2ChildRegistrationNotAllowedComplete string `json:"oauth2ChildRegistrationNotAllowedComplete,omitempty"`
 	Oauth2CompleteRegistration                string `json:"oauth2CompleteRegistration,omitempty"`
+	Oauth2Consent                             string `json:"oauth2Consent,omitempty"`
 	Oauth2Device                              string `json:"oauth2Device,omitempty"`
 	Oauth2DeviceComplete                      string `json:"oauth2DeviceComplete,omitempty"`
 	Oauth2Error                               string `json:"oauth2Error,omitempty"`
@@ -6708,6 +6773,20 @@ type LoginResponse struct {
 }
 
 func (b *LoginResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * The Application Scope API response.
+ *
+ * @author Spencer Witt
+ */
+type ApplicationOAuthScopeResponse struct {
+	BaseHTTPResponse
+	Scope ApplicationOAuthScope `json:"scope,omitempty"`
+}
+
+func (b *ApplicationOAuthScopeResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -6984,6 +7063,23 @@ type LoginHintConfiguration struct {
 }
 
 /**
+ * Controls the policy for whether OAuth workflows will more strictly adhere to the OAuth and OIDC specification
+ * or run in backwards compatibility mode.
+ *
+ * @author David Charles
+ */
+type OAuthScopeHandlingPolicy string
+
+func (e OAuthScopeHandlingPolicy) String() string {
+	return string(e)
+}
+
+const (
+	OAuthScopeHandlingPolicy_Compatibility OAuthScopeHandlingPolicy = "Compatibility"
+	OAuthScopeHandlingPolicy_Strict        OAuthScopeHandlingPolicy = "Strict"
+)
+
+/**
  * API request for managing families and members.
  *
  * @author Brian Pontarelli
@@ -7049,6 +7145,7 @@ type UserRegistrationCreateEvent struct {
  * @author Spencer Witt
  */
 type ApplicationSearchRequest struct {
+	ExpandableRequest
 	Search ApplicationSearchCriteria `json:"search,omitempty"`
 }
 
@@ -7258,7 +7355,7 @@ type UserPasswordResetSuccessEvent struct {
 
 /**
  * Something that can be required and thus also optional. This currently extends Enableable because anything that is
- * require/optional is almost always enableable as well.
+ * required/optional is almost always enableable as well.
  *
  * @author Brian Pontarelli
  */
@@ -7335,6 +7432,23 @@ type WebhookSearchCriteria struct {
 }
 
 /**
+ * Policy for handling unknown OAuth scopes in the request
+ *
+ * @author Spencer Witt
+ */
+type UnknownScopePolicy string
+
+func (e UnknownScopePolicy) String() string {
+	return string(e)
+}
+
+const (
+	UnknownScopePolicy_Allow  UnknownScopePolicy = "Allow"
+	UnknownScopePolicy_Remove UnknownScopePolicy = "Remove"
+	UnknownScopePolicy_Reject UnknownScopePolicy = "Reject"
+)
+
+/**
  * Models the User Password Reset Start Event.
  *
  * @author Daniel DeGroff
@@ -7371,6 +7485,7 @@ const (
 	OAuthErrorReason_AccessTokenUnavailableForProcessing OAuthErrorReason = "access_token_unavailable_for_processing"
 	OAuthErrorReason_AccessTokenFailedProcessing         OAuthErrorReason = "access_token_failed_processing"
 	OAuthErrorReason_AccessTokenInvalid                  OAuthErrorReason = "access_token_invalid"
+	OAuthErrorReason_AccessTokenRequired                 OAuthErrorReason = "access_token_required"
 	OAuthErrorReason_RefreshTokenNotFound                OAuthErrorReason = "refresh_token_not_found"
 	OAuthErrorReason_RefreshTokenTypeNotSupported        OAuthErrorReason = "refresh_token_type_not_supported"
 	OAuthErrorReason_InvalidClientId                     OAuthErrorReason = "invalid_client_id"
@@ -7422,6 +7537,9 @@ const (
 	OAuthErrorReason_ChangePasswordExpired               OAuthErrorReason = "change_password_expired"
 	OAuthErrorReason_ChangePasswordValidation            OAuthErrorReason = "change_password_validation"
 	OAuthErrorReason_Unknown                             OAuthErrorReason = "unknown"
+	OAuthErrorReason_MissingRequiredScope                OAuthErrorReason = "missing_required_scope"
+	OAuthErrorReason_UnknownScope                        OAuthErrorReason = "unknown_scope"
+	OAuthErrorReason_ConsentCanceled                     OAuthErrorReason = "consent_canceled"
 )
 
 /**
@@ -7579,6 +7697,24 @@ type ReactorRequest struct {
 	License   string `json:"license,omitempty"`
 	LicenseId string `json:"licenseId,omitempty"`
 }
+
+/**
+ * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
+ * for a third-party application.
+ *
+ * @author Spencer Witt
+ */
+type OAuthScopeConsentMode string
+
+func (e OAuthScopeConsentMode) String() string {
+	return string(e)
+}
+
+const (
+	OAuthScopeConsentMode_AlwaysPrompt     OAuthScopeConsentMode = "AlwaysPrompt"
+	OAuthScopeConsentMode_RememberDecision OAuthScopeConsentMode = "RememberDecision"
+	OAuthScopeConsentMode_NeverPrompt      OAuthScopeConsentMode = "NeverPrompt"
+)
 
 /**
  * @author Michael Sleevi

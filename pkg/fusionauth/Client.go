@@ -1249,6 +1249,42 @@ func (c *FusionAuthClient) CreateMessengerWithContext(ctx context.Context, messe
 	return &resp, &errors, err
 }
 
+// CreateOAuthScope
+// Creates a new custom OAuth scope for an application. You must specify the Id of the application you are creating the scope for.
+// You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+//
+//	string applicationId The Id of the application to create the OAuth scope on.
+//	string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+//	ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth OAuth scope.
+func (c *FusionAuthClient) CreateOAuthScope(applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.CreateOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
+}
+
+// CreateOAuthScopeWithContext
+// Creates a new custom OAuth scope for an application. You must specify the Id of the application you are creating the scope for.
+// You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+//
+//	string applicationId The Id of the application to create the OAuth scope on.
+//	string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+//	ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth OAuth scope.
+func (c *FusionAuthClient) CreateOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateTenant
 // Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
 //
@@ -1716,7 +1752,7 @@ func (c *FusionAuthClient) DeleteApplicationWithContext(ctx context.Context, app
 // Hard deletes an application role. This is a dangerous operation and should not be used in most circumstances. This
 // permanently removes the given role from all users that had it.
 //
-//	string applicationId The Id of the application to deactivate.
+//	string applicationId The Id of the application that the role belongs to.
 //	string roleId The Id of the role to delete.
 func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId string) (*BaseHTTPResponse, *Errors, error) {
 	return c.DeleteApplicationRoleWithContext(context.TODO(), applicationId, roleId)
@@ -1726,7 +1762,7 @@ func (c *FusionAuthClient) DeleteApplicationRole(applicationId string, roleId st
 // Hard deletes an application role. This is a dangerous operation and should not be used in most circumstances. This
 // permanently removes the given role from all users that had it.
 //
-//	string applicationId The Id of the application to deactivate.
+//	string applicationId The Id of the application that the role belongs to.
 //	string roleId The Id of the role to delete.
 func (c *FusionAuthClient) DeleteApplicationRoleWithContext(ctx context.Context, applicationId string, roleId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
@@ -2209,6 +2245,39 @@ func (c *FusionAuthClient) DeleteMessengerWithContext(ctx context.Context, messe
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/messenger").
 		WithUriSegment(messengerId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteOAuthScope
+// Hard deletes a custom OAuth scope.
+// OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the application's unknown scope policy.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to delete.
+func (c *FusionAuthClient) DeleteOAuthScope(applicationId string, scopeId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteOAuthScopeWithContext(context.TODO(), applicationId, scopeId)
+}
+
+// DeleteOAuthScopeWithContext
+// Hard deletes a custom OAuth scope.
+// OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the application's unknown scope policy.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to delete.
+func (c *FusionAuthClient) DeleteOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithMethod(http.MethodDelete).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -4015,6 +4084,40 @@ func (c *FusionAuthClient) PatchMessengerWithContext(ctx context.Context, messen
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/messenger").
 		WithUriSegment(messengerId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchOAuthScope
+// Updates, via PATCH, the custom OAuth scope with the given Id for the application.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	ApplicationOAuthScopeRequest request The request that contains just the new OAuth scope information.
+func (c *FusionAuthClient) PatchOAuthScope(applicationId string, scopeId string, request map[string]interface{}) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.PatchOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
+}
+
+// PatchOAuthScopeWithContext
+// Updates, via PATCH, the custom OAuth scope with the given Id for the application.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	ApplicationOAuthScopeRequest request The request that contains just the new OAuth scope information.
+func (c *FusionAuthClient) PatchOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request map[string]interface{}) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPatch).
 		Do(ctx)
@@ -5848,6 +5951,37 @@ func (c *FusionAuthClient) RetrieveMonthlyActiveReportWithContext(ctx context.Co
 		WithParameter("applicationId", applicationId).
 		WithParameter("start", strconv.FormatInt(start, 10)).
 		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveOAuthScope
+// Retrieves a custom OAuth scope.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to retrieve.
+func (c *FusionAuthClient) RetrieveOAuthScope(applicationId string, scopeId string) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.RetrieveOAuthScopeWithContext(context.TODO(), applicationId, scopeId)
+}
+
+// RetrieveOAuthScopeWithContext
+// Retrieves a custom OAuth scope.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to retrieve.
+func (c *FusionAuthClient) RetrieveOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -8995,6 +9129,40 @@ func (c *FusionAuthClient) UpdateMessengerWithContext(ctx context.Context, messe
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/messenger").
 		WithUriSegment(messengerId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateOAuthScope
+// Updates the OAuth scope with the given Id for the application.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	ApplicationOAuthScopeRequest request The request that contains all the new OAuth scope information.
+func (c *FusionAuthClient) UpdateOAuthScope(applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	return c.UpdateOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
+}
+
+// UpdateOAuthScopeWithContext
+// Updates the OAuth scope with the given Id for the application.
+//
+//	string applicationId The Id of the application that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	ApplicationOAuthScopeRequest request The request that contains all the new OAuth scope information.
+func (c *FusionAuthClient) UpdateOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
+	var resp ApplicationOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do(ctx)
