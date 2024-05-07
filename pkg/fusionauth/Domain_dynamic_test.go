@@ -77,6 +77,13 @@ func Test_ReactorFeatureStatusImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_ThemeTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = ThemeType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("ThemeType does not implement stringer interface\n")
+	}
+}
+
 func Test_ProofKeyForCodeExchangePolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = ProofKeyForCodeExchangePolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
