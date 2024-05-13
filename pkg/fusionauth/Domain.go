@@ -7805,3 +7805,19 @@ func (b *EventLogResponse) SetStatus(status int) {
 type TenantRegistrationConfiguration struct {
 	BlockedDomains []string `json:"blockedDomains,omitempty"`
 }
+
+/**
+ * Controls the policy for refresh token expiration
+ * @author Maksym Cierżniak
+ */
+type OauthRefreshTokenExpirationPolicy string
+
+func (e OauthRefreshTokenExpirationPolicy) String() string {
+	return string(e)
+}
+
+const (
+	OauthRefreshTokenExpirationPolicy_Fixed                            RefreshTokenExpirationPolicy = "Fixed"
+	OauthRefreshTokenExpirationPolicy_SlidingWindow                    RefreshTokenExpirationPolicy = "SlidingWindow"
+	OauthRefreshTokenExpirationPolicy_SlidingWindowWithMaximumLifetime RefreshTokenExpirationPolicy = "SlidingWindowWithMaximumLifetime"
+)
