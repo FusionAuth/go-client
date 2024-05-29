@@ -1077,6 +1077,17 @@ type UserLoginIdDuplicateOnCreateEvent struct {
 	User              User   `json:"user,omitempty"`
 }
 
+type ThemeType string
+
+func (e ThemeType) String() string {
+	return string(e)
+}
+
+const (
+	ThemeType_Advanced ThemeType = "advanced"
+	ThemeType_Simple   ThemeType = "simple"
+)
+
 /**
  * Login API request object.
  *
@@ -1102,6 +1113,46 @@ type RecentLoginResponse struct {
 
 func (b *RecentLoginResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Theme object for values used in the css variables for simple themes.
+ *
+ * @author Lyle Schemmerling
+ */
+type SimpleThemeVariables struct {
+	AlertBackgroundColor        string `json:"alertBackgroundColor,omitempty"`
+	AlertFontColor              string `json:"alertFontColor,omitempty"`
+	BackgroundImageUrl          string `json:"backgroundImageUrl,omitempty"`
+	BackgroundSize              string `json:"backgroundSize,omitempty"`
+	BorderRadius                string `json:"borderRadius,omitempty"`
+	DeleteButtonColor           string `json:"deleteButtonColor,omitempty"`
+	DeleteButtonFocusColor      string `json:"deleteButtonFocusColor,omitempty"`
+	DeleteButtonTextColor       string `json:"deleteButtonTextColor,omitempty"`
+	DeleteButtonTextFocusColor  string `json:"deleteButtonTextFocusColor,omitempty"`
+	ErrorFontColor              string `json:"errorFontColor,omitempty"`
+	ErrorIconColor              string `json:"errorIconColor,omitempty"`
+	FontColor                   string `json:"fontColor,omitempty"`
+	FontFamily                  string `json:"fontFamily,omitempty"`
+	FooterDisplay               bool   `json:"footerDisplay"`
+	IconBackgroundColor         string `json:"iconBackgroundColor,omitempty"`
+	IconColor                   string `json:"iconColor,omitempty"`
+	InfoIconColor               string `json:"infoIconColor,omitempty"`
+	InputBackgroundColor        string `json:"inputBackgroundColor,omitempty"`
+	InputIconColor              string `json:"inputIconColor,omitempty"`
+	InputTextColor              string `json:"inputTextColor,omitempty"`
+	LinkTextColor               string `json:"linkTextColor,omitempty"`
+	LinkTextFocusColor          string `json:"linkTextFocusColor,omitempty"`
+	LogoImageSize               string `json:"logoImageSize,omitempty"`
+	LogoImageUrl                string `json:"logoImageUrl,omitempty"`
+	MonoFontColor               string `json:"monoFontColor,omitempty"`
+	MonoFontFamily              string `json:"monoFontFamily,omitempty"`
+	PageBackgroundColor         string `json:"pageBackgroundColor,omitempty"`
+	PanelBackgroundColor        string `json:"panelBackgroundColor,omitempty"`
+	PrimaryButtonColor          string `json:"primaryButtonColor,omitempty"`
+	PrimaryButtonFocusColor     string `json:"primaryButtonFocusColor,omitempty"`
+	PrimaryButtonTextColor      string `json:"primaryButtonTextColor,omitempty"`
+	PrimaryButtonTextFocusColor string `json:"primaryButtonTextFocusColor,omitempty"`
 }
 
 /**
@@ -4125,6 +4176,8 @@ type Theme struct {
 	Name              string                 `json:"name,omitempty"`
 	Stylesheet        string                 `json:"stylesheet,omitempty"`
 	Templates         Templates              `json:"templates,omitempty"`
+	Type              ThemeType              `json:"type,omitempty"`
+	Variables         SimpleThemeVariables   `json:"variables,omitempty"`
 }
 
 /**
@@ -7033,7 +7086,8 @@ const (
  */
 type ThemeSearchCriteria struct {
 	BaseSearchCriteria
-	Name string `json:"name,omitempty"`
+	Name string    `json:"name,omitempty"`
+	Type ThemeType `json:"type,omitempty"`
 }
 
 /**
