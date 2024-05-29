@@ -1123,7 +1123,7 @@ func (b *RecentLoginResponse) SetStatus(status int) {
 type SimpleThemeVariables struct {
 	AlertBackgroundColor        string `json:"alertBackgroundColor,omitempty"`
 	AlertFontColor              string `json:"alertFontColor,omitempty"`
-	BackgroundImageUrl          string `json:"backgroundImageUrl,omitempty"`
+	BackgroundImageURL          string `json:"backgroundImageURL,omitempty"`
 	BackgroundSize              string `json:"backgroundSize,omitempty"`
 	BorderRadius                string `json:"borderRadius,omitempty"`
 	DeleteButtonColor           string `json:"deleteButtonColor,omitempty"`
@@ -1144,7 +1144,7 @@ type SimpleThemeVariables struct {
 	LinkTextColor               string `json:"linkTextColor,omitempty"`
 	LinkTextFocusColor          string `json:"linkTextFocusColor,omitempty"`
 	LogoImageSize               string `json:"logoImageSize,omitempty"`
-	LogoImageUrl                string `json:"logoImageUrl,omitempty"`
+	LogoImageURL                string `json:"logoImageURL,omitempty"`
 	MonoFontColor               string `json:"monoFontColor,omitempty"`
 	MonoFontFamily              string `json:"monoFontFamily,omitempty"`
 	PageBackgroundColor         string `json:"pageBackgroundColor,omitempty"`
