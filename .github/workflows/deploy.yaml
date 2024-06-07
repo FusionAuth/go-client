@@ -1,0 +1,58 @@
+# Run locally with act:
+#
+# act pull_request [--input command=[command]] \
+#  --platform fusionauth-builder=[ecr-repo-name]/fusionauth-builder:latest] \
+#  --workflows ./.github/workflows/release.yaml \
+#  --env-file <(aws configure export-credentials --profile [aws-profile] --format env)
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      command:
+        type: choice
+        options:
+          - test     # build only
+          - release  # build & release to svn
+        default: build
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' && inputs.command == 'test'
+    runs-on: fusionauth-builder
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: compile
+        shell: bash -l {0}
+        run: |
+          echo "TODO: enable tests"
+          # We need an instance to run tests against before we can enable this.
+          # sb test
+
+  deploy:
+    if: |
+      github.event_name == 'workflow_dispatch' && inputs.command == 'release'
+    runs-on: fusionauth-builder
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: release to svn
+        if: inputs.command == 'release'
+        shell: bash -l {0}
+        run: sb release
