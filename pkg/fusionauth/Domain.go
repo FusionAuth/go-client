@@ -4000,6 +4000,20 @@ type UIConfiguration struct {
 	MenuFontColor string `json:"menuFontColor,omitempty"`
 }
 
+/**
+ * The public Status API response
+ *
+ * @author Daniel DeGroff
+ */
+type StatusResponse struct {
+	BaseHTTPResponse
+	LinkedHashMap
+}
+
+func (b *StatusResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
 type RegistrationType string
 
 func (e RegistrationType) String() string {

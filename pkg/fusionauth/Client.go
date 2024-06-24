@@ -6371,6 +6371,60 @@ func (c *FusionAuthClient) RetrieveSystemConfigurationWithContext(ctx context.Co
 	return &resp, err
 }
 
+// RetrieveSystemHealth
+// Retrieves the FusionAuth system health. This API will return 200 if the system is healthy, and 500 if the system is un-healthy.
+func (c *FusionAuthClient) RetrieveSystemHealth() (*BaseHTTPResponse, error) {
+	return c.RetrieveSystemHealthWithContext(context.TODO())
+}
+
+// RetrieveSystemHealthWithContext
+// Retrieves the FusionAuth system health. This API will return 200 if the system is healthy, and 500 if the system is un-healthy.
+func (c *FusionAuthClient) RetrieveSystemHealthWithContext(ctx context.Context) (*BaseHTTPResponse, error) {
+	var resp BaseHTTPResponse
+
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/health").
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	return &resp, err
+}
+
+// RetrieveSystemStatus
+// Retrieves the FusionAuth system status. This request is anonymous and does not require an API key. When an API key is not provided the response will contain a single value in the JSON response indicating the current health check.
+func (c *FusionAuthClient) RetrieveSystemStatus() (*StatusResponse, error) {
+	return c.RetrieveSystemStatusWithContext(context.TODO())
+}
+
+// RetrieveSystemStatusWithContext
+// Retrieves the FusionAuth system status. This request is anonymous and does not require an API key. When an API key is not provided the response will contain a single value in the JSON response indicating the current health check.
+func (c *FusionAuthClient) RetrieveSystemStatusWithContext(ctx context.Context) (*StatusResponse, error) {
+	var resp StatusResponse
+
+	err := c.StartAnonymous(&resp, nil).
+		WithUri("/api/status").
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	return &resp, err
+}
+
+// RetrieveSystemStatusUsingAPIKey
+// Retrieves the FusionAuth system status using an API key. Using an API key will cause the response to include the product version, health checks and various runtime metrics.
+func (c *FusionAuthClient) RetrieveSystemStatusUsingAPIKey() (*StatusResponse, error) {
+	return c.RetrieveSystemStatusUsingAPIKeyWithContext(context.TODO())
+}
+
+// RetrieveSystemStatusUsingAPIKeyWithContext
+// Retrieves the FusionAuth system status using an API key. Using an API key will cause the response to include the product version, health checks and various runtime metrics.
+func (c *FusionAuthClient) RetrieveSystemStatusUsingAPIKeyWithContext(ctx context.Context) (*StatusResponse, error) {
+	var resp StatusResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/status").
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	return &resp, err
+}
+
 // RetrieveTenant
 // Retrieves the tenant for the given Id.
 //
