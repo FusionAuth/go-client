@@ -16,8 +16,8 @@
 package fusionauth
 
 import (
-        "fmt"
-        "encoding/json"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -43,9 +43,9 @@ var faClient = NewClient(httpClient, baseURL, "af69486b-4733-4470-a592-f1bfce7af
 func TestRetrieveUserFail(t *testing.T) {
 	userResponse, errors, _ := faClient.RetrieveUserByEmail("missing@example.com")
 
-        errJson, _ := json.Marshal(errors)
-        fmt.Println(string(errJson))
-        
+	errJson, _ := json.Marshal(errors)
+	fmt.Println(string(errJson))
+
 	assert.Equal(t, 0, len(errors.FieldErrors))
 	assert.Equal(t, 0, len(errors.GeneralErrors))
 	assert.Equal(t, 404, userResponse.StatusCode)
@@ -53,9 +53,9 @@ func TestRetrieveUserFail(t *testing.T) {
 
 func TestRetrieveUserSuccess(t *testing.T) {
 	userResponse, errors, _ := faClient.RetrieveUserByEmail("richard@example.com")
-        errJson, _ := json.Marshal(errors)
-        fmt.Println(string(errJson))
-        
+	errJson, _ := json.Marshal(errors)
+	fmt.Println(string(errJson))
+
 	assert.Equal(t, (*Errors)(nil), errors)
 	assert.Equal(t, 200, userResponse.StatusCode)
 }
