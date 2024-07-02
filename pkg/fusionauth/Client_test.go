@@ -48,7 +48,7 @@ func TestRetrieveUserFail(t *testing.T) {
         
 	assert.Equal(t, 0, len(errors.FieldErrors))
 	assert.Equal(t, 0, len(errors.GeneralErrors))
-	assert.Equal(t, 401, userResponse.StatusCode)
+	assert.Equal(t, 404, userResponse.StatusCode)
 }
 
 func TestRetrieveUserSuccess(t *testing.T) {
@@ -56,8 +56,7 @@ func TestRetrieveUserSuccess(t *testing.T) {
         errJson, _ := json.Marshal(errors)
         fmt.Println(string(errJson))
         
-	assert.Equal(t, 0, len(errors.FieldErrors))
-	assert.Equal(t, 0, len(errors.GeneralErrors))
+	assert.Equal(t, nil, errors)
 	assert.Equal(t, 200, userResponse.StatusCode)
 }
 
