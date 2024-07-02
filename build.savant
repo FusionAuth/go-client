@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,17 @@ project(group: "io.fusionauth", name: "go-client", version: "1.51.1", licenses: 
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0-RC.6")
 
 target(name: "clean", description: "Cleans build directory") {
+  ProcessBuilder pb = new ProcessBuilder("go", "clean", "-x")
+      .inheritIO()
+      .directory(new File("./pkg/fusionauth/"))
+
+  def process = pb.start()
+  process.consumeProcessOutput(System.out, System.err)
+  process.waitFor()
 }
 
 target(name: "format", description: "Formats the source code") {
-  ProcessBuilder pb = new ProcessBuilder("go", "fmt")
+  ProcessBuilder pb = new ProcessBuilder("go", "fmt", "-x")
       .inheritIO()
       .directory(new File("./pkg/fusionauth/"))
 
@@ -47,6 +54,13 @@ target(name: "format", description: "Formats the source code") {
 }
 
 target(name: "compile", description: "Compiles the source code", dependsOn: ["format"]) {
+  ProcessBuilder pb = new ProcessBuilder("go", "build", "-v", "-x")
+      .inheritIO()
+      .directory(new File("./pkg/fusionauth/"))
+
+  def process = pb.start()
+  process.consumeProcessOutput(System.out, System.err)
+  process.waitFor()
 }
 
 target(name: "test", description: "Runs the project's unit tests", dependsOn: ["compile"]) {
