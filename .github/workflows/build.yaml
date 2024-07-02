@@ -23,6 +23,8 @@ jobs:
           FUSIONAUTH_VERSION: 1.51.1
           FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: kickstart
       # Compile
+      - name: Debugging network info
+        run: docker network ls
       - name: Test that we can compile
         run: cd pkg/fusionauth && go build
       # Compile
