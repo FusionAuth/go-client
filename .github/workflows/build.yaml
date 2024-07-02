@@ -1,0 +1,23 @@
+# This is a starting workflow for building with GitHub Actions
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out code
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+
+      # Compile
+      - name: Test that we can compile
+        run: cd pkg/fusionauth && go build
+      # Compile
+      - name: Run tests
+        run: cd pkg/fusionauth && go test
+      # Done!
