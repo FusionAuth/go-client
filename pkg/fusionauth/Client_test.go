@@ -38,9 +38,14 @@ var (
 
 var faClient = NewClient(httpClient, baseURL, "af69486b-4733-4470-a592-f1bfce7af580")
 
-func TestRetrieveUser(t *testing.T) {
+func TestRetrieveUserFail(t *testing.T) {
 	userResponse, _, _ := faClient.RetrieveUser("missing@example.com")
 	assert.Equal(t, 401, userResponse.StatusCode)
+}
+
+func TestRetrieveUserSuccess(t *testing.T) {
+	userResponse, _, _ := faClient.RetrieveUser("richard@example.com")
+	assert.Equal(t, 200, userResponse.StatusCode)
 }
 
 func TestMain(m *testing.M) {
