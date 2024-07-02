@@ -32,17 +32,31 @@ jobs:
       github.event_name == 'pull_request' ||
       github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' && inputs.command == 'test'
-    runs-on: fusionauth-builder
+    runs-on: fusionauth-standard
     steps:
       - name: checkout
         uses: actions/checkout@v4
-
-      - name: compile
+      - name: Test that we can compile
         shell: bash -l {0}
+        run: sb compile
+      - name: Copy our kickstart file over so it gets picked up
         run: |
-          echo "TODO: enable tests"
-          # We need an instance to run tests against before we can enable this.
-          # sb test
+          mkdir faDockerComposeFilePath
+          cp -r .github/kickstart faDockerComposeFilePath
+          cp .github/kickstart/kickstart.json faDockerComposeFilePath/kickstart/k2.json
+          cp .github/kickstart/kickstart.json .github/kickstart/k2.json
+
+      - name: Start FusionAuth
+        uses: fusionauth/fusionauth-github-action@v1
+        with:
+          FUSIONAUTH_APP_KICKSTART_FILENAME: k2.json
+          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
+
+      - name: Sleep until FusionAuth starts
+        run: sleep 30
+      - name: Run tests
+        shell: bash -l {0}
+        run: sb test
 
   deploy:
     if: |
