@@ -21,10 +21,11 @@ jobs:
         with:
           FUSIONAUTH_APP_KICKSTART_FILENAME: k2.json
           FUSIONAUTH_VERSION: 1.51.1
-          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: kickstart
-      # Compile
+          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
+
       - name: Debugging network info
         run: docker network ls
+      # Compile
       - name: Test that we can compile
         run: cd pkg/fusionauth && go build
       # Compile
