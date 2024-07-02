@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-go@v5
       # Set up the build environment
       - name: Copy our kickstart file over so it gets picked up
-        run: mkdir faDockerComposeFilePath/ && cp -r .github/kickstart faDockerComposeFilePath/ && cp .github/kickstart/kickstart.json faDockerComposeFilePath/kickstart/k2.json
+        run: mkdir faDockerComposeFilePath/ && cp -r .github/kickstart faDockerComposeFilePath/ && cp .github/kickstart/kickstart.json faDockerComposeFilePath/kickstart/k2.json && cp .github/kickstart/kickstart.json .github/kickstart/k2.json
       - name: Start FusionAuth
         uses: fusionauth/fusionauth-github-action@v1
         with:
