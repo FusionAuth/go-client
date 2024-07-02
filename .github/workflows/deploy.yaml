@@ -51,10 +51,11 @@ jobs:
 
       - name: Sleep until FusionAuth starts
         run: sleep 30
-
       - name: Test that we can compile
+        shell: bash -l {0}
         run: sb compile
       - name: Run tests
+        shell: bash -l {0}
         run: sb test
 
   deploy:
