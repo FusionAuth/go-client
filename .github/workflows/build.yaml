@@ -21,7 +21,6 @@ jobs:
         with:
           FUSIONAUTH_VERSION: 1.48.3
           FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: kickstart
-      - name: Install npm dependencies
 
       # Compile
       - name: Test that we can compile
