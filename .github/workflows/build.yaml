@@ -23,6 +23,8 @@ jobs:
           FUSIONAUTH_VERSION: 1.51.1
           FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
 
+      - name: Sleeping until FusionAuth starts
+        run: sleep 30
       - name: Debugging network info
         run: docker network ls
       # Compile
