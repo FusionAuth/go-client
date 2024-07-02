@@ -56,7 +56,7 @@ func TestRetrieveUserSuccess(t *testing.T) {
         errJson, _ := json.Marshal(errors)
         fmt.Println(string(errJson))
         
-	assert.Equal(t, nil, errors)
+	assert.Equal(t, (*Errors)(nil), errors)
 	assert.Equal(t, 200, userResponse.StatusCode)
 }
 
