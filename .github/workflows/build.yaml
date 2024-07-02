@@ -20,7 +20,6 @@ jobs:
         uses: fusionauth/fusionauth-github-action@v1
         with:
           FUSIONAUTH_APP_KICKSTART_FILENAME: k2.json
-          FUSIONAUTH_VERSION: 1.51.1
           FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
 
       - name: Sleeping until FusionAuth starts
