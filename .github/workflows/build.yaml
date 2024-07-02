@@ -13,6 +13,15 @@ jobs:
       # Check out code
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
+      # Set up the build environment
+      - name: Copy our kickstart file over so it gets picked up
+        run: mkdir faDockerComposeFilePath/ && cp -r .github/kickstart faDockerComposeFilePath/ && cp kickstart/kickstart.json faDockerComposeFilePath/kickstart/k2.json
+      - name: Start FusionAuth
+        uses: fusionauth/fusionauth-github-action@v1
+        with:
+          FUSIONAUTH_VERSION: 1.48.3
+          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: kickstart
+      - name: Install npm dependencies
 
       # Compile
       - name: Test that we can compile
