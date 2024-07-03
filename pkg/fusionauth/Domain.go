@@ -38,8 +38,6 @@ func (b *BaseHTTPResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
-type LinkedHashMap map[string]interface{}
-
 /**
  * @author Rob Davis
  */
