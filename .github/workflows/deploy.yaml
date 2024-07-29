@@ -61,7 +61,7 @@ jobs:
   deploy:
     if: |
       github.event_name == 'workflow_dispatch' && inputs.command == 'release'
-    runs-on: fusionauth-builder
+    runs-on: fusionauth-standard
     steps:
       - name: checkout
         uses: actions/checkout@v4
