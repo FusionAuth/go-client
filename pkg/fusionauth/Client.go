@@ -7292,6 +7292,60 @@ func (c *FusionAuthClient) RetrieveWebhookWithContext(ctx context.Context, webho
 	return &resp, err
 }
 
+// RetrieveWebhookAttemptLog
+// Retrieves a single webhook attempt log for the given Id.
+//
+//	string webhookAttemptLogId The Id of the webhook attempt log to retrieve.
+func (c *FusionAuthClient) RetrieveWebhookAttemptLog(webhookAttemptLogId string) (*WebhookAttemptLogResponse, *Errors, error) {
+	return c.RetrieveWebhookAttemptLogWithContext(context.TODO(), webhookAttemptLogId)
+}
+
+// RetrieveWebhookAttemptLogWithContext
+// Retrieves a single webhook attempt log for the given Id.
+//
+//	string webhookAttemptLogId The Id of the webhook attempt log to retrieve.
+func (c *FusionAuthClient) RetrieveWebhookAttemptLogWithContext(ctx context.Context, webhookAttemptLogId string) (*WebhookAttemptLogResponse, *Errors, error) {
+	var resp WebhookAttemptLogResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/webhook-attempt-log").
+		WithUriSegment(webhookAttemptLogId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveWebhookEventLog
+// Retrieves a single webhook event log for the given Id.
+//
+//	string webhookEventLogId The Id of the webhook event log to retrieve.
+func (c *FusionAuthClient) RetrieveWebhookEventLog(webhookEventLogId string) (*WebhookEventLogResponse, *Errors, error) {
+	return c.RetrieveWebhookEventLogWithContext(context.TODO(), webhookEventLogId)
+}
+
+// RetrieveWebhookEventLogWithContext
+// Retrieves a single webhook event log for the given Id.
+//
+//	string webhookEventLogId The Id of the webhook event log to retrieve.
+func (c *FusionAuthClient) RetrieveWebhookEventLogWithContext(ctx context.Context, webhookEventLogId string) (*WebhookEventLogResponse, *Errors, error) {
+	var resp WebhookEventLogResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/webhook-event-log").
+		WithUriSegment(webhookEventLogId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveWebhooks
 // Retrieves all the webhooks.
 func (c *FusionAuthClient) RetrieveWebhooks() (*WebhookResponse, error) {
@@ -8203,6 +8257,33 @@ func (c *FusionAuthClient) SearchUsersByQueryStringWithContext(ctx context.Conte
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchWebhookEventLogs
+// Searches the webhook event logs with the specified criteria and pagination.
+//
+//	WebhookEventLogSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchWebhookEventLogs(request WebhookEventLogSearchRequest) (*WebhookEventLogSearchResponse, *Errors, error) {
+	return c.SearchWebhookEventLogsWithContext(context.TODO(), request)
+}
+
+// SearchWebhookEventLogsWithContext
+// Searches the webhook event logs with the specified criteria and pagination.
+//
+//	WebhookEventLogSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchWebhookEventLogsWithContext(ctx context.Context, request WebhookEventLogSearchRequest) (*WebhookEventLogSearchResponse, *Errors, error) {
+	var resp WebhookEventLogSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/system/webhook-event-log/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)

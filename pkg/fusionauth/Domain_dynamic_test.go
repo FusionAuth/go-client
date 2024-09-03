@@ -238,6 +238,13 @@ func Test_RefreshTokenUsagePolicyImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_WebhookAttemptResultImplementsStringer(t *testing.T) {
+	var enum interface{} = WebhookAttemptResult("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("WebhookAttemptResult does not implement stringer interface\n")
+	}
+}
+
 func Test_DeviceTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = DeviceType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -592,5 +599,12 @@ func Test_IdentityProviderLoginMethodImplementsStringer(t *testing.T) {
 	var enum interface{} = IdentityProviderLoginMethod("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("IdentityProviderLoginMethod does not implement stringer interface\n")
+	}
+}
+
+func Test_WebhookEventResultImplementsStringer(t *testing.T) {
+	var enum interface{} = WebhookEventResult("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("WebhookEventResult does not implement stringer interface\n")
 	}
 }

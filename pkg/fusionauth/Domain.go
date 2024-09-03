@@ -41,9 +41,24 @@ func (b *BaseHTTPResponse) SetStatus(status int) {
 type LinkedHashMap map[string]interface{}
 
 /**
+ * Webhook attempt log response.
+ *
+ * @author Spencer Witt
+ */
+type WebhookAttemptLogResponse struct {
+	BaseHTTPResponse
+	WebhookAttemptLog WebhookAttemptLog `json:"webhookAttemptLog,omitempty"`
+}
+
+func (b *WebhookAttemptLogResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Rob Davis
  */
 type TenantLambdaConfiguration struct {
+	LoginValidationId                     string `json:"loginValidationId,omitempty"`
 	ScimEnterpriseUserRequestConverterId  string `json:"scimEnterpriseUserRequestConverterId,omitempty"`
 	ScimEnterpriseUserResponseConverterId string `json:"scimEnterpriseUserResponseConverterId,omitempty"`
 	ScimGroupRequestConverterId           string `json:"scimGroupRequestConverterId,omitempty"`
@@ -81,7 +96,7 @@ type AuthenticationTokenConfiguration struct {
 }
 
 /**
- * Event event to an audit log was created.
+ * Event to indicate an audit log was created.
  *
  * @author Daniel DeGroff
  */
@@ -206,10 +221,9 @@ type ApplicationRegistrationDeletePolicy struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationDeleteEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -263,8 +277,7 @@ type UserComment struct {
  * @author Daniel DeGroff
  */
 type GroupDeleteCompleteEvent struct {
-	BaseEvent
-	Group Group `json:"group,omitempty"`
+	BaseGroupEvent
 }
 
 /**
@@ -455,8 +468,7 @@ type EmailTemplate struct {
  * @author Trevor Smith
  */
 type UserEmailVerifiedEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -539,8 +551,7 @@ type ConsentSearchRequest struct {
  * @author Brian Pontarelli
  */
 type UserReactivateEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -668,9 +679,8 @@ type AuditLog struct {
  * @author Rob Davis
  */
 type UserIdentityProviderLinkEvent struct {
-	BaseEvent
+	BaseUserEvent
 	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
-	User                 User                 `json:"user,omitempty"`
 }
 
 /**
@@ -802,9 +812,8 @@ type GroupMember struct {
  * @author Brian Pontarelli
  */
 type UserUpdateEvent struct {
-	BaseEvent
+	BaseUserEvent
 	Original User `json:"original,omitempty"`
-	User     User `json:"user,omitempty"`
 }
 
 /**
@@ -918,8 +927,7 @@ type TwoFactorStartRequest struct {
  * @author Daniel DeGroff
  */
 type GroupCreateEvent struct {
-	BaseEvent
-	Group Group `json:"group,omitempty"`
+	BaseGroupEvent
 }
 
 /**
@@ -1072,11 +1080,10 @@ type RefreshRequest struct {
  * @author Daniel DeGroff
  */
 type UserLoginIdDuplicateOnCreateEvent struct {
-	BaseEvent
+	BaseUserEvent
 	DuplicateEmail    string `json:"duplicateEmail,omitempty"`
 	DuplicateUsername string `json:"duplicateUsername,omitempty"`
 	Existing          User   `json:"existing,omitempty"`
-	User              User   `json:"user,omitempty"`
 }
 
 type ThemeType string
@@ -1101,6 +1108,17 @@ type LoginRequest struct {
 	OneTimePassword  string `json:"oneTimePassword,omitempty"`
 	Password         string `json:"password,omitempty"`
 	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
+}
+
+/**
+ * The reason for the login failure.
+ *
+ * @author Daniel DeGroff
+ */
+type UserLoginFailedReason struct {
+	Code         string `json:"code,omitempty"`
+	LambdaId     string `json:"lambdaId,omitempty"`
+	LambdaResult Errors `json:"lambdaResult,omitempty"`
 }
 
 /**
@@ -1496,8 +1514,7 @@ const (
  * @author Daniel DeGroff
  */
 type GroupUpdateCompleteEvent struct {
-	BaseEvent
-	Group    Group `json:"group,omitempty"`
+	BaseGroupEvent
 	Original Group `json:"original,omitempty"`
 }
 
@@ -1521,16 +1538,17 @@ type LambdaSearchCriteria struct {
  * @author Brian Pontarelli
  */
 type SystemConfiguration struct {
-	AuditLogConfiguration     AuditLogConfiguration           `json:"auditLogConfiguration,omitempty"`
-	CorsConfiguration         CORSConfiguration               `json:"corsConfiguration,omitempty"`
-	Data                      map[string]interface{}          `json:"data,omitempty"`
-	EventLogConfiguration     EventLogConfiguration           `json:"eventLogConfiguration,omitempty"`
-	InsertInstant             int64                           `json:"insertInstant,omitempty"`
-	LastUpdateInstant         int64                           `json:"lastUpdateInstant,omitempty"`
-	LoginRecordConfiguration  LoginRecordConfiguration        `json:"loginRecordConfiguration,omitempty"`
-	ReportTimezone            string                          `json:"reportTimezone,omitempty"`
-	TrustedProxyConfiguration SystemTrustedProxyConfiguration `json:"trustedProxyConfiguration,omitempty"`
-	UiConfiguration           UIConfiguration                 `json:"uiConfiguration,omitempty"`
+	AuditLogConfiguration        AuditLogConfiguration           `json:"auditLogConfiguration,omitempty"`
+	CorsConfiguration            CORSConfiguration               `json:"corsConfiguration,omitempty"`
+	Data                         map[string]interface{}          `json:"data,omitempty"`
+	EventLogConfiguration        EventLogConfiguration           `json:"eventLogConfiguration,omitempty"`
+	InsertInstant                int64                           `json:"insertInstant,omitempty"`
+	LastUpdateInstant            int64                           `json:"lastUpdateInstant,omitempty"`
+	LoginRecordConfiguration     LoginRecordConfiguration        `json:"loginRecordConfiguration,omitempty"`
+	ReportTimezone               string                          `json:"reportTimezone,omitempty"`
+	TrustedProxyConfiguration    SystemTrustedProxyConfiguration `json:"trustedProxyConfiguration,omitempty"`
+	UiConfiguration              UIConfiguration                 `json:"uiConfiguration,omitempty"`
+	WebhookEventLogConfiguration WebhookEventLogConfiguration    `json:"webhookEventLogConfiguration,omitempty"`
 }
 
 /**
@@ -2148,8 +2166,7 @@ type ConnectorRequest struct {
  * @author Daniel DeGroff
  */
 type UserCreateCompleteEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -2218,10 +2235,9 @@ type KafkaMessengerConfiguration struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationCreateCompleteEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -2313,6 +2329,7 @@ const (
 	LambdaType_SCIMServerUserResponseConverter   LambdaType = "SCIMServerUserResponseConverter"
 	LambdaType_SelfServiceRegistrationValidation LambdaType = "SelfServiceRegistrationValidation"
 	LambdaType_UserInfoPopulate                  LambdaType = "UserInfoPopulate"
+	LambdaType_LoginValidation                   LambdaType = "LoginValidation"
 )
 
 /**
@@ -2373,9 +2390,8 @@ type LambdaRequest struct {
  * @author Daniel DeGroff
  */
 type UserEmailUpdateEvent struct {
-	BaseEvent
+	BaseUserEvent
 	PreviousEmail string `json:"previousEmail,omitempty"`
-	User          User   `json:"user,omitempty"`
 }
 
 /**
@@ -2659,9 +2675,8 @@ type TenantWebAuthnWorkflowConfiguration struct {
  * @author Daniel DeGroff
  */
 type UserTwoFactorMethodRemoveEvent struct {
-	BaseEvent
+	BaseUserEvent
 	Method TwoFactorMethod `json:"method,omitempty"`
-	User   User            `json:"user,omitempty"`
 }
 
 type UsernameModeration struct {
@@ -2877,8 +2892,7 @@ type Integrations struct {
  * @author Daniel DeGroff
  */
 type UserPasswordUpdateEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -2922,6 +2936,23 @@ type PreviewMessageTemplateResponse struct {
 func (b *PreviewMessageTemplateResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * The possible states of an individual webhook attempt to a single endpoint.
+ *
+ * @author Spencer Witt
+ */
+type WebhookAttemptResult string
+
+func (e WebhookAttemptResult) String() string {
+	return string(e)
+}
+
+const (
+	WebhookAttemptResult_Success WebhookAttemptResult = "Success"
+	WebhookAttemptResult_Failure WebhookAttemptResult = "Failure"
+	WebhookAttemptResult_Unknown WebhookAttemptResult = "Unknown"
+)
 
 /**
  * @author Daniel DeGroff
@@ -3220,10 +3251,9 @@ type ApplicationSearchCriteria struct {
  * @author Trevor Smith
  */
 type UserRegistrationVerifiedEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -3259,8 +3289,7 @@ type NonTransactionalEvent struct {
  * @author Brian Pontarelli
  */
 type UserCreateEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -3376,6 +3405,16 @@ type RefreshTokenRevocationPolicy struct {
 }
 
 /**
+ * Base class for all {@link User}-related events.
+ *
+ * @author Spencer Witt
+ */
+type BaseUserEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type MinimumPasswordAge struct {
@@ -3422,8 +3461,7 @@ const (
  * @author Daniel DeGroff
  */
 type GroupUpdateEvent struct {
-	BaseEvent
-	Group    Group `json:"group,omitempty"`
+	BaseGroupEvent
 	Original Group `json:"original,omitempty"`
 }
 
@@ -3648,8 +3686,7 @@ type UserLoginIdDuplicateOnUpdateEvent struct {
  * @author Daniel DeGroff
  */
 type GroupMemberRemoveCompleteEvent struct {
-	BaseEvent
-	Group   Group         `json:"group,omitempty"`
+	BaseGroupEvent
 	Members []GroupMember `json:"members,omitempty"`
 }
 
@@ -3685,8 +3722,7 @@ type WebhookSearchRequest struct {
  * @author Daniel DeGroff
  */
 type GroupMemberAddCompleteEvent struct {
-	BaseEvent
-	Group   Group         `json:"group,omitempty"`
+	BaseGroupEvent
 	Members []GroupMember `json:"members,omitempty"`
 }
 
@@ -3727,6 +3763,7 @@ type ExternalIdentifierConfiguration struct {
 	EmailVerificationIdTimeToLiveInSeconds             int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
 	EmailVerificationOneTimeCodeGenerator              SecureGeneratorConfiguration `json:"emailVerificationOneTimeCodeGenerator,omitempty"`
 	ExternalAuthenticationIdTimeToLiveInSeconds        int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
+	LoginIntentTimeToLiveInSeconds                     int                          `json:"loginIntentTimeToLiveInSeconds,omitempty"`
 	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
 	PasswordlessLoginTimeToLiveInSeconds               int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
@@ -4003,6 +4040,20 @@ type UIConfiguration struct {
 }
 
 /**
+ * Webhook event log response.
+ *
+ * @author Spencer Witt
+ */
+type WebhookEventLogResponse struct {
+	BaseHTTPResponse
+	WebhookEventLog WebhookEventLog `json:"webhookEventLog,omitempty"`
+}
+
+func (b *WebhookEventLogResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * The public Status API response
  *
  * @author Daniel DeGroff
@@ -4074,11 +4125,11 @@ func (b *MessengerResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type UserLoginFailedEvent struct {
-	BaseEvent
-	ApplicationId      string `json:"applicationId,omitempty"`
-	AuthenticationType string `json:"authenticationType,omitempty"`
-	IpAddress          string `json:"ipAddress,omitempty"`
-	User               User   `json:"user,omitempty"`
+	BaseUserEvent
+	ApplicationId      string                `json:"applicationId,omitempty"`
+	AuthenticationType string                `json:"authenticationType,omitempty"`
+	IpAddress          string                `json:"ipAddress,omitempty"`
+	Reason             UserLoginFailedReason `json:"reason,omitempty"`
 }
 
 /**
@@ -4129,8 +4180,7 @@ type Tenant struct {
  * @author Daniel DeGroff
  */
 type GroupMemberUpdateCompleteEvent struct {
-	BaseEvent
-	Group   Group         `json:"group,omitempty"`
+	BaseGroupEvent
 	Members []GroupMember `json:"members,omitempty"`
 }
 
@@ -4310,8 +4360,7 @@ type AuditLogSearchRequest struct {
  * @author Matthew Altman
  */
 type UserPasswordBreachEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -4339,14 +4388,19 @@ type AuditLogConfiguration struct {
 }
 
 /**
+ * User login failed reason codes.
+ */
+type UserLoginFailedReasonCode struct {
+}
+
+/**
  * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
  * delete).
  *
  * @author Brian Pontarelli
  */
 type UserDeleteEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -4650,6 +4704,22 @@ type MetaData struct {
 	Scopes []string               `json:"scopes,omitempty"`
 }
 
+type WebhookEventLog struct {
+	Attempts           []WebhookAttemptLog    `json:"attempts,omitempty"`
+	Data               map[string]interface{} `json:"data,omitempty"`
+	Event              EventRequest           `json:"event,omitempty"`
+	EventResult        WebhookEventResult     `json:"eventResult,omitempty"`
+	EventType          EventType              `json:"eventType,omitempty"`
+	FailedAttempts     int                    `json:"failedAttempts,omitempty"`
+	Id                 string                 `json:"id,omitempty"`
+	InsertInstant      int64                  `json:"insertInstant,omitempty"`
+	LastAttemptInstant int64                  `json:"lastAttemptInstant,omitempty"`
+	LastUpdateInstant  int64                  `json:"lastUpdateInstant,omitempty"`
+	LinkedObjectId     string                 `json:"linkedObjectId,omitempty"`
+	Sequence           int64                  `json:"sequence,omitempty"`
+	SuccessfulAttempts int                    `json:"successfulAttempts,omitempty"`
+}
+
 type SAMLLogoutBehavior string
 
 func (e SAMLLogoutBehavior) String() string {
@@ -4889,11 +4959,10 @@ const (
  * @author Daniel DeGroff
  */
 type UserRegistrationUpdateEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Original      UserRegistration `json:"original,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -4965,10 +5034,9 @@ type EpicGamesApplicationConfiguration struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationDeleteCompleteEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -5030,8 +5098,7 @@ type GoogleApplicationConfiguration struct {
  * @author Daniel DeGroff
  */
 type UserDeleteCompleteEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -5205,6 +5272,22 @@ type User struct {
 }
 
 /**
+ * A webhook call attempt log.
+ *
+ * @author Spencer Witt
+ */
+type WebhookAttemptLog struct {
+	AttemptResult       WebhookAttemptResult   `json:"attemptResult,omitempty"`
+	Data                map[string]interface{} `json:"data,omitempty"`
+	EndInstant          int64                  `json:"endInstant,omitempty"`
+	Id                  string                 `json:"id,omitempty"`
+	StartInstant        int64                  `json:"startInstant,omitempty"`
+	WebhookCallResponse WebhookCallResponse    `json:"webhookCallResponse,omitempty"`
+	WebhookEventLogId   string                 `json:"webhookEventLogId,omitempty"`
+	WebhookId           string                 `json:"webhookId,omitempty"`
+}
+
+/**
  * Search criteria for entity types.
  *
  * @author Brian Pontarelli
@@ -5220,9 +5303,8 @@ type EntityTypeSearchCriteria struct {
  * @author Rob Davis
  */
 type UserIdentityProviderUnlinkEvent struct {
-	BaseEvent
+	BaseUserEvent
 	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
-	User                 User                 `json:"user,omitempty"`
 }
 
 /**
@@ -5273,8 +5355,7 @@ type TenantWebAuthnConfiguration struct {
  * @author Daniel DeGroff
  */
 type GroupCreateCompleteEvent struct {
-	BaseEvent
-	Group Group `json:"group,omitempty"`
+	BaseGroupEvent
 }
 
 /**
@@ -5284,6 +5365,15 @@ type GroupCreateCompleteEvent struct {
  */
 type WebAuthnRegistrationExtensionOptions struct {
 	CredProps bool `json:"credProps"`
+}
+
+/**
+ * The system configuration for Webhook Event Log data.
+ *
+ * @author Spencer Witt
+ */
+type WebhookEventLogConfiguration struct {
+	Delete DeleteConfiguration `json:"delete,omitempty"`
 }
 
 /**
@@ -5608,9 +5698,16 @@ type NintendoIdentityProvider struct {
  * @author Daniel DeGroff
  */
 type UserUpdateCompleteEvent struct {
-	BaseEvent
+	BaseUserEvent
 	Original User `json:"original,omitempty"`
-	User     User `json:"user,omitempty"`
+}
+
+/**
+ * A marker interface indicating this event is an event that can supply a linked object Id.
+ *
+ * @author Spencer Witt
+ */
+type ObjectIdentifiable struct {
 }
 
 /**
@@ -5638,14 +5735,13 @@ const (
  * @author Daniel DeGroff
  */
 type UserLoginSuccessEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId        string `json:"applicationId,omitempty"`
 	AuthenticationType   string `json:"authenticationType,omitempty"`
 	ConnectorId          string `json:"connectorId,omitempty"`
 	IdentityProviderId   string `json:"identityProviderId,omitempty"`
 	IdentityProviderName string `json:"identityProviderName,omitempty"`
 	IpAddress            string `json:"ipAddress,omitempty"`
-	User                 User   `json:"user,omitempty"`
 }
 
 /**
@@ -5686,11 +5782,10 @@ func (b *RegistrationResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type UserRegistrationUpdateCompleteEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Original      UserRegistration `json:"original,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -5800,8 +5895,7 @@ type LoginConfiguration struct {
  * @author Daniel DeGroff
  */
 type GroupMemberAddEvent struct {
-	BaseEvent
-	Group   Group         `json:"group,omitempty"`
+	BaseGroupEvent
 	Members []GroupMember `json:"members,omitempty"`
 }
 
@@ -5863,6 +5957,16 @@ type GenericConnectorConfiguration struct {
 }
 
 /**
+ * Base class for all {@link Group} and {@link GroupMember} events.
+ *
+ * @author Spencer Witt
+ */
+type BaseGroupEvent struct {
+	BaseEvent
+	Group Group `json:"group,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type MessengerTransport struct {
@@ -5912,6 +6016,21 @@ type WebAuthnCredentialResponse struct {
 }
 
 func (b *WebAuthnCredentialResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Webhook event log search response.
+ *
+ * @author Spencer Witt
+ */
+type WebhookEventLogSearchResponse struct {
+	BaseHTTPResponse
+	Total            int64             `json:"total,omitempty"`
+	WebhookEventLogs []WebhookEventLog `json:"webhookEventLogs,omitempty"`
+}
+
+func (b *WebhookEventLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -6519,7 +6638,7 @@ type PasswordBreachDetection struct {
 }
 
 /**
- * Base-class for all FusionAuth events.
+ * Base class for all FusionAuth events.
  *
  * @author Brian Pontarelli
  */
@@ -6735,8 +6854,7 @@ type LambdaSearchRequest struct {
  * @author Daniel DeGroff
  */
 type UserPasswordResetSendEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -6977,9 +7095,8 @@ const (
  * @author Daniel DeGroff
  */
 type UserTwoFactorMethodAddEvent struct {
-	BaseEvent
+	BaseUserEvent
 	Method TwoFactorMethod `json:"method,omitempty"`
-	User   User            `json:"user,omitempty"`
 }
 
 /**
@@ -7018,8 +7135,7 @@ type IPAccessControlEntry struct {
  * @author Daniel DeGroff
  */
 type GroupMemberUpdateEvent struct {
-	BaseEvent
-	Group   Group         `json:"group,omitempty"`
+	BaseGroupEvent
 	Members []GroupMember `json:"members,omitempty"`
 }
 
@@ -7029,8 +7145,21 @@ type GroupMemberUpdateEvent struct {
  * @author Brian Pontarelli
  */
 type UserDeactivateEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
+}
+
+/**
+ * Search criteria for the webhook event log.
+ *
+ * @author Spencer Witt
+ */
+type WebhookEventLogSearchCriteria struct {
+	BaseSearchCriteria
+	End         int64              `json:"end,omitempty"`
+	Event       string             `json:"event,omitempty"`
+	EventResult WebhookEventResult `json:"eventResult,omitempty"`
+	EventType   EventType          `json:"eventType,omitempty"`
+	Start       int64              `json:"start,omitempty"`
 }
 
 /**
@@ -7045,6 +7174,15 @@ type MemberResponse struct {
 
 func (b *MemberResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Webhook event log search request.
+ *
+ * @author Spencer Witt
+ */
+type WebhookEventLogSearchRequest struct {
+	Search WebhookEventLogSearchCriteria `json:"search,omitempty"`
 }
 
 /**
@@ -7203,10 +7341,9 @@ type LogHistory struct {
  * @author Daniel DeGroff
  */
 type UserRegistrationCreateEvent struct {
-	BaseEvent
+	BaseUserEvent
 	ApplicationId string           `json:"applicationId,omitempty"`
 	Registration  UserRegistration `json:"registration,omitempty"`
-	User          User             `json:"user,omitempty"`
 }
 
 /**
@@ -7217,6 +7354,22 @@ type UserRegistrationCreateEvent struct {
 type ApplicationSearchRequest struct {
 	ExpandableRequest
 	Search ApplicationSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * A webhook call response.
+ *
+ * @author Spencer Witt
+ */
+type WebhookCallResponse struct {
+	BaseHTTPResponse
+	Exception  string `json:"exception,omitempty"`
+	StatusCode int    `json:"statusCode,omitempty"`
+	Url        string `json:"url,omitempty"`
+}
+
+func (b *WebhookCallResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -7419,8 +7572,7 @@ type HYPRIdentityProvider struct {
  * @author Daniel DeGroff
  */
 type UserPasswordResetSuccessEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -7524,8 +7676,7 @@ const (
  * @author Daniel DeGroff
  */
 type UserPasswordResetStartEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
+	BaseUserEvent
 }
 
 /**
@@ -7534,8 +7685,7 @@ type UserPasswordResetStartEvent struct {
  * @author Daniel DeGroff
  */
 type GroupDeleteEvent struct {
-	BaseEvent
-	Group Group `json:"group,omitempty"`
+	BaseGroupEvent
 }
 
 type MultiFactorEmailTemplate struct {
@@ -7650,8 +7800,7 @@ func (b *ConsentResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type GroupMemberRemoveEvent struct {
-	BaseEvent
-	Group   Group         `json:"group,omitempty"`
+	BaseGroupEvent
 	Members []GroupMember `json:"members,omitempty"`
 }
 
@@ -7840,6 +7989,24 @@ type EventLogCreateEvent struct {
 	BaseEvent
 	EventLog EventLog `json:"eventLog,omitempty"`
 }
+
+/**
+ * The possible result states of a webhook event. This tracks the success of the overall webhook transaction according to the {@link TransactionType}
+ * and configured webhooks.
+ *
+ * @author Spencer Witt
+ */
+type WebhookEventResult string
+
+func (e WebhookEventResult) String() string {
+	return string(e)
+}
+
+const (
+	WebhookEventResult_Failed    WebhookEventResult = "Failed"
+	WebhookEventResult_Running   WebhookEventResult = "Running"
+	WebhookEventResult_Succeeded WebhookEventResult = "Succeeded"
+)
 
 type UniqueUsernameConfiguration struct {
 	Enableable
