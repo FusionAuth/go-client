@@ -399,6 +399,13 @@ func Test_EventLogTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_IdentityTypesImplementsStringer(t *testing.T) {
+	var enum interface{} = IdentityTypes("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("IdentityTypes does not implement stringer interface\n")
+	}
+}
+
 func Test_AlgorithmImplementsStringer(t *testing.T) {
 	var enum interface{} = Algorithm("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -599,6 +606,13 @@ func Test_IdentityProviderLoginMethodImplementsStringer(t *testing.T) {
 	var enum interface{} = IdentityProviderLoginMethod("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("IdentityProviderLoginMethod does not implement stringer interface\n")
+	}
+}
+
+func Test_CodeTypesImplementsStringer(t *testing.T) {
+	var enum interface{} = CodeTypes("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CodeTypes does not implement stringer interface\n")
 	}
 }
 

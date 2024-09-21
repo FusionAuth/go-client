@@ -206,6 +206,13 @@ func (b *KeySearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+type VerifyStartRequest struct {
+	ApplicationId string `json:"applicationId,omitempty"`
+	CodeType      string `json:"codeType,omitempty"`
+	LoginId       string `json:"loginId,omitempty"`
+	LoginType     string `json:"loginType,omitempty"`
+}
+
 /**
  * A Application-level policy for deleting Users.
  *
@@ -883,6 +890,7 @@ type PasswordlessSendRequest struct {
 	Code          string                 `json:"code,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
+	Transport     string                 `json:"transport,omitempty"`
 }
 
 /**
@@ -1104,10 +1112,11 @@ const (
  */
 type LoginRequest struct {
 	BaseLoginRequest
-	LoginId          string `json:"loginId,omitempty"`
-	OneTimePassword  string `json:"oneTimePassword,omitempty"`
-	Password         string `json:"password,omitempty"`
-	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
+	LoginId          string   `json:"loginId,omitempty"`
+	OneTimePassword  string   `json:"oneTimePassword,omitempty"`
+	Password         string   `json:"password,omitempty"`
+	TwoFactorTrustId string   `json:"twoFactorTrustId,omitempty"`
+	Types            []string `json:"types,omitempty"`
 }
 
 /**
@@ -2035,7 +2044,8 @@ type CertificateInformation struct {
  */
 type PasswordlessStartResponse struct {
 	BaseHTTPResponse
-	Code string `json:"code,omitempty"`
+	Code        string `json:"code,omitempty"`
+	OneTimeCode string `json:"oneTimeCode,omitempty"`
 }
 
 func (b *PasswordlessStartResponse) SetStatus(status int) {
@@ -2616,6 +2626,12 @@ type IdentityProviderDetails struct {
 	Type           IdentityProviderType                `json:"type,omitempty"`
 }
 
+type TenantPasswordlessSMSMethod struct {
+	Enableable
+	MessengerId string `json:"messengerId,omitempty"`
+	TemplateId  string `json:"templateId,omitempty"`
+}
+
 /**
  * @author Brett Pontarelli
  */
@@ -2714,12 +2730,19 @@ func (b *WebAuthnAuthenticatorRegistrationResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+type SMSConfiguration struct {
+	MessengerId            string `json:"messengerId,omitempty"`
+	VerificationTemplateId string `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber      bool   `json:"verifyPhoneNumber"`
+}
+
 /**
  * @author Daniel DeGroff
  */
 type PasswordlessLoginRequest struct {
 	BaseLoginRequest
 	Code             string `json:"code,omitempty"`
+	OneTimeCode      string `json:"oneTimeCode,omitempty"`
 	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
 }
 
@@ -2754,6 +2777,15 @@ type JWTConfiguration struct {
 type EmailTemplateErrors struct {
 	ParseErrors  map[string]string `json:"parseErrors,omitempty"`
 	RenderErrors map[string]string `json:"renderErrors,omitempty"`
+}
+
+/**
+ * Models the User Phone Verify Event.
+ *
+ * @author Trevor Smith
+ */
+type UserPhoneVerifiedEvent struct {
+	BaseUserEvent
 }
 
 /**
@@ -3076,6 +3108,7 @@ type Application struct {
 	Roles                            []ApplicationRole                          `json:"roles,omitempty"`
 	Samlv2Configuration              SAMLv2Configuration                        `json:"samlv2Configuration,omitempty"`
 	Scopes                           []ApplicationOAuthScope                    `json:"scopes,omitempty"`
+	SmsConfiguration                 SMSConfiguration                           `json:"smsConfiguration,omitempty"`
 	State                            ObjectState                                `json:"state,omitempty"`
 	TenantId                         string                                     `json:"tenantId,omitempty"`
 	ThemeId                          string                                     `json:"themeId,omitempty"`
@@ -3690,6 +3723,12 @@ type GroupMemberRemoveCompleteEvent struct {
 	Members []GroupMember `json:"members,omitempty"`
 }
 
+type VerifySendCompleteRequest struct {
+	BaseEventRequest
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
 type EventLogConfiguration struct {
 	NumberToRetain int `json:"numberToRetain,omitempty"`
 }
@@ -3746,7 +3785,9 @@ const (
  */
 type PasswordlessStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
+	CodeType      string                 `json:"codeType,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
+	LoginType     string                 `json:"loginType,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
 }
 
@@ -3767,6 +3808,8 @@ type ExternalIdentifierConfiguration struct {
 	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
 	PasswordlessLoginTimeToLiveInSeconds               int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
+	PasswordlessShortCodeLoginGenerator                SecureGeneratorConfiguration `json:"passwordlessShortCodeLoginGenerator,omitempty"`
+	PasswordlessShortCodeLoginTimeToLiveInSeconds      int                          `json:"passwordlessShortCodeLoginTimeToLiveInSeconds,omitempty"`
 	PendingAccountLinkTimeToLiveInSeconds              int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationIdGenerator                SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
 	RegistrationVerificationIdTimeToLiveInSeconds      int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
@@ -3775,6 +3818,9 @@ type ExternalIdentifierConfiguration struct {
 	Samlv2AuthNRequestIdTimeToLiveInSeconds            int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
 	SetupPasswordIdGenerator                           SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
 	SetupPasswordIdTimeToLiveInSeconds                 int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
+	SmsVerificationIdGenerator                         SecureGeneratorConfiguration `json:"smsVerificationIdGenerator,omitempty"`
+	SmsVerificationOneTimeCodeGenerator                SecureGeneratorConfiguration `json:"smsVerificationOneTimeCodeGenerator,omitempty"`
+	SmsVerificationTimeToLiveInSeconds                 int                          `json:"smsVerificationTimeToLiveInSeconds,omitempty"`
 	TrustTokenTimeToLiveInSeconds                      int                          `json:"trustTokenTimeToLiveInSeconds,omitempty"`
 	TwoFactorIdTimeToLiveInSeconds                     int                          `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
 	TwoFactorOneTimeCodeIdGenerator                    SecureGeneratorConfiguration `json:"twoFactorOneTimeCodeIdGenerator,omitempty"`
@@ -4162,10 +4208,12 @@ type Tenant struct {
 	Name                              string                            `json:"name,omitempty"`
 	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
+	PasswordlessSMSMethod             TenantPasswordlessSMSMethod       `json:"passwordlessSMSMethod,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
 	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
 	ScimServerConfiguration           TenantSCIMServerConfiguration     `json:"scimServerConfiguration,omitempty"`
+	SmsConfiguration                  SMSConfiguration                  `json:"smsConfiguration,omitempty"`
 	SsoConfiguration                  TenantSSOConfiguration            `json:"ssoConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
@@ -5316,6 +5364,18 @@ type WebAuthnExtensionsClientOutputs struct {
 	CredProps CredentialPropertiesOutput `json:"credProps,omitempty"`
 }
 
+type IdentityTypes string
+
+func (e IdentityTypes) String() string {
+	return string(e)
+}
+
+const (
+	IdentityTypes_Email       IdentityTypes = "email"
+	IdentityTypes_PhoneNumber IdentityTypes = "phoneNumber"
+	IdentityTypes_Username    IdentityTypes = "username"
+)
+
 /**
  * @author Daniel DeGroff
  */
@@ -6409,6 +6469,16 @@ type WebAuthnStartRequest struct {
 	Workflow      WebAuthnWorkflow       `json:"workflow,omitempty"`
 }
 
+type VerifyStartResponse struct {
+	BaseHTTPResponse
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+func (b *VerifyStartResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
 /**
  * A raw login record response
  *
@@ -6720,6 +6790,7 @@ const (
 	EventType_UserDeleteComplete             EventType = "user.delete.complete"
 	EventType_UserEmailUpdate                EventType = "user.email.update"
 	EventType_UserEmailVerified              EventType = "user.email.verified"
+	EventType_UserPhoneVerified              EventType = "user.phone.verified"
 	EventType_UserIdentityProviderLink       EventType = "user.identity-provider.link"
 	EventType_UserIdentityProviderUnlink     EventType = "user.identity-provider.unlink"
 	EventType_UserLoginIdDuplicateOnCreate   EventType = "user.loginId.duplicate.create"
@@ -7969,6 +8040,17 @@ const (
 type MessengerRequest struct {
 	Messenger BaseMessengerConfiguration `json:"messenger,omitempty"`
 }
+
+type CodeTypes string
+
+func (e CodeTypes) String() string {
+	return string(e)
+}
+
+const (
+	CodeTypes_Clickable CodeTypes = "clickable"
+	CodeTypes_ShortCode CodeTypes = "shortCode"
+)
 
 /**
  * Request for the Tenant API to delete a tenant rather than using the URL parameters.
