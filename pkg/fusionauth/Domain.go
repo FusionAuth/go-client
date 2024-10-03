@@ -207,10 +207,10 @@ func (b *KeySearchResponse) SetStatus(status int) {
 }
 
 type VerifyStartRequest struct {
-	ApplicationId string `json:"applicationId,omitempty"`
-	CodeType      string `json:"codeType,omitempty"`
-	LoginId       string `json:"loginId,omitempty"`
-	LoginType     string `json:"loginType,omitempty"`
+	ApplicationId        string `json:"applicationId,omitempty"`
+	LoginId              string `json:"loginId,omitempty"`
+	LoginIdType          string `json:"loginIdType,omitempty"`
+	VerificationStrategy string `json:"verificationStrategy,omitempty"`
 }
 
 /**
@@ -890,7 +890,6 @@ type PasswordlessSendRequest struct {
 	Code          string                 `json:"code,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
-	Transport     string                 `json:"transport,omitempty"`
 }
 
 /**
@@ -966,6 +965,19 @@ type FormField struct {
 	Required          bool                   `json:"required"`
 	Type              FormDataType           `json:"type,omitempty"`
 	Validator         FormFieldValidator     `json:"validator,omitempty"`
+}
+
+/**
+ * Hold SMS configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+type TenantSMSConfiguration struct {
+	MessengerId            string               `json:"messengerId,omitempty"`
+	PasswordlessTemplateId string               `json:"passwordlessTemplateId,omitempty"`
+	VerificationStrategy   VerificationStrategy `json:"verificationStrategy,omitempty"`
+	VerificationTemplateId string               `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber      bool                 `json:"verifyPhoneNumber"`
 }
 
 /**
@@ -1078,8 +1090,9 @@ const (
  */
 type RefreshRequest struct {
 	BaseEventRequest
-	RefreshToken string `json:"refreshToken,omitempty"`
-	Token        string `json:"token,omitempty"`
+	RefreshToken        string `json:"refreshToken,omitempty"`
+	TimeToLiveInSeconds int    `json:"timeToLiveInSeconds,omitempty"`
+	Token               string `json:"token,omitempty"`
 }
 
 /**
@@ -1113,10 +1126,10 @@ const (
 type LoginRequest struct {
 	BaseLoginRequest
 	LoginId          string   `json:"loginId,omitempty"`
+	LoginIdTypes     []string `json:"loginIdTypes,omitempty"`
 	OneTimePassword  string   `json:"oneTimePassword,omitempty"`
 	Password         string   `json:"password,omitempty"`
 	TwoFactorTrustId string   `json:"twoFactorTrustId,omitempty"`
-	Types            []string `json:"types,omitempty"`
 }
 
 /**
@@ -1767,12 +1780,13 @@ const (
  */
 type UserRequest struct {
 	BaseEventRequest
-	ApplicationId        string `json:"applicationId,omitempty"`
-	CurrentPassword      string `json:"currentPassword,omitempty"`
-	DisableDomainBlock   bool   `json:"disableDomainBlock"`
-	SendSetPasswordEmail bool   `json:"sendSetPasswordEmail"`
-	SkipVerification     bool   `json:"skipVerification"`
-	User                 User   `json:"user,omitempty"`
+	ApplicationId        string   `json:"applicationId,omitempty"`
+	CurrentPassword      string   `json:"currentPassword,omitempty"`
+	DisableDomainBlock   bool     `json:"disableDomainBlock"`
+	SendSetPasswordEmail bool     `json:"sendSetPasswordEmail"`
+	SkipVerification     bool     `json:"skipVerification"`
+	User                 User     `json:"user,omitempty"`
+	VerificationIds      []string `json:"verificationIds,omitempty"`
 }
 
 /**
@@ -2626,12 +2640,6 @@ type IdentityProviderDetails struct {
 	Type           IdentityProviderType                `json:"type,omitempty"`
 }
 
-type TenantPasswordlessSMSMethod struct {
-	Enableable
-	MessengerId string `json:"messengerId,omitempty"`
-	TemplateId  string `json:"templateId,omitempty"`
-}
-
 /**
  * @author Brett Pontarelli
  */
@@ -2730,12 +2738,6 @@ func (b *WebAuthnAuthenticatorRegistrationResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
-type SMSConfiguration struct {
-	MessengerId            string `json:"messengerId,omitempty"`
-	VerificationTemplateId string `json:"verificationTemplateId,omitempty"`
-	VerifyPhoneNumber      bool   `json:"verifyPhoneNumber"`
-}
-
 /**
  * @author Daniel DeGroff
  */
@@ -2777,15 +2779,6 @@ type JWTConfiguration struct {
 type EmailTemplateErrors struct {
 	ParseErrors  map[string]string `json:"parseErrors,omitempty"`
 	RenderErrors map[string]string `json:"renderErrors,omitempty"`
-}
-
-/**
- * Models the User Phone Verify Event.
- *
- * @author Trevor Smith
- */
-type UserPhoneVerifiedEvent struct {
-	BaseUserEvent
 }
 
 /**
@@ -3108,7 +3101,6 @@ type Application struct {
 	Roles                            []ApplicationRole                          `json:"roles,omitempty"`
 	Samlv2Configuration              SAMLv2Configuration                        `json:"samlv2Configuration,omitempty"`
 	Scopes                           []ApplicationOAuthScope                    `json:"scopes,omitempty"`
-	SmsConfiguration                 SMSConfiguration                           `json:"smsConfiguration,omitempty"`
 	State                            ObjectState                                `json:"state,omitempty"`
 	TenantId                         string                                     `json:"tenantId,omitempty"`
 	ThemeId                          string                                     `json:"themeId,omitempty"`
@@ -3470,6 +3462,17 @@ func (b *APIKeyResponse) SetStatus(status int) {
 }
 
 /**
+ * Models the identity verified event
+ *
+ * @author Brady Wied
+ */
+type IdentityVerifiedEvent struct {
+	BaseUserEvent
+	LoginId     string `json:"loginId,omitempty"`
+	LoginIdType string `json:"loginIdType,omitempty"`
+}
+
+/**
  * Used to indicate what type of attestation was included in the authenticator response for a given WebAuthn credential at the time it was created
  *
  * @author Spencer Witt
@@ -3785,9 +3788,9 @@ const (
  */
 type PasswordlessStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
-	CodeType      string                 `json:"codeType,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
-	LoginType     string                 `json:"loginType,omitempty"`
+	LoginIdType   string                 `json:"loginIdType,omitempty"`
+	LoginStrategy string                 `json:"loginStrategy,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
 }
 
@@ -3818,8 +3821,6 @@ type ExternalIdentifierConfiguration struct {
 	Samlv2AuthNRequestIdTimeToLiveInSeconds            int                          `json:"samlv2AuthNRequestIdTimeToLiveInSeconds,omitempty"`
 	SetupPasswordIdGenerator                           SecureGeneratorConfiguration `json:"setupPasswordIdGenerator,omitempty"`
 	SetupPasswordIdTimeToLiveInSeconds                 int                          `json:"setupPasswordIdTimeToLiveInSeconds,omitempty"`
-	SmsVerificationIdGenerator                         SecureGeneratorConfiguration `json:"smsVerificationIdGenerator,omitempty"`
-	SmsVerificationOneTimeCodeGenerator                SecureGeneratorConfiguration `json:"smsVerificationOneTimeCodeGenerator,omitempty"`
 	SmsVerificationTimeToLiveInSeconds                 int                          `json:"smsVerificationTimeToLiveInSeconds,omitempty"`
 	TrustTokenTimeToLiveInSeconds                      int                          `json:"trustTokenTimeToLiveInSeconds,omitempty"`
 	TwoFactorIdTimeToLiveInSeconds                     int                          `json:"twoFactorIdTimeToLiveInSeconds,omitempty"`
@@ -4056,6 +4057,7 @@ const (
 	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
 )
 
+// TODO : ENG-1 : Brady - this overlaps with the IdentityType enumeration
 type LoginIdType string
 
 func (e LoginIdType) String() string {
@@ -4208,12 +4210,11 @@ type Tenant struct {
 	Name                              string                            `json:"name,omitempty"`
 	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
-	PasswordlessSMSMethod             TenantPasswordlessSMSMethod       `json:"passwordlessSMSMethod,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
 	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
 	ScimServerConfiguration           TenantSCIMServerConfiguration     `json:"scimServerConfiguration,omitempty"`
-	SmsConfiguration                  SMSConfiguration                  `json:"smsConfiguration,omitempty"`
+	SmsConfiguration                  TenantSMSConfiguration            `json:"smsConfiguration,omitempty"`
 	SsoConfiguration                  TenantSSOConfiguration            `json:"ssoConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
@@ -4221,6 +4222,20 @@ type Tenant struct {
 	UsernameConfiguration             TenantUsernameConfiguration       `json:"usernameConfiguration,omitempty"`
 	WebAuthnConfiguration             TenantWebAuthnConfiguration       `json:"webAuthnConfiguration,omitempty"`
 }
+
+/**
+ * @author Daniel DeGroff
+ */
+type PasswordlessStrategy string
+
+func (e PasswordlessStrategy) String() string {
+	return string(e)
+}
+
+const (
+	PasswordlessStrategy_ClickableLink PasswordlessStrategy = "ClickableLink"
+	PasswordlessStrategy_FormField     PasswordlessStrategy = "FormField"
+)
 
 /**
  * Models the Group Member Update Complete Event.
@@ -6790,7 +6805,7 @@ const (
 	EventType_UserDeleteComplete             EventType = "user.delete.complete"
 	EventType_UserEmailUpdate                EventType = "user.email.update"
 	EventType_UserEmailVerified              EventType = "user.email.verified"
-	EventType_UserPhoneVerified              EventType = "user.phone.verified"
+	EventType_IdentityVerified               EventType = "identity.verified"
 	EventType_UserIdentityProviderLink       EventType = "user.identity-provider.link"
 	EventType_UserIdentityProviderUnlink     EventType = "user.identity-provider.unlink"
 	EventType_UserLoginIdDuplicateOnCreate   EventType = "user.loginId.duplicate.create"
@@ -7780,6 +7795,7 @@ const (
 	OAuthErrorReason_RefreshTokenNotFound                OAuthErrorReason = "refresh_token_not_found"
 	OAuthErrorReason_RefreshTokenTypeNotSupported        OAuthErrorReason = "refresh_token_type_not_supported"
 	OAuthErrorReason_InvalidClientId                     OAuthErrorReason = "invalid_client_id"
+	OAuthErrorReason_InvalidExpiresIn                    OAuthErrorReason = "invalid_expires_in"
 	OAuthErrorReason_InvalidUserCredentials              OAuthErrorReason = "invalid_user_credentials"
 	OAuthErrorReason_InvalidGrantType                    OAuthErrorReason = "invalid_grant_type"
 	OAuthErrorReason_InvalidOrigin                       OAuthErrorReason = "invalid_origin"
@@ -8040,17 +8056,6 @@ const (
 type MessengerRequest struct {
 	Messenger BaseMessengerConfiguration `json:"messenger,omitempty"`
 }
-
-type CodeTypes string
-
-func (e CodeTypes) String() string {
-	return string(e)
-}
-
-const (
-	CodeTypes_Clickable CodeTypes = "clickable"
-	CodeTypes_ShortCode CodeTypes = "shortCode"
-)
 
 /**
  * Request for the Tenant API to delete a tenant rather than using the URL parameters.
