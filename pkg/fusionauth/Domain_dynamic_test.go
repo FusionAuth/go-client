@@ -21,6 +21,13 @@ import (
 	"testing"
 )
 
+func Test_TenantIdentityConfigurationModeImplementsStringer(t *testing.T) {
+	var enum interface{} = TenantIdentityConfigurationMode("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("TenantIdentityConfigurationMode does not implement stringer interface\n")
+	}
+}
+
 func Test_FormDataTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = FormDataType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -403,13 +410,6 @@ func Test_EventLogTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = EventLogType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("EventLogType does not implement stringer interface\n")
-	}
-}
-
-func Test_IdentityTypesImplementsStringer(t *testing.T) {
-	var enum interface{} = IdentityTypes("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("IdentityTypes does not implement stringer interface\n")
 	}
 }
 

@@ -106,6 +106,20 @@ type AuditLogCreateEvent struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type TenantIdentityConfigurationMode string
+
+func (e TenantIdentityConfigurationMode) String() string {
+	return string(e)
+}
+
+const (
+	TenantIdentityConfigurationMode_Compatible TenantIdentityConfigurationMode = "Compatible"
+	TenantIdentityConfigurationMode_Discrete   TenantIdentityConfigurationMode = "Discrete"
+)
+
+/**
  * Models the FusionAuth connector.
  *
  * @author Trevor Smith
@@ -206,7 +220,11 @@ func (b *KeySearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
+/**
+ * @author Brady Wied
+ */
 type VerifyStartRequest struct {
+	BaseEventRequest
 	ApplicationId        string `json:"applicationId,omitempty"`
 	LoginId              string `json:"loginId,omitempty"`
 	LoginIdType          string `json:"loginIdType,omitempty"`
@@ -600,6 +618,22 @@ func (b *OpenIdConfiguration) SetStatus(status int) {
  */
 type UserSearchCriteria struct {
 	BaseElasticSearchCriteria
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type UserIdentity struct {
+	InsertInstant     int64         `json:"insertInstant,omitempty"`
+	LastLoginInstant  int64         `json:"lastLoginInstant,omitempty"`
+	LastUpdateInstant int64         `json:"lastUpdateInstant,omitempty"`
+	ModerationStatus  ContentStatus `json:"moderationStatus,omitempty"`
+	Primary           bool          `json:"primary"`
+	Type              string        `json:"type,omitempty"`
+	UniqueValue       string        `json:"uniqueValue,omitempty"`
+	Value             string        `json:"value,omitempty"`
+	Verified          bool          `json:"verified"`
+	VerifiedInstant   int64         `json:"verifiedInstant,omitempty"`
 }
 
 /**
@@ -1017,6 +1051,7 @@ type DisplayableRawLogin struct {
 	ApplicationName string   `json:"applicationName,omitempty"`
 	Location        Location `json:"location,omitempty"`
 	LoginId         string   `json:"loginId,omitempty"`
+	LoginIdType     string   `json:"loginIdType,omitempty"`
 }
 
 type SAMLv2SingleLogout struct {
@@ -1570,6 +1605,7 @@ type SystemConfiguration struct {
 	ReportTimezone               string                          `json:"reportTimezone,omitempty"`
 	TrustedProxyConfiguration    SystemTrustedProxyConfiguration `json:"trustedProxyConfiguration,omitempty"`
 	UiConfiguration              UIConfiguration                 `json:"uiConfiguration,omitempty"`
+	UsageDataConfiguration       UsageDataConfiguration          `json:"usageDataConfiguration,omitempty"`
 	WebhookEventLogConfiguration WebhookEventLogConfiguration    `json:"webhookEventLogConfiguration,omitempty"`
 }
 
@@ -3028,6 +3064,16 @@ type Attachment struct {
 }
 
 /**
+ * Config for Usage Data / Stats
+ *
+ * @author Lyle Schemmerling
+ */
+type UsageDataConfiguration struct {
+	Enableable
+	NumberOfDaysToRetain int `json:"numberOfDaysToRetain,omitempty"`
+}
+
+/**
  * A grant for an entity to a user or another entity.
  *
  * @author Brian Pontarelli
@@ -3647,6 +3693,7 @@ type SecureIdentity struct {
 	EncryptionScheme                   string                 `json:"encryptionScheme,omitempty"`
 	Factor                             int                    `json:"factor,omitempty"`
 	Id                                 string                 `json:"id,omitempty"`
+	Identities                         []UserIdentity         `json:"identities,omitempty"`
 	LastLoginInstant                   int64                  `json:"lastLoginInstant,omitempty"`
 	Password                           string                 `json:"password,omitempty"`
 	PasswordChangeReason               ChangePasswordReason   `json:"passwordChangeReason,omitempty"`
@@ -3726,6 +3773,9 @@ type GroupMemberRemoveCompleteEvent struct {
 	Members []GroupMember `json:"members,omitempty"`
 }
 
+/**
+ * @author Brady Wied
+ */
 type VerifySendCompleteRequest struct {
 	BaseEventRequest
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
@@ -3756,6 +3806,13 @@ func (b *IdentityProviderResponse) SetStatus(status int) {
  */
 type WebhookSearchRequest struct {
 	Search WebhookSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * @author Brady Wied
+ */
+type IdentityType struct {
+	Name string `json:"name,omitempty"`
 }
 
 /**
@@ -4057,7 +4114,7 @@ const (
 	CoseEllipticCurve_Secp256k1 CoseEllipticCurve = "Secp256k1"
 )
 
-// TODO : ENG-1 : Brady - this overlaps with the IdentityType enumeration
+// This is separate from IdentityType.
 type LoginIdType string
 
 func (e LoginIdType) String() string {
@@ -4197,6 +4254,7 @@ type Tenant struct {
 	FormConfiguration                 TenantFormConfiguration           `json:"formConfiguration,omitempty"`
 	HttpSessionMaxInactiveInterval    int                               `json:"httpSessionMaxInactiveInterval,omitempty"`
 	Id                                string                            `json:"id,omitempty"`
+	IdentityConfiguration             TenantIdentityConfiguration       `json:"identityConfiguration,omitempty"`
 	InsertInstant                     int64                             `json:"insertInstant,omitempty"`
 	Issuer                            string                            `json:"issuer,omitempty"`
 	JwtConfiguration                  JWTConfiguration                  `json:"jwtConfiguration,omitempty"`
@@ -4522,6 +4580,14 @@ type VerifyEmailRequest struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type TenantIdentityConfiguration struct {
+	EnabledTypes []string                        `json:"enabledTypes,omitempty"`
+	Mode         TenantIdentityConfigurationMode `json:"mode,omitempty"`
+}
+
+/**
  * @author Brian Pontarelli
  */
 type TwoFactorDisableRequest struct {
@@ -4770,7 +4836,7 @@ type MetaData struct {
 type WebhookEventLog struct {
 	Attempts           []WebhookAttemptLog    `json:"attempts,omitempty"`
 	Data               map[string]interface{} `json:"data,omitempty"`
-	Event              EventRequest           `json:"event,omitempty"`
+	Event              map[string]interface{} `json:"event,omitempty"`
 	EventResult        WebhookEventResult     `json:"eventResult,omitempty"`
 	EventType          EventType              `json:"eventType,omitempty"`
 	FailedAttempts     int                    `json:"failedAttempts,omitempty"`
@@ -5378,18 +5444,6 @@ type UserIdentityProviderUnlinkEvent struct {
 type WebAuthnExtensionsClientOutputs struct {
 	CredProps CredentialPropertiesOutput `json:"credProps,omitempty"`
 }
-
-type IdentityTypes string
-
-func (e IdentityTypes) String() string {
-	return string(e)
-}
-
-const (
-	IdentityTypes_Email       IdentityTypes = "email"
-	IdentityTypes_PhoneNumber IdentityTypes = "phoneNumber"
-	IdentityTypes_Username    IdentityTypes = "username"
-)
 
 /**
  * @author Daniel DeGroff
@@ -6479,11 +6533,15 @@ type WebAuthnStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
 	CredentialId  string                 `json:"credentialId,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
+	LoginIdTypes  []string               `json:"loginIdTypes,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
 	UserId        string                 `json:"userId,omitempty"`
 	Workflow      WebAuthnWorkflow       `json:"workflow,omitempty"`
 }
 
+/**
+ * @author Brady Wied
+ */
 type VerifyStartResponse struct {
 	BaseHTTPResponse
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
