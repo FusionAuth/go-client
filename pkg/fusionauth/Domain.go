@@ -4583,8 +4583,7 @@ type VerifyEmailRequest struct {
  * @author Daniel DeGroff
  */
 type TenantIdentityConfiguration struct {
-	EnabledTypes []string                        `json:"enabledTypes,omitempty"`
-	Mode         TenantIdentityConfigurationMode `json:"mode,omitempty"`
+	Mode TenantIdentityConfigurationMode `json:"mode,omitempty"`
 }
 
 /**
