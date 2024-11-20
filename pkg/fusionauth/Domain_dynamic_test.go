@@ -294,6 +294,13 @@ func Test_KeyTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_IdentityVerifiedReasonImplementsStringer(t *testing.T) {
+	var enum interface{} = IdentityVerifiedReason("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("IdentityVerifiedReason does not implement stringer interface\n")
+	}
+}
+
 func Test_ConnectorTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = ConnectorType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {

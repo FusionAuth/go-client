@@ -624,16 +624,17 @@ type UserSearchCriteria struct {
  * @author Daniel DeGroff
  */
 type UserIdentity struct {
-	InsertInstant     int64         `json:"insertInstant,omitempty"`
-	LastLoginInstant  int64         `json:"lastLoginInstant,omitempty"`
-	LastUpdateInstant int64         `json:"lastUpdateInstant,omitempty"`
-	ModerationStatus  ContentStatus `json:"moderationStatus,omitempty"`
-	Primary           bool          `json:"primary"`
-	Type              string        `json:"type,omitempty"`
-	UniqueValue       string        `json:"uniqueValue,omitempty"`
-	Value             string        `json:"value,omitempty"`
-	Verified          bool          `json:"verified"`
-	VerifiedInstant   int64         `json:"verifiedInstant,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastLoginInstant  int64                  `json:"lastLoginInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	ModerationStatus  ContentStatus          `json:"moderationStatus,omitempty"`
+	Primary           bool                   `json:"primary"`
+	Type              string                 `json:"type,omitempty"`
+	UniqueValue       string                 `json:"uniqueValue,omitempty"`
+	Value             string                 `json:"value,omitempty"`
+	Verified          bool                   `json:"verified"`
+	VerifiedInstant   int64                  `json:"verifiedInstant,omitempty"`
+	VerifiedReason    IdentityVerifiedReason `json:"verifiedReason,omitempty"`
 }
 
 /**
@@ -999,19 +1000,6 @@ type FormField struct {
 	Required          bool                   `json:"required"`
 	Type              FormDataType           `json:"type,omitempty"`
 	Validator         FormFieldValidator     `json:"validator,omitempty"`
-}
-
-/**
- * Hold SMS configuration for passwordless and verification cases.
- *
- * @author Brady Wied
- */
-type TenantSMSConfiguration struct {
-	MessengerId            string               `json:"messengerId,omitempty"`
-	PasswordlessTemplateId string               `json:"passwordlessTemplateId,omitempty"`
-	VerificationStrategy   VerificationStrategy `json:"verificationStrategy,omitempty"`
-	VerificationTemplateId string               `json:"verificationTemplateId,omitempty"`
-	VerifyPhoneNumber      bool                 `json:"verifyPhoneNumber"`
 }
 
 /**
@@ -3585,6 +3573,28 @@ type EventLogSearchRequest struct {
 }
 
 /**
+ * Models the reason that {@link UserIdentity#verified} was set to true or false.
+ *
+ * @author Brady Wied
+ */
+type IdentityVerifiedReason string
+
+func (e IdentityVerifiedReason) String() string {
+	return string(e)
+}
+
+const (
+	IdentityVerifiedReason_Unknown      IdentityVerifiedReason = "Unknown"
+	IdentityVerifiedReason_Skipped      IdentityVerifiedReason = "Skipped"
+	IdentityVerifiedReason_Trusted      IdentityVerifiedReason = "Trusted"
+	IdentityVerifiedReason_Unverifiable IdentityVerifiedReason = "Unverifiable"
+	IdentityVerifiedReason_Implicit     IdentityVerifiedReason = "Implicit"
+	IdentityVerifiedReason_Pending      IdentityVerifiedReason = "Pending"
+	IdentityVerifiedReason_Completed    IdentityVerifiedReason = "Completed"
+	IdentityVerifiedReason_Disabled     IdentityVerifiedReason = "Disabled"
+)
+
+/**
  * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
  *
  * @author Trevor Smith
@@ -4269,10 +4279,10 @@ type Tenant struct {
 	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
+	PhoneConfiguration                TenantPhoneConfiguration          `json:"phoneConfiguration,omitempty"`
 	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
 	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
 	ScimServerConfiguration           TenantSCIMServerConfiguration     `json:"scimServerConfiguration,omitempty"`
-	SmsConfiguration                  TenantSMSConfiguration            `json:"smsConfiguration,omitempty"`
 	SsoConfiguration                  TenantSSOConfiguration            `json:"ssoConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
@@ -5202,6 +5212,19 @@ type ValidateResponse struct {
 
 func (b *ValidateResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Hold tenant phone configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+type TenantPhoneConfiguration struct {
+	MessengerId            string               `json:"messengerId,omitempty"`
+	PasswordlessTemplateId string               `json:"passwordlessTemplateId,omitempty"`
+	VerificationStrategy   VerificationStrategy `json:"verificationStrategy,omitempty"`
+	VerificationTemplateId string               `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber      bool                 `json:"verifyPhoneNumber"`
 }
 
 /**
