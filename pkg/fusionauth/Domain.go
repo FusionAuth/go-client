@@ -197,12 +197,13 @@ func (e FormDataType) String() string {
 }
 
 const (
-	FormDataType_Bool    FormDataType = "bool"
-	FormDataType_Consent FormDataType = "consent"
-	FormDataType_Date    FormDataType = "date"
-	FormDataType_Email   FormDataType = "email"
-	FormDataType_Number  FormDataType = "number"
-	FormDataType_String  FormDataType = "string"
+	FormDataType_Bool        FormDataType = "bool"
+	FormDataType_Consent     FormDataType = "consent"
+	FormDataType_Date        FormDataType = "date"
+	FormDataType_Email       FormDataType = "email"
+	FormDataType_Number      FormDataType = "number"
+	FormDataType_PhoneNumber FormDataType = "phoneNumber"
+	FormDataType_String      FormDataType = "string"
 )
 
 /**
