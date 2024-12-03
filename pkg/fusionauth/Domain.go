@@ -5773,6 +5773,7 @@ type MemberDeleteRequest struct {
 type RegistrationResponse struct {
 	BaseHTTPResponse
 	RefreshToken                        string           `json:"refreshToken,omitempty"`
+	RefreshTokenId                      string           `json:"refreshTokenId,omitempty"`
 	Registration                        UserRegistration `json:"registration,omitempty"`
 	RegistrationVerificationId          string           `json:"registrationVerificationId,omitempty"`
 	RegistrationVerificationOneTimeCode string           `json:"registrationVerificationOneTimeCode,omitempty"`
