@@ -106,20 +106,6 @@ type AuditLogCreateEvent struct {
 }
 
 /**
- * @author Daniel DeGroff
- */
-type TenantIdentityConfigurationMode string
-
-func (e TenantIdentityConfigurationMode) String() string {
-	return string(e)
-}
-
-const (
-	TenantIdentityConfigurationMode_Compatible TenantIdentityConfigurationMode = "Compatible"
-	TenantIdentityConfigurationMode_Discrete   TenantIdentityConfigurationMode = "Discrete"
-)
-
-/**
  * Models the FusionAuth connector.
  *
  * @author Trevor Smith
@@ -1120,15 +1106,16 @@ type RefreshRequest struct {
 }
 
 /**
- * Models an event where a user is being created with an "in-use" login Id (email or username).
+ * Models an event where a user is being created with an "in-use" login Id (email, username, or other identities).
  *
  * @author Daniel DeGroff
  */
 type UserLoginIdDuplicateOnCreateEvent struct {
 	BaseUserEvent
-	DuplicateEmail    string `json:"duplicateEmail,omitempty"`
-	DuplicateUsername string `json:"duplicateUsername,omitempty"`
-	Existing          User   `json:"existing,omitempty"`
+	DuplicateEmail      string         `json:"duplicateEmail,omitempty"`
+	DuplicateIdentities []IdentityInfo `json:"duplicateIdentities,omitempty"`
+	DuplicateUsername   string         `json:"duplicateUsername,omitempty"`
+	Existing            User           `json:"existing,omitempty"`
 }
 
 type ThemeType string
@@ -1318,6 +1305,17 @@ const (
 	ProofKeyForCodeExchangePolicy_Required                                 ProofKeyForCodeExchangePolicy = "Required"
 	ProofKeyForCodeExchangePolicy_NotRequired                              ProofKeyForCodeExchangePolicy = "NotRequired"
 	ProofKeyForCodeExchangePolicy_NotRequiredWhenUsingClientAuthentication ProofKeyForCodeExchangePolicy = "NotRequiredWhenUsingClientAuthentication"
+)
+
+type APIVersion string
+
+func (e APIVersion) String() string {
+	return string(e)
+}
+
+const (
+	APIVersion_V1 APIVersion = "V1"
+	APIVersion_V2 APIVersion = "V2"
 )
 
 /**
@@ -1585,6 +1583,7 @@ type LambdaSearchCriteria struct {
  */
 type SystemConfiguration struct {
 	AuditLogConfiguration        AuditLogConfiguration           `json:"auditLogConfiguration,omitempty"`
+	CookieEncryptionKey          string                          `json:"cookieEncryptionKey,omitempty"`
 	CorsConfiguration            CORSConfiguration               `json:"corsConfiguration,omitempty"`
 	Data                         map[string]interface{}          `json:"data,omitempty"`
 	EventLogConfiguration        EventLogConfiguration           `json:"eventLogConfiguration,omitempty"`
@@ -3585,7 +3584,6 @@ func (e IdentityVerifiedReason) String() string {
 }
 
 const (
-	IdentityVerifiedReason_Unknown      IdentityVerifiedReason = "Unknown"
 	IdentityVerifiedReason_Skipped      IdentityVerifiedReason = "Skipped"
 	IdentityVerifiedReason_Trusted      IdentityVerifiedReason = "Trusted"
 	IdentityVerifiedReason_Unverifiable IdentityVerifiedReason = "Unverifiable"
@@ -4265,7 +4263,6 @@ type Tenant struct {
 	FormConfiguration                 TenantFormConfiguration           `json:"formConfiguration,omitempty"`
 	HttpSessionMaxInactiveInterval    int                               `json:"httpSessionMaxInactiveInterval,omitempty"`
 	Id                                string                            `json:"id,omitempty"`
-	IdentityConfiguration             TenantIdentityConfiguration       `json:"identityConfiguration,omitempty"`
 	InsertInstant                     int64                             `json:"insertInstant,omitempty"`
 	Issuer                            string                            `json:"issuer,omitempty"`
 	JwtConfiguration                  JWTConfiguration                  `json:"jwtConfiguration,omitempty"`
@@ -4588,13 +4585,6 @@ type VerifyEmailRequest struct {
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	UserId         string `json:"userId,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
-}
-
-/**
- * @author Daniel DeGroff
- */
-type TenantIdentityConfiguration struct {
-	Mode TenantIdentityConfigurationMode `json:"mode,omitempty"`
 }
 
 /**
@@ -5393,7 +5383,7 @@ type TwitchIdentityProvider struct {
 }
 
 /**
- * The global view of a User. This object contains all global information about the user including birthdate, registration information
+ * The public, global view of a User. This object contains all global information about the user including birthdate, registration information
  * preferred languages, global attributes, etc.
  *
  * @author Seth Musselman
@@ -5914,6 +5904,7 @@ type MemberDeleteRequest struct {
 type RegistrationResponse struct {
 	BaseHTTPResponse
 	RefreshToken                        string           `json:"refreshToken,omitempty"`
+	RefreshTokenId                      string           `json:"refreshTokenId,omitempty"`
 	Registration                        UserRegistration `json:"registration,omitempty"`
 	RegistrationVerificationId          string           `json:"registrationVerificationId,omitempty"`
 	RegistrationVerificationOneTimeCode string           `json:"registrationVerificationOneTimeCode,omitempty"`
@@ -6297,6 +6288,11 @@ type BaseSAMLv2IdentityProvider struct {
 	UniqueIdClaim     string `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail bool   `json:"useNameIdForEmail"`
 	UsernameClaim     string `json:"usernameClaim,omitempty"`
+}
+
+type IdentityInfo struct {
+	Type  string `json:"type,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 /**
@@ -6886,7 +6882,6 @@ const (
 	EventType_UserDeleteComplete             EventType = "user.delete.complete"
 	EventType_UserEmailUpdate                EventType = "user.email.update"
 	EventType_UserEmailVerified              EventType = "user.email.verified"
-	EventType_IdentityVerified               EventType = "identity.verified"
 	EventType_UserIdentityProviderLink       EventType = "user.identity-provider.link"
 	EventType_UserIdentityProviderUnlink     EventType = "user.identity-provider.unlink"
 	EventType_UserLoginIdDuplicateOnCreate   EventType = "user.loginId.duplicate.create"
@@ -6913,6 +6908,7 @@ const (
 	EventType_UserUpdate                     EventType = "user.update"
 	EventType_UserUpdateComplete             EventType = "user.update.complete"
 	EventType_Test                           EventType = "test"
+	EventType_IdentityVerified               EventType = "identity.verified"
 )
 
 /**

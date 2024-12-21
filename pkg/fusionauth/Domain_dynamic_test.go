@@ -21,13 +21,6 @@ import (
 	"testing"
 )
 
-func Test_TenantIdentityConfigurationModeImplementsStringer(t *testing.T) {
-	var enum interface{} = TenantIdentityConfigurationMode("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("TenantIdentityConfigurationMode does not implement stringer interface\n")
-	}
-}
-
 func Test_FormDataTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = FormDataType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -95,6 +88,13 @@ func Test_ProofKeyForCodeExchangePolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = ProofKeyForCodeExchangePolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("ProofKeyForCodeExchangePolicy does not implement stringer interface\n")
+	}
+}
+
+func Test_APIVersionImplementsStringer(t *testing.T) {
+	var enum interface{} = APIVersion("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("APIVersion does not implement stringer interface\n")
 	}
 }
 
