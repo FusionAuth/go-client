@@ -41,21 +41,6 @@ func (b *BaseHTTPResponse) SetStatus(status int) {
 type LinkedHashMap map[string]interface{}
 
 /**
- * Identity Provider response.
- *
- * @author Spencer Witt
- */
-type IdentityProviderSearchResponse struct {
-	BaseHTTPResponse
-	IdentityProviders []BaseIdentityProvider `json:"identityProviders,omitempty"`
-	Total             int64                  `json:"total,omitempty"`
-}
-
-func (b *IdentityProviderSearchResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization
  * Framework - RFC 6749</a>.
  * <p>
@@ -98,6 +83,21 @@ const (
 	AttestationType_AnonymizationCa AttestationType = "anonymizationCa"
 	AttestationType_None            AttestationType = "none"
 )
+
+/**
+ * Identity Provider response.
+ *
+ * @author Spencer Witt
+ */
+type IdentityProviderSearchResponse struct {
+	BaseHTTPResponse
+	IdentityProviders []BaseIdentityProvider `json:"identityProviders,omitempty"`
+	Total             int64                  `json:"total,omitempty"`
+}
+
+func (b *IdentityProviderSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
 
 /**
  * @author Daniel DeGroff
@@ -394,6 +394,16 @@ type XboxApplicationConfiguration struct {
 }
 
 /**
+ * An Event "event" to indicate an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+type EventLogCreateEvent struct {
+	BaseEvent
+	EventLog EventLog `json:"eventLog,omitempty"`
+}
+
+/**
  * Models a generic connector.
  *
  * @author Trevor Smith
@@ -407,16 +417,6 @@ type GenericConnectorConfiguration struct {
 	HttpAuthenticationUsername string            `json:"httpAuthenticationUsername,omitempty"`
 	ReadTimeout                int               `json:"readTimeout,omitempty"`
 	SslCertificateKeyId        string            `json:"sslCertificateKeyId,omitempty"`
-}
-
-/**
- * An Event "event" to indicate an event log was created.
- *
- * @author Daniel DeGroff
- */
-type EventLogCreateEvent struct {
-	BaseEvent
-	EventLog EventLog `json:"eventLog,omitempty"`
 }
 
 /**
@@ -552,6 +552,15 @@ type UserCommentSearchCriteria struct {
 }
 
 /**
+ * Models the User Email Verify Event.
+ *
+ * @author Trevor Smith
+ */
+type UserEmailVerifiedEvent struct {
+	BaseUserEvent
+}
+
+/**
  * @author Derek Klatt
  */
 type PasswordValidationRules struct {
@@ -563,15 +572,6 @@ type PasswordValidationRules struct {
 	RequireNonAlpha           bool                      `json:"requireNonAlpha"`
 	RequireNumber             bool                      `json:"requireNumber"`
 	ValidateOnLogin           bool                      `json:"validateOnLogin"`
-}
-
-/**
- * Models the User Email Verify Event.
- *
- * @author Trevor Smith
- */
-type UserEmailVerifiedEvent struct {
-	BaseUserEvent
 }
 
 /**
@@ -714,6 +714,16 @@ func (b *ReactorResponse) SetStatus(status int) {
 }
 
 /**
+ * Models the User Identity Provider Unlink Event.
+ *
+ * @author Rob Davis
+ */
+type UserIdentityProviderUnlinkEvent struct {
+	BaseUserEvent
+	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
+}
+
+/**
  * Login API request object.
  *
  * @author Seth Musselman
@@ -724,16 +734,6 @@ type LoginRequest struct {
 	OneTimePassword  string `json:"oneTimePassword,omitempty"`
 	Password         string `json:"password,omitempty"`
 	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
-}
-
-/**
- * Models the User Identity Provider Unlink Event.
- *
- * @author Rob Davis
- */
-type UserIdentityProviderUnlinkEvent struct {
-	BaseUserEvent
-	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
 }
 
 /**
@@ -1002,18 +1002,6 @@ const (
 )
 
 /**
- * @author Daniel DeGroff
- */
-type TwoFactorSendRequest struct {
-	ApplicationId string `json:"applicationId,omitempty"`
-	Email         string `json:"email,omitempty"`
-	Method        string `json:"method,omitempty"`
-	MethodId      string `json:"methodId,omitempty"`
-	MobilePhone   string `json:"mobilePhone,omitempty"`
-	UserId        string `json:"userId,omitempty"`
-}
-
-/**
  * @author Brett Pontarelli
  */
 type SteamApplicationConfiguration struct {
@@ -1023,6 +1011,18 @@ type SteamApplicationConfiguration struct {
 	ClientId   string       `json:"client_id,omitempty"`
 	Scope      string       `json:"scope,omitempty"`
 	WebAPIKey  string       `json:"webAPIKey,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type TwoFactorSendRequest struct {
+	ApplicationId string `json:"applicationId,omitempty"`
+	Email         string `json:"email,omitempty"`
+	Method        string `json:"method,omitempty"`
+	MethodId      string `json:"methodId,omitempty"`
+	MobilePhone   string `json:"mobilePhone,omitempty"`
+	UserId        string `json:"userId,omitempty"`
 }
 
 /**
@@ -1514,19 +1514,6 @@ type SendRequest struct {
 }
 
 /**
- * @author Michael Sleevi
- */
-type MessageTemplateResponse struct {
-	BaseHTTPResponse
-	MessageTemplate  MessageTemplate   `json:"messageTemplate,omitempty"`
-	MessageTemplates []MessageTemplate `json:"messageTemplates,omitempty"`
-}
-
-func (b *MessageTemplateResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
  * and request based on the Tenant configuration.
  *
@@ -1543,6 +1530,19 @@ const (
 	WebAuthnWorkflow_General          WebAuthnWorkflow = "general"
 	WebAuthnWorkflow_Reauthentication WebAuthnWorkflow = "reauthentication"
 )
+
+/**
+ * @author Michael Sleevi
+ */
+type MessageTemplateResponse struct {
+	BaseHTTPResponse
+	MessageTemplate  MessageTemplate   `json:"messageTemplate,omitempty"`
+	MessageTemplates []MessageTemplate `json:"messageTemplates,omitempty"`
+}
+
+func (b *MessageTemplateResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
 
 /**
  * Models a consent.
@@ -1808,16 +1808,6 @@ type Group struct {
 }
 
 /**
- * Base class for all {@link User}-related events.
- *
- * @author Spencer Witt
- */
-type BaseUserEvent struct {
-	BaseEvent
-	User User `json:"user,omitempty"`
-}
-
-/**
  * @author Daniel DeGroff
  */
 type Form struct {
@@ -1828,6 +1818,16 @@ type Form struct {
 	Name              string                 `json:"name,omitempty"`
 	Steps             []FormStep             `json:"steps,omitempty"`
 	Type              FormType               `json:"type,omitempty"`
+}
+
+/**
+ * Base class for all {@link User}-related events.
+ *
+ * @author Spencer Witt
+ */
+type BaseUserEvent struct {
+	BaseEvent
+	User User `json:"user,omitempty"`
 }
 
 /**
@@ -2266,16 +2266,6 @@ type EntityJWTConfiguration struct {
 }
 
 /**
- * Models the Group Member Update Complete Event.
- *
- * @author Daniel DeGroff
- */
-type GroupMemberUpdateCompleteEvent struct {
-	BaseGroupEvent
-	Members []GroupMember `json:"members,omitempty"`
-}
-
-/**
  * Search criteria for Consents
  *
  * @author Spencer Witt
@@ -2283,6 +2273,16 @@ type GroupMemberUpdateCompleteEvent struct {
 type ConsentSearchCriteria struct {
 	BaseSearchCriteria
 	Name string `json:"name,omitempty"`
+}
+
+/**
+ * Models the Group Member Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+type GroupMemberUpdateCompleteEvent struct {
+	BaseGroupEvent
+	Members []GroupMember `json:"members,omitempty"`
 }
 
 /**
@@ -2508,18 +2508,6 @@ type UserConsent struct {
 }
 
 /**
- * @author Daniel DeGroff
- */
-type IdentityProviderStartLoginResponse struct {
-	BaseHTTPResponse
-	Code string `json:"code,omitempty"`
-}
-
-func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * Twitch gaming login provider.
  *
  * @author Brett Pontarelli
@@ -2530,6 +2518,18 @@ type TwitchIdentityProvider struct {
 	ClientId     string `json:"client_id,omitempty"`
 	ClientSecret string `json:"client_secret,omitempty"`
 	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+type IdentityProviderStartLoginResponse struct {
+	BaseHTTPResponse
+	Code string `json:"code,omitempty"`
+}
+
+func (b *IdentityProviderStartLoginResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -3202,6 +3202,17 @@ func (b *WebhookSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type RefreshResponse struct {
+	BaseHTTPResponse
+}
+
+func (b *RefreshResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * Response for the login report.
  *
  * @author Brian Pontarelli
@@ -3213,17 +3224,6 @@ type LoginReportResponse struct {
 }
 
 func (b *LoginReportResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
- * @author Daniel DeGroff
- */
-type RefreshResponse struct {
-	BaseHTTPResponse
-}
-
-func (b *RefreshResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
 
@@ -3279,19 +3279,6 @@ type NonTransactionalEvent struct {
 }
 
 /**
- * @author Daniel DeGroff
- */
-type TwoFactorResponse struct {
-	BaseHTTPResponse
-	Code          string   `json:"code,omitempty"`
-	RecoveryCodes []string `json:"recoveryCodes,omitempty"`
-}
-
-func (b *TwoFactorResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * @author Brett Guy
  */
 type ProofKeyForCodeExchangePolicy string
@@ -3305,6 +3292,19 @@ const (
 	ProofKeyForCodeExchangePolicy_NotRequired                              ProofKeyForCodeExchangePolicy = "NotRequired"
 	ProofKeyForCodeExchangePolicy_NotRequiredWhenUsingClientAuthentication ProofKeyForCodeExchangePolicy = "NotRequiredWhenUsingClientAuthentication"
 )
+
+/**
+ * @author Daniel DeGroff
+ */
+type TwoFactorResponse struct {
+	BaseHTTPResponse
+	Code          string   `json:"code,omitempty"`
+	RecoveryCodes []string `json:"recoveryCodes,omitempty"`
+}
+
+func (b *TwoFactorResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
 
 /**
  * Epic gaming login provider.
@@ -4022,20 +4022,6 @@ const (
 )
 
 /**
- * API response for starting a WebAuthn authentication ceremony
- *
- * @author Spencer Witt
- */
-type WebAuthnStartResponse struct {
-	BaseHTTPResponse
-	Options PublicKeyCredentialRequestOptions `json:"options,omitempty"`
-}
-
-func (b *WebAuthnStartResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * SAML v2 identity provider configuration.
  *
  * @author Brian Pontarelli
@@ -4055,6 +4041,20 @@ type SAMLv2IdentityProvider struct {
 	RequestSigningKeyId       string                          `json:"requestSigningKeyId,omitempty"`
 	SignRequest               bool                            `json:"signRequest"`
 	XmlSignatureC14nMethod    CanonicalizationMethod          `json:"xmlSignatureC14nMethod,omitempty"`
+}
+
+/**
+ * API response for starting a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnStartResponse struct {
+	BaseHTTPResponse
+	Options PublicKeyCredentialRequestOptions `json:"options,omitempty"`
+}
+
+func (b *WebAuthnStartResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -5283,21 +5283,21 @@ type TwitterIdentityProvider struct {
 }
 
 /**
- * Lambda API request object.
- *
- * @author Brian Pontarelli
- */
-type LambdaRequest struct {
-	Lambda Lambda `json:"lambda,omitempty"`
-}
-
-/**
  * @author Michael Sleevi
  */
 type SMSMessageTemplate struct {
 	MessageTemplate
 	DefaultTemplate    string            `json:"defaultTemplate,omitempty"`
 	LocalizedTemplates map[string]string `json:"localizedTemplates,omitempty"`
+}
+
+/**
+ * Lambda API request object.
+ *
+ * @author Brian Pontarelli
+ */
+type LambdaRequest struct {
+	Lambda Lambda `json:"lambda,omitempty"`
 }
 
 /**
@@ -6843,40 +6843,6 @@ type CertificateInformation struct {
 }
 
 /**
- * Search criteria for entity grants.
- *
- * @author Brian Pontarelli
- */
-type EntityGrantSearchCriteria struct {
-	BaseSearchCriteria
-	EntityId string `json:"entityId,omitempty"`
-	Name     string `json:"name,omitempty"`
-	UserId   string `json:"userId,omitempty"`
-}
-
-/**
- * Models the FusionAuth connector.
- *
- * @author Trevor Smith
- */
-type FusionAuthConnectorConfiguration struct {
-	BaseConnectorConfiguration
-}
-
-/**
- * @author Trevor Smith
- */
-type ConnectorResponse struct {
-	BaseHTTPResponse
-	Connector  BaseConnectorConfiguration   `json:"connector,omitempty"`
-	Connectors []BaseConnectorConfiguration `json:"connectors,omitempty"`
-}
-
-func (b *ConnectorResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
  * for a third-party application.
  *
@@ -6895,6 +6861,40 @@ const (
 )
 
 /**
+ * Search criteria for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+type EntityGrantSearchCriteria struct {
+	BaseSearchCriteria
+	EntityId string `json:"entityId,omitempty"`
+	Name     string `json:"name,omitempty"`
+	UserId   string `json:"userId,omitempty"`
+}
+
+/**
+ * @author Trevor Smith
+ */
+type ConnectorResponse struct {
+	BaseHTTPResponse
+	Connector  BaseConnectorConfiguration   `json:"connector,omitempty"`
+	Connectors []BaseConnectorConfiguration `json:"connectors,omitempty"`
+}
+
+func (b *ConnectorResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Models the FusionAuth connector.
+ *
+ * @author Trevor Smith
+ */
+type FusionAuthConnectorConfiguration struct {
+	BaseConnectorConfiguration
+}
+
+/**
  * @author Daniel DeGroff
  */
 type RefreshTokenSlidingWindowConfiguration struct {
@@ -6911,6 +6911,15 @@ type ThemeSearchRequest struct {
 }
 
 /**
+ * Search request for Consents
+ *
+ * @author Spencer Witt
+ */
+type ConsentSearchRequest struct {
+	Search ConsentSearchCriteria `json:"search,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type ObjectState string
@@ -6924,15 +6933,6 @@ const (
 	ObjectState_Inactive      ObjectState = "Inactive"
 	ObjectState_PendingDelete ObjectState = "PendingDelete"
 )
-
-/**
- * Search request for Consents
- *
- * @author Spencer Witt
- */
-type ConsentSearchRequest struct {
-	Search ConsentSearchCriteria `json:"search,omitempty"`
-}
 
 /**
  * Search request for Identity Providers
@@ -7025,19 +7025,19 @@ type UserComment struct {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+type TenantSSOConfiguration struct {
+	DeviceTrustTimeToLiveInSeconds int `json:"deviceTrustTimeToLiveInSeconds,omitempty"`
+}
+
+/**
  * Models the Group Created Event.
  *
  * @author Daniel DeGroff
  */
 type GroupCreateCompleteEvent struct {
 	BaseGroupEvent
-}
-
-/**
- * @author Brett Pontarelli
- */
-type TenantSSOConfiguration struct {
-	DeviceTrustTimeToLiveInSeconds int `json:"deviceTrustTimeToLiveInSeconds,omitempty"`
 }
 
 /**
@@ -7421,6 +7421,12 @@ type TenantAccessControlConfiguration struct {
 }
 
 /**
+ * Interface for any object that can provide JSON Web key Information.
+ */
+type JSONWebKeyInfoProvider struct {
+}
+
+/**
  * This class is a simple attachment with a byte array, name and MIME type.
  *
  * @author Brian Pontarelli
@@ -7429,12 +7435,6 @@ type Attachment struct {
 	Attachment []byte `json:"attachment,omitempty"`
 	Mime       string `json:"mime,omitempty"`
 	Name       string `json:"name,omitempty"`
-}
-
-/**
- * Interface for any object that can provide JSON Web key Information.
- */
-type JSONWebKeyInfoProvider struct {
 }
 
 /**
@@ -7598,15 +7598,6 @@ func (b *LambdaResponse) SetStatus(status int) {
 }
 
 /**
- * The Integration Request
- *
- * @author Daniel DeGroff
- */
-type IntegrationRequest struct {
-	Integrations Integrations `json:"integrations,omitempty"`
-}
-
-/**
  * Models the JWT public key Refresh Token Revoke Event. This event might be for a single
  * token, a user or an entire application.
  *
@@ -7615,6 +7606,15 @@ type IntegrationRequest struct {
 type JWTPublicKeyUpdateEvent struct {
 	BaseEvent
 	ApplicationIds []string `json:"applicationIds,omitempty"`
+}
+
+/**
+ * The Integration Request
+ *
+ * @author Daniel DeGroff
+ */
+type IntegrationRequest struct {
+	Integrations Integrations `json:"integrations,omitempty"`
 }
 
 /**
@@ -7921,6 +7921,15 @@ type EntityTypePermission struct {
 }
 
 /**
+ * This class is the user query. It provides a build pattern as well as public fields for use on forms and in actions.
+ *
+ * @author Brian Pontarelli
+ */
+type UserSearchCriteria struct {
+	BaseElasticSearchCriteria
+}
+
+/**
  * User comment search response
  *
  * @author Spencer Witt
@@ -7933,15 +7942,6 @@ type UserCommentSearchResponse struct {
 
 func (b *UserCommentSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
-}
-
-/**
- * This class is the user query. It provides a build pattern as well as public fields for use on forms and in actions.
- *
- * @author Brian Pontarelli
- */
-type UserSearchCriteria struct {
-	BaseElasticSearchCriteria
 }
 
 /**
