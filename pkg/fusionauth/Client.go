@@ -578,6 +578,33 @@ func (c *FusionAuthClient) CommentOnUserWithContext(ctx context.Context, request
 	return &resp, &errors, err
 }
 
+// CompleteVerifyIdentity
+// Completes verification of an identity using verification codes from the Verify Start API.
+//
+//	VerifySendCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
+func (c *FusionAuthClient) CompleteVerifyIdentity(request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	return c.CompleteVerifyIdentityWithContext(context.TODO(), request)
+}
+
+// CompleteVerifyIdentityWithContext
+// Completes verification of an identity using verification codes from the Verify Start API.
+//
+//	VerifySendCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
+func (c *FusionAuthClient) CompleteVerifyIdentityWithContext(ctx context.Context, request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity/verify/complete").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CompleteWebAuthnAssertion
 // Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
 //
@@ -8525,6 +8552,33 @@ func (c *FusionAuthClient) SendTwoFactorCodeForLoginUsingMethodWithContext(ctx c
 	return &resp, &errors, err
 }
 
+// SendVerifyIdentity
+// Send a verification code using the appropriate transport for the identity type being verified.
+//
+//	VerifySendCompleteRequest request The identity verify send request that contains all the information used send the code.
+func (c *FusionAuthClient) SendVerifyIdentity(request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	return c.SendVerifyIdentityWithContext(context.TODO(), request)
+}
+
+// SendVerifyIdentityWithContext
+// Send a verification code using the appropriate transport for the identity type being verified.
+//
+//	VerifySendCompleteRequest request The identity verify send request that contains all the information used send the code.
+func (c *FusionAuthClient) SendVerifyIdentityWithContext(ctx context.Context, request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity/verify/send").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // StartIdentityProviderLogin
 // Begins a login request for a 3rd party login that requires user interaction such as HYPR.
 //
@@ -8611,6 +8665,35 @@ func (c *FusionAuthClient) StartTwoFactorLoginWithContext(ctx context.Context, r
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/two-factor/start").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// StartVerifyIdentity
+// Start a verification of an identity by generating a code. This code can be sent to the User using the Verify Send API
+// Verification Code API or using a mechanism outside of FusionAuth. The verification is completed by using the Verify Complete API with this code.
+//
+//	VerifyStartRequest request The identity verify start request that contains all the information used to begin the request.
+func (c *FusionAuthClient) StartVerifyIdentity(request VerifyStartRequest) (*VerifyStartResponse, *Errors, error) {
+	return c.StartVerifyIdentityWithContext(context.TODO(), request)
+}
+
+// StartVerifyIdentityWithContext
+// Start a verification of an identity by generating a code. This code can be sent to the User using the Verify Send API
+// Verification Code API or using a mechanism outside of FusionAuth. The verification is completed by using the Verify Complete API with this code.
+//
+//	VerifyStartRequest request The identity verify start request that contains all the information used to begin the request.
+func (c *FusionAuthClient) StartVerifyIdentityWithContext(ctx context.Context, request VerifyStartRequest) (*VerifyStartResponse, *Errors, error) {
+	var resp VerifyStartResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity/verify/start").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
