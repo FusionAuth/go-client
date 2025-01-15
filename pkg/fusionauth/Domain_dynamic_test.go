@@ -91,13 +91,6 @@ func Test_ProofKeyForCodeExchangePolicyImplementsStringer(t *testing.T) {
 	}
 }
 
-func Test_APIVersionImplementsStringer(t *testing.T) {
-	var enum interface{} = APIVersion("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("APIVersion does not implement stringer interface\n")
-	}
-}
-
 func Test_TokenTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = TokenType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {

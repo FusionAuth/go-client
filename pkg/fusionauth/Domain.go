@@ -1307,17 +1307,6 @@ const (
 	ProofKeyForCodeExchangePolicy_NotRequiredWhenUsingClientAuthentication ProofKeyForCodeExchangePolicy = "NotRequiredWhenUsingClientAuthentication"
 )
 
-type APIVersion string
-
-func (e APIVersion) String() string {
-	return string(e)
-}
-
-const (
-	APIVersion_V1 APIVersion = "V1"
-	APIVersion_V2 APIVersion = "V2"
-)
-
 /**
  * Audit log response.
  *
