@@ -1572,7 +1572,6 @@ type LambdaSearchCriteria struct {
  */
 type SystemConfiguration struct {
 	AuditLogConfiguration        AuditLogConfiguration           `json:"auditLogConfiguration,omitempty"`
-	CookieEncryptionKey          string                          `json:"cookieEncryptionKey,omitempty"`
 	CorsConfiguration            CORSConfiguration               `json:"corsConfiguration,omitempty"`
 	Data                         map[string]interface{}          `json:"data,omitempty"`
 	EventLogConfiguration        EventLogConfiguration           `json:"eventLogConfiguration,omitempty"`
