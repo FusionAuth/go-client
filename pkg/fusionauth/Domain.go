@@ -7065,6 +7065,7 @@ type IdentityProviderStartLoginRequest struct {
 	Data               map[string]string      `json:"data,omitempty"`
 	IdentityProviderId string                 `json:"identityProviderId,omitempty"`
 	LoginId            string                 `json:"loginId,omitempty"`
+	LoginIdTypes       []string               `json:"loginIdTypes,omitempty"`
 	State              map[string]interface{} `json:"state,omitempty"`
 }
 
