@@ -5394,6 +5394,7 @@ type User struct {
 	MiddleName         string                     `json:"middleName,omitempty"`
 	MobilePhone        string                     `json:"mobilePhone,omitempty"`
 	ParentEmail        string                     `json:"parentEmail,omitempty"`
+	PhoneNumber        string                     `json:"phoneNumber,omitempty"`
 	PreferredLanguages []string                   `json:"preferredLanguages,omitempty"`
 	Registrations      []UserRegistration         `json:"registrations,omitempty"`
 	TenantId           string                     `json:"tenantId,omitempty"`
