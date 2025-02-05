@@ -211,7 +211,6 @@ func (b *KeySearchResponse) SetStatus(status int) {
  * @author Brady Wied
  */
 type VerifyStartRequest struct {
-	BaseEventRequest
 	ApplicationId        string `json:"applicationId,omitempty"`
 	LoginId              string `json:"loginId,omitempty"`
 	LoginIdType          string `json:"loginIdType,omitempty"`
