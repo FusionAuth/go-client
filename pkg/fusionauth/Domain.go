@@ -4129,8 +4129,9 @@ func (e LoginIdType) String() string {
 }
 
 const (
-	LoginIdType_Email    LoginIdType = "email"
-	LoginIdType_Username LoginIdType = "username"
+	LoginIdType_Email       LoginIdType = "email"
+	LoginIdType_PhoneNumber LoginIdType = "phoneNumber"
+	LoginIdType_Username    LoginIdType = "username"
 )
 
 /**
