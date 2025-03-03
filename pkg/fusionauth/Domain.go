@@ -3235,6 +3235,13 @@ type RegistrationConfiguration struct {
 	Type               RegistrationType `json:"type,omitempty"`
 }
 
+type VerificationId struct {
+	Id          string `json:"id,omitempty"`
+	OneTimeCode string `json:"oneTimeCode,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Value       string `json:"value,omitempty"`
+}
+
 /**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
@@ -3863,9 +3870,6 @@ type ExternalIdentifierConfiguration struct {
 	EmailVerificationIdTimeToLiveInSeconds             int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
 	EmailVerificationOneTimeCodeGenerator              SecureGeneratorConfiguration `json:"emailVerificationOneTimeCodeGenerator,omitempty"`
 	ExternalAuthenticationIdTimeToLiveInSeconds        int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
-	IdentityVerificationIdGenerator                    SecureGeneratorConfiguration `json:"identityVerificationIdGenerator,omitempty"`
-	IdentityVerificationIdTimeToLiveInSeconds          int                          `json:"identityVerificationIdTimeToLiveInSeconds,omitempty"`
-	IdentityVerificationOneTimeCodeGenerator           SecureGeneratorConfiguration `json:"identityVerificationOneTimeCodeGenerator,omitempty"`
 	LoginIntentTimeToLiveInSeconds                     int                          `json:"loginIntentTimeToLiveInSeconds,omitempty"`
 	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
@@ -3873,6 +3877,9 @@ type ExternalIdentifierConfiguration struct {
 	PasswordlessShortCodeLoginGenerator                SecureGeneratorConfiguration `json:"passwordlessShortCodeLoginGenerator,omitempty"`
 	PasswordlessShortCodeLoginTimeToLiveInSeconds      int                          `json:"passwordlessShortCodeLoginTimeToLiveInSeconds,omitempty"`
 	PendingAccountLinkTimeToLiveInSeconds              int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
+	PhoneNumberVerificationIdGenerator                 SecureGeneratorConfiguration `json:"phoneNumberVerificationIdGenerator,omitempty"`
+	PhoneNumberVerificationIdTimeToLiveInSeconds       int                          `json:"phoneNumberVerificationIdTimeToLiveInSeconds,omitempty"`
+	PhoneNumberVerificationOneTimeCodeGenerator        SecureGeneratorConfiguration `json:"phoneNumberVerificationOneTimeCodeGenerator,omitempty"`
 	RegistrationVerificationIdGenerator                SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
 	RegistrationVerificationIdTimeToLiveInSeconds      int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationOneTimeCodeGenerator       SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
@@ -3960,6 +3967,7 @@ type UserResponse struct {
 	Token                                string            `json:"token,omitempty"`
 	TokenExpirationInstant               int64             `json:"tokenExpirationInstant,omitempty"`
 	User                                 User              `json:"user,omitempty"`
+	VerificationIds                      []VerificationId  `json:"verificationIds,omitempty"`
 }
 
 func (b *UserResponse) SetStatus(status int) {
