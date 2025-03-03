@@ -728,6 +728,15 @@ func (b *ApplicationSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+type PhoneUnverifiedOptions struct {
+	Behavior UnverifiedBehavior `json:"behavior,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type OAuthConfigurationResponse struct {
@@ -3235,6 +3244,13 @@ type RegistrationConfiguration struct {
 	Type               RegistrationType `json:"type,omitempty"`
 }
 
+type VerificationId struct {
+	Id          string `json:"id,omitempty"`
+	OneTimeCode string `json:"oneTimeCode,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Value       string `json:"value,omitempty"`
+}
+
 /**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
@@ -3960,6 +3976,7 @@ type UserResponse struct {
 	Token                                string            `json:"token,omitempty"`
 	TokenExpirationInstant               int64             `json:"tokenExpirationInstant,omitempty"`
 	User                                 User              `json:"user,omitempty"`
+	VerificationIds                      []VerificationId  `json:"verificationIds,omitempty"`
 }
 
 func (b *UserResponse) SetStatus(status int) {
@@ -5204,11 +5221,13 @@ func (b *ValidateResponse) SetStatus(status int) {
  * @author Brady Wied
  */
 type TenantPhoneConfiguration struct {
-	MessengerId            string               `json:"messengerId,omitempty"`
-	PasswordlessTemplateId string               `json:"passwordlessTemplateId,omitempty"`
-	VerificationStrategy   VerificationStrategy `json:"verificationStrategy,omitempty"`
-	VerificationTemplateId string               `json:"verificationTemplateId,omitempty"`
-	VerifyPhoneNumber      bool                 `json:"verifyPhoneNumber"`
+	MessengerId                    string                 `json:"messengerId,omitempty"`
+	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
+	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
+	VerificationCompleteTemplateId string                 `json:"verificationCompleteTemplateId,omitempty"`
+	VerificationStrategy           VerificationStrategy   `json:"verificationStrategy,omitempty"`
+	VerificationTemplateId         string                 `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber              bool                   `json:"verifyPhoneNumber"`
 }
 
 /**
