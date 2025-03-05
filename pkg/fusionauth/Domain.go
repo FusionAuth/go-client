@@ -728,6 +728,15 @@ func (b *ApplicationSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+type PhoneUnverifiedOptions struct {
+	Behavior UnverifiedBehavior `json:"behavior,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type OAuthConfigurationResponse struct {
@@ -5212,11 +5221,13 @@ func (b *ValidateResponse) SetStatus(status int) {
  * @author Brady Wied
  */
 type TenantPhoneConfiguration struct {
-	MessengerId            string               `json:"messengerId,omitempty"`
-	PasswordlessTemplateId string               `json:"passwordlessTemplateId,omitempty"`
-	VerificationStrategy   VerificationStrategy `json:"verificationStrategy,omitempty"`
-	VerificationTemplateId string               `json:"verificationTemplateId,omitempty"`
-	VerifyPhoneNumber      bool                 `json:"verifyPhoneNumber"`
+	MessengerId                    string                 `json:"messengerId,omitempty"`
+	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
+	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
+	VerificationCompleteTemplateId string                 `json:"verificationCompleteTemplateId,omitempty"`
+	VerificationStrategy           VerificationStrategy   `json:"verificationStrategy,omitempty"`
+	VerificationTemplateId         string                 `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber              bool                   `json:"verifyPhoneNumber"`
 }
 
 /**
