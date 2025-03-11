@@ -581,16 +581,16 @@ func (c *FusionAuthClient) CommentOnUserWithContext(ctx context.Context, request
 // CompleteVerifyIdentity
 // Completes verification of an identity using verification codes from the Verify Start API.
 //
-//	VerifySendCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
-func (c *FusionAuthClient) CompleteVerifyIdentity(request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+//	VerifyCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
+func (c *FusionAuthClient) CompleteVerifyIdentity(request VerifyCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
 	return c.CompleteVerifyIdentityWithContext(context.TODO(), request)
 }
 
 // CompleteVerifyIdentityWithContext
 // Completes verification of an identity using verification codes from the Verify Start API.
 //
-//	VerifySendCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
-func (c *FusionAuthClient) CompleteVerifyIdentityWithContext(ctx context.Context, request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+//	VerifyCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
+func (c *FusionAuthClient) CompleteVerifyIdentityWithContext(ctx context.Context, request VerifyCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
@@ -8555,16 +8555,16 @@ func (c *FusionAuthClient) SendTwoFactorCodeForLoginUsingMethodWithContext(ctx c
 // SendVerifyIdentity
 // Send a verification code using the appropriate transport for the identity type being verified.
 //
-//	VerifySendCompleteRequest request The identity verify send request that contains all the information used send the code.
-func (c *FusionAuthClient) SendVerifyIdentity(request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+//	VerifySendRequest request The identity verify send request that contains all the information used send the code.
+func (c *FusionAuthClient) SendVerifyIdentity(request VerifySendRequest) (*BaseHTTPResponse, *Errors, error) {
 	return c.SendVerifyIdentityWithContext(context.TODO(), request)
 }
 
 // SendVerifyIdentityWithContext
 // Send a verification code using the appropriate transport for the identity type being verified.
 //
-//	VerifySendCompleteRequest request The identity verify send request that contains all the information used send the code.
-func (c *FusionAuthClient) SendVerifyIdentityWithContext(ctx context.Context, request VerifySendCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+//	VerifySendRequest request The identity verify send request that contains all the information used send the code.
+func (c *FusionAuthClient) SendVerifyIdentityWithContext(ctx context.Context, request VerifySendRequest) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
