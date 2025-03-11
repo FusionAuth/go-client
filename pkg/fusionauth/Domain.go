@@ -241,7 +241,6 @@ type UserRegistrationDeleteEvent struct {
  * Verify Send API request object.
  */
 type VerifySendRequest struct {
-	BaseEventRequest
 	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }
