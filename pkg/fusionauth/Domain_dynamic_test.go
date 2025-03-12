@@ -70,6 +70,13 @@ func Test_AttestationTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_IdentityVerifiedReasonImplementsStringer(t *testing.T) {
+	var enum interface{} = IdentityVerifiedReason("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("IdentityVerifiedReason does not implement stringer interface\n")
+	}
+}
+
 func Test_CoseEllipticCurveImplementsStringer(t *testing.T) {
 	var enum interface{} = CoseEllipticCurve("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -144,6 +151,13 @@ func Test_FormControlImplementsStringer(t *testing.T) {
 	var enum interface{} = FormControl("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("FormControl does not implement stringer interface\n")
+	}
+}
+
+func Test_PasswordlessStrategyImplementsStringer(t *testing.T) {
+	var enum interface{} = PasswordlessStrategy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("PasswordlessStrategy does not implement stringer interface\n")
 	}
 }
 

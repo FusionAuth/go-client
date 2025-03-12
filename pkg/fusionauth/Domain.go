@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+* either express or implied. See the License for the specific
+* language governing permissions and limitations under the License.
  */
 
 package fusionauth
@@ -100,10 +100,11 @@ type FamilyEmailRequest struct {
  */
 type LoginRequest struct {
 	BaseLoginRequest
-	LoginId          string `json:"loginId,omitempty"`
-	OneTimePassword  string `json:"oneTimePassword,omitempty"`
-	Password         string `json:"password,omitempty"`
-	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
+	LoginId          string   `json:"loginId,omitempty"`
+	LoginIdTypes     []string `json:"loginIdTypes,omitempty"`
+	OneTimePassword  string   `json:"oneTimePassword,omitempty"`
+	Password         string   `json:"password,omitempty"`
+	TwoFactorTrustId string   `json:"twoFactorTrustId,omitempty"`
 }
 
 /**
@@ -389,6 +390,7 @@ type GroupSearchCriteria struct {
 type PasswordlessLoginRequest struct {
 	BaseLoginRequest
 	Code             string `json:"code,omitempty"`
+	OneTimeCode      string `json:"oneTimeCode,omitempty"`
 	TwoFactorTrustId string `json:"twoFactorTrustId,omitempty"`
 }
 
@@ -836,6 +838,27 @@ type KeyRequest struct {
 }
 
 /**
+ * Models the reason that {@link UserIdentity#verified} was set to true or false.
+ *
+ * @author Brady Wied
+ */
+type IdentityVerifiedReason string
+
+func (e IdentityVerifiedReason) String() string {
+	return string(e)
+}
+
+const (
+	IdentityVerifiedReason_Skipped      IdentityVerifiedReason = "Skipped"
+	IdentityVerifiedReason_Trusted      IdentityVerifiedReason = "Trusted"
+	IdentityVerifiedReason_Unverifiable IdentityVerifiedReason = "Unverifiable"
+	IdentityVerifiedReason_Implicit     IdentityVerifiedReason = "Implicit"
+	IdentityVerifiedReason_Pending      IdentityVerifiedReason = "Pending"
+	IdentityVerifiedReason_Completed    IdentityVerifiedReason = "Completed"
+	IdentityVerifiedReason_Disabled     IdentityVerifiedReason = "Disabled"
+)
+
+/**
  * Domain for a public key, key pair or an HMAC secret. This is used by KeyMaster to manage keys for JWTs, SAML, etc.
  *
  * @author Brian Pontarelli
@@ -983,12 +1006,13 @@ func (e FormDataType) String() string {
 }
 
 const (
-	FormDataType_Bool    FormDataType = "bool"
-	FormDataType_Consent FormDataType = "consent"
-	FormDataType_Date    FormDataType = "date"
-	FormDataType_Email   FormDataType = "email"
-	FormDataType_Number  FormDataType = "number"
-	FormDataType_String  FormDataType = "string"
+	FormDataType_Bool        FormDataType = "bool"
+	FormDataType_Consent     FormDataType = "consent"
+	FormDataType_Date        FormDataType = "date"
+	FormDataType_Email       FormDataType = "email"
+	FormDataType_Number      FormDataType = "number"
+	FormDataType_PhoneNumber FormDataType = "phoneNumber"
+	FormDataType_String      FormDataType = "string"
 )
 
 type LoginRecordConfiguration struct {
@@ -1183,6 +1207,16 @@ type ApplicationSearchCriteria struct {
 }
 
 /**
+ * @author Brady Wied
+ */
+type VerifyStartRequest struct {
+	ApplicationId        string `json:"applicationId,omitempty"`
+	LoginId              string `json:"loginId,omitempty"`
+	LoginIdType          string `json:"loginIdType,omitempty"`
+	VerificationStrategy string `json:"verificationStrategy,omitempty"`
+}
+
+/**
  * Configuration for the behavior of failed login attempts. This helps us protect against brute force password attacks.
  *
  * @author Daniel DeGroff
@@ -1273,6 +1307,7 @@ type SecureIdentity struct {
 	EncryptionScheme                   string                 `json:"encryptionScheme,omitempty"`
 	Factor                             int                    `json:"factor,omitempty"`
 	Id                                 string                 `json:"id,omitempty"`
+	Identities                         []UserIdentity         `json:"identities,omitempty"`
 	LastLoginInstant                   int64                  `json:"lastLoginInstant,omitempty"`
 	Password                           string                 `json:"password,omitempty"`
 	PasswordChangeReason               ChangePasswordReason   `json:"passwordChangeReason,omitempty"`
@@ -1628,18 +1663,33 @@ type MultiFactorSMSTemplate struct {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+type PasswordlessStrategy string
+
+func (e PasswordlessStrategy) String() string {
+	return string(e)
+}
+
+const (
+	PasswordlessStrategy_ClickableLink PasswordlessStrategy = "ClickableLink"
+	PasswordlessStrategy_FormField     PasswordlessStrategy = "FormField"
+)
+
+/**
  * User API request object.
  *
  * @author Brian Pontarelli
  */
 type UserRequest struct {
 	BaseEventRequest
-	ApplicationId        string `json:"applicationId,omitempty"`
-	CurrentPassword      string `json:"currentPassword,omitempty"`
-	DisableDomainBlock   bool   `json:"disableDomainBlock"`
-	SendSetPasswordEmail bool   `json:"sendSetPasswordEmail"`
-	SkipVerification     bool   `json:"skipVerification"`
-	User                 User   `json:"user,omitempty"`
+	ApplicationId        string   `json:"applicationId,omitempty"`
+	CurrentPassword      string   `json:"currentPassword,omitempty"`
+	DisableDomainBlock   bool     `json:"disableDomainBlock"`
+	SendSetPasswordEmail bool     `json:"sendSetPasswordEmail"`
+	SkipVerification     bool     `json:"skipVerification"`
+	User                 User     `json:"user,omitempty"`
+	VerificationIds      []string `json:"verificationIds,omitempty"`
 }
 
 /**
@@ -1682,6 +1732,21 @@ func (b *VerifyEmailResponse) SetStatus(status int) {
 }
 
 /**
+ * Hold tenant phone configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+type TenantPhoneConfiguration struct {
+	MessengerId                    string                 `json:"messengerId,omitempty"`
+	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
+	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
+	VerificationCompleteTemplateId string                 `json:"verificationCompleteTemplateId,omitempty"`
+	VerificationStrategy           VerificationStrategy   `json:"verificationStrategy,omitempty"`
+	VerificationTemplateId         string                 `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber              bool                   `json:"verifyPhoneNumber"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type OpenIdConnectApplicationConfiguration struct {
@@ -1712,6 +1777,8 @@ const (
 type PasswordlessStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
+	LoginIdType   string                 `json:"loginIdType,omitempty"`
+	LoginStrategy string                 `json:"loginStrategy,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
 }
 
@@ -1795,6 +1862,7 @@ const (
 	OAuthErrorReason_RefreshTokenNotFound                OAuthErrorReason = "refresh_token_not_found"
 	OAuthErrorReason_RefreshTokenTypeNotSupported        OAuthErrorReason = "refresh_token_type_not_supported"
 	OAuthErrorReason_InvalidClientId                     OAuthErrorReason = "invalid_client_id"
+	OAuthErrorReason_InvalidExpiresIn                    OAuthErrorReason = "invalid_expires_in"
 	OAuthErrorReason_InvalidUserCredentials              OAuthErrorReason = "invalid_user_credentials"
 	OAuthErrorReason_InvalidGrantType                    OAuthErrorReason = "invalid_grant_type"
 	OAuthErrorReason_InvalidOrigin                       OAuthErrorReason = "invalid_origin"
@@ -1964,6 +2032,7 @@ const (
 	RateLimitedRequestType_SendPasswordless             RateLimitedRequestType = "SendPasswordless"
 	RateLimitedRequestType_SendRegistrationVerification RateLimitedRequestType = "SendRegistrationVerification"
 	RateLimitedRequestType_SendTwoFactor                RateLimitedRequestType = "SendTwoFactor"
+	RateLimitedRequestType_SendPhoneVerification        RateLimitedRequestType = "SendPhoneVerification"
 )
 
 /**
@@ -2931,7 +3000,8 @@ func (b *ApplicationSearchResponse) SetStatus(status int) {
  */
 type PasswordlessStartResponse struct {
 	BaseHTTPResponse
-	Code string `json:"code,omitempty"`
+	Code        string `json:"code,omitempty"`
+	OneTimeCode string `json:"oneTimeCode,omitempty"`
 }
 
 func (b *PasswordlessStartResponse) SetStatus(status int) {
@@ -3041,7 +3111,7 @@ type Email struct {
 }
 
 /**
- * The global view of a User. This object contains all global information about the user including birthdate, registration information
+ * The public, global view of a User. This object contains all global information about the user including birthdate, registration information
  * preferred languages, global attributes, etc.
  *
  * @author Seth Musselman
@@ -3064,6 +3134,7 @@ type User struct {
 	MiddleName         string                     `json:"middleName,omitempty"`
 	MobilePhone        string                     `json:"mobilePhone,omitempty"`
 	ParentEmail        string                     `json:"parentEmail,omitempty"`
+	PhoneNumber        string                     `json:"phoneNumber,omitempty"`
 	PreferredLanguages []string                   `json:"preferredLanguages,omitempty"`
 	Registrations      []UserRegistration         `json:"registrations,omitempty"`
 	TenantId           string                     `json:"tenantId,omitempty"`
@@ -3508,6 +3579,7 @@ const (
 	Sort_Desc Sort = "desc"
 )
 
+// This is separate from IdentityType.
 type LoginIdType string
 
 func (e LoginIdType) String() string {
@@ -3515,8 +3587,9 @@ func (e LoginIdType) String() string {
 }
 
 const (
-	LoginIdType_Email    LoginIdType = "email"
-	LoginIdType_Username LoginIdType = "username"
+	LoginIdType_Email       LoginIdType = "email"
+	LoginIdType_PhoneNumber LoginIdType = "phoneNumber"
+	LoginIdType_Username    LoginIdType = "username"
 )
 
 /**
@@ -3575,6 +3648,7 @@ type IdentityProviderStartLoginRequest struct {
 	Data               map[string]string      `json:"data,omitempty"`
 	IdentityProviderId string                 `json:"identityProviderId,omitempty"`
 	LoginId            string                 `json:"loginId,omitempty"`
+	LoginIdTypes       []string               `json:"loginIdTypes,omitempty"`
 	State              map[string]interface{} `json:"state,omitempty"`
 }
 
@@ -4591,6 +4665,15 @@ type LoginHintConfiguration struct {
 }
 
 /**
+ * Verify Complete API request object.
+ */
+type VerifyCompleteRequest struct {
+	BaseEventRequest
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type FacebookApplicationConfiguration struct {
@@ -4683,6 +4766,7 @@ const (
 	EventType_UserUpdate                     EventType = "user.update"
 	EventType_UserUpdateComplete             EventType = "user.update.complete"
 	EventType_Test                           EventType = "test"
+	EventType_IdentityVerified               EventType = "identity.verified"
 )
 
 /**
@@ -4865,6 +4949,7 @@ type UserResponse struct {
 	Token                                string            `json:"token,omitempty"`
 	TokenExpirationInstant               int64             `json:"tokenExpirationInstant,omitempty"`
 	User                                 User              `json:"user,omitempty"`
+	VerificationIds                      []VerificationId  `json:"verificationIds,omitempty"`
 }
 
 func (b *UserResponse) SetStatus(status int) {
@@ -4923,6 +5008,19 @@ type TenantAccessControlConfiguration struct {
  */
 type WebhookRequest struct {
 	Webhook Webhook `json:"webhook,omitempty"`
+}
+
+/**
+ * @author Brady Wied
+ */
+type VerifyStartResponse struct {
+	BaseHTTPResponse
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+func (b *VerifyStartResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -5133,7 +5231,12 @@ type ExternalIdentifierConfiguration struct {
 	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
 	PasswordlessLoginTimeToLiveInSeconds               int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
+	PasswordlessShortCodeLoginGenerator                SecureGeneratorConfiguration `json:"passwordlessShortCodeLoginGenerator,omitempty"`
+	PasswordlessShortCodeLoginTimeToLiveInSeconds      int                          `json:"passwordlessShortCodeLoginTimeToLiveInSeconds,omitempty"`
 	PendingAccountLinkTimeToLiveInSeconds              int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
+	PhoneNumberVerificationIdGenerator                 SecureGeneratorConfiguration `json:"phoneNumberVerificationIdGenerator,omitempty"`
+	PhoneNumberVerificationIdTimeToLiveInSeconds       int                          `json:"phoneNumberVerificationIdTimeToLiveInSeconds,omitempty"`
+	PhoneNumberVerificationOneTimeCodeGenerator        SecureGeneratorConfiguration `json:"phoneNumberVerificationOneTimeCodeGenerator,omitempty"`
 	RegistrationVerificationIdGenerator                SecureGeneratorConfiguration `json:"registrationVerificationIdGenerator,omitempty"`
 	RegistrationVerificationIdTimeToLiveInSeconds      int                          `json:"registrationVerificationIdTimeToLiveInSeconds,omitempty"`
 	RegistrationVerificationOneTimeCodeGenerator       SecureGeneratorConfiguration `json:"registrationVerificationOneTimeCodeGenerator,omitempty"`
@@ -5176,6 +5279,7 @@ type TenantRateLimitConfiguration struct {
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
 	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
+	SendPhoneVerification        RateLimitedRequestConfiguration `json:"sendPhoneVerification,omitempty"`
 	SendRegistrationVerification RateLimitedRequestConfiguration `json:"sendRegistrationVerification,omitempty"`
 	SendTwoFactor                RateLimitedRequestConfiguration `json:"sendTwoFactor,omitempty"`
 }
@@ -5220,6 +5324,7 @@ type Tenant struct {
 	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
+	PhoneConfiguration                TenantPhoneConfiguration          `json:"phoneConfiguration,omitempty"`
 	RateLimitConfiguration            TenantRateLimitConfiguration      `json:"rateLimitConfiguration,omitempty"`
 	RegistrationConfiguration         TenantRegistrationConfiguration   `json:"registrationConfiguration,omitempty"`
 	ScimServerConfiguration           TenantSCIMServerConfiguration     `json:"scimServerConfiguration,omitempty"`
@@ -5242,6 +5347,17 @@ type BaseSAMLv2IdentityProvider struct {
 	UniqueIdClaim                    string                                 `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail                bool                                   `json:"useNameIdForEmail"`
 	UsernameClaim                    string                                 `json:"usernameClaim,omitempty"`
+}
+
+/**
+ * Models the identity verified event
+ *
+ * @author Brady Wied
+ */
+type IdentityVerifiedEvent struct {
+	BaseUserEvent
+	LoginId     string `json:"loginId,omitempty"`
+	LoginIdType string `json:"loginIdType,omitempty"`
 }
 
 /**
@@ -5424,8 +5540,9 @@ const (
  */
 type RefreshRequest struct {
 	BaseEventRequest
-	RefreshToken string `json:"refreshToken,omitempty"`
-	Token        string `json:"token,omitempty"`
+	RefreshToken        string `json:"refreshToken,omitempty"`
+	TimeToLiveInSeconds int    `json:"timeToLiveInSeconds,omitempty"`
+	Token               string `json:"token,omitempty"`
 }
 
 /**
@@ -5590,6 +5707,11 @@ const (
 type AuditLogExportRequest struct {
 	BaseExportRequest
 	Criteria AuditLogSearchCriteria `json:"criteria,omitempty"`
+}
+
+type IdentityInfo struct {
+	Type  string `json:"type,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 /**
@@ -6152,6 +6274,13 @@ type OpenIdConnectIdentityProvider struct {
 	PostRequest    bool                                `json:"postRequest"`
 }
 
+type VerificationId struct {
+	Id          string `json:"id,omitempty"`
+	OneTimeCode string `json:"oneTimeCode,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Value       string `json:"value,omitempty"`
+}
+
 type ProviderLambdaConfiguration struct {
 	ReconcileId string `json:"reconcileId,omitempty"`
 }
@@ -6217,6 +6346,7 @@ type DisplayableRawLogin struct {
 	ApplicationName string   `json:"applicationName,omitempty"`
 	Location        Location `json:"location,omitempty"`
 	LoginId         string   `json:"loginId,omitempty"`
+	LoginIdType     string   `json:"loginIdType,omitempty"`
 }
 
 /**
@@ -6358,6 +6488,13 @@ type TenantUnverifiedConfiguration struct {
 }
 
 /**
+ * @author Brady Wied
+ */
+type IdentityType struct {
+	Name string `json:"name,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type TwoFactorSendRequest struct {
@@ -6450,7 +6587,7 @@ type UserRegistrationUpdateCompleteEvent struct {
 type WebhookEventLog struct {
 	Attempts           []WebhookAttemptLog    `json:"attempts,omitempty"`
 	Data               map[string]interface{} `json:"data,omitempty"`
-	Event              EventRequest           `json:"event,omitempty"`
+	Event              map[string]interface{} `json:"event,omitempty"`
 	EventResult        WebhookEventResult     `json:"eventResult,omitempty"`
 	EventType          EventType              `json:"eventType,omitempty"`
 	FailedAttempts     int                    `json:"failedAttempts,omitempty"`
@@ -6897,15 +7034,17 @@ func (b *UserConsentResponse) SetStatus(status int) {
 }
 
 /**
- * Models an event where a user is being created with an "in-use" login Id (email or username).
+ * Models an event where a user is being created with an "in-use" login Id (email, username, or other identities).
  *
  * @author Daniel DeGroff
  */
 type UserLoginIdDuplicateOnCreateEvent struct {
 	BaseUserEvent
-	DuplicateEmail    string `json:"duplicateEmail,omitempty"`
-	DuplicateUsername string `json:"duplicateUsername,omitempty"`
-	Existing          User   `json:"existing,omitempty"`
+	DuplicateEmail       string         `json:"duplicateEmail,omitempty"`
+	DuplicateIdentities  []IdentityInfo `json:"duplicateIdentities,omitempty"`
+	DuplicatePhoneNumber string         `json:"duplicatePhoneNumber,omitempty"`
+	DuplicateUsername    string         `json:"duplicateUsername,omitempty"`
+	Existing             User           `json:"existing,omitempty"`
 }
 
 /**
@@ -6954,6 +7093,7 @@ type WebAuthnStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
 	CredentialId  string                 `json:"credentialId,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
+	LoginIdTypes  []string               `json:"loginIdTypes,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
 	UserId        string                 `json:"userId,omitempty"`
 	Workflow      WebAuthnWorkflow       `json:"workflow,omitempty"`
@@ -7133,6 +7273,14 @@ type UserRegistrationDeleteCompleteEvent struct {
 }
 
 /**
+ * Verify Send API request object.
+ */
+type VerifySendRequest struct {
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+/**
  * The Integration Response
  *
  * @author Daniel DeGroff
@@ -7196,6 +7344,15 @@ type PublicKeyCredentialRequestOptions struct {
 	RpId             string                          `json:"rpId,omitempty"`
 	Timeout          int64                           `json:"timeout,omitempty"`
 	UserVerification UserVerificationRequirement     `json:"userVerification,omitempty"`
+}
+
+/**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+type PhoneUnverifiedOptions struct {
+	Behavior UnverifiedBehavior `json:"behavior,omitempty"`
 }
 
 type DeleteConfiguration struct {
@@ -7574,6 +7731,23 @@ type WebAuthnCredentialImportRequest struct {
 	ValidateDbConstraints bool                 `json:"validateDbConstraints"`
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+type UserIdentity struct {
+	DisplayValue      string                 `json:"displayValue,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	LastLoginInstant  int64                  `json:"lastLoginInstant,omitempty"`
+	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	ModerationStatus  ContentStatus          `json:"moderationStatus,omitempty"`
+	Primary           bool                   `json:"primary"`
+	Type              string                 `json:"type,omitempty"`
+	Value             string                 `json:"value,omitempty"`
+	Verified          bool                   `json:"verified"`
+	VerifiedInstant   int64                  `json:"verifiedInstant,omitempty"`
+	VerifiedReason    IdentityVerifiedReason `json:"verifiedReason,omitempty"`
+}
+
 type Templates struct {
 	AccountEdit                               string `json:"accountEdit,omitempty"`
 	AccountIndex                              string `json:"accountIndex,omitempty"`
@@ -7616,6 +7790,7 @@ type Templates struct {
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
 	PasswordSent                              string `json:"passwordSent,omitempty"`
+	PhoneVerificationRequired                 string `json:"phoneVerificationRequired,omitempty"`
 	RegistrationComplete                      string `json:"registrationComplete,omitempty"`
 	RegistrationSend                          string `json:"registrationSend,omitempty"`
 	RegistrationSent                          string `json:"registrationSent,omitempty"`
