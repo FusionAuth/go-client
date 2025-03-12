@@ -238,6 +238,14 @@ type UserRegistrationDeleteEvent struct {
 }
 
 /**
+ * Verify Send API request object.
+ */
+type VerifySendRequest struct {
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type AccessToken struct {
@@ -995,6 +1003,15 @@ type FormField struct {
 	Required          bool                   `json:"required"`
 	Type              FormDataType           `json:"type,omitempty"`
 	Validator         FormFieldValidator     `json:"validator,omitempty"`
+}
+
+/**
+ * Verify Complete API request object.
+ */
+type VerifyCompleteRequest struct {
+	BaseEventRequest
+	OneTimeCode    string `json:"oneTimeCode,omitempty"`
+	VerificationId string `json:"verificationId,omitempty"`
 }
 
 /**
@@ -3788,15 +3805,6 @@ type GroupMemberRemoveCompleteEvent struct {
 	Members []GroupMember `json:"members,omitempty"`
 }
 
-/**
- * @author Brady Wied
- */
-type VerifySendCompleteRequest struct {
-	BaseEventRequest
-	OneTimeCode    string `json:"oneTimeCode,omitempty"`
-	VerificationId string `json:"verificationId,omitempty"`
-}
-
 type EventLogConfiguration struct {
 	NumberToRetain int `json:"numberToRetain,omitempty"`
 }
@@ -5825,6 +5833,7 @@ type TenantRateLimitConfiguration struct {
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
 	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
+	SendPhoneVerification        RateLimitedRequestConfiguration `json:"sendPhoneVerification,omitempty"`
 	SendRegistrationVerification RateLimitedRequestConfiguration `json:"sendRegistrationVerification,omitempty"`
 	SendTwoFactor                RateLimitedRequestConfiguration `json:"sendTwoFactor,omitempty"`
 }
@@ -7017,6 +7026,7 @@ type Templates struct {
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
 	PasswordSent                              string `json:"passwordSent,omitempty"`
+	PhoneVerificationRequired                 string `json:"phoneVerificationRequired,omitempty"`
 	RegistrationComplete                      string `json:"registrationComplete,omitempty"`
 	RegistrationSend                          string `json:"registrationSend,omitempty"`
 	RegistrationSent                          string `json:"registrationSent,omitempty"`
@@ -7458,6 +7468,7 @@ const (
 	RateLimitedRequestType_SendPasswordless             RateLimitedRequestType = "SendPasswordless"
 	RateLimitedRequestType_SendRegistrationVerification RateLimitedRequestType = "SendRegistrationVerification"
 	RateLimitedRequestType_SendTwoFactor                RateLimitedRequestType = "SendTwoFactor"
+	RateLimitedRequestType_SendPhoneVerification        RateLimitedRequestType = "SendPhoneVerification"
 )
 
 /**
