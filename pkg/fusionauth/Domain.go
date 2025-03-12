@@ -5833,7 +5833,7 @@ type TenantRateLimitConfiguration struct {
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
 	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
-	SendPhoneNumberVerification  RateLimitedRequestConfiguration `json:"sendPhoneNumberVerification,omitempty"`
+	SendPhoneVerification        RateLimitedRequestConfiguration `json:"sendPhoneVerification,omitempty"`
 	SendRegistrationVerification RateLimitedRequestConfiguration `json:"sendRegistrationVerification,omitempty"`
 	SendTwoFactor                RateLimitedRequestConfiguration `json:"sendTwoFactor,omitempty"`
 }
@@ -7468,7 +7468,7 @@ const (
 	RateLimitedRequestType_SendPasswordless             RateLimitedRequestType = "SendPasswordless"
 	RateLimitedRequestType_SendRegistrationVerification RateLimitedRequestType = "SendRegistrationVerification"
 	RateLimitedRequestType_SendTwoFactor                RateLimitedRequestType = "SendTwoFactor"
-	RateLimitedRequestType_SendPhoneNumberVerification  RateLimitedRequestType = "SendPhoneNumberVerification"
+	RateLimitedRequestType_SendPhoneVerification        RateLimitedRequestType = "SendPhoneVerification"
 )
 
 /**
