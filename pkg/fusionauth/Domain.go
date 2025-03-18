@@ -7026,7 +7026,10 @@ type Templates struct {
 	PasswordComplete                          string `json:"passwordComplete,omitempty"`
 	PasswordForgot                            string `json:"passwordForgot,omitempty"`
 	PasswordSent                              string `json:"passwordSent,omitempty"`
+	PhoneComplete                             string `json:"phoneComplete,omitempty"`
+	PhoneSent                                 string `json:"phoneSent,omitempty"`
 	PhoneVerificationRequired                 string `json:"phoneVerificationRequired,omitempty"`
+	PhoneVerify                               string `json:"phoneVerify,omitempty"`
 	RegistrationComplete                      string `json:"registrationComplete,omitempty"`
 	RegistrationSend                          string `json:"registrationSend,omitempty"`
 	RegistrationSent                          string `json:"registrationSent,omitempty"`
