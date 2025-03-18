@@ -7145,6 +7145,7 @@ type LoginResponse struct {
 	ChangePasswordReason       ChangePasswordReason     `json:"changePasswordReason,omitempty"`
 	ConfigurableMethods        []string                 `json:"configurableMethods,omitempty"`
 	EmailVerificationId        string                   `json:"emailVerificationId,omitempty"`
+	IdentityVerificationId     string                   `json:"identityVerificationId,omitempty"`
 	Methods                    []TwoFactorMethod        `json:"methods,omitempty"`
 	PendingIdPLinkId           string                   `json:"pendingIdPLinkId,omitempty"`
 	RefreshToken               string                   `json:"refreshToken,omitempty"`
