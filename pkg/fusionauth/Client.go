@@ -3886,6 +3886,36 @@ func (c *FusionAuthClient) PatchEmailTemplateWithContext(ctx context.Context, em
 	return &resp, &errors, err
 }
 
+// PatchEntity
+// Updates, via PATCH, the Entity with the given Id.
+//
+//	string entityId The Id of the Entity Type to update.
+//	EntityRequest request The request that contains just the new Entity information.
+func (c *FusionAuthClient) PatchEntity(entityId string, request map[string]interface{}) (*EntityResponse, *Errors, error) {
+	return c.PatchEntityWithContext(context.TODO(), entityId, request)
+}
+
+// PatchEntityWithContext
+// Updates, via PATCH, the Entity with the given Id.
+//
+//	string entityId The Id of the Entity Type to update.
+//	EntityRequest request The request that contains just the new Entity information.
+func (c *FusionAuthClient) PatchEntityWithContext(ctx context.Context, entityId string, request map[string]interface{}) (*EntityResponse, *Errors, error) {
+	var resp EntityResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity").
+		WithUriSegment(entityId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchEntityType
 // Updates, via PATCH, the Entity Type with the given Id.
 //
@@ -3916,6 +3946,100 @@ func (c *FusionAuthClient) PatchEntityTypeWithContext(ctx context.Context, entit
 	return &resp, &errors, err
 }
 
+// PatchEntityTypePermission
+// Patches the permission with the given Id for the entity type.
+//
+//	string entityTypeId The Id of the entityType that the permission belongs to.
+//	string permissionId The Id of the permission to patch.
+//	EntityTypeRequest request The request that contains the new permission information.
+func (c *FusionAuthClient) PatchEntityTypePermission(entityTypeId string, permissionId string, request map[string]interface{}) (*EntityTypeResponse, *Errors, error) {
+	return c.PatchEntityTypePermissionWithContext(context.TODO(), entityTypeId, permissionId, request)
+}
+
+// PatchEntityTypePermissionWithContext
+// Patches the permission with the given Id for the entity type.
+//
+//	string entityTypeId The Id of the entityType that the permission belongs to.
+//	string permissionId The Id of the permission to patch.
+//	EntityTypeRequest request The request that contains the new permission information.
+func (c *FusionAuthClient) PatchEntityTypePermissionWithContext(ctx context.Context, entityTypeId string, permissionId string, request map[string]interface{}) (*EntityTypeResponse, *Errors, error) {
+	var resp EntityTypeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type").
+		WithUriSegment(entityTypeId).
+		WithUriSegment("permission").
+		WithUriSegment(permissionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchForm
+// Patches the form with the given Id.
+//
+//	string formId The Id of the form to patch.
+//	FormRequest request The request object that contains the new form information.
+func (c *FusionAuthClient) PatchForm(formId string, request map[string]interface{}) (*FormResponse, *Errors, error) {
+	return c.PatchFormWithContext(context.TODO(), formId, request)
+}
+
+// PatchFormWithContext
+// Patches the form with the given Id.
+//
+//	string formId The Id of the form to patch.
+//	FormRequest request The request object that contains the new form information.
+func (c *FusionAuthClient) PatchFormWithContext(ctx context.Context, formId string, request map[string]interface{}) (*FormResponse, *Errors, error) {
+	var resp FormResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form").
+		WithUriSegment(formId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchFormField
+// Patches the form field with the given Id.
+//
+//	string fieldId The Id of the form field to patch.
+//	FormFieldRequest request The request object that contains the new form field information.
+func (c *FusionAuthClient) PatchFormField(fieldId string, request map[string]interface{}) (*FormFieldResponse, *Errors, error) {
+	return c.PatchFormFieldWithContext(context.TODO(), fieldId, request)
+}
+
+// PatchFormFieldWithContext
+// Patches the form field with the given Id.
+//
+//	string fieldId The Id of the form field to patch.
+//	FormFieldRequest request The request object that contains the new form field information.
+func (c *FusionAuthClient) PatchFormFieldWithContext(ctx context.Context, fieldId string, request map[string]interface{}) (*FormFieldResponse, *Errors, error) {
+	var resp FormFieldResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/form/field").
+		WithUriSegment(fieldId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchGroup
 // Updates, via PATCH, the group with the given Id.
 //
@@ -3937,6 +4061,36 @@ func (c *FusionAuthClient) PatchGroupWithContext(ctx context.Context, groupId st
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/group").
 		WithUriSegment(groupId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchIPAccessControlList
+// Update the IP Access Control List with the given Id.
+//
+//	string accessControlListId The Id of the IP Access Control List to patch.
+//	IPAccessControlListRequest request The request that contains the new IP Access Control List information.
+func (c *FusionAuthClient) PatchIPAccessControlList(accessControlListId string, request map[string]interface{}) (*IPAccessControlListResponse, *Errors, error) {
+	return c.PatchIPAccessControlListWithContext(context.TODO(), accessControlListId, request)
+}
+
+// PatchIPAccessControlListWithContext
+// Update the IP Access Control List with the given Id.
+//
+//	string accessControlListId The Id of the IP Access Control List to patch.
+//	IPAccessControlListRequest request The request that contains the new IP Access Control List information.
+func (c *FusionAuthClient) PatchIPAccessControlListWithContext(ctx context.Context, accessControlListId string, request map[string]interface{}) (*IPAccessControlListResponse, *Errors, error) {
+	var resp IPAccessControlListResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/ip-acl").
+		WithUriSegment(accessControlListId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPatch).
 		Do(ctx)
@@ -4355,6 +4509,36 @@ func (c *FusionAuthClient) PatchUserConsentWithContext(ctx context.Context, user
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/consent").
 		WithUriSegment(userConsentId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchWebhook
+// Patches the webhook with the given Id.
+//
+//	string webhookId The Id of the webhook to update.
+//	WebhookRequest request The request that contains the new webhook information.
+func (c *FusionAuthClient) PatchWebhook(webhookId string, request map[string]interface{}) (*WebhookResponse, *Errors, error) {
+	return c.PatchWebhookWithContext(context.TODO(), webhookId, request)
+}
+
+// PatchWebhookWithContext
+// Patches the webhook with the given Id.
+//
+//	string webhookId The Id of the webhook to update.
+//	WebhookRequest request The request that contains the new webhook information.
+func (c *FusionAuthClient) PatchWebhookWithContext(ctx context.Context, webhookId string, request map[string]interface{}) (*WebhookResponse, *Errors, error) {
+	var resp WebhookResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webhook").
+		WithUriSegment(webhookId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPatch).
 		Do(ctx)
@@ -8970,6 +9154,36 @@ func (c *FusionAuthClient) UpdateEntityTypePermissionWithContext(ctx context.Con
 		WithUriSegment(entityTypeId).
 		WithUriSegment("permission").
 		WithUriSegment(permissionId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateFamily
+// Updates a family with a given Id.
+//
+//	string familyId The Id of the family to update.
+//	FamilyRequest request The request object that contains all the new family information.
+func (c *FusionAuthClient) UpdateFamily(familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
+	return c.UpdateFamilyWithContext(context.TODO(), familyId, request)
+}
+
+// UpdateFamilyWithContext
+// Updates a family with a given Id.
+//
+//	string familyId The Id of the family to update.
+//	FamilyRequest request The request object that contains all the new family information.
+func (c *FusionAuthClient) UpdateFamilyWithContext(ctx context.Context, familyId string, request FamilyRequest) (*FamilyResponse, *Errors, error) {
+	var resp FamilyResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/family").
+		WithUriSegment(familyId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do(ctx)
