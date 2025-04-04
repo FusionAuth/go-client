@@ -1,10 +1,4 @@
-# Run locally with act:
-#
-# act pull_request [--input command=[command]] \
-#  --platform fusionauth-standard=[ecr-repo-name]/fusionauth-standard:latest] \
-#  --workflows ./.github/workflows/deploy.yaml \
-#  --env-file <(aws configure export-credentials --profile [aws-profile] --format env)
-
+---
 name: Deploy
 
 on:
@@ -19,27 +13,53 @@ on:
       command:
         type: choice
         options:
-          - test     # build only
+          - test     # build & test only
           - release  # build & release to svn
-        default: build
+        default: test
 
 permissions:
   contents: read
 
 jobs:
   test:
-    if: |
-      github.event_name == 'pull_request' ||
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch' && inputs.command == 'test'
-    runs-on: fusionauth-standard
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: /usr/bin/bash -l -e -o pipefail {0}
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: Test that we can compile
-        shell: bash -l {0}
+
+      - name: setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          java-package: jre
+
+      - name: install savant
+        run: |
+          curl -O https://repository.savantbuild.org/org/savantbuild/savant-core/2.0.0/savant-2.0.0.tar.gz
+          tar xzvf savant-2.0.0.tar.gz
+          savant-2.0.0/bin/sb --version
+          SAVANT_PATH=$(realpath -s "./savant-2.0.0/bin")
+          echo "${SAVANT_PATH}" >> $GITHUB_PATH
+          mkdir -p ~/.savant/plugins
+          cat << EOF > ~/.savant/plugins/org.savantbuild.plugin.java.properties
+          21=${JAVA_HOME}
+          EOF
+
+      - name: install golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.20'
+
+      - name: Compile
+        if: inputs.command != 'release'
         run: sb compile
+
       - name: Copy our kickstart file over so it gets picked up
+        if: inputs.command != 'release'
         run: |
           mkdir faDockerComposeFilePath
           cp -r .github/kickstart faDockerComposeFilePath
@@ -47,26 +67,16 @@ jobs:
           cp .github/kickstart/kickstart.json .github/kickstart/k2.json
 
       - name: Start FusionAuth
+        if: inputs.command != 'release'
         uses: fusionauth/fusionauth-github-action@v1
         with:
           FUSIONAUTH_APP_KICKSTART_FILENAME: k2.json
           FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
 
-      - name: Sleep until FusionAuth starts
-        run: sleep 30
       - name: Run tests
-        shell: bash -l {0}
-        run: sb test
-
-  deploy:
-    if: |
-      github.event_name == 'workflow_dispatch' && inputs.command == 'release'
-    runs-on: fusionauth-standard
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
+        if: inputs.command != 'release'
+        run: sleep 30 && sb test
 
       - name: release to svn
         if: inputs.command == 'release'
-        shell: bash -l {0}
         run: sb release
