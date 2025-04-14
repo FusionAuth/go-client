@@ -961,6 +961,7 @@ type TwoFactorStartRequest struct {
 	ApplicationId  string                 `json:"applicationId,omitempty"`
 	Code           string                 `json:"code,omitempty"`
 	LoginId        string                 `json:"loginId,omitempty"`
+	LoginIdTypes   []string               `json:"loginIdTypes,omitempty"`
 	State          map[string]interface{} `json:"state,omitempty"`
 	TrustChallenge string                 `json:"trustChallenge,omitempty"`
 	UserId         string                 `json:"userId,omitempty"`
