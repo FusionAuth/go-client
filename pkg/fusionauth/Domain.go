@@ -394,6 +394,16 @@ type XboxApplicationConfiguration struct {
 }
 
 /**
+ * An Event "event" to indicate an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+type EventLogCreateEvent struct {
+	BaseEvent
+	EventLog EventLog `json:"eventLog,omitempty"`
+}
+
+/**
  * Models a generic connector.
  *
  * @author Trevor Smith
@@ -407,16 +417,6 @@ type GenericConnectorConfiguration struct {
 	HttpAuthenticationUsername string            `json:"httpAuthenticationUsername,omitempty"`
 	ReadTimeout                int               `json:"readTimeout,omitempty"`
 	SslCertificateKeyId        string            `json:"sslCertificateKeyId,omitempty"`
-}
-
-/**
- * An Event "event" to indicate an event log was created.
- *
- * @author Daniel DeGroff
- */
-type EventLogCreateEvent struct {
-	BaseEvent
-	EventLog EventLog `json:"eventLog,omitempty"`
 }
 
 /**
@@ -1157,6 +1157,13 @@ const (
 )
 
 /**
+ * @author Brian Pontarelli
+ */
+type EventLogSearchRequest struct {
+	Search EventLogSearchCriteria `json:"search,omitempty"`
+}
+
+/**
  * Event log response.
  *
  * @author Brian Pontarelli
@@ -1169,13 +1176,6 @@ type EventLogSearchResponse struct {
 
 func (b *EventLogSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
-}
-
-/**
- * @author Brian Pontarelli
- */
-type EventLogSearchRequest struct {
-	Search EventLogSearchCriteria `json:"search,omitempty"`
 }
 
 /**
@@ -1857,16 +1857,6 @@ type WebhookEventLogConfiguration struct {
 }
 
 /**
- * Model a user event when a two-factor method has been removed.
- *
- * @author Daniel DeGroff
- */
-type UserTwoFactorMethodAddEvent struct {
-	BaseUserEvent
-	Method TwoFactorMethod `json:"method,omitempty"`
-}
-
-/**
  * @author Daniel DeGroff
  */
 type LinkedInApplicationConfiguration struct {
@@ -1875,6 +1865,16 @@ type LinkedInApplicationConfiguration struct {
 	ClientId     string `json:"client_id,omitempty"`
 	ClientSecret string `json:"client_secret,omitempty"`
 	Scope        string `json:"scope,omitempty"`
+}
+
+/**
+ * Model a user event when a two-factor method has been removed.
+ *
+ * @author Daniel DeGroff
+ */
+type UserTwoFactorMethodAddEvent struct {
+	BaseUserEvent
+	Method TwoFactorMethod `json:"method,omitempty"`
 }
 
 /**
@@ -3159,20 +3159,6 @@ type ConnectorRequest struct {
 }
 
 /**
- * Request to register a new public key with WebAuthn
- *
- * @author Spencer Witt
- */
-type WebAuthnPublicKeyRegistrationRequest struct {
-	ClientExtensionResults WebAuthnExtensionsClientOutputs           `json:"clientExtensionResults,omitempty"`
-	Id                     string                                    `json:"id,omitempty"`
-	Response               WebAuthnAuthenticatorRegistrationResponse `json:"response,omitempty"`
-	RpId                   string                                    `json:"rpId,omitempty"`
-	Transports             []string                                  `json:"transports,omitempty"`
-	Type                   string                                    `json:"type,omitempty"`
-}
-
-/**
  * External JWT-only identity provider.
  *
  * @author Daniel DeGroff and Brian Pontarelli
@@ -3185,6 +3171,20 @@ type ExternalJWTIdentityProvider struct {
 	HeaderKeyParameter  string                              `json:"headerKeyParameter,omitempty"`
 	Oauth2              IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
 	UniqueIdentityClaim string                              `json:"uniqueIdentityClaim,omitempty"`
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnPublicKeyRegistrationRequest struct {
+	ClientExtensionResults WebAuthnExtensionsClientOutputs           `json:"clientExtensionResults,omitempty"`
+	Id                     string                                    `json:"id,omitempty"`
+	Response               WebAuthnAuthenticatorRegistrationResponse `json:"response,omitempty"`
+	RpId                   string                                    `json:"rpId,omitempty"`
+	Transports             []string                                  `json:"transports,omitempty"`
+	Type                   string                                    `json:"type,omitempty"`
 }
 
 /**
@@ -3280,19 +3280,6 @@ type NonTransactionalEvent struct {
 }
 
 /**
- * @author Daniel DeGroff
- */
-type TwoFactorResponse struct {
-	BaseHTTPResponse
-	Code          string   `json:"code,omitempty"`
-	RecoveryCodes []string `json:"recoveryCodes,omitempty"`
-}
-
-func (b *TwoFactorResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * @author Brett Guy
  */
 type ProofKeyForCodeExchangePolicy string
@@ -3306,6 +3293,19 @@ const (
 	ProofKeyForCodeExchangePolicy_NotRequired                              ProofKeyForCodeExchangePolicy = "NotRequired"
 	ProofKeyForCodeExchangePolicy_NotRequiredWhenUsingClientAuthentication ProofKeyForCodeExchangePolicy = "NotRequiredWhenUsingClientAuthentication"
 )
+
+/**
+ * @author Daniel DeGroff
+ */
+type TwoFactorResponse struct {
+	BaseHTTPResponse
+	Code          string   `json:"code,omitempty"`
+	RecoveryCodes []string `json:"recoveryCodes,omitempty"`
+}
+
+func (b *TwoFactorResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
 
 /**
  * Epic gaming login provider.
@@ -3913,20 +3913,6 @@ func (b *SystemConfigurationResponse) SetStatus(status int) {
 }
 
 /**
- * API response for completing WebAuthn assertion
- *
- * @author Spencer Witt
- */
-type WebAuthnAssertResponse struct {
-	BaseHTTPResponse
-	Credential WebAuthnCredential `json:"credential,omitempty"`
-}
-
-func (b *WebAuthnAssertResponse) SetStatus(status int) {
-	b.StatusCode = status
-}
-
-/**
  * @author Daniel DeGroff
  */
 type ReactorStatus struct {
@@ -3950,6 +3936,20 @@ type ReactorStatus struct {
 	WebAuthn                                  ReactorFeatureStatus `json:"webAuthn,omitempty"`
 	WebAuthnPlatformAuthenticators            ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
 	WebAuthnRoamingAuthenticators             ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
+}
+
+/**
+ * API response for completing WebAuthn assertion
+ *
+ * @author Spencer Witt
+ */
+type WebAuthnAssertResponse struct {
+	BaseHTTPResponse
+	Credential WebAuthnCredential `json:"credential,omitempty"`
+}
+
+func (b *WebAuthnAssertResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
@@ -4067,15 +4067,6 @@ type EntityTypeSearchRequest struct {
 	Search EntityTypeSearchCriteria `json:"search,omitempty"`
 }
 
-/**
- * API request for managing families and members.
- *
- * @author Brian Pontarelli
- */
-type FamilyRequest struct {
-	FamilyMember FamilyMember `json:"familyMember,omitempty"`
-}
-
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 type BaseConnectorConfiguration struct {
 	Data              map[string]interface{} `json:"data,omitempty"`
@@ -4085,6 +4076,15 @@ type BaseConnectorConfiguration struct {
 	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
 	Name              string                 `json:"name,omitempty"`
 	Type              ConnectorType          `json:"type,omitempty"`
+}
+
+/**
+ * API request for managing families and members.
+ *
+ * @author Brian Pontarelli
+ */
+type FamilyRequest struct {
+	FamilyMember FamilyMember `json:"familyMember,omitempty"`
 }
 
 /**
@@ -4959,6 +4959,14 @@ type RefreshTokenRevokeRequest struct {
 }
 
 /**
+ * A marker interface indicating this event is an event that can supply a linked object Id.
+ *
+ * @author Spencer Witt
+ */
+type ObjectIdentifiable struct {
+}
+
+/**
  * Models a JWT Refresh Token.
  *
  * @author Daniel DeGroff
@@ -4979,14 +4987,6 @@ type MetaData struct {
 	Data   map[string]interface{} `json:"data,omitempty"`
 	Device DeviceInfo             `json:"device,omitempty"`
 	Scopes []string               `json:"scopes,omitempty"`
-}
-
-/**
- * A marker interface indicating this event is an event that can supply a linked object Id.
- *
- * @author Spencer Witt
- */
-type ObjectIdentifiable struct {
 }
 
 /**
@@ -5284,21 +5284,21 @@ type TwitterIdentityProvider struct {
 }
 
 /**
- * Lambda API request object.
- *
- * @author Brian Pontarelli
- */
-type LambdaRequest struct {
-	Lambda Lambda `json:"lambda,omitempty"`
-}
-
-/**
  * @author Michael Sleevi
  */
 type SMSMessageTemplate struct {
 	MessageTemplate
 	DefaultTemplate    string            `json:"defaultTemplate,omitempty"`
 	LocalizedTemplates map[string]string `json:"localizedTemplates,omitempty"`
+}
+
+/**
+ * Lambda API request object.
+ *
+ * @author Brian Pontarelli
+ */
+type LambdaRequest struct {
+	Lambda Lambda `json:"lambda,omitempty"`
 }
 
 /**
