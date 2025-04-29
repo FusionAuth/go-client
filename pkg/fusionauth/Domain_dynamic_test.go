@@ -301,6 +301,13 @@ func Test_IdentityProviderTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_IdentityVerifiedReasonImplementsStringer(t *testing.T) {
+	var enum interface{} = IdentityVerifiedReason("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("IdentityVerifiedReason does not implement stringer interface\n")
+	}
+}
+
 func Test_KeyAlgorithmImplementsStringer(t *testing.T) {
 	var enum interface{} = KeyAlgorithm("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -431,6 +438,13 @@ func Test_BreachMatchModeImplementsStringer(t *testing.T) {
 	var enum interface{} = BreachMatchMode("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("BreachMatchMode does not implement stringer interface\n")
+	}
+}
+
+func Test_PasswordlessStrategyImplementsStringer(t *testing.T) {
+	var enum interface{} = PasswordlessStrategy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("PasswordlessStrategy does not implement stringer interface\n")
 	}
 }
 
