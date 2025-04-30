@@ -6333,6 +6333,7 @@ type Templates struct {
 	Oauth2Error                               string `json:"oauth2Error,omitempty"`
 	Oauth2Logout                              string `json:"oauth2Logout,omitempty"`
 	Oauth2Passwordless                        string `json:"oauth2Passwordless,omitempty"`
+	Oauth2PasswordlessFormField               string `json:"oauth2PasswordlessFormField,omitempty"`
 	Oauth2Register                            string `json:"oauth2Register,omitempty"`
 	Oauth2StartIdPLink                        string `json:"oauth2StartIdPLink,omitempty"`
 	Oauth2TwoFactor                           string `json:"oauth2TwoFactor,omitempty"`
