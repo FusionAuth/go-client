@@ -7374,6 +7374,47 @@ func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdWithContext(ctx conte
 	return &resp, &errors, err
 }
 
+// RetrieveUserLoginReportByLoginIdAndLoginIdTypes
+// Retrieves the login report between the two instants for a particular user by login Id, using specific loginIdTypes. If you specify an application id, it will only return the
+// login counts for that application.
+//
+//	string applicationId (Optional) The application id.
+//	string loginId The userId id.
+//	int64 start The start instant as UTC milliseconds since Epoch.
+//	int64 end The end instant as UTC milliseconds since Epoch.
+//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId string, loginId string, start int64, end int64, loginIdTypes []string) (*LoginReportResponse, *Errors, error) {
+	return c.RetrieveUserLoginReportByLoginIdAndLoginIdTypesWithContext(context.TODO(), applicationId, loginId, start, end, loginIdTypes)
+}
+
+// RetrieveUserLoginReportByLoginIdAndLoginIdTypesWithContext
+// Retrieves the login report between the two instants for a particular user by login Id, using specific loginIdTypes. If you specify an application id, it will only return the
+// login counts for that application.
+//
+//	string applicationId (Optional) The application id.
+//	string loginId The userId id.
+//	int64 start The start instant as UTC milliseconds since Epoch.
+//	int64 end The end instant as UTC milliseconds since Epoch.
+//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdAndLoginIdTypesWithContext(ctx context.Context, applicationId string, loginId string, start int64, end int64, loginIdTypes []string) (*LoginReportResponse, *Errors, error) {
+	var resp LoginReportResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/report/login").
+		WithParameter("applicationId", applicationId).
+		WithParameter("loginId", loginId).
+		WithParameter("start", strconv.FormatInt(start, 10)).
+		WithParameter("end", strconv.FormatInt(end, 10)).
+		WithParameter("loginIdTypes", loginIdTypes).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveUserRecentLogins
 // Retrieves the last number of login records for a user.
 //
