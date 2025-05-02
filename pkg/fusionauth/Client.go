@@ -7008,6 +7008,36 @@ func (c *FusionAuthClient) RetrieveUserByLoginIdWithContext(ctx context.Context,
 	return &resp, &errors, err
 }
 
+// RetrieveUserByLoginIdWithLoginIdTypes
+// Retrieves the user for the loginId, using specific loginIdTypes.
+//
+//	string loginId The email or username of the user.
+//	[]String loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+func (c *FusionAuthClient) RetrieveUserByLoginIdWithLoginIdTypes(loginId string, loginIdTypes []String) (*UserResponse, *Errors, error) {
+	return c.RetrieveUserByLoginIdWithLoginIdTypesWithContext(context.TODO(), loginId, loginIdTypes)
+}
+
+// RetrieveUserByLoginIdWithLoginIdTypesWithContext
+// Retrieves the user for the loginId, using specific loginIdTypes.
+//
+//	string loginId The email or username of the user.
+//	[]String loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+func (c *FusionAuthClient) RetrieveUserByLoginIdWithLoginIdTypesWithContext(ctx context.Context, loginId string, loginIdTypes []String) (*UserResponse, *Errors, error) {
+	var resp UserResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user").
+		WithParameter("loginId", loginId).
+		WithParameter("loginIdTypes", string(loginIdTypes)).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveUserByUsername
 // Retrieves the user for the given username.
 //
