@@ -1065,14 +1065,15 @@ const (
  */
 type ChangePasswordRequest struct {
 	BaseEventRequest
-	ApplicationId    string `json:"applicationId,omitempty"`
-	ChangePasswordId string `json:"changePasswordId,omitempty"`
-	CurrentPassword  string `json:"currentPassword,omitempty"`
-	LoginId          string `json:"loginId,omitempty"`
-	Password         string `json:"password,omitempty"`
-	RefreshToken     string `json:"refreshToken,omitempty"`
-	TrustChallenge   string `json:"trustChallenge,omitempty"`
-	TrustToken       string `json:"trustToken,omitempty"`
+	ApplicationId    string   `json:"applicationId,omitempty"`
+	ChangePasswordId string   `json:"changePasswordId,omitempty"`
+	CurrentPassword  string   `json:"currentPassword,omitempty"`
+	LoginId          string   `json:"loginId,omitempty"`
+	LoginIdTypes     []string `json:"loginIdTypes,omitempty"`
+	Password         string   `json:"password,omitempty"`
+	RefreshToken     string   `json:"refreshToken,omitempty"`
+	TrustChallenge   string   `json:"trustChallenge,omitempty"`
+	TrustToken       string   `json:"trustToken,omitempty"`
 }
 
 /**
@@ -2417,13 +2418,15 @@ func (b *FamilyResponse) SetStatus(status int) {
  */
 type ForgotPasswordRequest struct {
 	BaseEventRequest
-	ApplicationId           string                 `json:"applicationId,omitempty"`
-	ChangePasswordId        string                 `json:"changePasswordId,omitempty"`
-	Email                   string                 `json:"email,omitempty"`
-	LoginId                 string                 `json:"loginId,omitempty"`
-	SendForgotPasswordEmail bool                   `json:"sendForgotPasswordEmail"`
-	State                   map[string]interface{} `json:"state,omitempty"`
-	Username                string                 `json:"username,omitempty"`
+	ApplicationId             string                 `json:"applicationId,omitempty"`
+	ChangePasswordId          string                 `json:"changePasswordId,omitempty"`
+	Email                     string                 `json:"email,omitempty"`
+	LoginId                   string                 `json:"loginId,omitempty"`
+	LoginIdTypes              []string               `json:"loginIdTypes,omitempty"`
+	SendForgotPasswordEmail   bool                   `json:"sendForgotPasswordEmail"`
+	SendForgotPasswordMessage bool                   `json:"sendForgotPasswordMessage"`
+	State                     map[string]interface{} `json:"state,omitempty"`
+	Username                  string                 `json:"username,omitempty"`
 }
 
 /**
@@ -6105,6 +6108,7 @@ type MultiFactorSMSMethod struct {
  * @author Brady Wied
  */
 type TenantPhoneConfiguration struct {
+	ForgotPasswordTemplateId       string                 `json:"forgotPasswordTemplateId,omitempty"`
 	MessengerId                    string                 `json:"messengerId,omitempty"`
 	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
 	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
