@@ -5368,6 +5368,7 @@ type RegistrationRequest struct {
 	GenerateAuthenticationToken  bool             `json:"generateAuthenticationToken"`
 	Registration                 UserRegistration `json:"registration,omitempty"`
 	SendSetPasswordEmail         bool             `json:"sendSetPasswordEmail"`
+	SendSetPasswordPhone         bool             `json:"sendSetPasswordPhone"`
 	SkipRegistrationVerification bool             `json:"skipRegistrationVerification"`
 	SkipVerification             bool             `json:"skipVerification"`
 	User                         User             `json:"user,omitempty"`
@@ -6111,6 +6112,7 @@ type TenantPhoneConfiguration struct {
 	ForgotPasswordTemplateId       string                 `json:"forgotPasswordTemplateId,omitempty"`
 	MessengerId                    string                 `json:"messengerId,omitempty"`
 	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
+	SetPasswordTemplateId          string                 `json:"setPasswordTemplateId,omitempty"`
 	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
 	VerificationCompleteTemplateId string                 `json:"verificationCompleteTemplateId,omitempty"`
 	VerificationStrategy           VerificationStrategy   `json:"verificationStrategy,omitempty"`
@@ -7488,6 +7490,7 @@ type UserRequest struct {
 	CurrentPassword      string   `json:"currentPassword,omitempty"`
 	DisableDomainBlock   bool     `json:"disableDomainBlock"`
 	SendSetPasswordEmail bool     `json:"sendSetPasswordEmail"`
+	SendSetPasswordPhone bool     `json:"sendSetPasswordPhone"`
 	SkipVerification     bool     `json:"skipVerification"`
 	User                 User     `json:"user,omitempty"`
 	VerificationIds      []string `json:"verificationIds,omitempty"`
