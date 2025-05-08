@@ -60,6 +60,28 @@ func TestRetrieveUserSuccess(t *testing.T) {
 	assert.Equal(t, 200, userResponse.StatusCode)
 }
 
+func TestRetrieveUserByLoginIdSuccess(t *testing.T) {
+	loginIdTypes := []string{"email"}
+
+	userResponse, errors, _ := faClient.RetrieveUserByLoginIdWithLoginIdTypes("richard@example.com", loginIdTypes)
+	errJson, _ := json.Marshal(errors)
+	fmt.Println(string(errJson))
+
+	assert.Equal(t, (*Errors)(nil), errors)
+	assert.Equal(t, 200, userResponse.StatusCode)
+}
+
+// TODO: Will pass when issue 1 is released
+// func TestRetrieveUserByLoginIdWrongIdentityType(t *testing.T) {
+// 	loginIdTypes := []string{"phoneNumber"}
+//
+// 	userResponse, errors, _ := faClient.RetrieveUserByLoginIdWithLoginIdTypes("richard@example.com", loginIdTypes)
+// 	errJson, _ := json.Marshal(errors)
+// 	fmt.Println(string(errJson))
+//
+// 	assert.Equal(t, 404, userResponse.StatusCode)
+// }
+
 func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
