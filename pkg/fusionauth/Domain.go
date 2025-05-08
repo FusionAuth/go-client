@@ -2227,7 +2227,7 @@ type ExternalIdentifierConfiguration struct {
 	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
 	PasswordlessLoginTimeToLiveInSeconds               int                          `json:"passwordlessLoginTimeToLiveInSeconds,omitempty"`
-	PasswordlessShortCodeLoginGenerator                SecureGeneratorConfiguration `json:"passwordlessShortCodeLoginGenerator,omitempty"`
+	PasswordlessOneTimeCodeLoginGenerator              SecureGeneratorConfiguration `json:"passwordlessOneTimeCodeLoginGenerator,omitempty"`
 	PasswordlessShortCodeLoginTimeToLiveInSeconds      int                          `json:"passwordlessShortCodeLoginTimeToLiveInSeconds,omitempty"`
 	PendingAccountLinkTimeToLiveInSeconds              int                          `json:"pendingAccountLinkTimeToLiveInSeconds,omitempty"`
 	PhoneVerificationIdGenerator                       SecureGeneratorConfiguration `json:"phoneVerificationIdGenerator,omitempty"`
