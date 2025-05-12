@@ -5363,13 +5363,14 @@ func (b *RegistrationReportResponse) SetStatus(status int) {
  */
 type RegistrationRequest struct {
 	BaseEventRequest
-	DisableDomainBlock           bool             `json:"disableDomainBlock"`
-	GenerateAuthenticationToken  bool             `json:"generateAuthenticationToken"`
-	Registration                 UserRegistration `json:"registration,omitempty"`
-	SendSetPasswordEmail         bool             `json:"sendSetPasswordEmail"`
-	SkipRegistrationVerification bool             `json:"skipRegistrationVerification"`
-	SkipVerification             bool             `json:"skipVerification"`
-	User                         User             `json:"user,omitempty"`
+	DisableDomainBlock           bool                        `json:"disableDomainBlock"`
+	GenerateAuthenticationToken  bool                        `json:"generateAuthenticationToken"`
+	Registration                 UserRegistration            `json:"registration,omitempty"`
+	SendSetPasswordEmail         bool                        `json:"sendSetPasswordEmail"`
+	SendSetPasswordIdentityType  SendSetPasswordIdentityType `json:"sendSetPasswordIdentityType,omitempty"`
+	SkipRegistrationVerification bool                        `json:"skipRegistrationVerification"`
+	SkipVerification             bool                        `json:"skipVerification"`
+	User                         User                        `json:"user,omitempty"`
 }
 
 /**
@@ -5723,6 +5724,22 @@ type EmailTemplateErrors struct {
 	ParseErrors  map[string]string `json:"parseErrors,omitempty"`
 	RenderErrors map[string]string `json:"renderErrors,omitempty"`
 }
+
+/**
+ * Used to indicate which identity type a password "request" might go to. It could be
+ * used for send set passwords or send password resets.
+ */
+type SendSetPasswordIdentityType string
+
+func (e SendSetPasswordIdentityType) String() string {
+	return string(e)
+}
+
+const (
+	SendSetPasswordIdentityType_Email     SendSetPasswordIdentityType = "email"
+	SendSetPasswordIdentityType_Phone     SendSetPasswordIdentityType = "phone"
+	SendSetPasswordIdentityType_DoNotSend SendSetPasswordIdentityType = "doNotSend"
+)
 
 /**
  * Theme object for values used in the css variables for simple themes.
@@ -6110,6 +6127,7 @@ type TenantPhoneConfiguration struct {
 	ForgotPasswordTemplateId       string                 `json:"forgotPasswordTemplateId,omitempty"`
 	MessengerId                    string                 `json:"messengerId,omitempty"`
 	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
+	SetPasswordTemplateId          string                 `json:"setPasswordTemplateId,omitempty"`
 	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
 	VerificationCompleteTemplateId string                 `json:"verificationCompleteTemplateId,omitempty"`
 	VerificationStrategy           VerificationStrategy   `json:"verificationStrategy,omitempty"`
@@ -7483,13 +7501,14 @@ type UserRegistrationVerifiedEvent struct {
  */
 type UserRequest struct {
 	BaseEventRequest
-	ApplicationId        string   `json:"applicationId,omitempty"`
-	CurrentPassword      string   `json:"currentPassword,omitempty"`
-	DisableDomainBlock   bool     `json:"disableDomainBlock"`
-	SendSetPasswordEmail bool     `json:"sendSetPasswordEmail"`
-	SkipVerification     bool     `json:"skipVerification"`
-	User                 User     `json:"user,omitempty"`
-	VerificationIds      []string `json:"verificationIds,omitempty"`
+	ApplicationId               string                      `json:"applicationId,omitempty"`
+	CurrentPassword             string                      `json:"currentPassword,omitempty"`
+	DisableDomainBlock          bool                        `json:"disableDomainBlock"`
+	SendSetPasswordEmail        bool                        `json:"sendSetPasswordEmail"`
+	SendSetPasswordIdentityType SendSetPasswordIdentityType `json:"sendSetPasswordIdentityType,omitempty"`
+	SkipVerification            bool                        `json:"skipVerification"`
+	User                        User                        `json:"user,omitempty"`
+	VerificationIds             []string                    `json:"verificationIds,omitempty"`
 }
 
 /**
