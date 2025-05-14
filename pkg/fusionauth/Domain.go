@@ -4876,7 +4876,8 @@ func (b *PendingResponse) SetStatus(status int) {
  * @author Spencer Witt
  */
 type PhoneUnverifiedOptions struct {
-	Behavior UnverifiedBehavior `json:"behavior,omitempty"`
+	AllowPhoneNumberChangeWhenGated bool               `json:"allowPhoneNumberChangeWhenGated"`
+	Behavior                        UnverifiedBehavior `json:"behavior,omitempty"`
 }
 
 /**
@@ -6124,15 +6125,25 @@ type MultiFactorSMSMethod struct {
  * @author Brady Wied
  */
 type TenantPhoneConfiguration struct {
-	ForgotPasswordTemplateId       string                 `json:"forgotPasswordTemplateId,omitempty"`
-	MessengerId                    string                 `json:"messengerId,omitempty"`
-	PasswordlessTemplateId         string                 `json:"passwordlessTemplateId,omitempty"`
-	SetPasswordTemplateId          string                 `json:"setPasswordTemplateId,omitempty"`
-	Unverified                     PhoneUnverifiedOptions `json:"unverified,omitempty"`
-	VerificationCompleteTemplateId string                 `json:"verificationCompleteTemplateId,omitempty"`
-	VerificationStrategy           VerificationStrategy   `json:"verificationStrategy,omitempty"`
-	VerificationTemplateId         string                 `json:"verificationTemplateId,omitempty"`
-	VerifyPhoneNumber              bool                   `json:"verifyPhoneNumber"`
+	ForgotPasswordTemplateId         string                 `json:"forgotPasswordTemplateId,omitempty"`
+	IdentityUpdateTemplateId         string                 `json:"identityUpdateTemplateId,omitempty"`
+	ImplicitPhoneVerificationAllowed bool                   `json:"implicitPhoneVerificationAllowed"`
+	LoginIdInUseOnCreateTemplateId   string                 `json:"loginIdInUseOnCreateTemplateId,omitempty"`
+	LoginIdInUseOnUpdateTemplateId   string                 `json:"loginIdInUseOnUpdateTemplateId,omitempty"`
+	LoginNewDeviceTemplateId         string                 `json:"loginNewDeviceTemplateId,omitempty"`
+	LoginSuspiciousTemplateId        string                 `json:"loginSuspiciousTemplateId,omitempty"`
+	MessengerId                      string                 `json:"messengerId,omitempty"`
+	PasswordlessTemplateId           string                 `json:"passwordlessTemplateId,omitempty"`
+	PasswordResetSuccessTemplateId   string                 `json:"passwordResetSuccessTemplateId,omitempty"`
+	PasswordUpdateTemplateId         string                 `json:"passwordUpdateTemplateId,omitempty"`
+	SetPasswordTemplateId            string                 `json:"setPasswordTemplateId,omitempty"`
+	TwoFactorMethodAddTemplateId     string                 `json:"twoFactorMethodAddTemplateId,omitempty"`
+	TwoFactorMethodRemoveTemplateId  string                 `json:"twoFactorMethodRemoveTemplateId,omitempty"`
+	Unverified                       PhoneUnverifiedOptions `json:"unverified,omitempty"`
+	VerificationCompleteTemplateId   string                 `json:"verificationCompleteTemplateId,omitempty"`
+	VerificationStrategy             VerificationStrategy   `json:"verificationStrategy,omitempty"`
+	VerificationTemplateId           string                 `json:"verificationTemplateId,omitempty"`
+	VerifyPhoneNumber                bool                   `json:"verifyPhoneNumber"`
 }
 
 /**
