@@ -511,6 +511,13 @@ func Test_SecureGeneratorTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_SendSetPasswordIdentityTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = SendSetPasswordIdentityType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("SendSetPasswordIdentityType does not implement stringer interface\n")
+	}
+}
+
 func Test_SortImplementsStringer(t *testing.T) {
 	var enum interface{} = Sort("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
