@@ -233,6 +233,7 @@ type Application struct {
 	State                            ObjectState                                `json:"state,omitempty"`
 	TenantId                         string                                     `json:"tenantId,omitempty"`
 	ThemeId                          string                                     `json:"themeId,omitempty"`
+	UniversalConfiguration           UniversalConfiguration                     `json:"universalConfiguration,omitempty"`
 	Unverified                       RegistrationUnverifiedOptions              `json:"unverified,omitempty"`
 	VerificationEmailTemplateId      string                                     `json:"verificationEmailTemplateId,omitempty"`
 	VerificationStrategy             VerificationStrategy                       `json:"verificationStrategy,omitempty"`
@@ -384,6 +385,12 @@ const (
 	XMLSignatureLocation_Assertion XMLSignatureLocation = "Assertion"
 	XMLSignatureLocation_Response  XMLSignatureLocation = "Response"
 )
+
+type UniversalConfiguration struct {
+	ApplicationTenants []UniversalApplicationTenant `json:"applicationTenants,omitempty"`
+	Global             bool                         `json:"global"`
+	Universal          bool                         `json:"universal"`
+}
 
 /**
  * @author Daniel DeGroff
@@ -4509,6 +4516,7 @@ const (
 	OAuthErrorReason_InvalidTargetEntityScope            OAuthErrorReason = "invalid_target_entity_scope"
 	OAuthErrorReason_InvalidEntityPermissionScope        OAuthErrorReason = "invalid_entity_permission_scope"
 	OAuthErrorReason_InvalidUserId                       OAuthErrorReason = "invalid_user_id"
+	OAuthErrorReason_InvalidTenantId                     OAuthErrorReason = "invalid_tenant_id"
 	OAuthErrorReason_GrantTypeDisabled                   OAuthErrorReason = "grant_type_disabled"
 	OAuthErrorReason_MissingClientId                     OAuthErrorReason = "missing_client_id"
 	OAuthErrorReason_MissingClientSecret                 OAuthErrorReason = "missing_client_secret"
@@ -4524,6 +4532,7 @@ const (
 	OAuthErrorReason_MissingUserCode                     OAuthErrorReason = "missing_user_code"
 	OAuthErrorReason_MissingUserId                       OAuthErrorReason = "missing_user_id"
 	OAuthErrorReason_MissingVerificationUri              OAuthErrorReason = "missing_verification_uri"
+	OAuthErrorReason_MissingTenantId                     OAuthErrorReason = "missing_tenant_id"
 	OAuthErrorReason_LoginPrevented                      OAuthErrorReason = "login_prevented"
 	OAuthErrorReason_NotLicensed                         OAuthErrorReason = "not_licensed"
 	OAuthErrorReason_UserCodeExpired                     OAuthErrorReason = "user_code_expired"
@@ -5175,8 +5184,10 @@ type ReactorStatus struct {
 	Expiration                                string               `json:"expiration,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
+	OrganizationAdminApplication              ReactorFeatureStatus `json:"organizationAdminApplication,omitempty"`
 	ScimServer                                ReactorFeatureStatus `json:"scimServer,omitempty"`
 	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
+	UniversalApplication                      ReactorFeatureStatus `json:"universalApplication,omitempty"`
 	WebAuthn                                  ReactorFeatureStatus `json:"webAuthn,omitempty"`
 	WebAuthnPlatformAuthenticators            ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
 	WebAuthnRoamingAuthenticators             ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
@@ -6736,6 +6747,13 @@ type TwoFactorTrust struct {
 	ApplicationId string `json:"applicationId,omitempty"`
 	Expiration    int64  `json:"expiration,omitempty"`
 	StartInstant  int64  `json:"startInstant,omitempty"`
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type UniversalApplicationTenant struct {
+	TenantId string `json:"tenantId,omitempty"`
 }
 
 /**
