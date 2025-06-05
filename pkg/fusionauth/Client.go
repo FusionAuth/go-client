@@ -582,7 +582,7 @@ func (c *FusionAuthClient) CommentOnUserWithContext(ctx context.Context, request
 // Completes verification of an identity using verification codes from the Verify Start API.
 //
 //	VerifyCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
-func (c *FusionAuthClient) CompleteVerifyIdentity(request VerifyCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) CompleteVerifyIdentity(request VerifyCompleteRequest) (*VerifyCompleteResponse, *Errors, error) {
 	return c.CompleteVerifyIdentityWithContext(context.TODO(), request)
 }
 
@@ -590,8 +590,8 @@ func (c *FusionAuthClient) CompleteVerifyIdentity(request VerifyCompleteRequest)
 // Completes verification of an identity using verification codes from the Verify Start API.
 //
 //	VerifyCompleteRequest request The identity verify complete request that contains all the information used to verify the identity.
-func (c *FusionAuthClient) CompleteVerifyIdentityWithContext(ctx context.Context, request VerifyCompleteRequest) (*BaseHTTPResponse, *Errors, error) {
-	var resp BaseHTTPResponse
+func (c *FusionAuthClient) CompleteVerifyIdentityWithContext(ctx context.Context, request VerifyCompleteRequest) (*VerifyCompleteResponse, *Errors, error) {
+	var resp VerifyCompleteResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
