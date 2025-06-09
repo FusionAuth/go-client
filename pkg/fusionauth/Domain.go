@@ -7223,6 +7223,7 @@ type UserEmailVerifiedEvent struct {
  */
 type UserIdentity struct {
 	DisplayValue      string                 `json:"displayValue,omitempty"`
+	Id                int64                  `json:"id,omitempty"`
 	InsertInstant     int64                  `json:"insertInstant,omitempty"`
 	LastLoginInstant  int64                  `json:"lastLoginInstant,omitempty"`
 	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
