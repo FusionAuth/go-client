@@ -462,13 +462,6 @@ func Test_PublicKeyCredentialTypeImplementsStringer(t *testing.T) {
 	}
 }
 
-func Test_RateLimitedRequestTypeImplementsStringer(t *testing.T) {
-	var enum interface{} = RateLimitedRequestType("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("RateLimitedRequestType does not implement stringer interface\n")
-	}
-}
-
 func Test_ReactorFeatureStatusImplementsStringer(t *testing.T) {
 	var enum interface{} = ReactorFeatureStatus("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
