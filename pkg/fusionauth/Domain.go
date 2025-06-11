@@ -7727,8 +7727,8 @@ func (b *VerifyRegistrationResponse) SetStatus(status int) {
  */
 type VerifyRequest struct {
 	BaseEventRequest
-	IdentityId int64  `json:"identityId,omitempty"`
-	UserId     string `json:"userId,omitempty"`
+	LoginId     string `json:"loginId,omitempty"`
+	LoginIdType string `json:"loginIdType,omitempty"`
 }
 
 /**
