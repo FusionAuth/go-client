@@ -6135,7 +6135,6 @@ type TenantRateLimitConfiguration struct {
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
 	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
-	SendPasswordlessPhone        RateLimitedRequestConfiguration `json:"sendPasswordlessPhone,omitempty"`
 	SendPhoneVerification        RateLimitedRequestConfiguration `json:"sendPhoneVerification,omitempty"`
 	SendRegistrationVerification RateLimitedRequestConfiguration `json:"sendRegistrationVerification,omitempty"`
 	SendTwoFactor                RateLimitedRequestConfiguration `json:"sendTwoFactor,omitempty"`
