@@ -7678,6 +7678,18 @@ type VerifyCompleteRequest struct {
 }
 
 /**
+ * Verify Complete API response object.
+ */
+type VerifyCompleteResponse struct {
+	BaseHTTPResponse
+	State map[string]interface{} `json:"state,omitempty"`
+}
+
+func (b *VerifyCompleteResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Daniel DeGroff
  */
 type VerifyEmailRequest struct {
@@ -7743,10 +7755,11 @@ type VerifySendRequest struct {
  * @author Brady Wied
  */
 type VerifyStartRequest struct {
-	ApplicationId        string `json:"applicationId,omitempty"`
-	LoginId              string `json:"loginId,omitempty"`
-	LoginIdType          string `json:"loginIdType,omitempty"`
-	VerificationStrategy string `json:"verificationStrategy,omitempty"`
+	ApplicationId        string                 `json:"applicationId,omitempty"`
+	LoginId              string                 `json:"loginId,omitempty"`
+	LoginIdType          string                 `json:"loginIdType,omitempty"`
+	State                map[string]interface{} `json:"state,omitempty"`
+	VerificationStrategy string                 `json:"verificationStrategy,omitempty"`
 }
 
 /**
