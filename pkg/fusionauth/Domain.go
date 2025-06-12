@@ -5068,25 +5068,6 @@ type RateLimitedRequestConfiguration struct {
 }
 
 /**
- * @author Daniel DeGroff
- */
-type RateLimitedRequestType string
-
-func (e RateLimitedRequestType) String() string {
-	return string(e)
-}
-
-const (
-	RateLimitedRequestType_FailedLogin                  RateLimitedRequestType = "FailedLogin"
-	RateLimitedRequestType_ForgotPassword               RateLimitedRequestType = "ForgotPassword"
-	RateLimitedRequestType_SendEmailVerification        RateLimitedRequestType = "SendEmailVerification"
-	RateLimitedRequestType_SendPasswordless             RateLimitedRequestType = "SendPasswordless"
-	RateLimitedRequestType_SendRegistrationVerification RateLimitedRequestType = "SendRegistrationVerification"
-	RateLimitedRequestType_SendTwoFactor                RateLimitedRequestType = "SendTwoFactor"
-	RateLimitedRequestType_SendPhoneVerification        RateLimitedRequestType = "SendPhoneVerification"
-)
-
-/**
  * Raw login information for each time a user logs into an application.
  *
  * @author Brian Pontarelli
@@ -6154,6 +6135,7 @@ type TenantRateLimitConfiguration struct {
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
 	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
+	SendPasswordlessPhone        RateLimitedRequestConfiguration `json:"sendPasswordlessPhone,omitempty"`
 	SendPhoneVerification        RateLimitedRequestConfiguration `json:"sendPhoneVerification,omitempty"`
 	SendRegistrationVerification RateLimitedRequestConfiguration `json:"sendRegistrationVerification,omitempty"`
 	SendTwoFactor                RateLimitedRequestConfiguration `json:"sendTwoFactor,omitempty"`
