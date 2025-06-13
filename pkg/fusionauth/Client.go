@@ -375,6 +375,42 @@ func (c *FusionAuthClient) ChangePasswordWithContext(ctx context.Context, change
 	return &resp, &errors, err
 }
 
+// ChangePasswordByJWT
+// Changes a user's password using their access token (JWT) instead of the changePasswordId
+// A common use case for this method will be if you want to allow the user to change their own password.
+//
+// Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
+//
+//	string encodedJWT The encoded JWT (access token).
+//	ChangePasswordRequest request The change password request that contains all the information used to change the password.
+func (c *FusionAuthClient) ChangePasswordByJWT(encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
+	return c.ChangePasswordByJWTWithContext(context.TODO(), encodedJWT, request)
+}
+
+// ChangePasswordByJWTWithContext
+// Changes a user's password using their access token (JWT) instead of the changePasswordId
+// A common use case for this method will be if you want to allow the user to change their own password.
+//
+// Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
+//
+//	string encodedJWT The encoded JWT (access token).
+//	ChangePasswordRequest request The change password request that contains all the information used to change the password.
+func (c *FusionAuthClient) ChangePasswordByJWTWithContext(ctx context.Context, encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
+	var resp ChangePasswordResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/user/change-password").
+		WithAuthorization("Bearer " + encodedJWT).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // ChangePasswordByIdentity
 // Changes a user's password using their identity (loginId and password). Using a loginId instead of the changePasswordId
 // bypasses the email verification and allows a password to be changed directly without first calling the #forgotPassword
