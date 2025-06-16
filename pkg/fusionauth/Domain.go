@@ -3357,13 +3357,14 @@ func (e IdentityVerifiedReason) String() string {
 }
 
 const (
-	IdentityVerifiedReason_Skipped      IdentityVerifiedReason = "Skipped"
-	IdentityVerifiedReason_Trusted      IdentityVerifiedReason = "Trusted"
-	IdentityVerifiedReason_Unverifiable IdentityVerifiedReason = "Unverifiable"
-	IdentityVerifiedReason_Implicit     IdentityVerifiedReason = "Implicit"
-	IdentityVerifiedReason_Pending      IdentityVerifiedReason = "Pending"
-	IdentityVerifiedReason_Completed    IdentityVerifiedReason = "Completed"
-	IdentityVerifiedReason_Disabled     IdentityVerifiedReason = "Disabled"
+	IdentityVerifiedReason_Skipped        IdentityVerifiedReason = "Skipped"
+	IdentityVerifiedReason_Trusted        IdentityVerifiedReason = "Trusted"
+	IdentityVerifiedReason_Unverifiable   IdentityVerifiedReason = "Unverifiable"
+	IdentityVerifiedReason_Implicit       IdentityVerifiedReason = "Implicit"
+	IdentityVerifiedReason_Pending        IdentityVerifiedReason = "Pending"
+	IdentityVerifiedReason_Completed      IdentityVerifiedReason = "Completed"
+	IdentityVerifiedReason_Disabled       IdentityVerifiedReason = "Disabled"
+	IdentityVerifiedReason_Administrative IdentityVerifiedReason = "Administrative"
 )
 
 /**
@@ -7713,6 +7714,15 @@ type VerifyRegistrationResponse struct {
 
 func (b *VerifyRegistrationResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Identity verify request. Used to administratively verify an identity.
+ */
+type VerifyRequest struct {
+	BaseEventRequest
+	LoginId     string `json:"loginId,omitempty"`
+	LoginIdType string `json:"loginIdType,omitempty"`
 }
 
 /**

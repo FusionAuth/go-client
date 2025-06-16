@@ -10208,6 +10208,33 @@ func (c *FusionAuthClient) VerifyEmailAddressByUserIdWithContext(ctx context.Con
 	return &resp, &errors, err
 }
 
+// VerifyIdentity
+// Administratively verify a user identity.
+//
+//	VerifyRequest request The identity verify request that contains information to verify the identity.
+func (c *FusionAuthClient) VerifyIdentity(request VerifyRequest) (*BaseHTTPResponse, *Errors, error) {
+	return c.VerifyIdentityWithContext(context.TODO(), request)
+}
+
+// VerifyIdentityWithContext
+// Administratively verify a user identity.
+//
+//	VerifyRequest request The identity verify request that contains information to verify the identity.
+func (c *FusionAuthClient) VerifyIdentityWithContext(ctx context.Context, request VerifyRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity/verify").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // VerifyRegistration
 // Confirms an application registration. The Id given is usually from an email sent to the user.
 //
