@@ -7747,7 +7747,6 @@ type VerifyRequest struct {
  * Verify Send API request object.
  */
 type VerifySendRequest struct {
-	OneTimeCode    string `json:"oneTimeCode,omitempty"`
 	VerificationId string `json:"verificationId,omitempty"`
 }
 
