@@ -225,6 +225,7 @@ type Application struct {
 	Name                             string                                     `json:"name,omitempty"`
 	OauthConfiguration               OAuth2Configuration                        `json:"oauthConfiguration,omitempty"`
 	PasswordlessConfiguration        PasswordlessConfiguration                  `json:"passwordlessConfiguration,omitempty"`
+	PhoneConfiguration               ApplicationPhoneConfiguration              `json:"phoneConfiguration,omitempty"`
 	RegistrationConfiguration        RegistrationConfiguration                  `json:"registrationConfiguration,omitempty"`
 	RegistrationDeletePolicy         ApplicationRegistrationDeletePolicy        `json:"registrationDeletePolicy,omitempty"`
 	Roles                            []ApplicationRole                          `json:"roles,omitempty"`
@@ -480,6 +481,26 @@ type ApplicationOAuthScopeResponse struct {
 
 func (b *ApplicationOAuthScopeResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Hold application phone configuration for template overrides.
+ */
+type ApplicationPhoneConfiguration struct {
+	ForgotPasswordTemplateId        string `json:"forgotPasswordTemplateId,omitempty"`
+	IdentityUpdateTemplateId        string `json:"identityUpdateTemplateId,omitempty"`
+	LoginIdInUseOnCreateTemplateId  string `json:"loginIdInUseOnCreateTemplateId,omitempty"`
+	LoginIdInUseOnUpdateTemplateId  string `json:"loginIdInUseOnUpdateTemplateId,omitempty"`
+	LoginNewDeviceTemplateId        string `json:"loginNewDeviceTemplateId,omitempty"`
+	LoginSuspiciousTemplateId       string `json:"loginSuspiciousTemplateId,omitempty"`
+	PasswordlessTemplateId          string `json:"passwordlessTemplateId,omitempty"`
+	PasswordResetSuccessTemplateId  string `json:"passwordResetSuccessTemplateId,omitempty"`
+	PasswordUpdateTemplateId        string `json:"passwordUpdateTemplateId,omitempty"`
+	SetPasswordTemplateId           string `json:"setPasswordTemplateId,omitempty"`
+	TwoFactorMethodAddTemplateId    string `json:"twoFactorMethodAddTemplateId,omitempty"`
+	TwoFactorMethodRemoveTemplateId string `json:"twoFactorMethodRemoveTemplateId,omitempty"`
+	VerificationCompleteTemplateId  string `json:"verificationCompleteTemplateId,omitempty"`
+	VerificationTemplateId          string `json:"verificationTemplateId,omitempty"`
 }
 
 /**
