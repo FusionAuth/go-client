@@ -385,9 +385,8 @@ const (
 )
 
 type UniversalConfiguration struct {
-	ApplicationTenants []UniversalApplicationTenant `json:"applicationTenants,omitempty"`
-	Global             bool                         `json:"global"`
-	Universal          bool                         `json:"universal"`
+	Global    bool `json:"global"`
+	Universal bool `json:"universal"`
 }
 
 /**
@@ -6610,7 +6609,27 @@ type TwoFactorTrust struct {
  * @author Lyle Schemmerling
  */
 type UniversalApplicationTenant struct {
-	TenantId string `json:"tenantId,omitempty"`
+	ApplicationId string `json:"applicationId,omitempty"`
+	TenantId      string `json:"tenantId,omitempty"`
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type UniversalApplicationTenantsRequest struct {
+	ApplicationTenants []UniversalApplicationTenant `json:"applicationTenants,omitempty"`
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type UniversalApplicationTenantsResponse struct {
+	BaseHTTPResponse
+	ApplicationTenants []UniversalApplicationTenant `json:"applicationTenants,omitempty"`
+}
+
+func (b *UniversalApplicationTenantsResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
