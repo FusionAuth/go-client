@@ -1305,6 +1305,35 @@ func (c *FusionAuthClient) CreateThemeWithContext(ctx context.Context, themeId s
 	return &resp, &errors, err
 }
 
+// CreateUniversalApplicationTenants
+// Adds the application tenants for universal applications.
+//   string applicationId The Id of the application that the role belongs to.
+//   UniversalApplicationTenantsRequest request The request object that contains all the information used to create the Entity.
+func (c *FusionAuthClient) CreateUniversalApplicationTenants(applicationId string, request UniversalApplicationTenantsRequest) (*UniversalApplicationTenantsResponse, *Errors, error) {
+	return c.CreateUniversalApplicationTenantsWithContext(context.TODO(), applicationId, request)
+}
+
+// CreateUniversalApplicationTenantsWithContext
+// Adds the application tenants for universal applications.
+//   string applicationId The Id of the application that the role belongs to.
+//   UniversalApplicationTenantsRequest request The request object that contains all the information used to create the Entity.
+func (c *FusionAuthClient) CreateUniversalApplicationTenantsWithContext(ctx context.Context, applicationId string, request UniversalApplicationTenantsRequest) (*UniversalApplicationTenantsResponse, *Errors, error) {
+	var resp UniversalApplicationTenantsResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("application-tenant").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateUser
 // Creates a user. You can optionally specify an Id for the user, if not provided one will be generated.
 //   string userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
@@ -2343,6 +2372,64 @@ func (c *FusionAuthClient) DeleteThemeWithContext(ctx context.Context, themeId s
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/theme").
 		WithUriSegment(themeId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteUniversalApplicationTenant
+// Removes the specified tenant from the universal application tenants list.
+//   string applicationId The Id of the application that the role belongs to.
+//   string tenantId The Id of the tenant to delete from the universal application tenants list.
+func (c *FusionAuthClient) DeleteUniversalApplicationTenant(applicationId string, tenantId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteUniversalApplicationTenantWithContext(context.TODO(), applicationId, tenantId)
+}
+
+// DeleteUniversalApplicationTenantWithContext
+// Removes the specified tenant from the universal application tenants list.
+//   string applicationId The Id of the application that the role belongs to.
+//   string tenantId The Id of the tenant to delete from the universal application tenants list.
+func (c *FusionAuthClient) DeleteUniversalApplicationTenantWithContext(ctx context.Context, applicationId string, tenantId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("application-tenant").
+		WithUriSegment(tenantId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteUniversalApplicationTenants
+// Removes the specified tenants from the universal application tenants list.
+//   string applicationId The Id of the universal application that the tenants are linked to.
+//   []string tenantIds The Ids of the tenants to delete from the universal application tenants list.
+func (c *FusionAuthClient) DeleteUniversalApplicationTenants(applicationId string, tenantIds []string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteUniversalApplicationTenantsWithContext(context.TODO(), applicationId, tenantIds)
+}
+
+// DeleteUniversalApplicationTenantsWithContext
+// Removes the specified tenants from the universal application tenants list.
+//   string applicationId The Id of the universal application that the tenants are linked to.
+//   []string tenantIds The Ids of the tenants to delete from the universal application tenants list.
+func (c *FusionAuthClient) DeleteUniversalApplicationTenantsWithContext(ctx context.Context, applicationId string, tenantIds []string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("application-tenant").
+		WithParameter("tenantIds", tenantIds).
 		WithMethod(http.MethodDelete).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -6411,6 +6498,32 @@ func (c *FusionAuthClient) RetrieveTwoFactorStatusWithContext(ctx context.Contex
 		WithParameter("userId", userId).
 		WithParameter("applicationId", applicationId).
 		WithUriSegment(twoFactorTrustId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveUniversalApplicationTenants
+// Retrieves the application tenants for universal applications.
+//   string applicationId The Id of the application that the role belongs to.
+func (c *FusionAuthClient) RetrieveUniversalApplicationTenants(applicationId string) (*UniversalApplicationTenantsResponse, *Errors, error) {
+	return c.RetrieveUniversalApplicationTenantsWithContext(context.TODO(), applicationId)
+}
+
+// RetrieveUniversalApplicationTenantsWithContext
+// Retrieves the application tenants for universal applications.
+//   string applicationId The Id of the application that the role belongs to.
+func (c *FusionAuthClient) RetrieveUniversalApplicationTenantsWithContext(ctx context.Context, applicationId string) (*UniversalApplicationTenantsResponse, *Errors, error) {
+	var resp UniversalApplicationTenantsResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("application-tenant").
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
