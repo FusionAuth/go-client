@@ -1305,26 +1305,29 @@ func (c *FusionAuthClient) CreateThemeWithContext(ctx context.Context, themeId s
 	return &resp, &errors, err
 }
 
-// CreateUniversalApplicationTenants
+// CreateUniversalApplicationTenant
 // Adds the application tenants for universal applications.
-//   string applicationId The Id of the application that the role belongs to.
-//   UniversalApplicationTenantsRequest request The request object that contains all the information used to create the Entity.
-func (c *FusionAuthClient) CreateUniversalApplicationTenants(applicationId string, request UniversalApplicationTenantsRequest) (*UniversalApplicationTenantsResponse, *Errors, error) {
-	return c.CreateUniversalApplicationTenantsWithContext(context.TODO(), applicationId, request)
+//   string applicationId The Id of the application that the universal application tenant belongs to.
+//   string universalApplicationTenantId (Optional) The Id of the universal application tenant.
+//   UniversalApplicationTenantRequest request The request object that contains all the information used to create the UniversalApplicationTenants.
+func (c *FusionAuthClient) CreateUniversalApplicationTenant(applicationId string, universalApplicationTenantId string, request UniversalApplicationTenantRequest) (*UniversalApplicationTenantResponse, *Errors, error) {
+	return c.CreateUniversalApplicationTenantWithContext(context.TODO(), applicationId, universalApplicationTenantId, request)
 }
 
-// CreateUniversalApplicationTenantsWithContext
+// CreateUniversalApplicationTenantWithContext
 // Adds the application tenants for universal applications.
-//   string applicationId The Id of the application that the role belongs to.
-//   UniversalApplicationTenantsRequest request The request object that contains all the information used to create the Entity.
-func (c *FusionAuthClient) CreateUniversalApplicationTenantsWithContext(ctx context.Context, applicationId string, request UniversalApplicationTenantsRequest) (*UniversalApplicationTenantsResponse, *Errors, error) {
-	var resp UniversalApplicationTenantsResponse
+//   string applicationId The Id of the application that the universal application tenant belongs to.
+//   string universalApplicationTenantId (Optional) The Id of the universal application tenant.
+//   UniversalApplicationTenantRequest request The request object that contains all the information used to create the UniversalApplicationTenants.
+func (c *FusionAuthClient) CreateUniversalApplicationTenantWithContext(ctx context.Context, applicationId string, universalApplicationTenantId string, request UniversalApplicationTenantRequest) (*UniversalApplicationTenantResponse, *Errors, error) {
+	var resp UniversalApplicationTenantResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/application").
 		WithUriSegment(applicationId).
-		WithUriSegment("application-tenant").
+		WithUriSegment("universal-application-tenant").
+		WithUriSegment(universalApplicationTenantId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
@@ -2381,26 +2384,26 @@ func (c *FusionAuthClient) DeleteThemeWithContext(ctx context.Context, themeId s
 }
 
 // DeleteUniversalApplicationTenant
-// Removes the specified tenant from the universal application tenants list.
-//   string applicationId The Id of the application that the role belongs to.
-//   string tenantId The Id of the tenant to delete from the universal application tenants list.
-func (c *FusionAuthClient) DeleteUniversalApplicationTenant(applicationId string, tenantId string) (*BaseHTTPResponse, *Errors, error) {
-	return c.DeleteUniversalApplicationTenantWithContext(context.TODO(), applicationId, tenantId)
+// Deletes the universal application tenant.
+//   string applicationId The Id of the application that the UniversalApplicationTenant belongs to.
+//   string universalApplicationTenantId The Id of the UniversalApplicationTenant to delete.
+func (c *FusionAuthClient) DeleteUniversalApplicationTenant(applicationId string, universalApplicationTenantId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteUniversalApplicationTenantWithContext(context.TODO(), applicationId, universalApplicationTenantId)
 }
 
 // DeleteUniversalApplicationTenantWithContext
-// Removes the specified tenant from the universal application tenants list.
-//   string applicationId The Id of the application that the role belongs to.
-//   string tenantId The Id of the tenant to delete from the universal application tenants list.
-func (c *FusionAuthClient) DeleteUniversalApplicationTenantWithContext(ctx context.Context, applicationId string, tenantId string) (*BaseHTTPResponse, *Errors, error) {
+// Deletes the universal application tenant.
+//   string applicationId The Id of the application that the UniversalApplicationTenant belongs to.
+//   string universalApplicationTenantId The Id of the UniversalApplicationTenant to delete.
+func (c *FusionAuthClient) DeleteUniversalApplicationTenantWithContext(ctx context.Context, applicationId string, universalApplicationTenantId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/application").
 		WithUriSegment(applicationId).
-		WithUriSegment("application-tenant").
-		WithUriSegment(tenantId).
+		WithUriSegment("universal-application-tenant").
+		WithUriSegment(universalApplicationTenantId).
 		WithMethod(http.MethodDelete).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -6506,24 +6509,27 @@ func (c *FusionAuthClient) RetrieveTwoFactorStatusWithContext(ctx context.Contex
 	return &resp, &errors, err
 }
 
-// RetrieveUniversalApplicationTenants
-// Retrieves the application tenants for universal applications.
-//   string applicationId The Id of the application that the role belongs to.
-func (c *FusionAuthClient) RetrieveUniversalApplicationTenants(applicationId string) (*UniversalApplicationTenantsResponse, *Errors, error) {
-	return c.RetrieveUniversalApplicationTenantsWithContext(context.TODO(), applicationId)
+// RetrieveUniversalApplicationTenant
+// Retrieves the universal application tenant.
+//   string applicationId The Id of the universal application that tenant is mapped to
+//   string universalApplicationTenantId The Id of the universal application tenant.
+func (c *FusionAuthClient) RetrieveUniversalApplicationTenant(applicationId string, universalApplicationTenantId string) (*UniversalApplicationTenantResponse, *Errors, error) {
+	return c.RetrieveUniversalApplicationTenantWithContext(context.TODO(), applicationId, universalApplicationTenantId)
 }
 
-// RetrieveUniversalApplicationTenantsWithContext
-// Retrieves the application tenants for universal applications.
-//   string applicationId The Id of the application that the role belongs to.
-func (c *FusionAuthClient) RetrieveUniversalApplicationTenantsWithContext(ctx context.Context, applicationId string) (*UniversalApplicationTenantsResponse, *Errors, error) {
-	var resp UniversalApplicationTenantsResponse
+// RetrieveUniversalApplicationTenantWithContext
+// Retrieves the universal application tenant.
+//   string applicationId The Id of the universal application that tenant is mapped to
+//   string universalApplicationTenantId The Id of the universal application tenant.
+func (c *FusionAuthClient) RetrieveUniversalApplicationTenantWithContext(ctx context.Context, applicationId string, universalApplicationTenantId string) (*UniversalApplicationTenantResponse, *Errors, error) {
+	var resp UniversalApplicationTenantResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/application").
 		WithUriSegment(applicationId).
 		WithUriSegment("application-tenant").
+		WithUriSegment(universalApplicationTenantId).
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -7950,6 +7956,33 @@ func (c *FusionAuthClient) SearchThemesWithContext(ctx context.Context, request 
 	return &resp, &errors, err
 }
 
+// SearchUniversalApplicationTenants
+// Searches universal application tenants for the specified applicationId and with the specified criteria and pagination.
+//   UniversalApplicationTenantSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchUniversalApplicationTenants(request UniversalApplicationTenantSearchRequest) (*UniversalApplicationTenantSearchResponse, *Errors, error) {
+	return c.SearchUniversalApplicationTenantsWithContext(context.TODO(), request)
+}
+
+// SearchUniversalApplicationTenantsWithContext
+// Searches universal application tenants for the specified applicationId and with the specified criteria and pagination.
+//   UniversalApplicationTenantSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchUniversalApplicationTenantsWithContext(ctx context.Context, request UniversalApplicationTenantSearchRequest) (*UniversalApplicationTenantSearchResponse, *Errors, error) {
+	var resp UniversalApplicationTenantSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment("universal-application-tenant").
+		WithUriSegment("search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchUserComments
 // Searches user comments with the specified criteria and pagination.
 //   UserCommentSearchRequest request The search criteria and pagination information.
@@ -9186,6 +9219,38 @@ func (c *FusionAuthClient) UpdateThemeWithContext(ctx context.Context, themeId s
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/theme").
 		WithUriSegment(themeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateUniversalApplicationTenant
+// Adds the application tenants for universal applications.
+//   string applicationId The Id of the application that the UniversalApplicationTenant belongs to.
+//   string universalApplicationTenantId The Id of the universal application tenant.
+//   UniversalApplicationTenantRequest request The request object that contains all the information used to create the UniversalApplicationTenant.
+func (c *FusionAuthClient) UpdateUniversalApplicationTenant(applicationId string, universalApplicationTenantId string, request UniversalApplicationTenantRequest) (*UniversalApplicationTenantResponse, *Errors, error) {
+	return c.UpdateUniversalApplicationTenantWithContext(context.TODO(), applicationId, universalApplicationTenantId, request)
+}
+
+// UpdateUniversalApplicationTenantWithContext
+// Adds the application tenants for universal applications.
+//   string applicationId The Id of the application that the UniversalApplicationTenant belongs to.
+//   string universalApplicationTenantId The Id of the universal application tenant.
+//   UniversalApplicationTenantRequest request The request object that contains all the information used to create the UniversalApplicationTenant.
+func (c *FusionAuthClient) UpdateUniversalApplicationTenantWithContext(ctx context.Context, applicationId string, universalApplicationTenantId string, request UniversalApplicationTenantRequest) (*UniversalApplicationTenantResponse, *Errors, error) {
+	var resp UniversalApplicationTenantResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/application").
+		WithUriSegment(applicationId).
+		WithUriSegment("universal-application-tenant").
+		WithUriSegment(universalApplicationTenantId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do(ctx)
