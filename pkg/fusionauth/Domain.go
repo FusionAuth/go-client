@@ -2189,6 +2189,7 @@ const (
 	EventType_UserUpdateComplete             EventType = "user.update.complete"
 	EventType_Test                           EventType = "test"
 	EventType_IdentityVerified               EventType = "identity.verified"
+	EventType_UserIdentityUpdate             EventType = "user.identity.update"
 )
 
 /**
@@ -7256,6 +7257,18 @@ type UserIdentityProviderLinkEvent struct {
 type UserIdentityProviderUnlinkEvent struct {
 	BaseUserEvent
 	IdentityProviderLink IdentityProviderLink `json:"identityProviderLink,omitempty"`
+}
+
+/**
+ * Models the user identity update event
+ *
+ * @author Brent Halsey
+ */
+type UserIdentityUpdateEvent struct {
+	BaseUserEvent
+	LoginIdType     string `json:"loginIdType,omitempty"`
+	NewLoginId      string `json:"newLoginId,omitempty"`
+	PreviousLoginId string `json:"previousLoginId,omitempty"`
 }
 
 /**
