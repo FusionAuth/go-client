@@ -8135,7 +8135,7 @@ func (b *WebhookCallResponse) SetStatus(status int) {
 type WebhookEventLog struct {
 	Attempts           []WebhookAttemptLog    `json:"attempts,omitempty"`
 	Data               map[string]interface{} `json:"data,omitempty"`
-	Event              map[string]interface{} `json:"event,omitempty"`
+	Event              EventRequest           `json:"event,omitempty"`
 	EventResult        WebhookEventResult     `json:"eventResult,omitempty"`
 	EventType          EventType              `json:"eventType,omitempty"`
 	FailedAttempts     int                    `json:"failedAttempts,omitempty"`
