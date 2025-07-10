@@ -233,7 +233,7 @@ type Application struct {
 	State                            ObjectState                                `json:"state,omitempty"`
 	TenantId                         string                                     `json:"tenantId,omitempty"`
 	ThemeId                          string                                     `json:"themeId,omitempty"`
-	UniversalConfiguration           UniversalConfiguration                     `json:"universalConfiguration,omitempty"`
+	UniversalConfiguration           UniversalApplicationConfiguration          `json:"universalConfiguration,omitempty"`
 	Unverified                       RegistrationUnverifiedOptions              `json:"unverified,omitempty"`
 	VerificationEmailTemplateId      string                                     `json:"verificationEmailTemplateId,omitempty"`
 	VerificationStrategy             VerificationStrategy                       `json:"verificationStrategy,omitempty"`
@@ -383,12 +383,6 @@ const (
 	XMLSignatureLocation_Assertion XMLSignatureLocation = "Assertion"
 	XMLSignatureLocation_Response  XMLSignatureLocation = "Response"
 )
-
-type UniversalConfiguration struct {
-	ApplicationTenants []UniversalApplicationTenant `json:"applicationTenants,omitempty"`
-	Global             bool                         `json:"global"`
-	Universal          bool                         `json:"universal"`
-}
 
 /**
  * @author Daniel DeGroff
@@ -6604,6 +6598,13 @@ type TwoFactorTrust struct {
 	ApplicationId string `json:"applicationId,omitempty"`
 	Expiration    int64  `json:"expiration,omitempty"`
 	StartInstant  int64  `json:"startInstant,omitempty"`
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type UniversalApplicationConfiguration struct {
+	Universal bool `json:"universal"`
 }
 
 /**
