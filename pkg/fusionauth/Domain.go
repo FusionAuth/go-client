@@ -6608,13 +6608,6 @@ type UniversalApplicationConfiguration struct {
 }
 
 /**
- * @author Lyle Schemmerling
- */
-type UniversalApplicationTenant struct {
-	TenantId string `json:"tenantId,omitempty"`
-}
-
-/**
  * Policy for handling unknown OAuth scopes in the request
  *
  * @author Spencer Witt
