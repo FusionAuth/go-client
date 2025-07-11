@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -1662,7 +1662,7 @@ func (c *FusionAuthClient) DeactivateUserActionWithContext(ctx context.Context, 
 }
 
 // DeactivateUsers
-// Deactivates the users with the given ids.
+// Deactivates the users with the given Ids.
 //
 //	[]string userIds The ids of the users to deactivate.
 //
@@ -1672,7 +1672,7 @@ func (c *FusionAuthClient) DeactivateUsers(userIds []string) (*UserDeleteRespons
 }
 
 // DeactivateUsersWithContext
-// Deactivates the users with the given ids.
+// Deactivates the users with the given Ids.
 //
 //	[]string userIds The ids of the users to deactivate.
 //
@@ -1695,7 +1695,7 @@ func (c *FusionAuthClient) DeactivateUsersWithContext(ctx context.Context, userI
 }
 
 // DeactivateUsersByIds
-// Deactivates the users with the given ids.
+// Deactivates the users with the given Ids.
 //
 //	[]string userIds The ids of the users to deactivate.
 func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteResponse, *Errors, error) {
@@ -1703,7 +1703,7 @@ func (c *FusionAuthClient) DeactivateUsersByIds(userIds []string) (*UserDeleteRe
 }
 
 // DeactivateUsersByIdsWithContext
-// Deactivates the users with the given ids.
+// Deactivates the users with the given Ids.
 //
 //	[]string userIds The ids of the users to deactivate.
 func (c *FusionAuthClient) DeactivateUsersByIdsWithContext(ctx context.Context, userIds []string) (*UserDeleteResponse, *Errors, error) {
@@ -2656,8 +2656,8 @@ func (c *FusionAuthClient) DeleteUserWithRequestWithContext(ctx context.Context,
 }
 
 // DeleteUsers
-// Deletes the users with the given ids, or users matching the provided JSON query or queryString.
-// The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+// Deletes the users with the given Ids, or users matching the provided JSON query or queryString.
+// The order of preference is Ids, query and then queryString, it is recommended to only provide one of the three for the request.
 //
 // This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
 // Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
@@ -2670,8 +2670,8 @@ func (c *FusionAuthClient) DeleteUsers(request UserDeleteRequest) (*UserDeleteRe
 }
 
 // DeleteUsersWithContext
-// Deletes the users with the given ids, or users matching the provided JSON query or queryString.
-// The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+// Deletes the users with the given Ids, or users matching the provided JSON query or queryString.
+// The order of preference is Ids, query and then queryString, it is recommended to only provide one of the three for the request.
 //
 // This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
 // Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
@@ -2695,8 +2695,8 @@ func (c *FusionAuthClient) DeleteUsersWithContext(ctx context.Context, request U
 }
 
 // DeleteUsersByQuery
-// Deletes the users with the given ids, or users matching the provided JSON query or queryString.
-// The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+// Deletes the users with the given Ids, or users matching the provided JSON query or queryString.
+// The order of preference is Ids, query and then queryString, it is recommended to only provide one of the three for the request.
 //
 // This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
 // Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
@@ -2707,8 +2707,8 @@ func (c *FusionAuthClient) DeleteUsersByQuery(request UserDeleteRequest) (*UserD
 }
 
 // DeleteUsersByQueryWithContext
-// Deletes the users with the given ids, or users matching the provided JSON query or queryString.
-// The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+// Deletes the users with the given Ids, or users matching the provided JSON query or queryString.
+// The order of preference is Ids, query and then queryString, it is recommended to only provide one of the three for the request.
 //
 // This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
 // Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
@@ -3683,7 +3683,7 @@ func (c *FusionAuthClient) LookupIdentityProviderWithContext(ctx context.Context
 // Modifies a temporal user action by changing the expiration of the action and optionally adding a comment to the
 // action.
 //
-//	string actionId The Id of the action to modify. This is technically the user action log id.
+//	string actionId The Id of the action to modify. This is technically the user action log Id.
 //	ActionRequest request The request that contains all the information about the modification.
 func (c *FusionAuthClient) ModifyAction(actionId string, request ActionRequest) (*ActionResponse, *Errors, error) {
 	return c.ModifyActionWithContext(context.TODO(), actionId, request)
@@ -3693,7 +3693,7 @@ func (c *FusionAuthClient) ModifyAction(actionId string, request ActionRequest) 
 // Modifies a temporal user action by changing the expiration of the action and optionally adding a comment to the
 // action.
 //
-//	string actionId The Id of the action to modify. This is technically the user action log id.
+//	string actionId The Id of the action to modify. This is technically the user action log Id.
 //	ActionRequest request The request that contains all the information about the modification.
 func (c *FusionAuthClient) ModifyActionWithContext(ctx context.Context, actionId string, request ActionRequest) (*ActionResponse, *Errors, error) {
 	var resp ActionResponse
@@ -3739,20 +3739,20 @@ func (c *FusionAuthClient) PasswordlessLoginWithContext(ctx context.Context, req
 }
 
 // PatchAPIKey
-// Updates an authentication API key by given id
+// Updates an API key with the given Id.
 //
-//	string keyId The Id of the authentication key. If not provided a secure random api key will be generated.
-//	APIKeyRequest request The request object that contains all the information needed to create the APIKey.
-func (c *FusionAuthClient) PatchAPIKey(keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+//	string keyId The Id of the API key. If not provided a secure random api key will be generated.
+//	APIKeyRequest request The request object that contains all the information needed to create the API key.
+func (c *FusionAuthClient) PatchAPIKey(keyId string, request map[string]interface{}) (*APIKeyResponse, *Errors, error) {
 	return c.PatchAPIKeyWithContext(context.TODO(), keyId, request)
 }
 
 // PatchAPIKeyWithContext
-// Updates an authentication API key by given id
+// Updates an API key with the given Id.
 //
-//	string keyId The Id of the authentication key. If not provided a secure random api key will be generated.
-//	APIKeyRequest request The request object that contains all the information needed to create the APIKey.
-func (c *FusionAuthClient) PatchAPIKeyWithContext(ctx context.Context, keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+//	string keyId The Id of the API key. If not provided a secure random api key will be generated.
+//	APIKeyRequest request The request object that contains all the information needed to create the API key.
+func (c *FusionAuthClient) PatchAPIKeyWithContext(ctx context.Context, keyId string, request map[string]interface{}) (*APIKeyResponse, *Errors, error) {
 	var resp APIKeyResponse
 	var errors Errors
 
@@ -3760,7 +3760,7 @@ func (c *FusionAuthClient) PatchAPIKeyWithContext(ctx context.Context, keyId str
 	err := restClient.WithUri("/api/api-key").
 		WithUriSegment(keyId).
 		WithJSONBody(request).
-		WithMethod(http.MethodPost).
+		WithMethod(http.MethodPatch).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
@@ -4839,7 +4839,7 @@ func (c *FusionAuthClient) ReindexWithContext(ctx context.Context, request Reind
 }
 
 // RemoveUserFromFamily
-// Removes a user from the family with the given id.
+// Removes a user from the family with the given Id.
 //
 //	string familyId The Id of the family to remove the user from.
 //	string userId The Id of the user to remove from the family.
@@ -4848,7 +4848,7 @@ func (c *FusionAuthClient) RemoveUserFromFamily(familyId string, userId string) 
 }
 
 // RemoveUserFromFamilyWithContext
-// Removes a user from the family with the given id.
+// Removes a user from the family with the given Id.
 //
 //	string familyId The Id of the family to remove the user from.
 //	string userId The Id of the user to remove from the family.
@@ -4958,7 +4958,7 @@ func (c *FusionAuthClient) ResendRegistrationVerificationWithContext(ctx context
 }
 
 // RetrieveAPIKey
-// Retrieves an authentication API key for the given id
+// Retrieves an authentication API key for the given Id.
 //
 //	string keyId The Id of the API key to retrieve.
 func (c *FusionAuthClient) RetrieveAPIKey(keyId string) (*APIKeyResponse, *Errors, error) {
@@ -4966,7 +4966,7 @@ func (c *FusionAuthClient) RetrieveAPIKey(keyId string) (*APIKeyResponse, *Error
 }
 
 // RetrieveAPIKeyWithContext
-// Retrieves an authentication API key for the given id
+// Retrieves an authentication API key for the given Id.
 //
 //	string keyId The Id of the API key to retrieve.
 func (c *FusionAuthClient) RetrieveAPIKeyWithContext(ctx context.Context, keyId string) (*APIKeyResponse, *Errors, error) {
@@ -5101,7 +5101,7 @@ func (c *FusionAuthClient) RetrieveActiveActionsWithContext(ctx context.Context,
 // RetrieveApplication
 // Retrieves the application for the given Id or all the applications if the Id is null.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 func (c *FusionAuthClient) RetrieveApplication(applicationId string) (*ApplicationResponse, error) {
 	return c.RetrieveApplicationWithContext(context.TODO(), applicationId)
 }
@@ -5109,7 +5109,7 @@ func (c *FusionAuthClient) RetrieveApplication(applicationId string) (*Applicati
 // RetrieveApplicationWithContext
 // Retrieves the application for the given Id or all the applications if the Id is null.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 func (c *FusionAuthClient) RetrieveApplicationWithContext(ctx context.Context, applicationId string) (*ApplicationResponse, error) {
 	var resp ApplicationResponse
 
@@ -5249,10 +5249,10 @@ func (c *FusionAuthClient) RetrieveConsentsWithContext(ctx context.Context) (*Co
 }
 
 // RetrieveDailyActiveReport
-// Retrieves the daily active user report between the two instants. If you specify an application id, it will only
+// Retrieves the daily active user report between the two instants. If you specify an application Id, it will only
 // return the daily active counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveDailyActiveReport(applicationId string, start int64, end int64) (*DailyActiveUserReportResponse, *Errors, error) {
@@ -5260,10 +5260,10 @@ func (c *FusionAuthClient) RetrieveDailyActiveReport(applicationId string, start
 }
 
 // RetrieveDailyActiveReportWithContext
-// Retrieves the daily active user report between the two instants. If you specify an application id, it will only
+// Retrieves the daily active user report between the two instants. If you specify an application Id, it will only
 // return the daily active counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveDailyActiveReportWithContext(ctx context.Context, applicationId string, start int64, end int64) (*DailyActiveUserReportResponse, *Errors, error) {
@@ -5284,7 +5284,7 @@ func (c *FusionAuthClient) RetrieveDailyActiveReportWithContext(ctx context.Cont
 }
 
 // RetrieveEmailTemplate
-// Retrieves the email template for the given Id. If you don't specify the id, this will return all the email templates.
+// Retrieves the email template for the given Id. If you don't specify the Id, this will return all the email templates.
 //
 //	string emailTemplateId (Optional) The Id of the email template.
 func (c *FusionAuthClient) RetrieveEmailTemplate(emailTemplateId string) (*EmailTemplateResponse, error) {
@@ -5292,7 +5292,7 @@ func (c *FusionAuthClient) RetrieveEmailTemplate(emailTemplateId string) (*Email
 }
 
 // RetrieveEmailTemplateWithContext
-// Retrieves the email template for the given Id. If you don't specify the id, this will return all the email templates.
+// Retrieves the email template for the given Id. If you don't specify the Id, this will return all the email templates.
 //
 //	string emailTemplateId (Optional) The Id of the email template.
 func (c *FusionAuthClient) RetrieveEmailTemplateWithContext(ctx context.Context, emailTemplateId string) (*EmailTemplateResponse, error) {
@@ -6001,10 +6001,10 @@ func (c *FusionAuthClient) RetrieveLambdasByTypeWithContext(ctx context.Context,
 }
 
 // RetrieveLoginReport
-// Retrieves the login report between the two instants. If you specify an application id, it will only return the
+// Retrieves the login report between the two instants. If you specify an application Id, it will only return the
 // login counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
@@ -6012,10 +6012,10 @@ func (c *FusionAuthClient) RetrieveLoginReport(applicationId string, start int64
 }
 
 // RetrieveLoginReportWithContext
-// Retrieves the login report between the two instants. If you specify an application id, it will only return the
+// Retrieves the login report between the two instants. If you specify an application Id, it will only return the
 // login counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveLoginReportWithContext(ctx context.Context, applicationId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
@@ -6036,7 +6036,7 @@ func (c *FusionAuthClient) RetrieveLoginReportWithContext(ctx context.Context, a
 }
 
 // RetrieveMessageTemplate
-// Retrieves the message template for the given Id. If you don't specify the id, this will return all the message templates.
+// Retrieves the message template for the given Id. If you don't specify the Id, this will return all the message templates.
 //
 //	string messageTemplateId (Optional) The Id of the message template.
 func (c *FusionAuthClient) RetrieveMessageTemplate(messageTemplateId string) (*MessageTemplateResponse, error) {
@@ -6044,7 +6044,7 @@ func (c *FusionAuthClient) RetrieveMessageTemplate(messageTemplateId string) (*M
 }
 
 // RetrieveMessageTemplateWithContext
-// Retrieves the message template for the given Id. If you don't specify the id, this will return all the message templates.
+// Retrieves the message template for the given Id. If you don't specify the Id, this will return all the message templates.
 //
 //	string messageTemplateId (Optional) The Id of the message template.
 func (c *FusionAuthClient) RetrieveMessageTemplateWithContext(ctx context.Context, messageTemplateId string) (*MessageTemplateResponse, error) {
@@ -6145,10 +6145,10 @@ func (c *FusionAuthClient) RetrieveMessengersWithContext(ctx context.Context) (*
 }
 
 // RetrieveMonthlyActiveReport
-// Retrieves the monthly active user report between the two instants. If you specify an application id, it will only
+// Retrieves the monthly active user report between the two instants. If you specify an application Id, it will only
 // return the monthly active counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveMonthlyActiveReport(applicationId string, start int64, end int64) (*MonthlyActiveUserReportResponse, *Errors, error) {
@@ -6156,10 +6156,10 @@ func (c *FusionAuthClient) RetrieveMonthlyActiveReport(applicationId string, sta
 }
 
 // RetrieveMonthlyActiveReportWithContext
-// Retrieves the monthly active user report between the two instants. If you specify an application id, it will only
+// Retrieves the monthly active user report between the two instants. If you specify an application Id, it will only
 // return the monthly active counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveMonthlyActiveReportWithContext(ctx context.Context, applicationId string, start int64, end int64) (*MonthlyActiveUserReportResponse, *Errors, error) {
@@ -6485,7 +6485,7 @@ func (c *FusionAuthClient) RetrieveRefreshTokensWithContext(ctx context.Context,
 }
 
 // RetrieveRegistration
-// Retrieves the user registration for the user with the given Id and the given application id.
+// Retrieves the user registration for the user with the given Id and the given application Id.
 //
 //	string userId The Id of the user.
 //	string applicationId The Id of the application.
@@ -6494,7 +6494,7 @@ func (c *FusionAuthClient) RetrieveRegistration(userId string, applicationId str
 }
 
 // RetrieveRegistrationWithContext
-// Retrieves the user registration for the user with the given Id and the given application id.
+// Retrieves the user registration for the user with the given Id and the given application Id.
 //
 //	string userId The Id of the user.
 //	string applicationId The Id of the application.
@@ -6515,10 +6515,10 @@ func (c *FusionAuthClient) RetrieveRegistrationWithContext(ctx context.Context, 
 }
 
 // RetrieveRegistrationReport
-// Retrieves the registration report between the two instants. If you specify an application id, it will only return
+// Retrieves the registration report between the two instants. If you specify an application Id, it will only return
 // the registration counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveRegistrationReport(applicationId string, start int64, end int64) (*RegistrationReportResponse, *Errors, error) {
@@ -6526,10 +6526,10 @@ func (c *FusionAuthClient) RetrieveRegistrationReport(applicationId string, star
 }
 
 // RetrieveRegistrationReportWithContext
-// Retrieves the registration report between the two instants. If you specify an application id, it will only return
+// Retrieves the registration report between the two instants. If you specify an application Id, it will only return
 // the registration counts for that application.
 //
-//	string applicationId (Optional) The application id.
+//	string applicationId (Optional) The application Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveRegistrationReportWithContext(ctx context.Context, applicationId string, start int64, end int64) (*RegistrationReportResponse, *Errors, error) {
@@ -6849,7 +6849,7 @@ func (c *FusionAuthClient) RetrieveUserWithContext(ctx context.Context, userId s
 }
 
 // RetrieveUserAction
-// Retrieves the user action for the given Id. If you pass in null for the id, this will return all the user
+// Retrieves the user action for the given Id. If you pass in null for the Id, this will return all the user
 // actions.
 //
 //	string userActionId (Optional) The Id of the user action.
@@ -6858,7 +6858,7 @@ func (c *FusionAuthClient) RetrieveUserAction(userActionId string) (*UserActionR
 }
 
 // RetrieveUserActionWithContext
-// Retrieves the user action for the given Id. If you pass in null for the id, this will return all the user
+// Retrieves the user action for the given Id. If you pass in null for the Id, this will return all the user
 // actions.
 //
 //	string userActionId (Optional) The Id of the user action.
@@ -6874,7 +6874,7 @@ func (c *FusionAuthClient) RetrieveUserActionWithContext(ctx context.Context, us
 }
 
 // RetrieveUserActionReason
-// Retrieves the user action reason for the given Id. If you pass in null for the id, this will return all the user
+// Retrieves the user action reason for the given Id. If you pass in null for the Id, this will return all the user
 // action reasons.
 //
 //	string userActionReasonId (Optional) The Id of the user action reason.
@@ -6883,7 +6883,7 @@ func (c *FusionAuthClient) RetrieveUserActionReason(userActionReasonId string) (
 }
 
 // RetrieveUserActionReasonWithContext
-// Retrieves the user action reason for the given Id. If you pass in null for the id, this will return all the user
+// Retrieves the user action reason for the given Id. If you pass in null for the Id, this will return all the user
 // action reasons.
 //
 //	string userActionReasonId (Optional) The Id of the user action reason.
@@ -7078,8 +7078,8 @@ func (c *FusionAuthClient) RetrieveUserByVerificationIdWithContext(ctx context.C
 //
 // This API is useful if you want to build your own login workflow to complete a device grant.
 //
-//	string clientId The client id.
-//	string clientSecret The client id.
+//	string clientId The client Id.
+//	string clientSecret The client Id.
 //	string userCode The end-user verification code.
 func (c *FusionAuthClient) RetrieveUserCode(clientId string, clientSecret string, userCode string) (*BaseHTTPResponse, error) {
 	return c.RetrieveUserCodeWithContext(context.TODO(), clientId, clientSecret, userCode)
@@ -7090,8 +7090,8 @@ func (c *FusionAuthClient) RetrieveUserCode(clientId string, clientSecret string
 //
 // This API is useful if you want to build your own login workflow to complete a device grant.
 //
-//	string clientId The client id.
-//	string clientSecret The client id.
+//	string clientId The client Id.
+//	string clientSecret The client Id.
 //	string userCode The end-user verification code.
 func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clientId string, clientSecret string, userCode string) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
@@ -7278,11 +7278,11 @@ func (c *FusionAuthClient) RetrieveUserLinksByUserIdWithContext(ctx context.Cont
 }
 
 // RetrieveUserLoginReport
-// Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
+// Retrieves the login report between the two instants for a particular user by Id. If you specify an application Id, it will only return the
 // login counts for that application.
 //
-//	string applicationId (Optional) The application id.
-//	string userId The userId id.
+//	string applicationId (Optional) The application Id.
+//	string userId The userId Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveUserLoginReport(applicationId string, userId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
@@ -7290,11 +7290,11 @@ func (c *FusionAuthClient) RetrieveUserLoginReport(applicationId string, userId 
 }
 
 // RetrieveUserLoginReportWithContext
-// Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
+// Retrieves the login report between the two instants for a particular user by Id. If you specify an application Id, it will only return the
 // login counts for that application.
 //
-//	string applicationId (Optional) The application id.
-//	string userId The userId id.
+//	string applicationId (Optional) The application Id.
+//	string userId The userId Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveUserLoginReportWithContext(ctx context.Context, applicationId string, userId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
@@ -7316,11 +7316,11 @@ func (c *FusionAuthClient) RetrieveUserLoginReportWithContext(ctx context.Contex
 }
 
 // RetrieveUserLoginReportByLoginId
-// Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
+// Retrieves the login report between the two instants for a particular user by login Id. If you specify an application Id, it will only return the
 // login counts for that application.
 //
-//	string applicationId (Optional) The application id.
-//	string loginId The userId id.
+//	string applicationId (Optional) The application Id.
+//	string loginId The userId Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveUserLoginReportByLoginId(applicationId string, loginId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
@@ -7328,11 +7328,11 @@ func (c *FusionAuthClient) RetrieveUserLoginReportByLoginId(applicationId string
 }
 
 // RetrieveUserLoginReportByLoginIdWithContext
-// Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
+// Retrieves the login report between the two instants for a particular user by login Id. If you specify an application Id, it will only return the
 // login counts for that application.
 //
-//	string applicationId (Optional) The application id.
-//	string loginId The userId id.
+//	string applicationId (Optional) The application Id.
+//	string loginId The userId Id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
 func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdWithContext(ctx context.Context, applicationId string, loginId string, start int64, end int64) (*LoginReportResponse, *Errors, error) {
@@ -7490,7 +7490,7 @@ func (c *FusionAuthClient) RetrieveWebAuthnCredentialsForUserWithContext(ctx con
 }
 
 // RetrieveWebhook
-// Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
+// Retrieves the webhook for the given Id. If you pass in null for the Id, this will return all the webhooks.
 //
 //	string webhookId (Optional) The Id of the webhook.
 func (c *FusionAuthClient) RetrieveWebhook(webhookId string) (*WebhookResponse, error) {
@@ -7498,7 +7498,7 @@ func (c *FusionAuthClient) RetrieveWebhook(webhookId string) (*WebhookResponse, 
 }
 
 // RetrieveWebhookWithContext
-// Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
+// Retrieves the webhook for the given Id. If you pass in null for the Id, this will return all the webhooks.
 //
 //	string webhookId (Optional) The Id of the webhook.
 func (c *FusionAuthClient) RetrieveWebhookWithContext(ctx context.Context, webhookId string) (*WebhookResponse, error) {
@@ -7989,7 +7989,7 @@ func (c *FusionAuthClient) SearchEntitiesWithContext(ctx context.Context, reques
 }
 
 // SearchEntitiesByIds
-// Retrieves the entities for the given ids. If any Id is invalid, it is ignored.
+// Retrieves the entities for the given Ids. If any Id is invalid, it is ignored.
 //
 //	[]string ids The entity ids to search for.
 func (c *FusionAuthClient) SearchEntitiesByIds(ids []string) (*EntitySearchResponse, *Errors, error) {
@@ -7997,7 +7997,7 @@ func (c *FusionAuthClient) SearchEntitiesByIds(ids []string) (*EntitySearchRespo
 }
 
 // SearchEntitiesByIdsWithContext
-// Retrieves the entities for the given ids. If any Id is invalid, it is ignored.
+// Retrieves the entities for the given Ids. If any Id is invalid, it is ignored.
 //
 //	[]string ids The entity ids to search for.
 func (c *FusionAuthClient) SearchEntitiesByIdsWithContext(ctx context.Context, ids []string) (*EntitySearchResponse, *Errors, error) {
@@ -8367,7 +8367,7 @@ func (c *FusionAuthClient) SearchUserCommentsWithContext(ctx context.Context, re
 }
 
 // SearchUsers
-// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
+// Retrieves the users for the given Ids. If any Id is invalid, it is ignored.
 //
 //	[]string ids The user ids to search for.
 //
@@ -8377,7 +8377,7 @@ func (c *FusionAuthClient) SearchUsers(ids []string) (*SearchResponse, *Errors, 
 }
 
 // SearchUsersWithContext
-// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
+// Retrieves the users for the given Ids. If any Id is invalid, it is ignored.
 //
 //	[]string ids The user ids to search for.
 //
@@ -8398,17 +8398,17 @@ func (c *FusionAuthClient) SearchUsersWithContext(ctx context.Context, ids []str
 }
 
 // SearchUsersByIds
-// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
+// Retrieves the users for the given Ids. If any Id is invalid, it is ignored.
 //
-//	[]string ids The user ids to search for.
+//	[]string ids The user Ids to search for.
 func (c *FusionAuthClient) SearchUsersByIds(ids []string) (*SearchResponse, *Errors, error) {
 	return c.SearchUsersByIdsWithContext(context.TODO(), ids)
 }
 
 // SearchUsersByIdsWithContext
-// Retrieves the users for the given ids. If any Id is invalid, it is ignored.
+// Retrieves the users for the given Ids. If any Id is invalid, it is ignored.
 //
-//	[]string ids The user ids to search for.
+//	[]string ids The user Ids to search for.
 func (c *FusionAuthClient) SearchUsersByIdsWithContext(ctx context.Context, ids []string) (*SearchResponse, *Errors, error) {
 	var resp SearchResponse
 	var errors Errors
@@ -8541,7 +8541,7 @@ func (c *FusionAuthClient) SearchWebhooksWithContext(ctx context.Context, reques
 }
 
 // SendEmail
-// Send an email using an email template id. You can optionally provide <code>requestData</code> to access key value
+// Send an email using an email template Id. You can optionally provide <code>requestData</code> to access key value
 // pairs in the email template.
 //
 //	string emailTemplateId The Id for the template.
@@ -8551,7 +8551,7 @@ func (c *FusionAuthClient) SendEmail(emailTemplateId string, request SendRequest
 }
 
 // SendEmailWithContext
-// Send an email using an email template id. You can optionally provide <code>requestData</code> to access key value
+// Send an email using an email template Id. You can optionally provide <code>requestData</code> to access key value
 // pairs in the email template.
 //
 //	string emailTemplateId The Id for the template.
@@ -8922,26 +8922,26 @@ func (c *FusionAuthClient) TwoFactorLoginWithContext(ctx context.Context, reques
 }
 
 // UpdateAPIKey
-// Updates an API key by given id
+// Updates an API key with the given Id.
 //
-//	string apiKeyId The Id of the API key to update.
-//	APIKeyRequest request The request object that contains all the information used to create the API Key.
-func (c *FusionAuthClient) UpdateAPIKey(apiKeyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
-	return c.UpdateAPIKeyWithContext(context.TODO(), apiKeyId, request)
+//	string keyId The Id of the API key to update.
+//	APIKeyRequest request The request that contains all the new API key information.
+func (c *FusionAuthClient) UpdateAPIKey(keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+	return c.UpdateAPIKeyWithContext(context.TODO(), keyId, request)
 }
 
 // UpdateAPIKeyWithContext
-// Updates an API key by given id
+// Updates an API key with the given Id.
 //
-//	string apiKeyId The Id of the API key to update.
-//	APIKeyRequest request The request object that contains all the information used to create the API Key.
-func (c *FusionAuthClient) UpdateAPIKeyWithContext(ctx context.Context, apiKeyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
+//	string keyId The Id of the API key to update.
+//	APIKeyRequest request The request that contains all the new API key information.
+func (c *FusionAuthClient) UpdateAPIKeyWithContext(ctx context.Context, keyId string, request APIKeyRequest) (*APIKeyResponse, *Errors, error) {
 	var resp APIKeyResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/api-key").
-		WithUriSegment(apiKeyId).
+		WithUriSegment(keyId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do(ctx)
@@ -9860,7 +9860,7 @@ func (c *FusionAuthClient) UpsertEntityGrantWithContext(ctx context.Context, ent
 // If you build your own activation form you should validate the user provided code prior to beginning the Authorization grant.
 //
 //	string userCode The end-user verification code.
-//	string clientId The client id.
+//	string clientId The client Id.
 func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string) (*BaseHTTPResponse, error) {
 	return c.ValidateDeviceWithContext(context.TODO(), userCode, clientId)
 }
@@ -9870,7 +9870,7 @@ func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string) (*Ba
 // If you build your own activation form you should validate the user provided code prior to beginning the Authorization grant.
 //
 //	string userCode The end-user verification code.
-//	string clientId The client id.
+//	string clientId The client Id.
 func (c *FusionAuthClient) ValidateDeviceWithContext(ctx context.Context, userCode string, clientId string) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 
