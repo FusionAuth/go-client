@@ -6021,7 +6021,6 @@ type Tenant struct {
 	MultiFactorConfiguration          TenantMultiFactorConfiguration    `json:"multiFactorConfiguration,omitempty"`
 	Name                              string                            `json:"name,omitempty"`
 	OauthConfiguration                TenantOAuth2Configuration         `json:"oauthConfiguration,omitempty"`
-	PasswordEnabled                   bool                              `json:"passwordEnabled"`
 	PasswordEncryptionConfiguration   PasswordEncryptionConfiguration   `json:"passwordEncryptionConfiguration,omitempty"`
 	PasswordValidationRules           PasswordValidationRules           `json:"passwordValidationRules,omitempty"`
 	PhoneConfiguration                TenantPhoneConfiguration          `json:"phoneConfiguration,omitempty"`
