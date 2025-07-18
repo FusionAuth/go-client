@@ -2188,7 +2188,7 @@ const (
 	EventType_UserUpdate                     EventType = "user.update"
 	EventType_UserUpdateComplete             EventType = "user.update.complete"
 	EventType_Test                           EventType = "test"
-	EventType_IdentityVerified               EventType = "identity.verified"
+	EventType_UserIdentityVerified           EventType = "user.identity.verified"
 	EventType_UserIdentityUpdate             EventType = "user.identity.update"
 )
 
@@ -3354,17 +3354,6 @@ const (
  */
 type IdentityType struct {
 	Name string `json:"name,omitempty"`
-}
-
-/**
- * Models the identity verified event
- *
- * @author Brady Wied
- */
-type IdentityVerifiedEvent struct {
-	BaseUserEvent
-	LoginId     string `json:"loginId,omitempty"`
-	LoginIdType string `json:"loginIdType,omitempty"`
 }
 
 /**
@@ -7268,6 +7257,17 @@ type UserIdentityUpdateEvent struct {
 	LoginIdType     string `json:"loginIdType,omitempty"`
 	NewLoginId      string `json:"newLoginId,omitempty"`
 	PreviousLoginId string `json:"previousLoginId,omitempty"`
+}
+
+/**
+ * Models the user identity verified event
+ *
+ * @author Brady Wied
+ */
+type UserIdentityVerifiedEvent struct {
+	BaseUserEvent
+	LoginId     string `json:"loginId,omitempty"`
+	LoginIdType string `json:"loginIdType,omitempty"`
 }
 
 /**
