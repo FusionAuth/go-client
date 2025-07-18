@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -5089,8 +5089,8 @@ type ReactorStatus struct {
 	Expiration                                string               `json:"expiration,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
-	OrganizationAdminApplication              ReactorFeatureStatus `json:"organizationAdminApplication,omitempty"`
 	ScimServer                                ReactorFeatureStatus `json:"scimServer,omitempty"`
+	TenantManagerApplication                  ReactorFeatureStatus `json:"tenantManagerApplication,omitempty"`
 	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
 	UniversalApplication                      ReactorFeatureStatus `json:"universalApplication,omitempty"`
 	WebAuthn                                  ReactorFeatureStatus `json:"webAuthn,omitempty"`
