@@ -383,6 +383,8 @@ func (c *FusionAuthClient) ChangePasswordWithContext(ctx context.Context, change
 //
 //	string encodedJWT The encoded JWT (access token).
 //	ChangePasswordRequest request The change password request that contains all the information used to change the password.
+//
+// Deprecated: This method has been renamed to ChangePasswordUsingJWT, use that method instead.
 func (c *FusionAuthClient) ChangePasswordByJWT(encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
 	return c.ChangePasswordByJWTWithContext(context.TODO(), encodedJWT, request)
 }
@@ -395,6 +397,8 @@ func (c *FusionAuthClient) ChangePasswordByJWT(encodedJWT string, request Change
 //
 //	string encodedJWT The encoded JWT (access token).
 //	ChangePasswordRequest request The change password request that contains all the information used to change the password.
+//
+// Deprecated: This method has been renamed to ChangePasswordUsingJWTWithContext, use that method instead.
 func (c *FusionAuthClient) ChangePasswordByJWTWithContext(ctx context.Context, encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
 	var resp ChangePasswordResponse
 	var errors Errors
@@ -433,6 +437,42 @@ func (c *FusionAuthClient) ChangePasswordByIdentityWithContext(ctx context.Conte
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/change-password").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// ChangePasswordUsingJWT
+// Changes a user's password using their access token (JWT) instead of the changePasswordId
+// A common use case for this method will be if you want to allow the user to change their own password.
+//
+// Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
+//
+//	string encodedJWT The encoded JWT (access token).
+//	ChangePasswordRequest request The change password request that contains all the information used to change the password.
+func (c *FusionAuthClient) ChangePasswordUsingJWT(encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
+	return c.ChangePasswordUsingJWTWithContext(context.TODO(), encodedJWT, request)
+}
+
+// ChangePasswordUsingJWTWithContext
+// Changes a user's password using their access token (JWT) instead of the changePasswordId
+// A common use case for this method will be if you want to allow the user to change their own password.
+//
+// Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
+//
+//	string encodedJWT The encoded JWT (access token).
+//	ChangePasswordRequest request The change password request that contains all the information used to change the password.
+func (c *FusionAuthClient) ChangePasswordUsingJWTWithContext(ctx context.Context, encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
+	var resp ChangePasswordResponse
+	var errors Errors
+
+	restClient := c.StartAnonymous(&resp, &errors)
+	err := restClient.WithUri("/api/user/change-password").
+		WithAuthorization("Bearer " + encodedJWT).
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
 		Do(ctx)
