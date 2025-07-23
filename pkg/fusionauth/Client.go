@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+* Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+* either express or implied. See the License for the specific
+* language governing permissions and limitations under the License.
  */
 
 package fusionauth
@@ -451,8 +451,9 @@ func (c *FusionAuthClient) ChangePasswordByIdentityWithContext(ctx context.Conte
 // A common use case for this method will be if you want to allow the user to change their own password.
 //
 // Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
-//   string encodedJWT The encoded JWT (access token).
-//   ChangePasswordRequest request The change password request that contains all the information used to change the password.
+//
+//	string encodedJWT The encoded JWT (access token).
+//	ChangePasswordRequest request The change password request that contains all the information used to change the password.
 func (c *FusionAuthClient) ChangePasswordUsingJWT(encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
 	return c.ChangePasswordUsingJWTWithContext(context.TODO(), encodedJWT, request)
 }
@@ -462,8 +463,9 @@ func (c *FusionAuthClient) ChangePasswordUsingJWT(encodedJWT string, request Cha
 // A common use case for this method will be if you want to allow the user to change their own password.
 //
 // Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
-//   string encodedJWT The encoded JWT (access token).
-//   ChangePasswordRequest request The change password request that contains all the information used to change the password.
+//
+//	string encodedJWT The encoded JWT (access token).
+//	ChangePasswordRequest request The change password request that contains all the information used to change the password.
 func (c *FusionAuthClient) ChangePasswordUsingJWTWithContext(ctx context.Context, encodedJWT string, request ChangePasswordRequest) (*ChangePasswordResponse, *Errors, error) {
 	var resp ChangePasswordResponse
 	var errors Errors
