@@ -3351,7 +3351,7 @@ const (
 )
 
 /**
- * @author Brady Wied
+ * Model identity types provided by FusionAuth.
  */
 type IdentityType struct {
 	Name string `json:"name,omitempty"`
@@ -3377,6 +3377,7 @@ const (
 	IdentityVerifiedReason_Completed      IdentityVerifiedReason = "Completed"
 	IdentityVerifiedReason_Disabled       IdentityVerifiedReason = "Disabled"
 	IdentityVerifiedReason_Administrative IdentityVerifiedReason = "Administrative"
+	IdentityVerifiedReason_Import         IdentityVerifiedReason = "Import"
 )
 
 /**
