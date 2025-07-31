@@ -3351,7 +3351,7 @@ const (
 )
 
 /**
- * Keep track of identity types that FusionAuth provides out of the box.
+ * Model identity types provided by FusionAuth.
  */
 type IdentityType struct {
 	Name string `json:"name,omitempty"`
