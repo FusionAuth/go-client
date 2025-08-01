@@ -4487,7 +4487,11 @@ const (
 	OAuthErrorReason_UnknownScope                        OAuthErrorReason = "unknown_scope"
 	OAuthErrorReason_ConsentCanceled                     OAuthErrorReason = "consent_canceled"
 	OAuthErrorReason_AuthenticationRequired              OAuthErrorReason = "authentication_required"
+	OAuthErrorReason_EmailVerificationRequired           OAuthErrorReason = "email_verification_required"
 	OAuthErrorReason_MultiFactorChallengeRequired        OAuthErrorReason = "multi_factor_challenge_required"
+	OAuthErrorReason_RegistrationMissingRequirement      OAuthErrorReason = "registration_missing_requirement"
+	OAuthErrorReason_RegistrationRequired                OAuthErrorReason = "registration_required"
+	OAuthErrorReason_RegistrationVerificationRequired    OAuthErrorReason = "registration_verification_required"
 	OAuthErrorReason_ConsentRequired                     OAuthErrorReason = "consent_required"
 )
 
