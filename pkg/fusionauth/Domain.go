@@ -4827,7 +4827,7 @@ type PasswordlessStartRequest struct {
 	ApplicationId string                 `json:"applicationId,omitempty"`
 	LoginId       string                 `json:"loginId,omitempty"`
 	LoginIdTypes  []string               `json:"loginIdTypes,omitempty"`
-	LoginStrategy string                 `json:"loginStrategy,omitempty"`
+	LoginStrategy PasswordlessStrategy   `json:"loginStrategy,omitempty"`
 	State         map[string]interface{} `json:"state,omitempty"`
 }
 
@@ -7786,7 +7786,7 @@ type VerifyStartRequest struct {
 	LoginId              string                 `json:"loginId,omitempty"`
 	LoginIdType          string                 `json:"loginIdType,omitempty"`
 	State                map[string]interface{} `json:"state,omitempty"`
-	VerificationStrategy string                 `json:"verificationStrategy,omitempty"`
+	VerificationStrategy VerificationStrategy   `json:"verificationStrategy,omitempty"`
 }
 
 /**
