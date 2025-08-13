@@ -54,11 +54,11 @@ jobs:
           go-version: '1.20'
 
       - name: Compile
-        if: inputs.command != 'release'
+        if: success() && inputs.command != 'release'
         run: sb compile
 
       - name: Copy our kickstart file over so it gets picked up
-        if: inputs.command != 'release'
+        if: success() && inputs.command != 'release'
         run: |
           mkdir faDockerComposeFilePath
           cp -r .github/kickstart faDockerComposeFilePath
@@ -66,16 +66,16 @@ jobs:
           cp .github/kickstart/kickstart.json .github/kickstart/k2.json
 
       - name: Start FusionAuth
-        if: inputs.command != 'release'
+        if: success() && inputs.command != 'release'
         uses: fusionauth/fusionauth-github-action@v1
         with:
           FUSIONAUTH_APP_KICKSTART_FILENAME: k2.json
           FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
 
       - name: Run tests
-        if: inputs.command != 'release'
+        if: success() && inputs.command != 'release'
         run: sleep 30 && sb test
 
       - name: release to svn
-        if: inputs.command == 'release'
+        if: success() && inputs.command == 'release'
         run: sb release
