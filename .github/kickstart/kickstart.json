@@ -70,9 +70,6 @@
             "admin"
           ]
         },
-        "roles": [
-          "admin"
-        ],
         "skipRegistrationVerification": true,
         "user": {
           "birthDate": "1981-06-04",

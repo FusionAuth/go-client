@@ -301,6 +301,13 @@ func Test_IdentityProviderTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_IdentityVerifiedReasonImplementsStringer(t *testing.T) {
+	var enum interface{} = IdentityVerifiedReason("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("IdentityVerifiedReason does not implement stringer interface\n")
+	}
+}
+
 func Test_KeyAlgorithmImplementsStringer(t *testing.T) {
 	var enum interface{} = KeyAlgorithm("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -434,6 +441,13 @@ func Test_BreachMatchModeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_PasswordlessStrategyImplementsStringer(t *testing.T) {
+	var enum interface{} = PasswordlessStrategy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("PasswordlessStrategy does not implement stringer interface\n")
+	}
+}
+
 func Test_ProofKeyForCodeExchangePolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = ProofKeyForCodeExchangePolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -445,13 +459,6 @@ func Test_PublicKeyCredentialTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = PublicKeyCredentialType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("PublicKeyCredentialType does not implement stringer interface\n")
-	}
-}
-
-func Test_RateLimitedRequestTypeImplementsStringer(t *testing.T) {
-	var enum interface{} = RateLimitedRequestType("Test")
-	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("RateLimitedRequestType does not implement stringer interface\n")
 	}
 }
 
@@ -494,6 +501,13 @@ func Test_SecureGeneratorTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = SecureGeneratorType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("SecureGeneratorType does not implement stringer interface\n")
+	}
+}
+
+func Test_SendSetPasswordIdentityTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = SendSetPasswordIdentityType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("SendSetPasswordIdentityType does not implement stringer interface\n")
 	}
 }
 
