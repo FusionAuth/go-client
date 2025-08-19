@@ -8346,3 +8346,19 @@ type XboxIdentityProvider struct {
 	ClientSecret string `json:"client_secret,omitempty"`
 	Scope        string `json:"scope,omitempty"`
 }
+
+/**
+ * Controls the policy for refresh token expiration
+ * @author Maksym Cierżniak
+ */
+type OauthRefreshTokenExpirationPolicy string
+
+func (e OauthRefreshTokenExpirationPolicy) String() string {
+	return string(e)
+}
+
+const (
+	OauthRefreshTokenExpirationPolicy_Fixed                            RefreshTokenExpirationPolicy = "Fixed"
+	OauthRefreshTokenExpirationPolicy_SlidingWindow                    RefreshTokenExpirationPolicy = "SlidingWindow"
+	OauthRefreshTokenExpirationPolicy_SlidingWindowWithMaximumLifetime RefreshTokenExpirationPolicy = "SlidingWindowWithMaximumLifetime"
+)
