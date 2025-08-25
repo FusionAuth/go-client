@@ -4562,6 +4562,7 @@ const (
 	OAuthErrorReason_AuthenticationRequired              OAuthErrorReason = "authentication_required"
 	OAuthErrorReason_EmailVerificationRequired           OAuthErrorReason = "email_verification_required"
 	OAuthErrorReason_MultiFactorChallengeRequired        OAuthErrorReason = "multi_factor_challenge_required"
+	OAuthErrorReason_PhoneVerificationRequired           OAuthErrorReason = "phone_verification_required"
 	OAuthErrorReason_RegistrationMissingRequirement      OAuthErrorReason = "registration_missing_requirement"
 	OAuthErrorReason_RegistrationRequired                OAuthErrorReason = "registration_required"
 	OAuthErrorReason_RegistrationVerificationRequired    OAuthErrorReason = "registration_verification_required"
