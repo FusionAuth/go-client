@@ -4512,6 +4512,7 @@ const (
 	OAuthErrorReason_InvalidPkceCodeVerifier             OAuthErrorReason = "invalid_pkce_code_verifier"
 	OAuthErrorReason_InvalidPkceCodeChallenge            OAuthErrorReason = "invalid_pkce_code_challenge"
 	OAuthErrorReason_InvalidPkceCodeChallengeMethod      OAuthErrorReason = "invalid_pkce_code_challenge_method"
+	OAuthErrorReason_InvalidPrompt                       OAuthErrorReason = "invalid_prompt"
 	OAuthErrorReason_InvalidRedirectUri                  OAuthErrorReason = "invalid_redirect_uri"
 	OAuthErrorReason_InvalidResponseMode                 OAuthErrorReason = "invalid_response_mode"
 	OAuthErrorReason_InvalidResponseType                 OAuthErrorReason = "invalid_response_type"
@@ -4558,6 +4559,14 @@ const (
 	OAuthErrorReason_MissingRequiredScope                OAuthErrorReason = "missing_required_scope"
 	OAuthErrorReason_UnknownScope                        OAuthErrorReason = "unknown_scope"
 	OAuthErrorReason_ConsentCanceled                     OAuthErrorReason = "consent_canceled"
+	OAuthErrorReason_AuthenticationRequired              OAuthErrorReason = "authentication_required"
+	OAuthErrorReason_EmailVerificationRequired           OAuthErrorReason = "email_verification_required"
+	OAuthErrorReason_MultiFactorChallengeRequired        OAuthErrorReason = "multi_factor_challenge_required"
+	OAuthErrorReason_PhoneVerificationRequired           OAuthErrorReason = "phone_verification_required"
+	OAuthErrorReason_RegistrationMissingRequirement      OAuthErrorReason = "registration_missing_requirement"
+	OAuthErrorReason_RegistrationRequired                OAuthErrorReason = "registration_required"
+	OAuthErrorReason_RegistrationVerificationRequired    OAuthErrorReason = "registration_verification_required"
+	OAuthErrorReason_ConsentRequired                     OAuthErrorReason = "consent_required"
 )
 
 type OAuthErrorType string
@@ -4571,6 +4580,9 @@ const (
 	OAuthErrorType_InvalidClient           OAuthErrorType = "invalid_client"
 	OAuthErrorType_InvalidGrant            OAuthErrorType = "invalid_grant"
 	OAuthErrorType_InvalidToken            OAuthErrorType = "invalid_token"
+	OAuthErrorType_ConsentRequired         OAuthErrorType = "consent_required"
+	OAuthErrorType_InteractionRequired     OAuthErrorType = "interaction_required"
+	OAuthErrorType_LoginRequired           OAuthErrorType = "login_required"
 	OAuthErrorType_UnauthorizedClient      OAuthErrorType = "unauthorized_client"
 	OAuthErrorType_InvalidScope            OAuthErrorType = "invalid_scope"
 	OAuthErrorType_ServerError             OAuthErrorType = "server_error"
