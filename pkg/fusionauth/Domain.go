@@ -2791,7 +2791,6 @@ type GroupMember struct {
 	GroupId       string                 `json:"groupId,omitempty"`
 	Id            string                 `json:"id,omitempty"`
 	InsertInstant int64                  `json:"insertInstant,omitempty"`
-	User          User                   `json:"user,omitempty"`
 	UserId        string                 `json:"userId,omitempty"`
 }
 
