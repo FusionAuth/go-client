@@ -2708,7 +2708,7 @@ type GoogleIdentityProviderProperties struct {
 }
 
 /**
- * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization
+ * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0 Authorization
  * Framework - RFC 6749</a>.
  * <p>
  * Specific names as defined by <a href="https://tools.ietf.org/html/rfc7591#section-4.1">
@@ -2791,7 +2791,6 @@ type GroupMember struct {
 	GroupId       string                 `json:"groupId,omitempty"`
 	Id            string                 `json:"id,omitempty"`
 	InsertInstant int64                  `json:"insertInstant,omitempty"`
-	User          User                   `json:"user,omitempty"`
 	UserId        string                 `json:"userId,omitempty"`
 }
 
@@ -4503,6 +4502,9 @@ const (
 	OAuthErrorReason_AccessTokenRequired                 OAuthErrorReason = "access_token_required"
 	OAuthErrorReason_RefreshTokenNotFound                OAuthErrorReason = "refresh_token_not_found"
 	OAuthErrorReason_RefreshTokenTypeNotSupported        OAuthErrorReason = "refresh_token_type_not_supported"
+	OAuthErrorReason_IdTokenInvalid                      OAuthErrorReason = "id_token_invalid"
+	OAuthErrorReason_UnsupportedTokenType                OAuthErrorReason = "unsupported_token_type"
+	OAuthErrorReason_TokenTypeHintMismatch               OAuthErrorReason = "token_type_hint_mismatch"
 	OAuthErrorReason_InvalidClientId                     OAuthErrorReason = "invalid_client_id"
 	OAuthErrorReason_InvalidExpiresIn                    OAuthErrorReason = "invalid_expires_in"
 	OAuthErrorReason_InvalidUserCredentials              OAuthErrorReason = "invalid_user_credentials"
