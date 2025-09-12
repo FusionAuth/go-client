@@ -559,7 +559,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingJWTWithContext(ctx context.Co
 //
 // An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
 //
-//	string loginId The loginId of the User that you intend to change the password for.
+//	string loginId The loginId (email or username) of the User that you intend to change the password for.
 func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string) (*BaseHTTPResponse, *Errors, error) {
 	return c.CheckChangePasswordUsingLoginIdWithContext(context.TODO(), loginId)
 }
@@ -571,14 +571,52 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string) (*Bas
 //
 // An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
 //
-//	string loginId The loginId of the User that you intend to change the password for.
+//	string loginId The loginId (email or username) of the User that you intend to change the password for.
 func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx context.Context, loginId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/change-password").
-		WithParameter("username", loginId).
+		WithParameter("loginId", loginId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CheckChangePasswordUsingLoginIdAndLoginIdTypes
+// Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
+// When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
+// your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
+//
+// An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
+//
+//	string loginId The loginId of the User that you intend to change the password for.
+//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to.
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypes(loginId string, loginIdTypes []string) (*BaseHTTPResponse, *Errors, error) {
+	return c.CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext(context.TODO(), loginId, loginIdTypes)
+}
+
+// CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext
+// Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
+// When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
+// your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
+//
+// An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
+//
+//	string loginId The loginId of the User that you intend to change the password for.
+//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to.
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext(ctx context.Context, loginId string, loginIdTypes []string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/change-password").
+		WithParameter("loginId", loginId).
+		WithParameter("loginIdTypes", loginIdTypes).
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
