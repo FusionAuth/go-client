@@ -559,7 +559,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingJWTWithContext(ctx context.Co
 //
 // An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
 //
-//	string loginId The loginId of the User that you intend to change the password for.
+//	string loginId The loginId (email or username) of the User that you intend to change the password for.
 func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string) (*BaseHTTPResponse, *Errors, error) {
 	return c.CheckChangePasswordUsingLoginIdWithContext(context.TODO(), loginId)
 }
@@ -571,14 +571,52 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string) (*Bas
 //
 // An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
 //
-//	string loginId The loginId of the User that you intend to change the password for.
+//	string loginId The loginId (email or username) of the User that you intend to change the password for.
 func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx context.Context, loginId string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/user/change-password").
-		WithParameter("username", loginId).
+		WithParameter("loginId", loginId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CheckChangePasswordUsingLoginIdAndLoginIdTypes
+// Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
+// When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
+// your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
+//
+// An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
+//
+//	string loginId The loginId of the User that you intend to change the password for.
+//	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypes(loginId string, loginIdTypes []string) (*BaseHTTPResponse, *Errors, error) {
+	return c.CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext(context.TODO(), loginId, loginIdTypes)
+}
+
+// CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext
+// Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
+// When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
+// your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
+//
+// An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
+//
+//	string loginId The loginId of the User that you intend to change the password for.
+//	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext(ctx context.Context, loginId string, loginIdTypes []string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/change-password").
+		WithParameter("loginId", loginId).
+		WithParameter("loginIdTypes", loginIdTypes).
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -7088,7 +7126,7 @@ func (c *FusionAuthClient) RetrieveUserByLoginIdWithContext(ctx context.Context,
 // Retrieves the user for the loginId, using specific loginIdTypes.
 //
 //	string loginId The email or username of the user.
-//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to.
+//	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
 func (c *FusionAuthClient) RetrieveUserByLoginIdWithLoginIdTypes(loginId string, loginIdTypes []string) (*UserResponse, *Errors, error) {
 	return c.RetrieveUserByLoginIdWithLoginIdTypesWithContext(context.TODO(), loginId, loginIdTypes)
 }
@@ -7097,7 +7135,7 @@ func (c *FusionAuthClient) RetrieveUserByLoginIdWithLoginIdTypes(loginId string,
 // Retrieves the user for the loginId, using specific loginIdTypes.
 //
 //	string loginId The email or username of the user.
-//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to.
+//	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
 func (c *FusionAuthClient) RetrieveUserByLoginIdWithLoginIdTypesWithContext(ctx context.Context, loginId string, loginIdTypes []string) (*UserResponse, *Errors, error) {
 	var resp UserResponse
 	var errors Errors
@@ -7458,7 +7496,7 @@ func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdWithContext(ctx conte
 //	string loginId The userId id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
-//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to.
+//	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
 func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId string, loginId string, start int64, end int64, loginIdTypes []string) (*LoginReportResponse, *Errors, error) {
 	return c.RetrieveUserLoginReportByLoginIdAndLoginIdTypesWithContext(context.TODO(), applicationId, loginId, start, end, loginIdTypes)
 }
@@ -7471,7 +7509,7 @@ func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdAndLoginIdTypes(appli
 //	string loginId The userId id.
 //	int64 start The start instant as UTC milliseconds since Epoch.
 //	int64 end The end instant as UTC milliseconds since Epoch.
-//	[]string loginIdTypes the identity types that FusionAuth will compare the loginId to.
+//	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
 func (c *FusionAuthClient) RetrieveUserLoginReportByLoginIdAndLoginIdTypesWithContext(ctx context.Context, applicationId string, loginId string, start int64, end int64, loginIdTypes []string) (*LoginReportResponse, *Errors, error) {
 	var resp LoginReportResponse
 	var errors Errors
