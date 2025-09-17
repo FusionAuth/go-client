@@ -276,8 +276,9 @@ func (c *FusionAuthClient) AddUserToFamilyWithContext(ctx context.Context, famil
 //	string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //	string token The access token used to identify the user.
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) ApproveDevice(clientId string, clientSecret string, token string, userCode string) (*DeviceApprovalResponse, *Errors, error) {
-	return c.ApproveDeviceWithContext(context.TODO(), clientId, clientSecret, token, userCode)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ApproveDevice(clientId string, clientSecret string, token string, userCode string, tenantId string) (*DeviceApprovalResponse, *Errors, error) {
+	return c.ApproveDeviceWithContext(context.TODO(), clientId, clientSecret, token, userCode, tenantId)
 }
 
 // ApproveDeviceWithContext
@@ -287,7 +288,8 @@ func (c *FusionAuthClient) ApproveDevice(clientId string, clientSecret string, t
 //	string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //	string token The access token used to identify the user.
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) ApproveDeviceWithContext(ctx context.Context, clientId string, clientSecret string, token string, userCode string) (*DeviceApprovalResponse, *Errors, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ApproveDeviceWithContext(ctx context.Context, clientId string, clientSecret string, token string, userCode string, tenantId string) (*DeviceApprovalResponse, *Errors, error) {
 	var resp DeviceApprovalResponse
 	var errors Errors
 	formBody := url.Values{}
@@ -295,6 +297,7 @@ func (c *FusionAuthClient) ApproveDeviceWithContext(ctx context.Context, clientI
 	formBody.Set("client_secret", clientSecret)
 	formBody.Set("token", token)
 	formBody.Set("user_code", userCode)
+	formBody.Set("tenantId", tenantId)
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/oauth2/device/approve").
@@ -595,8 +598,9 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx contex
 //	string clientSecret (Optional) The client secret used to authenticate this request.
 //	This parameter is optional when Basic Authorization is used to authenticate this request.
 //	string scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:&lt;target-entity-id&gt;:&lt;roles&gt;. Roles are an optional comma separated list.
-func (c *FusionAuthClient) ClientCredentialsGrant(clientId string, clientSecret string, scope string) (*AccessToken, *OAuthError, error) {
-	return c.ClientCredentialsGrantWithContext(context.TODO(), clientId, clientSecret, scope)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ClientCredentialsGrant(clientId string, clientSecret string, scope string, tenantId string) (*AccessToken, *OAuthError, error) {
+	return c.ClientCredentialsGrantWithContext(context.TODO(), clientId, clientSecret, scope, tenantId)
 }
 
 // ClientCredentialsGrantWithContext
@@ -607,7 +611,8 @@ func (c *FusionAuthClient) ClientCredentialsGrant(clientId string, clientSecret 
 //	string clientSecret (Optional) The client secret used to authenticate this request.
 //	This parameter is optional when Basic Authorization is used to authenticate this request.
 //	string scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:&lt;target-entity-id&gt;:&lt;roles&gt;. Roles are an optional comma separated list.
-func (c *FusionAuthClient) ClientCredentialsGrantWithContext(ctx context.Context, clientId string, clientSecret string, scope string) (*AccessToken, *OAuthError, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ClientCredentialsGrantWithContext(ctx context.Context, clientId string, clientSecret string, scope string, tenantId string) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
@@ -615,6 +620,7 @@ func (c *FusionAuthClient) ClientCredentialsGrantWithContext(ctx context.Context
 	formBody.Set("client_secret", clientSecret)
 	formBody.Set("grant_type", "client_credentials")
 	formBody.Set("scope", scope)
+	formBody.Set("tenantId", tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -2952,8 +2958,9 @@ func (c *FusionAuthClient) EnableTwoFactorWithContext(ctx context.Context, userI
 //	This parameter is optional when Basic Authorization is used to authenticate this request.
 //	string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //	string redirectUri The URI to redirect to upon a successful request.
-func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId string, clientSecret string, redirectUri string) (*AccessToken, *OAuthError, error) {
-	return c.ExchangeOAuthCodeForAccessTokenWithContext(context.TODO(), code, clientId, clientSecret, redirectUri)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId string, clientSecret string, redirectUri string, tenantId string) (*AccessToken, *OAuthError, error) {
+	return c.ExchangeOAuthCodeForAccessTokenWithContext(context.TODO(), code, clientId, clientSecret, redirectUri, tenantId)
 }
 
 // ExchangeOAuthCodeForAccessTokenWithContext
@@ -2965,7 +2972,8 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessToken(code string, clientId
 //	This parameter is optional when Basic Authorization is used to authenticate this request.
 //	string clientSecret (Optional) The client secret. This value will be required if client authentication is enabled.
 //	string redirectUri The URI to redirect to upon a successful request.
-func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithContext(ctx context.Context, code string, clientId string, clientSecret string, redirectUri string) (*AccessToken, *OAuthError, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithContext(ctx context.Context, code string, clientId string, clientSecret string, redirectUri string, tenantId string) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
@@ -2974,6 +2982,7 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithContext(ctx contex
 	formBody.Set("client_secret", clientSecret)
 	formBody.Set("grant_type", "authorization_code")
 	formBody.Set("redirect_uri", redirectUri)
+	formBody.Set("tenantId", tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -2996,8 +3005,9 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithContext(ctx contex
 //	string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //	string redirectUri The URI to redirect to upon a successful request.
 //	string codeVerifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
-func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string, clientId string, clientSecret string, redirectUri string, codeVerifier string) (*AccessToken, *OAuthError, error) {
-	return c.ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext(context.TODO(), code, clientId, clientSecret, redirectUri, codeVerifier)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string, clientId string, clientSecret string, redirectUri string, codeVerifier string, tenantId string) (*AccessToken, *OAuthError, error) {
+	return c.ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext(context.TODO(), code, clientId, clientSecret, redirectUri, codeVerifier, tenantId)
 }
 
 // ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext
@@ -3010,7 +3020,8 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCE(code string,
 //	string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //	string redirectUri The URI to redirect to upon a successful request.
 //	string codeVerifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
-func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext(ctx context.Context, code string, clientId string, clientSecret string, redirectUri string, codeVerifier string) (*AccessToken, *OAuthError, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext(ctx context.Context, code string, clientId string, clientSecret string, redirectUri string, codeVerifier string, tenantId string) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
@@ -3020,6 +3031,7 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext(c
 	formBody.Set("grant_type", "authorization_code")
 	formBody.Set("redirect_uri", redirectUri)
 	formBody.Set("code_verifier", codeVerifier)
+	formBody.Set("tenantId", tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -3042,8 +3054,9 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithContext(c
 //	string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //	string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //	string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
-func (c *FusionAuthClient) ExchangeRefreshTokenForAccessToken(refreshToken string, clientId string, clientSecret string, scope string, userCode string) (*AccessToken, *OAuthError, error) {
-	return c.ExchangeRefreshTokenForAccessTokenWithContext(context.TODO(), refreshToken, clientId, clientSecret, scope, userCode)
+//	string tenantId (Optional) The Id of the tenant to use for this request. Required if the request is for a universal application.
+func (c *FusionAuthClient) ExchangeRefreshTokenForAccessToken(refreshToken string, clientId string, clientSecret string, scope string, userCode string, tenantId string) (*AccessToken, *OAuthError, error) {
+	return c.ExchangeRefreshTokenForAccessTokenWithContext(context.TODO(), refreshToken, clientId, clientSecret, scope, userCode, tenantId)
 }
 
 // ExchangeRefreshTokenForAccessTokenWithContext
@@ -3056,7 +3069,8 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForAccessToken(refreshToken strin
 //	string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //	string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //	string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
-func (c *FusionAuthClient) ExchangeRefreshTokenForAccessTokenWithContext(ctx context.Context, refreshToken string, clientId string, clientSecret string, scope string, userCode string) (*AccessToken, *OAuthError, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request. Required if the request is for a universal application.
+func (c *FusionAuthClient) ExchangeRefreshTokenForAccessTokenWithContext(ctx context.Context, refreshToken string, clientId string, clientSecret string, scope string, userCode string, tenantId string) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
@@ -3066,6 +3080,7 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForAccessTokenWithContext(ctx con
 	formBody.Set("grant_type", "refresh_token")
 	formBody.Set("scope", scope)
 	formBody.Set("user_code", userCode)
+	formBody.Set("tenantId", tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -3116,8 +3131,9 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForJWTWithContext(ctx context.Con
 //	string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //	string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //	string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
-func (c *FusionAuthClient) ExchangeUserCredentialsForAccessToken(username string, password string, clientId string, clientSecret string, scope string, userCode string) (*AccessToken, *OAuthError, error) {
-	return c.ExchangeUserCredentialsForAccessTokenWithContext(context.TODO(), username, password, clientId, clientSecret, scope, userCode)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ExchangeUserCredentialsForAccessToken(username string, password string, clientId string, clientSecret string, scope string, userCode string, tenantId string) (*AccessToken, *OAuthError, error) {
+	return c.ExchangeUserCredentialsForAccessTokenWithContext(context.TODO(), username, password, clientId, clientSecret, scope, userCode, tenantId)
 }
 
 // ExchangeUserCredentialsForAccessTokenWithContext
@@ -3131,7 +3147,8 @@ func (c *FusionAuthClient) ExchangeUserCredentialsForAccessToken(username string
 //	string clientSecret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
 //	string scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
 //	string userCode (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
-func (c *FusionAuthClient) ExchangeUserCredentialsForAccessTokenWithContext(ctx context.Context, username string, password string, clientId string, clientSecret string, scope string, userCode string) (*AccessToken, *OAuthError, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ExchangeUserCredentialsForAccessTokenWithContext(ctx context.Context, username string, password string, clientId string, clientSecret string, scope string, userCode string, tenantId string) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
@@ -3142,6 +3159,7 @@ func (c *FusionAuthClient) ExchangeUserCredentialsForAccessTokenWithContext(ctx 
 	formBody.Set("grant_type", "password")
 	formBody.Set("scope", scope)
 	formBody.Set("user_code", userCode)
+	formBody.Set("tenantId", tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -7178,8 +7196,9 @@ func (c *FusionAuthClient) RetrieveUserByVerificationIdWithContext(ctx context.C
 //	string clientId The client Id.
 //	string clientSecret The client Id.
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCode(clientId string, clientSecret string, userCode string) (*BaseHTTPResponse, error) {
-	return c.RetrieveUserCodeWithContext(context.TODO(), clientId, clientSecret, userCode)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) RetrieveUserCode(clientId string, clientSecret string, userCode string, tenantId string) (*BaseHTTPResponse, error) {
+	return c.RetrieveUserCodeWithContext(context.TODO(), clientId, clientSecret, userCode, tenantId)
 }
 
 // RetrieveUserCodeWithContext
@@ -7190,7 +7209,8 @@ func (c *FusionAuthClient) RetrieveUserCode(clientId string, clientSecret string
 //	string clientId The client Id.
 //	string clientSecret The client Id.
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clientId string, clientSecret string, userCode string) (*BaseHTTPResponse, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clientId string, clientSecret string, userCode string, tenantId string) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 	formBody := url.Values{}
 	formBody.Set("client_id", clientId)
@@ -7199,6 +7219,7 @@ func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clie
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/user-code").
+		WithParameter("tenantId", tenantId).
 		WithFormData(formBody).
 		WithMethod(http.MethodGet).
 		Do(ctx)
@@ -7213,8 +7234,9 @@ func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clie
 // This request will require an API key.
 //
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKey(userCode string) (*BaseHTTPResponse, error) {
-	return c.RetrieveUserCodeUsingAPIKeyWithContext(context.TODO(), userCode)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKey(userCode string, tenantId string) (*BaseHTTPResponse, error) {
+	return c.RetrieveUserCodeUsingAPIKeyWithContext(context.TODO(), userCode, tenantId)
 }
 
 // RetrieveUserCodeUsingAPIKeyWithContext
@@ -7225,13 +7247,15 @@ func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKey(userCode string) (*BaseHT
 // This request will require an API key.
 //
 //	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithContext(ctx context.Context, userCode string) (*BaseHTTPResponse, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithContext(ctx context.Context, userCode string, tenantId string) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 	formBody := url.Values{}
 	formBody.Set("user_code", userCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/user-code").
+		WithParameter("tenantId", tenantId).
 		WithFormData(formBody).
 		WithMethod(http.MethodGet).
 		Do(ctx)
@@ -10055,8 +10079,9 @@ func (c *FusionAuthClient) UpsertEntityGrantWithContext(ctx context.Context, ent
 //
 //	string userCode The end-user verification code.
 //	string clientId The client Id.
-func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string) (*BaseHTTPResponse, error) {
-	return c.ValidateDeviceWithContext(context.TODO(), userCode, clientId)
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string, tenantId string) (*BaseHTTPResponse, error) {
+	return c.ValidateDeviceWithContext(context.TODO(), userCode, clientId, tenantId)
 }
 
 // ValidateDeviceWithContext
@@ -10065,13 +10090,15 @@ func (c *FusionAuthClient) ValidateDevice(userCode string, clientId string) (*Ba
 //
 //	string userCode The end-user verification code.
 //	string clientId The client Id.
-func (c *FusionAuthClient) ValidateDeviceWithContext(ctx context.Context, userCode string, clientId string) (*BaseHTTPResponse, error) {
+//	string tenantId (Optional) The Id of the tenant to use for this request.
+func (c *FusionAuthClient) ValidateDeviceWithContext(ctx context.Context, userCode string, clientId string, tenantId string) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/validate").
 		WithParameter("user_code", userCode).
 		WithParameter("client_id", clientId).
+		WithParameter("tenantId", tenantId).
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	return &resp, err
