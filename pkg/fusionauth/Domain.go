@@ -2922,7 +2922,6 @@ func (b *GroupResponse) SetStatus(status int) {
  */
 type GroupSearchCriteria struct {
 	BaseSearchCriteria
-	Exact    bool   `json:"exact"`
 	Name     string `json:"name,omitempty"`
 	TenantId string `json:"tenantId,omitempty"`
 }
