@@ -3744,60 +3744,6 @@ func (c *FusionAuthClient) ImportWebAuthnCredentialWithContext(ctx context.Conte
 	return &resp, &errors, err
 }
 
-// IntrospectAccessTokenWithRequest
-// Inspect an access token issued as the result of the User based grant such as the Authorization Code Grant, Implicit Grant, the User Credentials Grant or the Refresh Grant.
-//
-//	AccessTokenIntrospectRequest request The access token introspection request.
-func (c *FusionAuthClient) IntrospectAccessTokenWithRequest(request AccessTokenIntrospectRequest) (*IntrospectResponse, *OAuthError, error) {
-	return c.IntrospectAccessTokenWithRequestWithContext(context.TODO(), request)
-}
-
-// IntrospectAccessTokenWithRequestWithContext
-// Inspect an access token issued as the result of the User based grant such as the Authorization Code Grant, Implicit Grant, the User Credentials Grant or the Refresh Grant.
-//
-//	AccessTokenIntrospectRequest request The access token introspection request.
-func (c *FusionAuthClient) IntrospectAccessTokenWithRequestWithContext(ctx context.Context, request AccessTokenIntrospectRequest) (*IntrospectResponse, *OAuthError, error) {
-	var resp IntrospectResponse
-	var errors OAuthError
-
-	restClient := c.StartAnonymous(&resp, &errors)
-	err := restClient.WithUri("/oauth2/introspect").
-		WithJSONBody(request).
-		WithMethod(http.MethodPost).
-		Do(ctx)
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
-// IntrospectClientCredentialsAccessTokenWithRequest
-// Inspect an access token issued as the result of the Client Credentials Grant.
-//
-//	ClientCredentialsAccessTokenIntrospectRequest request The client credentials access token.
-func (c *FusionAuthClient) IntrospectClientCredentialsAccessTokenWithRequest(request ClientCredentialsAccessTokenIntrospectRequest) (*IntrospectResponse, *OAuthError, error) {
-	return c.IntrospectClientCredentialsAccessTokenWithRequestWithContext(context.TODO(), request)
-}
-
-// IntrospectClientCredentialsAccessTokenWithRequestWithContext
-// Inspect an access token issued as the result of the Client Credentials Grant.
-//
-//	ClientCredentialsAccessTokenIntrospectRequest request The client credentials access token.
-func (c *FusionAuthClient) IntrospectClientCredentialsAccessTokenWithRequestWithContext(ctx context.Context, request ClientCredentialsAccessTokenIntrospectRequest) (*IntrospectResponse, *OAuthError, error) {
-	var resp IntrospectResponse
-	var errors OAuthError
-
-	restClient := c.StartAnonymous(&resp, &errors)
-	err := restClient.WithUri("/oauth2/introspect").
-		WithJSONBody(request).
-		WithMethod(http.MethodPost).
-		Do(ctx)
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
 // IssueJWT
 // Issue a new access token (JWT) for the requested Application after ensuring the provided JWT is valid. A valid
 // access token is properly signed and not expired.
