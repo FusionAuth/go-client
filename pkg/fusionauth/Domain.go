@@ -5385,6 +5385,7 @@ type RegistrationRequest struct {
 	SkipRegistrationVerification bool                        `json:"skipRegistrationVerification"`
 	SkipVerification             bool                        `json:"skipVerification"`
 	User                         User                        `json:"user,omitempty"`
+	VerificationIds              []string                    `json:"verificationIds,omitempty"`
 }
 
 /**
