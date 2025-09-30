@@ -7800,6 +7800,7 @@ type VerifyStartRequest struct {
 	ApplicationId        string                 `json:"applicationId,omitempty"`
 	LoginId              string                 `json:"loginId,omitempty"`
 	LoginIdType          string                 `json:"loginIdType,omitempty"`
+	SkipUserRequirement  bool                   `json:"skipUserRequirement"`
 	State                map[string]interface{} `json:"state,omitempty"`
 	VerificationStrategy VerificationStrategy   `json:"verificationStrategy,omitempty"`
 }
