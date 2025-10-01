@@ -245,6 +245,13 @@ func Test_FormFieldAdminPolicyImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_FormStepTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = FormStepType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("FormStepType does not implement stringer interface\n")
+	}
+}
+
 func Test_FormTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = FormType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
