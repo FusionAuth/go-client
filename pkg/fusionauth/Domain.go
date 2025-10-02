@@ -2611,8 +2611,8 @@ func (b *FormResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type FormStep struct {
-	Fields       []string     `json:"fields,omitempty"`
-	FormStepType FormStepType `json:"formStepType,omitempty"`
+	Fields []string     `json:"fields,omitempty"`
+	Type   FormStepType `json:"type,omitempty"`
 }
 
 /**
