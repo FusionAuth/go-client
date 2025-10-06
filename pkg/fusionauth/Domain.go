@@ -2625,9 +2625,9 @@ func (e FormStepType) String() string {
 }
 
 const (
-	FormStepType_CollectData FormStepType = "collectData"
-	FormStepType_VerifyEmail FormStepType = "verifyEmail"
-	FormStepType_VerifyPhone FormStepType = "verifyPhone"
+	FormStepType_CollectData       FormStepType = "collectData"
+	FormStepType_VerifyEmail       FormStepType = "verifyEmail"
+	FormStepType_VerifyPhoneNumber FormStepType = "verifyPhoneNumber"
 )
 
 /**
