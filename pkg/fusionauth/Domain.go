@@ -2611,8 +2611,24 @@ func (b *FormResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type FormStep struct {
-	Fields []string `json:"fields,omitempty"`
+	Fields []string     `json:"fields,omitempty"`
+	Type   FormStepType `json:"type,omitempty"`
 }
+
+/**
+ * Denotes the type of form step. This is used to configure different behavior on form steps in the registration flow.
+ */
+type FormStepType string
+
+func (e FormStepType) String() string {
+	return string(e)
+}
+
+const (
+	FormStepType_CollectData       FormStepType = "collectData"
+	FormStepType_VerifyEmail       FormStepType = "verifyEmail"
+	FormStepType_VerifyPhoneNumber FormStepType = "verifyPhoneNumber"
+)
 
 /**
  * @author Daniel DeGroff
