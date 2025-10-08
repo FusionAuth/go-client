@@ -5419,6 +5419,7 @@ type RegistrationResponse struct {
 	Token                               string           `json:"token,omitempty"`
 	TokenExpirationInstant              int64            `json:"tokenExpirationInstant,omitempty"`
 	User                                User             `json:"user,omitempty"`
+	VerificationIds                     []VerificationId `json:"verificationIds,omitempty"`
 }
 
 func (b *RegistrationResponse) SetStatus(status int) {
