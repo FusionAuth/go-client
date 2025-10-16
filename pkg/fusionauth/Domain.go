@@ -910,6 +910,7 @@ type BaseIdentityProvider struct {
 	LinkingStrategy          IdentityProviderLinkingStrategy                `json:"linkingStrategy,omitempty"`
 	Name                     string                                         `json:"name,omitempty"`
 	TenantConfiguration      map[string]IdentityProviderTenantConfiguration `json:"tenantConfiguration,omitempty"`
+	TenantId                 string                                         `json:"tenantId,omitempty"`
 	Type                     IdentityProviderType                           `json:"type,omitempty"`
 }
 
@@ -3262,6 +3263,7 @@ type IdentityProviderSearchCriteria struct {
 	BaseSearchCriteria
 	ApplicationId string               `json:"applicationId,omitempty"`
 	Name          string               `json:"name,omitempty"`
+	TenantId      string               `json:"tenantId,omitempty"`
 	Type          IdentityProviderType `json:"type,omitempty"`
 }
 
