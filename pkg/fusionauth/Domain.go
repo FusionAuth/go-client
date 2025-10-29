@@ -2194,6 +2194,20 @@ const (
 )
 
 /**
+ * Represent the various states/expectations of a user in the context of starting verification
+ */
+type ExistingUserStrategy string
+
+func (e ExistingUserStrategy) String() string {
+	return string(e)
+}
+
+const (
+	ExistingUserStrategy_MustExist    ExistingUserStrategy = "MustExist"
+	ExistingUserStrategy_MustNotExist ExistingUserStrategy = "MustNotExist"
+)
+
+/**
  * An expandable API request.
  *
  * @author Daniel DeGroff
@@ -7815,9 +7829,9 @@ type VerifySendRequest struct {
  */
 type VerifyStartRequest struct {
 	ApplicationId        string                 `json:"applicationId,omitempty"`
+	ExistingUserStrategy ExistingUserStrategy   `json:"existingUserStrategy,omitempty"`
 	LoginId              string                 `json:"loginId,omitempty"`
 	LoginIdType          string                 `json:"loginIdType,omitempty"`
-	SkipUserRequirement  bool                   `json:"skipUserRequirement"`
 	State                map[string]interface{} `json:"state,omitempty"`
 	VerificationStrategy VerificationStrategy   `json:"verificationStrategy,omitempty"`
 }

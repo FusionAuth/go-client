@@ -210,6 +210,13 @@ func Test_EventTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_ExistingUserStrategyImplementsStringer(t *testing.T) {
+	var enum interface{} = ExistingUserStrategy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("ExistingUserStrategy does not implement stringer interface\n")
+	}
+}
+
 func Test_ExpiryUnitImplementsStringer(t *testing.T) {
 	var enum interface{} = ExpiryUnit("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
