@@ -2203,8 +2203,8 @@ func (e ExistingUserStrategy) String() string {
 }
 
 const (
-	ExistingUserStrategy_MustExist    ExistingUserStrategy = "MustExist"
-	ExistingUserStrategy_MustNotExist ExistingUserStrategy = "MustNotExist"
+	ExistingUserStrategy_MustExist    ExistingUserStrategy = "mustExist"
+	ExistingUserStrategy_MustNotExist ExistingUserStrategy = "mustNotExist"
 )
 
 /**
