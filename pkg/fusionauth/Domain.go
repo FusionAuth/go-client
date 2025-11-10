@@ -4191,6 +4191,7 @@ type IdentityProviderDetails struct {
 	IdpEndpoint    string                              `json:"idpEndpoint,omitempty"`
 	Name           string                              `json:"name,omitempty"`
 	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	TenantId       string                              `json:"tenantId,omitempty"`
 	Type           IdentityProviderType                `json:"type,omitempty"`
 }
 
