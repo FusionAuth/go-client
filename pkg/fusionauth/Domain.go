@@ -3949,6 +3949,7 @@ const (
 	LambdaType_SelfServiceRegistrationValidation LambdaType = "SelfServiceRegistrationValidation"
 	LambdaType_UserInfoPopulate                  LambdaType = "UserInfoPopulate"
 	LambdaType_LoginValidation                   LambdaType = "LoginValidation"
+	LambdaType_MFARequirement                    LambdaType = "MFARequirement"
 )
 
 /**
