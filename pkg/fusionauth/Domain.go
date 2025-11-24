@@ -4365,6 +4365,21 @@ func (b *MonthlyActiveUserReportResponse) SetStatus(status int) {
 }
 
 /**
+ * Communicate various contexts in which multi-factor authentication can be used.
+ */
+type MultiFactorContext string
+
+func (e MultiFactorContext) String() string {
+	return string(e)
+}
+
+const (
+	MultiFactorContext_ChangePassword MultiFactorContext = "changePassword"
+	MultiFactorContext_Login          MultiFactorContext = "login"
+	MultiFactorContext_StepUp         MultiFactorContext = "stepUp"
+)
+
+/**
  * @author Daniel DeGroff
  */
 type MultiFactorLoginPolicy string
