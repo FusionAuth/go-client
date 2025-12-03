@@ -266,6 +266,7 @@ type AuthenticationTokenConfiguration struct {
 type LambdaConfiguration struct {
 	AccessTokenPopulateId               string `json:"accessTokenPopulateId,omitempty"`
 	IdTokenPopulateId                   string `json:"idTokenPopulateId,omitempty"`
+	MultiFactorRequirementId            string `json:"multiFactorRequirementId,omitempty"`
 	Samlv2PopulateId                    string `json:"samlv2PopulateId,omitempty"`
 	SelfServiceRegistrationValidationId string `json:"selfServiceRegistrationValidationId,omitempty"`
 	UserinfoPopulateId                  string `json:"userinfoPopulateId,omitempty"`
@@ -6104,6 +6105,7 @@ type TenantFormConfiguration struct {
  */
 type TenantLambdaConfiguration struct {
 	LoginValidationId                     string `json:"loginValidationId,omitempty"`
+	MultiFactorRequirementId              string `json:"multiFactorRequirementId,omitempty"`
 	ScimEnterpriseUserRequestConverterId  string `json:"scimEnterpriseUserRequestConverterId,omitempty"`
 	ScimEnterpriseUserResponseConverterId string `json:"scimEnterpriseUserResponseConverterId,omitempty"`
 	ScimGroupRequestConverterId           string `json:"scimGroupRequestConverterId,omitempty"`
