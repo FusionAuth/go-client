@@ -371,10 +371,10 @@ func Test_MessengerTypeImplementsStringer(t *testing.T) {
 	}
 }
 
-func Test_MultiFactorContextImplementsStringer(t *testing.T) {
-	var enum interface{} = MultiFactorContext("Test")
+func Test_MultiFactorActionImplementsStringer(t *testing.T) {
+	var enum interface{} = MultiFactorAction("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
-		t.Errorf("MultiFactorContext does not implement stringer interface\n")
+		t.Errorf("MultiFactorAction does not implement stringer interface\n")
 	}
 }
 
