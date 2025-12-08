@@ -4220,6 +4220,9 @@ type MFARequiredLambdaResult struct {
 	Required bool `json:"required"`
 }
 
+/**
+ * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
+ */
 type MFATrust struct {
 	ApplicationId     string                 `json:"applicationId,omitempty"`
 	Attributes        map[string]string      `json:"attributes,omitempty"`
