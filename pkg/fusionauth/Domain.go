@@ -266,6 +266,7 @@ type AuthenticationTokenConfiguration struct {
 type LambdaConfiguration struct {
 	AccessTokenPopulateId               string `json:"accessTokenPopulateId,omitempty"`
 	IdTokenPopulateId                   string `json:"idTokenPopulateId,omitempty"`
+	MultiFactorRequirementId            string `json:"multiFactorRequirementId,omitempty"`
 	Samlv2PopulateId                    string `json:"samlv2PopulateId,omitempty"`
 	SelfServiceRegistrationValidationId string `json:"selfServiceRegistrationValidationId,omitempty"`
 	UserinfoPopulateId                  string `json:"userinfoPopulateId,omitempty"`
@@ -4194,6 +4195,49 @@ type IdentityProviderDetails struct {
 }
 
 /**
+ * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
+ */
+type MFAContext struct {
+	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
+	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
+	MfaTrust              MFATrust                `json:"mfaTrust,omitempty"`
+	Registration          UserRegistration        `json:"registration,omitempty"`
+}
+
+/**
+ * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
+ */
+type MFAPolicies struct {
+	ApplicationLoginPolicy            MultiFactorLoginPolicy            `json:"applicationLoginPolicy,omitempty"`
+	ApplicationMultiFactorTrustPolicy ApplicationMultiFactorTrustPolicy `json:"applicationMultiFactorTrustPolicy,omitempty"`
+	TenantLoginPolicy                 MultiFactorLoginPolicy            `json:"tenantLoginPolicy,omitempty"`
+}
+
+/**
+ * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
+ */
+type MFARequiredLambdaResult struct {
+	Required bool `json:"required"`
+}
+
+type MFATrust struct {
+	ApplicationId     string                 `json:"applicationId,omitempty"`
+	Attributes        map[string]string      `json:"attributes,omitempty"`
+	ExpirationInstant int64                  `json:"expirationInstant,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	StartInstants     StartInstant           `json:"startInstants,omitempty"`
+	State             map[string]interface{} `json:"state,omitempty"`
+	TenantId          string                 `json:"tenantId,omitempty"`
+	UserId            string                 `json:"userId,omitempty"`
+}
+
+type StartInstant struct {
+	Applications map[string]int64 `json:"applications,omitempty"`
+	Tenant       int64            `json:"tenant,omitempty"`
+}
+
+/**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
  * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
@@ -4365,18 +4409,18 @@ func (b *MonthlyActiveUserReportResponse) SetStatus(status int) {
 }
 
 /**
- * Communicate various contexts in which multi-factor authentication can be used.
+ * Communicate various actions/contexts in which multi-factor authentication can be used.
  */
-type MultiFactorContext string
+type MultiFactorAction string
 
-func (e MultiFactorContext) String() string {
+func (e MultiFactorAction) String() string {
 	return string(e)
 }
 
 const (
-	MultiFactorContext_ChangePassword MultiFactorContext = "changePassword"
-	MultiFactorContext_Login          MultiFactorContext = "login"
-	MultiFactorContext_StepUp         MultiFactorContext = "stepUp"
+	MultiFactorAction_ChangePassword MultiFactorAction = "changePassword"
+	MultiFactorAction_Login          MultiFactorAction = "login"
+	MultiFactorAction_StepUp         MultiFactorAction = "stepUp"
 )
 
 /**
@@ -6104,6 +6148,7 @@ type TenantFormConfiguration struct {
  */
 type TenantLambdaConfiguration struct {
 	LoginValidationId                     string `json:"loginValidationId,omitempty"`
+	MultiFactorRequirementId              string `json:"multiFactorRequirementId,omitempty"`
 	ScimEnterpriseUserRequestConverterId  string `json:"scimEnterpriseUserRequestConverterId,omitempty"`
 	ScimEnterpriseUserResponseConverterId string `json:"scimEnterpriseUserResponseConverterId,omitempty"`
 	ScimGroupRequestConverterId           string `json:"scimGroupRequestConverterId,omitempty"`
