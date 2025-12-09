@@ -4203,6 +4203,7 @@ type IdentityProviderDetails struct {
 type MFAContext struct {
 	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
 	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
+	Jwt                   map[string]interface{}  `json:"jwt,omitempty"`
 	MfaTrust              MFATrust                `json:"mfaTrust,omitempty"`
 	Registration          UserRegistration        `json:"registration,omitempty"`
 }
@@ -6797,6 +6798,18 @@ type TwoFactorStartResponse struct {
 
 func (b *TwoFactorStartResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Check the status of two-factor authentication for a user, with more options than on a GET request.
+ */
+type TwoFactorStatusRequest struct {
+	BaseEventRequest
+	Action           MultiFactorAction `json:"action,omitempty"`
+	ApplicationId    string            `json:"applicationId,omitempty"`
+	Token            string            `json:"token,omitempty"`
+	TwoFactorTrustId string            `json:"twoFactorTrustId,omitempty"`
+	UserId           string            `json:"userId,omitempty"`
 }
 
 /**
