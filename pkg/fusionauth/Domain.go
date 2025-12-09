@@ -4221,7 +4221,8 @@ type MFAPolicies struct {
  * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
  */
 type MFARequiredLambdaResult struct {
-	Required bool `json:"required"`
+	Required                 bool `json:"required"`
+	SendSuspiciousLoginEvent bool `json:"sendSuspiciousLoginEvent"`
 }
 
 /**
