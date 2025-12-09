@@ -590,7 +590,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingJWTWithContext(ctx context.Co
 	return &resp, &errors, err
 }
 
-// CheckChangePasswordUsingJWT
+// CheckChangePasswordUsingJWTAndIPAddress
 // Check to see if the user must obtain a Trust Token Id in order to complete a change password request.
 // When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
 // your password, you must obtain a Trust Token by completing a Two-Factor Step-Up authentication.
@@ -599,11 +599,11 @@ func (c *FusionAuthClient) CheckChangePasswordUsingJWTWithContext(ctx context.Co
 //
 //	string encodedJWT The encoded JWT (access token).
 //	string ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
-func (c *FusionAuthClient) CheckChangePasswordUsingJWT(encodedJWT string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
-	return c.CheckChangePasswordUsingJWTWithContext(context.TODO(), encodedJWT, ipAddress)
+func (c *FusionAuthClient) CheckChangePasswordUsingJWTAndIPAddress(encodedJWT string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
+	return c.CheckChangePasswordUsingJWTAndIPAddressWithContext(context.TODO(), encodedJWT, ipAddress)
 }
 
-// CheckChangePasswordUsingJWTWithContext
+// CheckChangePasswordUsingJWTAndIPAddressWithContext
 // Check to see if the user must obtain a Trust Token Id in order to complete a change password request.
 // When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
 // your password, you must obtain a Trust Token by completing a Two-Factor Step-Up authentication.
@@ -612,7 +612,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingJWT(encodedJWT string, ipAddr
 //
 //	string encodedJWT The encoded JWT (access token).
 //	string ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
-func (c *FusionAuthClient) CheckChangePasswordUsingJWTWithContext(ctx context.Context, encodedJWT string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) CheckChangePasswordUsingJWTAndIPAddressWithContext(ctx context.Context, encodedJWT string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
@@ -663,7 +663,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx contex
 	return &resp, &errors, err
 }
 
-// CheckChangePasswordUsingLoginId
+// CheckChangePasswordUsingLoginIdAndIPAddress
 // Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
 // When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
 // your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
@@ -672,11 +672,11 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx contex
 //
 //	string loginId The loginId (email or username) of the User that you intend to change the password for.
 //	string ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
-func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
-	return c.CheckChangePasswordUsingLoginIdWithContext(context.TODO(), loginId, ipAddress)
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndIPAddress(loginId string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
+	return c.CheckChangePasswordUsingLoginIdAndIPAddressWithContext(context.TODO(), loginId, ipAddress)
 }
 
-// CheckChangePasswordUsingLoginIdWithContext
+// CheckChangePasswordUsingLoginIdAndIPAddressWithContext
 // Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
 // When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
 // your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
@@ -685,7 +685,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginId(loginId string, ipAdd
 //
 //	string loginId The loginId (email or username) of the User that you intend to change the password for.
 //	string ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
-func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdWithContext(ctx context.Context, loginId string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndIPAddressWithContext(ctx context.Context, loginId string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
@@ -739,7 +739,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesWithCon
 	return &resp, &errors, err
 }
 
-// CheckChangePasswordUsingLoginIdAndLoginIdTypes
+// CheckChangePasswordUsingLoginIdAndLoginIdTypesAndIPAddress
 // Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
 // When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
 // your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
@@ -749,11 +749,11 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesWithCon
 //	string loginId The loginId of the User that you intend to change the password for.
 //	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
 //	string ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
-func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypes(loginId string, loginIdTypes []string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
-	return c.CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext(context.TODO(), loginId, loginIdTypes, ipAddress)
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesAndIPAddress(loginId string, loginIdTypes []string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
+	return c.CheckChangePasswordUsingLoginIdAndLoginIdTypesAndIPAddressWithContext(context.TODO(), loginId, loginIdTypes, ipAddress)
 }
 
-// CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext
+// CheckChangePasswordUsingLoginIdAndLoginIdTypesAndIPAddressWithContext
 // Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
 // When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
 // your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
@@ -763,7 +763,7 @@ func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypes(loginI
 //	string loginId The loginId of the User that you intend to change the password for.
 //	[]string loginIdTypes The identity types that FusionAuth will compare the loginId to.
 //	string ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
-func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesWithContext(ctx context.Context, loginId string, loginIdTypes []string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
+func (c *FusionAuthClient) CheckChangePasswordUsingLoginIdAndLoginIdTypesAndIPAddressWithContext(ctx context.Context, loginId string, loginIdTypes []string, ipAddress string) (*BaseHTTPResponse, *Errors, error) {
 	var resp BaseHTTPResponse
 	var errors Errors
 
