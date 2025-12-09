@@ -6926,7 +6926,7 @@ func (c *FusionAuthClient) RetrieveTwoFactorStatusWithContext(ctx context.Contex
 	return &resp, &errors, err
 }
 
-// RetrieveTwoFactorStatusBody
+// RetrieveTwoFactorStatusUsing
 // Retrieve a user's two-factor status.
 //
 // This can be used to see if a user will need to complete a two-factor challenge to complete a login,
@@ -6934,11 +6934,11 @@ func (c *FusionAuthClient) RetrieveTwoFactorStatusWithContext(ctx context.Contex
 // provides more payload options than retrieveTwoFactorStatus.
 //
 //	TwoFactorStatusRequest request The request object that contains all the information used to check the status.
-func (c *FusionAuthClient) RetrieveTwoFactorStatusBody(request TwoFactorStatusRequest) (*TwoFactorStatusResponse, *Errors, error) {
-	return c.RetrieveTwoFactorStatusBodyWithContext(context.TODO(), request)
+func (c *FusionAuthClient) RetrieveTwoFactorStatusUsing(request TwoFactorStatusRequest) (*TwoFactorStatusResponse, *Errors, error) {
+	return c.RetrieveTwoFactorStatusUsingWithContext(context.TODO(), request)
 }
 
-// RetrieveTwoFactorStatusBodyWithContext
+// RetrieveTwoFactorStatusUsingWithContext
 // Retrieve a user's two-factor status.
 //
 // This can be used to see if a user will need to complete a two-factor challenge to complete a login,
@@ -6946,7 +6946,7 @@ func (c *FusionAuthClient) RetrieveTwoFactorStatusBody(request TwoFactorStatusRe
 // provides more payload options than retrieveTwoFactorStatus.
 //
 //	TwoFactorStatusRequest request The request object that contains all the information used to check the status.
-func (c *FusionAuthClient) RetrieveTwoFactorStatusBodyWithContext(ctx context.Context, request TwoFactorStatusRequest) (*TwoFactorStatusResponse, *Errors, error) {
+func (c *FusionAuthClient) RetrieveTwoFactorStatusUsingWithContext(ctx context.Context, request TwoFactorStatusRequest) (*TwoFactorStatusResponse, *Errors, error) {
 	var resp TwoFactorStatusResponse
 	var errors Errors
 
