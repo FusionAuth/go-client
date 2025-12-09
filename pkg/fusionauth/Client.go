@@ -6926,6 +6926,41 @@ func (c *FusionAuthClient) RetrieveTwoFactorStatusWithContext(ctx context.Contex
 	return &resp, &errors, err
 }
 
+// RetrieveTwoFactorStatusBody
+// Retrieve a user's two-factor status.
+//
+// This can be used to see if a user will need to complete a two-factor challenge to complete a login,
+// and optionally identify the state of the two-factor trust across various applications. This operation
+// provides more payload options than retrieveTwoFactorStatus.
+//
+//	TwoFactorStatusRequest request The request object that contains all the information used to check the status.
+func (c *FusionAuthClient) RetrieveTwoFactorStatusBody(request TwoFactorStatusRequest) (*TwoFactorStatusResponse, *Errors, error) {
+	return c.RetrieveTwoFactorStatusBodyWithContext(context.TODO(), request)
+}
+
+// RetrieveTwoFactorStatusBodyWithContext
+// Retrieve a user's two-factor status.
+//
+// This can be used to see if a user will need to complete a two-factor challenge to complete a login,
+// and optionally identify the state of the two-factor trust across various applications. This operation
+// provides more payload options than retrieveTwoFactorStatus.
+//
+//	TwoFactorStatusRequest request The request object that contains all the information used to check the status.
+func (c *FusionAuthClient) RetrieveTwoFactorStatusBodyWithContext(ctx context.Context, request TwoFactorStatusRequest) (*TwoFactorStatusResponse, *Errors, error) {
+	var resp TwoFactorStatusResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/two-factor/status").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveUser
 // Retrieves the user for the given Id.
 //
