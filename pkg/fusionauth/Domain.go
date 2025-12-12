@@ -5254,6 +5254,7 @@ type ReactorStatus struct {
 	Expiration                                string               `json:"expiration,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
+	MultiFactorLambdas                        ReactorFeatureStatus `json:"multiFactorLambdas,omitempty"`
 	ScimServer                                ReactorFeatureStatus `json:"scimServer,omitempty"`
 	TenantManagerApplication                  ReactorFeatureStatus `json:"tenantManagerApplication,omitempty"`
 	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
