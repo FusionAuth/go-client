@@ -921,6 +921,7 @@ type BaseIdentityProvider struct {
 	LinkingStrategy          IdentityProviderLinkingStrategy                `json:"linkingStrategy,omitempty"`
 	Name                     string                                         `json:"name,omitempty"`
 	TenantConfiguration      map[string]IdentityProviderTenantConfiguration `json:"tenantConfiguration,omitempty"`
+	TenantId                 string                                         `json:"tenantId,omitempty"`
 	Type                     IdentityProviderType                           `json:"type,omitempty"`
 }
 
@@ -3321,6 +3322,7 @@ type IdentityProviderSearchCriteria struct {
 	BaseSearchCriteria
 	ApplicationId string               `json:"applicationId,omitempty"`
 	Name          string               `json:"name,omitempty"`
+	TenantId      string               `json:"tenantId,omitempty"`
 	Type          IdentityProviderType `json:"type,omitempty"`
 }
 
@@ -4248,6 +4250,7 @@ type IdentityProviderDetails struct {
 	IdpEndpoint    string                              `json:"idpEndpoint,omitempty"`
 	Name           string                              `json:"name,omitempty"`
 	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	TenantId       string                              `json:"tenantId,omitempty"`
 	Type           IdentityProviderType                `json:"type,omitempty"`
 }
 
