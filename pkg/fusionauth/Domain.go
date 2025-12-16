@@ -1319,9 +1319,9 @@ type Context struct {
 	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
 	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
 	Jwt                   map[string]interface{}  `json:"jwt,omitempty"`
+	MfaTrust              Trust                   `json:"mfaTrust,omitempty"`
 	Policies              Policies                `json:"policies,omitempty"`
 	Registration          UserRegistration        `json:"registration,omitempty"`
-	Trust                 Trust                   `json:"trust,omitempty"`
 }
 
 /**
