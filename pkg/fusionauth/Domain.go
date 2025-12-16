@@ -1313,6 +1313,18 @@ const (
 )
 
 /**
+ * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
+ */
+type Context struct {
+	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
+	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
+	Jwt                   map[string]interface{}  `json:"jwt,omitempty"`
+	Policies              Policies                `json:"policies,omitempty"`
+	Registration          UserRegistration        `json:"registration,omitempty"`
+	Trust                 Trust                   `json:"trust,omitempty"`
+}
+
+/**
  * A number identifying a cryptographic algorithm. Values should be registered with the <a
  * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
  *
@@ -4198,55 +4210,6 @@ type IdentityProviderDetails struct {
 }
 
 /**
- * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
- */
-type MFAContext struct {
-	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
-	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
-	Jwt                   map[string]interface{}  `json:"jwt,omitempty"`
-	MfaTrust              MFATrust                `json:"mfaTrust,omitempty"`
-	Policies              MFAPolicies             `json:"policies,omitempty"`
-	Registration          UserRegistration        `json:"registration,omitempty"`
-}
-
-/**
- * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
- */
-type MFAPolicies struct {
-	ApplicationLoginPolicy            MultiFactorLoginPolicy            `json:"applicationLoginPolicy,omitempty"`
-	ApplicationMultiFactorTrustPolicy ApplicationMultiFactorTrustPolicy `json:"applicationMultiFactorTrustPolicy,omitempty"`
-	TenantLoginPolicy                 MultiFactorLoginPolicy            `json:"tenantLoginPolicy,omitempty"`
-}
-
-/**
- * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
- */
-type MFARequiredLambdaResult struct {
-	Required                 bool `json:"required"`
-	SendSuspiciousLoginEvent bool `json:"sendSuspiciousLoginEvent"`
-}
-
-/**
- * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
- */
-type MFATrust struct {
-	ApplicationId     string                 `json:"applicationId,omitempty"`
-	Attributes        map[string]string      `json:"attributes,omitempty"`
-	ExpirationInstant int64                  `json:"expirationInstant,omitempty"`
-	Id                string                 `json:"id,omitempty"`
-	InsertInstant     int64                  `json:"insertInstant,omitempty"`
-	StartInstants     StartInstant           `json:"startInstants,omitempty"`
-	State             map[string]interface{} `json:"state,omitempty"`
-	TenantId          string                 `json:"tenantId,omitempty"`
-	UserId            string                 `json:"userId,omitempty"`
-}
-
-type StartInstant struct {
-	Applications map[string]int64 `json:"applications,omitempty"`
-	Tenant       int64            `json:"tenant,omitempty"`
-}
-
-/**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
  * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
@@ -4980,6 +4943,15 @@ type PhoneUnverifiedOptions struct {
 }
 
 /**
+ * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
+ */
+type Policies struct {
+	ApplicationLoginPolicy            MultiFactorLoginPolicy            `json:"applicationLoginPolicy,omitempty"`
+	ApplicationMultiFactorTrustPolicy ApplicationMultiFactorTrustPolicy `json:"applicationMultiFactorTrustPolicy,omitempty"`
+	TenantLoginPolicy                 MultiFactorLoginPolicy            `json:"tenantLoginPolicy,omitempty"`
+}
+
+/**
  * @author Michael Sleevi
  */
 type PreviewMessageTemplateRequest struct {
@@ -5518,6 +5490,14 @@ type RememberPreviousPasswords struct {
 type Requirable struct {
 	Enableable
 	Required bool `json:"required"`
+}
+
+/**
+ * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
+ */
+type RequiredLambdaResult struct {
+	Required                 bool `json:"required"`
+	SendSuspiciousLoginEvent bool `json:"sendSuspiciousLoginEvent"`
 }
 
 /**
@@ -6620,6 +6600,26 @@ const (
 	TransactionType_SuperMajority    TransactionType = "SuperMajority"
 	TransactionType_AbsoluteMajority TransactionType = "AbsoluteMajority"
 )
+
+/**
+ * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
+ */
+type Trust struct {
+	ApplicationId     string                 `json:"applicationId,omitempty"`
+	Attributes        map[string]string      `json:"attributes,omitempty"`
+	ExpirationInstant int64                  `json:"expirationInstant,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	StartInstants     StartInstant           `json:"startInstants,omitempty"`
+	State             map[string]interface{} `json:"state,omitempty"`
+	TenantId          string                 `json:"tenantId,omitempty"`
+	UserId            string                 `json:"userId,omitempty"`
+}
+
+type StartInstant struct {
+	Applications map[string]int64 `json:"applications,omitempty"`
+	Tenant       int64            `json:"tenant,omitempty"`
+}
 
 /**
  * @author Brett Guy
