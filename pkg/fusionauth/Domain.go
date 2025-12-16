@@ -4205,6 +4205,7 @@ type MFAContext struct {
 	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
 	Jwt                   map[string]interface{}  `json:"jwt,omitempty"`
 	MfaTrust              MFATrust                `json:"mfaTrust,omitempty"`
+	Policies              MFAPolicies             `json:"policies,omitempty"`
 	Registration          UserRegistration        `json:"registration,omitempty"`
 }
 
