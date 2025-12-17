@@ -323,13 +323,11 @@ func (c *FusionAuthClient) ApproveDeviceWithRequestWithContext(ctx context.Conte
 	var resp DeviceApprovalResponse
 	var errors Errors
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
-	formBody.Set("token", request.token)
-	formBody.Set("user_code", request.userCode)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("tenantId", request.TenantId)
+	formBody.Set("token", request.Token)
+	formBody.Set("user_code", request.UserCode)
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/oauth2/device/approve").
@@ -716,11 +714,11 @@ func (c *FusionAuthClient) ClientCredentialsGrantWithRequestWithContext(ctx cont
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	formBody.Set("grant_type", request.grantType)
-	formBody.Set("scope", request.scope)
-	formBody.Set("tenantId", request.tenantId)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("grant_type", request.GrantType)
+	formBody.Set("scope", request.Scope)
+	formBody.Set("tenantId", request.TenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -3007,12 +3005,10 @@ func (c *FusionAuthClient) DeviceAuthorizeWithRequestWithContext(ctx context.Con
 	var resp DeviceResponse
 	var errors OAuthError
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	formBody.Set("scope", request.scope)
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("scope", request.Scope)
+	formBody.Set("tenantId", request.TenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/device_authorize").
@@ -3225,15 +3221,13 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithRequestWi
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	formBody.Set("code", request.code)
-	formBody.Set("code_verifier", request.codeVerifier)
-	formBody.Set("grant_type", request.grantType)
-	formBody.Set("redirect_uri", request.redirectUri)
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("code", request.Code)
+	formBody.Set("code_verifier", request.CodeVerifier)
+	formBody.Set("grant_type", request.GrantType)
+	formBody.Set("redirect_uri", request.RedirectUri)
+	formBody.Set("tenantId", request.TenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -3264,12 +3258,12 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithRequestWithContext
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	formBody.Set("code", request.code)
-	formBody.Set("grant_type", request.grantType)
-	formBody.Set("redirect_uri", request.redirectUri)
-	formBody.Set("tenantId", request.tenantId)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("code", request.Code)
+	formBody.Set("grant_type", request.GrantType)
+	formBody.Set("redirect_uri", request.RedirectUri)
+	formBody.Set("tenantId", request.TenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -3346,15 +3340,13 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForAccessTokenWithRequestWithCont
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	formBody.Set("grant_type", request.grantType)
-	formBody.Set("refresh_token", request.refreshToken)
-	formBody.Set("scope", request.scope)
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
-	formBody.Set("user_code", request.userCode)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("grant_type", request.GrantType)
+	formBody.Set("refresh_token", request.RefreshToken)
+	formBody.Set("scope", request.Scope)
+	formBody.Set("tenantId", request.TenantId)
+	formBody.Set("user_code", request.UserCode)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -3461,14 +3453,14 @@ func (c *FusionAuthClient) ExchangeUserCredentialsForAccessTokenWithRequestWithC
 	var resp AccessToken
 	var errors OAuthError
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	formBody.Set("grant_type", request.grantType)
-	formBody.Set("password", request.password)
-	formBody.Set("scope", request.scope)
-	formBody.Set("tenantId", request.tenantId)
-	formBody.Set("user_code", request.userCode)
-	formBody.Set("username", request.username)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("grant_type", request.GrantType)
+	formBody.Set("password", request.Password)
+	formBody.Set("scope", request.Scope)
+	formBody.Set("tenantId", request.TenantId)
+	formBody.Set("user_code", request.UserCode)
+	formBody.Set("username", request.Username)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
@@ -7611,10 +7603,8 @@ func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithRequest(request Retrie
 func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithRequestWithContext(ctx context.Context, request RetrieveUserCodeUsingAPIKeyRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 	formBody := url.Values{}
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
-	formBody.Set("user_code", request.userCode)
+	formBody.Set("tenantId", request.TenantId)
+	formBody.Set("user_code", request.UserCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/user-code").
@@ -7643,12 +7633,10 @@ func (c *FusionAuthClient) RetrieveUserCodeWithRequest(request RetrieveUserCodeR
 func (c *FusionAuthClient) RetrieveUserCodeWithRequestWithContext(ctx context.Context, request RetrieveUserCodeRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	formBody.Set("client_secret", request.clientSecret)
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
-	formBody.Set("user_code", request.userCode)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("client_secret", request.ClientSecret)
+	formBody.Set("tenantId", request.TenantId)
+	formBody.Set("user_code", request.UserCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/user-code").
@@ -10514,11 +10502,9 @@ func (c *FusionAuthClient) ValidateDeviceWithRequest(request ValidateDeviceReque
 func (c *FusionAuthClient) ValidateDeviceWithRequestWithContext(ctx context.Context, request ValidateDeviceRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
 	formBody := url.Values{}
-	formBody.Set("client_id", request.clientId)
-	if request.tenantId != nil {
-		formBody.Set("tenantId", request.tenantId.String())
-	}
-	formBody.Set("user_code", request.userCode)
+	formBody.Set("client_id", request.ClientId)
+	formBody.Set("tenantId", request.TenantId)
+	formBody.Set("user_code", request.UserCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/validate").
