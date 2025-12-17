@@ -322,10 +322,18 @@ func (c *FusionAuthClient) ApproveDeviceWithRequest(request DeviceApprovalReques
 func (c *FusionAuthClient) ApproveDeviceWithRequestWithContext(ctx context.Context, request DeviceApprovalRequest) (*DeviceApprovalResponse, *Errors, error) {
 	var resp DeviceApprovalResponse
 	var errors Errors
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
+	formBody.Set("token", request.token)
+	formBody.Set("user_code", request.userCode)
 
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/oauth2/device/approve").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -707,10 +715,16 @@ func (c *FusionAuthClient) ClientCredentialsGrantWithRequest(request ClientCrede
 func (c *FusionAuthClient) ClientCredentialsGrantWithRequestWithContext(ctx context.Context, request ClientCredentialsGrantRequest) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	formBody.Set("grant_type", request.grantType)
+	formBody.Set("scope", request.scope)
+	formBody.Set("tenantId", request.tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -2992,10 +3006,17 @@ func (c *FusionAuthClient) DeviceAuthorizeWithRequest(request DeviceAuthorizatio
 func (c *FusionAuthClient) DeviceAuthorizeWithRequestWithContext(ctx context.Context, request DeviceAuthorizationRequest) (*DeviceResponse, *OAuthError, error) {
 	var resp DeviceResponse
 	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	formBody.Set("scope", request.scope)
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/device_authorize").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -3203,10 +3224,20 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithRequest(r
 func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenUsingPKCEWithRequestWithContext(ctx context.Context, request OAuthCodePKCEAccessTokenRequest) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	formBody.Set("code", request.code)
+	formBody.Set("code_verifier", request.codeVerifier)
+	formBody.Set("grant_type", request.grantType)
+	formBody.Set("redirect_uri", request.redirectUri)
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -3232,10 +3263,17 @@ func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithRequest(request OA
 func (c *FusionAuthClient) ExchangeOAuthCodeForAccessTokenWithRequestWithContext(ctx context.Context, request OAuthCodeAccessTokenRequest) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	formBody.Set("code", request.code)
+	formBody.Set("grant_type", request.grantType)
+	formBody.Set("redirect_uri", request.redirectUri)
+	formBody.Set("tenantId", request.tenantId)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -3307,10 +3345,20 @@ func (c *FusionAuthClient) ExchangeRefreshTokenForAccessTokenWithRequest(request
 func (c *FusionAuthClient) ExchangeRefreshTokenForAccessTokenWithRequestWithContext(ctx context.Context, request RefreshTokenAccessTokenRequest) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	formBody.Set("grant_type", request.grantType)
+	formBody.Set("refresh_token", request.refreshToken)
+	formBody.Set("scope", request.scope)
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
+	formBody.Set("user_code", request.userCode)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -3412,10 +3460,19 @@ func (c *FusionAuthClient) ExchangeUserCredentialsForAccessTokenWithRequest(requ
 func (c *FusionAuthClient) ExchangeUserCredentialsForAccessTokenWithRequestWithContext(ctx context.Context, request UserCredentialsAccessTokenRequest) (*AccessToken, *OAuthError, error) {
 	var resp AccessToken
 	var errors OAuthError
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	formBody.Set("grant_type", request.grantType)
+	formBody.Set("password", request.password)
+	formBody.Set("scope", request.scope)
+	formBody.Set("tenantId", request.tenantId)
+	formBody.Set("user_code", request.userCode)
+	formBody.Set("username", request.username)
 
 	restClient := c.StartAnonymous(&resp, &errors)
 	err := restClient.WithUri("/oauth2/token").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -7553,10 +7610,15 @@ func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithRequest(request Retrie
 //	RetrieveUserCodeUsingAPIKeyRequest request The user code retrieval request including optional tenantId.
 func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithRequestWithContext(ctx context.Context, request RetrieveUserCodeUsingAPIKeyRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
+	formBody := url.Values{}
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
+	formBody.Set("user_code", request.userCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/user-code").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	return &resp, err
@@ -7580,10 +7642,17 @@ func (c *FusionAuthClient) RetrieveUserCodeWithRequest(request RetrieveUserCodeR
 //	RetrieveUserCodeRequest request The user code retrieval request.
 func (c *FusionAuthClient) RetrieveUserCodeWithRequestWithContext(ctx context.Context, request RetrieveUserCodeRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	formBody.Set("client_secret", request.clientSecret)
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
+	formBody.Set("user_code", request.userCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/user-code").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	return &resp, err
@@ -10444,10 +10513,16 @@ func (c *FusionAuthClient) ValidateDeviceWithRequest(request ValidateDeviceReque
 //	ValidateDeviceRequest request The device validation request.
 func (c *FusionAuthClient) ValidateDeviceWithRequestWithContext(ctx context.Context, request ValidateDeviceRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
+	formBody := url.Values{}
+	formBody.Set("client_id", request.clientId)
+	if request.tenantId != nil {
+		formBody.Set("tenantId", request.tenantId.String())
+	}
+	formBody.Set("user_code", request.userCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/validate").
-		WithJSONBody(request).
+		WithFormData(formBody).
 		WithMethod(http.MethodPost).
 		Do(ctx)
 	return &resp, err

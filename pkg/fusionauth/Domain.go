@@ -1449,12 +1449,11 @@ func (b *DailyActiveUserReportResponse) SetStatus(status int) {
  * @author Lyle Schemmerling
  */
 type DeviceApprovalRequest struct {
-	ClientId     string   `json:"client_id,omitempty"`
-	ClientSecret string   `json:"client_secret,omitempty"`
-	MetaData     MetaData `json:"metaData,omitempty"`
-	TenantId     string   `json:"tenantId,omitempty"`
-	Token        string   `json:"token,omitempty"`
-	UserCode     string   `json:"user_code,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+	Token        string `json:"token,omitempty"`
+	UserCode     string `json:"user_code,omitempty"`
 }
 
 /**
@@ -1477,11 +1476,10 @@ func (b *DeviceApprovalResponse) SetStatus(status int) {
  * @author Lyle Schemmerling
  */
 type DeviceAuthorizationRequest struct {
-	ClientId     string   `json:"client_id,omitempty"`
-	ClientSecret string   `json:"client_secret,omitempty"`
-	MetaData     MetaData `json:"metaData,omitempty"`
-	Scope        string   `json:"scope,omitempty"`
-	TenantId     string   `json:"tenantId,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
 }
 
 /**
