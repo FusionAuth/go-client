@@ -3734,15 +3734,16 @@ func (e KeyAlgorithm) String() string {
 }
 
 const (
-	KeyAlgorithm_ES256 KeyAlgorithm = "ES256"
-	KeyAlgorithm_ES384 KeyAlgorithm = "ES384"
-	KeyAlgorithm_ES512 KeyAlgorithm = "ES512"
-	KeyAlgorithm_HS256 KeyAlgorithm = "HS256"
-	KeyAlgorithm_HS384 KeyAlgorithm = "HS384"
-	KeyAlgorithm_HS512 KeyAlgorithm = "HS512"
-	KeyAlgorithm_RS256 KeyAlgorithm = "RS256"
-	KeyAlgorithm_RS384 KeyAlgorithm = "RS384"
-	KeyAlgorithm_RS512 KeyAlgorithm = "RS512"
+	KeyAlgorithm_ES256   KeyAlgorithm = "ES256"
+	KeyAlgorithm_ES384   KeyAlgorithm = "ES384"
+	KeyAlgorithm_ES512   KeyAlgorithm = "ES512"
+	KeyAlgorithm_HS256   KeyAlgorithm = "HS256"
+	KeyAlgorithm_HS384   KeyAlgorithm = "HS384"
+	KeyAlgorithm_HS512   KeyAlgorithm = "HS512"
+	KeyAlgorithm_RS256   KeyAlgorithm = "RS256"
+	KeyAlgorithm_RS384   KeyAlgorithm = "RS384"
+	KeyAlgorithm_RS512   KeyAlgorithm = "RS512"
+	KeyAlgorithm_Ed25519 KeyAlgorithm = "Ed25519"
 )
 
 type KeyType string
@@ -3755,6 +3756,7 @@ const (
 	KeyType_EC   KeyType = "EC"
 	KeyType_RSA  KeyType = "RSA"
 	KeyType_HMAC KeyType = "HMAC"
+	KeyType_OKP  KeyType = "OKP"
 )
 
 /**
