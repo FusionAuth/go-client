@@ -6860,6 +6860,29 @@ func (c *FusionAuthClient) RetrieveTotalReportWithContext(ctx context.Context) (
 	return &resp, err
 }
 
+// RetrieveTotalReportWithExcludes
+// Retrieves the totals report. This allows excluding applicationTotals from the report. An empty list will include the applicationTotals.
+//
+//	[]string excludes List of fields to exclude in the response. Currently only allows applicationTotals.
+func (c *FusionAuthClient) RetrieveTotalReportWithExcludes(excludes []string) (*TotalsReportResponse, error) {
+	return c.RetrieveTotalReportWithExcludesWithContext(context.TODO(), excludes)
+}
+
+// RetrieveTotalReportWithExcludesWithContext
+// Retrieves the totals report. This allows excluding applicationTotals from the report. An empty list will include the applicationTotals.
+//
+//	[]string excludes List of fields to exclude in the response. Currently only allows applicationTotals.
+func (c *FusionAuthClient) RetrieveTotalReportWithExcludesWithContext(ctx context.Context, excludes []string) (*TotalsReportResponse, error) {
+	var resp TotalsReportResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/report/totals").
+		WithParameter("excludes", excludes).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	return &resp, err
+}
+
 // RetrieveTwoFactorRecoveryCodes
 // Retrieve two-factor recovery codes for a user.
 //

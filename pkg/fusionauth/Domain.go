@@ -910,6 +910,7 @@ type BaseIdentityProvider struct {
 	LinkingStrategy          IdentityProviderLinkingStrategy                `json:"linkingStrategy,omitempty"`
 	Name                     string                                         `json:"name,omitempty"`
 	TenantConfiguration      map[string]IdentityProviderTenantConfiguration `json:"tenantConfiguration,omitempty"`
+	TenantId                 string                                         `json:"tenantId,omitempty"`
 	Type                     IdentityProviderType                           `json:"type,omitempty"`
 }
 
@@ -3275,6 +3276,7 @@ type IdentityProviderSearchCriteria struct {
 	BaseSearchCriteria
 	ApplicationId string               `json:"applicationId,omitempty"`
 	Name          string               `json:"name,omitempty"`
+	TenantId      string               `json:"tenantId,omitempty"`
 	Type          IdentityProviderType `json:"type,omitempty"`
 }
 
@@ -3688,15 +3690,16 @@ func (e KeyAlgorithm) String() string {
 }
 
 const (
-	KeyAlgorithm_ES256 KeyAlgorithm = "ES256"
-	KeyAlgorithm_ES384 KeyAlgorithm = "ES384"
-	KeyAlgorithm_ES512 KeyAlgorithm = "ES512"
-	KeyAlgorithm_HS256 KeyAlgorithm = "HS256"
-	KeyAlgorithm_HS384 KeyAlgorithm = "HS384"
-	KeyAlgorithm_HS512 KeyAlgorithm = "HS512"
-	KeyAlgorithm_RS256 KeyAlgorithm = "RS256"
-	KeyAlgorithm_RS384 KeyAlgorithm = "RS384"
-	KeyAlgorithm_RS512 KeyAlgorithm = "RS512"
+	KeyAlgorithm_ES256   KeyAlgorithm = "ES256"
+	KeyAlgorithm_ES384   KeyAlgorithm = "ES384"
+	KeyAlgorithm_ES512   KeyAlgorithm = "ES512"
+	KeyAlgorithm_HS256   KeyAlgorithm = "HS256"
+	KeyAlgorithm_HS384   KeyAlgorithm = "HS384"
+	KeyAlgorithm_HS512   KeyAlgorithm = "HS512"
+	KeyAlgorithm_RS256   KeyAlgorithm = "RS256"
+	KeyAlgorithm_RS384   KeyAlgorithm = "RS384"
+	KeyAlgorithm_RS512   KeyAlgorithm = "RS512"
+	KeyAlgorithm_Ed25519 KeyAlgorithm = "Ed25519"
 )
 
 type KeyType string
@@ -3709,6 +3712,7 @@ const (
 	KeyType_EC   KeyType = "EC"
 	KeyType_RSA  KeyType = "RSA"
 	KeyType_HMAC KeyType = "HMAC"
+	KeyType_OKP  KeyType = "OKP"
 )
 
 /**
@@ -4202,6 +4206,7 @@ type IdentityProviderDetails struct {
 	IdpEndpoint    string                              `json:"idpEndpoint,omitempty"`
 	Name           string                              `json:"name,omitempty"`
 	Oauth2         IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
+	TenantId       string                              `json:"tenantId,omitempty"`
 	Type           IdentityProviderType                `json:"type,omitempty"`
 }
 
