@@ -371,6 +371,13 @@ func Test_MessengerTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_MultiFactorActionImplementsStringer(t *testing.T) {
+	var enum interface{} = MultiFactorAction("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("MultiFactorAction does not implement stringer interface\n")
+	}
+}
+
 func Test_MultiFactorLoginPolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = MultiFactorLoginPolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {

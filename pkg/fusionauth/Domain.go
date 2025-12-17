@@ -266,6 +266,7 @@ type AuthenticationTokenConfiguration struct {
 type LambdaConfiguration struct {
 	AccessTokenPopulateId               string `json:"accessTokenPopulateId,omitempty"`
 	IdTokenPopulateId                   string `json:"idTokenPopulateId,omitempty"`
+	MultiFactorRequirementId            string `json:"multiFactorRequirementId,omitempty"`
 	Samlv2PopulateId                    string `json:"samlv2PopulateId,omitempty"`
 	SelfServiceRegistrationValidationId string `json:"selfServiceRegistrationValidationId,omitempty"`
 	UserinfoPopulateId                  string `json:"userinfoPopulateId,omitempty"`
@@ -1310,6 +1311,19 @@ const (
 	ContentStatus_PENDING  ContentStatus = "PENDING"
 	ContentStatus_REJECTED ContentStatus = "REJECTED"
 )
+
+/**
+ * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
+ */
+type Context struct {
+	AccessToken           string                  `json:"accessToken,omitempty"`
+	Action                MultiFactorAction       `json:"action,omitempty"`
+	Application           Application             `json:"application,omitempty"`
+	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
+	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
+	MfaTrust              Trust                   `json:"mfaTrust,omitempty"`
+	Policies              Policies                `json:"policies,omitempty"`
+}
 
 /**
  * A number identifying a cryptographic algorithm. Values should be registered with the <a
@@ -3966,6 +3980,7 @@ const (
 	LambdaType_SelfServiceRegistrationValidation LambdaType = "SelfServiceRegistrationValidation"
 	LambdaType_UserInfoPopulate                  LambdaType = "UserInfoPopulate"
 	LambdaType_LoginValidation                   LambdaType = "LoginValidation"
+	LambdaType_MFARequirement                    LambdaType = "MFARequirement"
 )
 
 /**
@@ -4380,6 +4395,21 @@ type MonthlyActiveUserReportResponse struct {
 func (b *MonthlyActiveUserReportResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * Communicate various actions/contexts in which multi-factor authentication can be used.
+ */
+type MultiFactorAction string
+
+func (e MultiFactorAction) String() string {
+	return string(e)
+}
+
+const (
+	MultiFactorAction_ChangePassword MultiFactorAction = "changePassword"
+	MultiFactorAction_Login          MultiFactorAction = "login"
+	MultiFactorAction_StepUp         MultiFactorAction = "stepUp"
+)
 
 /**
  * @author Daniel DeGroff
@@ -4929,6 +4959,15 @@ type PhoneUnverifiedOptions struct {
 }
 
 /**
+ * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
+ */
+type Policies struct {
+	ApplicationLoginPolicy            MultiFactorLoginPolicy            `json:"applicationLoginPolicy,omitempty"`
+	ApplicationMultiFactorTrustPolicy ApplicationMultiFactorTrustPolicy `json:"applicationMultiFactorTrustPolicy,omitempty"`
+	TenantLoginPolicy                 MultiFactorLoginPolicy            `json:"tenantLoginPolicy,omitempty"`
+}
+
+/**
  * @author Michael Sleevi
  */
 type PreviewMessageTemplateRequest struct {
@@ -5204,6 +5243,7 @@ type ReactorStatus struct {
 	Expiration                                string               `json:"expiration,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
+	MultiFactorLambdas                        ReactorFeatureStatus `json:"multiFactorLambdas,omitempty"`
 	ScimServer                                ReactorFeatureStatus `json:"scimServer,omitempty"`
 	TenantManagerApplication                  ReactorFeatureStatus `json:"tenantManagerApplication,omitempty"`
 	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
@@ -5466,6 +5506,14 @@ type RememberPreviousPasswords struct {
 type Requirable struct {
 	Enableable
 	Required bool `json:"required"`
+}
+
+/**
+ * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
+ */
+type RequiredLambdaResult struct {
+	Required                 bool `json:"required"`
+	SendSuspiciousLoginEvent bool `json:"sendSuspiciousLoginEvent"`
 }
 
 /**
@@ -6106,6 +6154,7 @@ type TenantFormConfiguration struct {
  */
 type TenantLambdaConfiguration struct {
 	LoginValidationId                     string `json:"loginValidationId,omitempty"`
+	MultiFactorRequirementId              string `json:"multiFactorRequirementId,omitempty"`
 	ScimEnterpriseUserRequestConverterId  string `json:"scimEnterpriseUserRequestConverterId,omitempty"`
 	ScimEnterpriseUserResponseConverterId string `json:"scimEnterpriseUserResponseConverterId,omitempty"`
 	ScimGroupRequestConverterId           string `json:"scimGroupRequestConverterId,omitempty"`
@@ -6569,6 +6618,26 @@ const (
 )
 
 /**
+ * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
+ */
+type Trust struct {
+	ApplicationId     string                 `json:"applicationId,omitempty"`
+	Attributes        map[string]string      `json:"attributes,omitempty"`
+	ExpirationInstant int64                  `json:"expirationInstant,omitempty"`
+	Id                string                 `json:"id,omitempty"`
+	InsertInstant     int64                  `json:"insertInstant,omitempty"`
+	StartInstants     StartInstant           `json:"startInstants,omitempty"`
+	State             map[string]interface{} `json:"state,omitempty"`
+	TenantId          string                 `json:"tenantId,omitempty"`
+	UserId            string                 `json:"userId,omitempty"`
+}
+
+type StartInstant struct {
+	Applications map[string]int64 `json:"applications,omitempty"`
+	Tenant       int64            `json:"tenant,omitempty"`
+}
+
+/**
  * @author Brett Guy
  */
 type TwilioMessengerConfiguration struct {
@@ -6748,6 +6817,18 @@ type TwoFactorStartResponse struct {
 
 func (b *TwoFactorStartResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Check the status of two-factor authentication for a user, with more options than on a GET request.
+ */
+type TwoFactorStatusRequest struct {
+	BaseEventRequest
+	AccessToken      string            `json:"accessToken,omitempty"`
+	Action           MultiFactorAction `json:"action,omitempty"`
+	ApplicationId    string            `json:"applicationId,omitempty"`
+	TwoFactorTrustId string            `json:"twoFactorTrustId,omitempty"`
+	UserId           string            `json:"userId,omitempty"`
 }
 
 /**
