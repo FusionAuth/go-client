@@ -1316,12 +1316,13 @@ const (
  * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
  */
 type Context struct {
+	Action                MultiFactorAction       `json:"action,omitempty"`
+	Application           Application             `json:"application,omitempty"`
 	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
 	EncodedJWT            string                  `json:"encodedJWT,omitempty"`
 	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
 	MfaTrust              Trust                   `json:"mfaTrust,omitempty"`
 	Policies              Policies                `json:"policies,omitempty"`
-	Registration          UserRegistration        `json:"registration,omitempty"`
 }
 
 /**
