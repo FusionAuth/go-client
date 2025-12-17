@@ -6809,9 +6809,9 @@ func (b *TwoFactorStartResponse) SetStatus(status int) {
  */
 type TwoFactorStatusRequest struct {
 	BaseEventRequest
+	AccessToken      string            `json:"accessToken,omitempty"`
 	Action           MultiFactorAction `json:"action,omitempty"`
 	ApplicationId    string            `json:"applicationId,omitempty"`
-	Token            string            `json:"token,omitempty"`
 	TwoFactorTrustId string            `json:"twoFactorTrustId,omitempty"`
 	UserId           string            `json:"userId,omitempty"`
 }
