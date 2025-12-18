@@ -2388,7 +2388,7 @@ type ExternalJWTIdentityProvider struct {
  * <p>
  * This also provides some helpers for FIPS things such as password length requirements.
  *
- * @author Brian Pontarelli & Daniel DeGroff
+ * @author Brian Pontarelli and Daniel DeGroff
  */
 type FIPS struct {
 }
