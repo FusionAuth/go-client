@@ -10691,15 +10691,13 @@ func (c *FusionAuthClient) ValidateDeviceWithRequest(request ValidateDeviceReque
 //	ValidateDeviceRequest request The device validation request.
 func (c *FusionAuthClient) ValidateDeviceWithRequestWithContext(ctx context.Context, request ValidateDeviceRequest) (*BaseHTTPResponse, error) {
 	var resp BaseHTTPResponse
-	formBody := url.Values{}
-	formBody.Set("client_id", request.ClientId)
-	formBody.Set("tenantId", request.TenantId)
-	formBody.Set("user_code", request.UserCode)
 
 	err := c.StartAnonymous(&resp, nil).
 		WithUri("/oauth2/device/validate").
-		WithFormData(formBody).
-		WithMethod(http.MethodPost).
+		WithParameter("client_id", request.ClientId).
+		WithParameter("tenantId", request.TenantId).
+		WithParameter("user_code", request.UserCode).
+		WithMethod(http.MethodGet).
 		Do(ctx)
 	return &resp, err
 }
