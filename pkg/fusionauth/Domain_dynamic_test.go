@@ -210,6 +210,13 @@ func Test_EventTypeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_ExistingUserStrategyImplementsStringer(t *testing.T) {
+	var enum interface{} = ExistingUserStrategy("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("ExistingUserStrategy does not implement stringer interface\n")
+	}
+}
+
 func Test_ExpiryUnitImplementsStringer(t *testing.T) {
 	var enum interface{} = ExpiryUnit("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -242,6 +249,13 @@ func Test_FormFieldAdminPolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = FormFieldAdminPolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("FormFieldAdminPolicy does not implement stringer interface\n")
+	}
+}
+
+func Test_FormStepTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = FormStepType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("FormStepType does not implement stringer interface\n")
 	}
 }
 
@@ -368,6 +382,13 @@ func Test_MessengerTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = MessengerType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("MessengerType does not implement stringer interface\n")
+	}
+}
+
+func Test_MultiFactorActionImplementsStringer(t *testing.T) {
+	var enum interface{} = MultiFactorAction("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("MultiFactorAction does not implement stringer interface\n")
 	}
 }
 
