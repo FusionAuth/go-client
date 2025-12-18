@@ -2209,6 +2209,20 @@ const (
 )
 
 /**
+ * Represent the various states/expectations of a user in the context of starting verification
+ */
+type ExistingUserStrategy string
+
+func (e ExistingUserStrategy) String() string {
+	return string(e)
+}
+
+const (
+	ExistingUserStrategy_MustExist    ExistingUserStrategy = "mustExist"
+	ExistingUserStrategy_MustNotExist ExistingUserStrategy = "mustNotExist"
+)
+
+/**
  * An expandable API request.
  *
  * @author Daniel DeGroff
@@ -2639,8 +2653,24 @@ func (b *FormResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type FormStep struct {
-	Fields []string `json:"fields,omitempty"`
+	Fields []string     `json:"fields,omitempty"`
+	Type   FormStepType `json:"type,omitempty"`
 }
+
+/**
+ * Denotes the type of form step. This is used to configure different behavior on form steps in the registration flow.
+ */
+type FormStepType string
+
+func (e FormStepType) String() string {
+	return string(e)
+}
+
+const (
+	FormStepType_CollectData       FormStepType = "collectData"
+	FormStepType_VerifyEmail       FormStepType = "verifyEmail"
+	FormStepType_VerifyPhoneNumber FormStepType = "verifyPhoneNumber"
+)
 
 /**
  * @author Daniel DeGroff
@@ -5443,6 +5473,7 @@ type RegistrationRequest struct {
 	SkipRegistrationVerification bool                        `json:"skipRegistrationVerification"`
 	SkipVerification             bool                        `json:"skipVerification"`
 	User                         User                        `json:"user,omitempty"`
+	VerificationIds              []string                    `json:"verificationIds,omitempty"`
 }
 
 /**
@@ -5460,6 +5491,7 @@ type RegistrationResponse struct {
 	Token                               string           `json:"token,omitempty"`
 	TokenExpirationInstant              int64            `json:"tokenExpirationInstant,omitempty"`
 	User                                User             `json:"user,omitempty"`
+	VerificationIds                     []VerificationId `json:"verificationIds,omitempty"`
 }
 
 func (b *RegistrationResponse) SetStatus(status int) {
@@ -7896,6 +7928,7 @@ type VerifySendRequest struct {
  */
 type VerifyStartRequest struct {
 	ApplicationId        string                 `json:"applicationId,omitempty"`
+	ExistingUserStrategy ExistingUserStrategy   `json:"existingUserStrategy,omitempty"`
 	LoginId              string                 `json:"loginId,omitempty"`
 	LoginIdType          string                 `json:"loginIdType,omitempty"`
 	State                map[string]interface{} `json:"state,omitempty"`
