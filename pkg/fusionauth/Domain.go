@@ -112,6 +112,17 @@ func (b *AccessToken) SetStatus(status int) {
 }
 
 /**
+ * The request object for introspecting an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+type AccessTokenIntrospectRequest struct {
+	ClientId string `json:"client_id,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+	Token    string `json:"token,omitempty"`
+}
+
+/**
  * The user action request object.
  *
  * @author Brian Pontarelli
@@ -1149,6 +1160,29 @@ const (
 )
 
 /**
+ * Contains the parameters used to introspect an access token that was obtained via the client credentials grant.
+ *
+ * @author Lyle Schemmerling
+ */
+type ClientCredentialsAccessTokenIntrospectRequest struct {
+	TenantId string `json:"tenantId,omitempty"`
+	Token    string `json:"token,omitempty"`
+}
+
+/**
+ * The request object to make a Client Credentials grant request to obtain an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+type ClientCredentialsGrantRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	GrantType    string `json:"grant_type,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+}
+
+/**
  * @author Trevor Smith
  */
 type ConnectorPolicy struct {
@@ -1424,6 +1458,19 @@ func (b *DailyActiveUserReportResponse) SetStatus(status int) {
 }
 
 /**
+ * The request object to approve a device grant.
+ *
+ * @author Lyle Schemmerling
+ */
+type DeviceApprovalRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+	Token        string `json:"token,omitempty"`
+	UserCode     string `json:"user_code,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type DeviceApprovalResponse struct {
@@ -1437,6 +1484,16 @@ type DeviceApprovalResponse struct {
 
 func (b *DeviceApprovalResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+type DeviceAuthorizationRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
 }
 
 /**
@@ -4538,6 +4595,36 @@ const (
 )
 
 /**
+ * The request object for exchanging an OAuth authorization code for an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+type OAuthCodeAccessTokenRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Code         string `json:"code,omitempty"`
+	GrantType    string `json:"grant_type,omitempty"`
+	RedirectUri  string `json:"redirect_uri,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+}
+
+/**
+ * The request object to make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint and a
+ * code_verifier for an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+type OAuthCodePKCEAccessTokenRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	Code         string `json:"code,omitempty"`
+	CodeVerifier string `json:"code_verifier,omitempty"`
+	GrantType    string `json:"grant_type,omitempty"`
+	RedirectUri  string `json:"redirect_uri,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type OAuthConfigurationResponse struct {
@@ -5342,6 +5429,21 @@ type MetaData struct {
 }
 
 /**
+ * The request object to exchange a Refresh Token for an Access Token.
+ *
+ * @author Lyle Schemmerling
+ */
+type RefreshTokenAccessTokenRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	GrantType    string `json:"grant_type,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+	UserCode     string `json:"user_code,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type RefreshTokenExpirationPolicy string
@@ -5573,6 +5675,28 @@ const (
 	ResidentKeyRequirement_Preferred   ResidentKeyRequirement = "preferred"
 	ResidentKeyRequirement_Required    ResidentKeyRequirement = "required"
 )
+
+/**
+ * The request object for retrieving a user code that is part of an in-progress Device Authorization Grant.
+ *
+ * @author Lyle Schemmerling
+ */
+type RetrieveUserCodeRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+	UserCode     string `json:"user_code,omitempty"`
+}
+
+/**
+ * The request object for retrieving a user code that is part of an in-progress Device Authorization Grant using an API key
+ *
+ * @author Lyle Schemmerling
+ */
+type RetrieveUserCodeUsingAPIKeyRequest struct {
+	TenantId string `json:"tenantId,omitempty"`
+	UserCode string `json:"user_code,omitempty"`
+}
 
 /**
  * @author Brian Pontarelli
@@ -7277,6 +7401,22 @@ type UserCreateEvent struct {
 }
 
 /**
+ * The request object for exchanging user credentials (username and password) for an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+type UserCredentialsAccessTokenRequest struct {
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	GrantType    string `json:"grant_type,omitempty"`
+	Password     string `json:"password,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+	UserCode     string `json:"user_code,omitempty"`
+	Username     string `json:"username,omitempty"`
+}
+
+/**
  * Models the User Deactivate Event.
  *
  * @author Brian Pontarelli
@@ -7814,6 +7954,17 @@ const (
 	UserVerificationRequirement_Preferred   UserVerificationRequirement = "preferred"
 	UserVerificationRequirement_Discouraged UserVerificationRequirement = "discouraged"
 )
+
+/**
+ * The request object for validating an end-user provided user_code from the user-interaction of the Device Authorization Grant
+ *
+ * @author Lyle Schemmerling
+ */
+type ValidateDeviceRequest struct {
+	ClientId string `json:"client_id,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+	UserCode string `json:"user_code,omitempty"`
+}
 
 /**
  * @author Daniel DeGroff
