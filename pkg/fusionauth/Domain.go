@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2026, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -4762,6 +4762,7 @@ const (
 	OAuthErrorType_AuthorizationPending    OAuthErrorType = "authorization_pending"
 	OAuthErrorType_ExpiredToken            OAuthErrorType = "expired_token"
 	OAuthErrorType_UnsupportedTokenType    OAuthErrorType = "unsupported_token_type"
+	OAuthErrorType_InvalidDpopProof        OAuthErrorType = "invalid_dpop_proof"
 )
 
 /**
@@ -6717,6 +6718,7 @@ type TimeBasedDeletePolicy struct {
  * <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05">
  * Draft RFC on OAuth 2.0 Message Authentication Code (MAC) Tokens</a>
  * </li>
+ * <li>DPoP Token type as defined by <a href="https://datatracker.ietf.org/doc/html/rfc9449"></li>
  * </ul>
  *
  * @author Daniel DeGroff
@@ -6730,6 +6732,7 @@ func (e TokenType) String() string {
 const (
 	TokenType_Bearer TokenType = "Bearer"
 	TokenType_MAC    TokenType = "MAC"
+	TokenType_DPoP   TokenType = "DPoP"
 )
 
 /**
