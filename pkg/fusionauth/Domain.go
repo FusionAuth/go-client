@@ -923,6 +923,7 @@ type BaseIdentityProvider struct {
 	LastUpdateInstant        int64                                          `json:"lastUpdateInstant,omitempty"`
 	LinkingStrategy          IdentityProviderLinkingStrategy                `json:"linkingStrategy,omitempty"`
 	Name                     string                                         `json:"name,omitempty"`
+	Source                   IdentityProviderSource                         `json:"source,omitempty"`
 	TenantConfiguration      map[string]IdentityProviderTenantConfiguration `json:"tenantConfiguration,omitempty"`
 	TenantId                 string                                         `json:"tenantId,omitempty"`
 	Type                     IdentityProviderType                           `json:"type,omitempty"`
@@ -3377,10 +3378,11 @@ func (b *IdentityProviderResponse) SetStatus(status int) {
  */
 type IdentityProviderSearchCriteria struct {
 	BaseSearchCriteria
-	ApplicationId string               `json:"applicationId,omitempty"`
-	Name          string               `json:"name,omitempty"`
-	TenantId      string               `json:"tenantId,omitempty"`
-	Type          IdentityProviderType `json:"type,omitempty"`
+	ApplicationId string                 `json:"applicationId,omitempty"`
+	Name          string                 `json:"name,omitempty"`
+	Source        IdentityProviderSource `json:"source,omitempty"`
+	TenantId      string                 `json:"tenantId,omitempty"`
+	Type          IdentityProviderType   `json:"type,omitempty"`
 }
 
 /**
@@ -3406,6 +3408,20 @@ type IdentityProviderSearchResponse struct {
 func (b *IdentityProviderSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
 }
+
+/**
+ * The source of an identity provider configuration.
+ */
+type IdentityProviderSource string
+
+func (e IdentityProviderSource) String() string {
+	return string(e)
+}
+
+const (
+	IdentityProviderSource_System        IdentityProviderSource = "System"
+	IdentityProviderSource_TenantManager IdentityProviderSource = "TenantManager"
+)
 
 /**
  * @author Daniel DeGroff

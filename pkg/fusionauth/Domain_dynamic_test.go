@@ -308,6 +308,13 @@ func Test_ClientAuthenticationMethodImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_IdentityProviderSourceImplementsStringer(t *testing.T) {
+	var enum interface{} = IdentityProviderSource("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("IdentityProviderSource does not implement stringer interface\n")
+	}
+}
+
 func Test_IdentityProviderTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = IdentityProviderType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
