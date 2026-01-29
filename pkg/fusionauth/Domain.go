@@ -686,6 +686,7 @@ type AuditLog struct {
 	NewValue      interface{}            `json:"newValue,omitempty"`
 	OldValue      interface{}            `json:"oldValue,omitempty"`
 	Reason        string                 `json:"reason,omitempty"`
+	TenantId      string                 `json:"tenantId,omitempty"`
 }
 
 /**
@@ -739,6 +740,7 @@ type AuditLogSearchCriteria struct {
 	OldValue string `json:"oldValue,omitempty"`
 	Reason   string `json:"reason,omitempty"`
 	Start    int64  `json:"start,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
 	User     string `json:"user,omitempty"`
 }
 
