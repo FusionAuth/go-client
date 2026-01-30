@@ -8122,33 +8122,6 @@ func (c *FusionAuthClient) RetrieveUserRecentLoginsWithContext(ctx context.Conte
 	return &resp, &errors, err
 }
 
-// RetrieveUserUsingJWT
-// Retrieves the user for the given Id. This method does not use an API key, instead it uses a JSON Web Token (JWT) for authentication.
-//
-//	string encodedJWT The encoded JWT (access token).
-func (c *FusionAuthClient) RetrieveUserUsingJWT(encodedJWT string) (*UserResponse, *Errors, error) {
-	return c.RetrieveUserUsingJWTWithContext(context.TODO(), encodedJWT)
-}
-
-// RetrieveUserUsingJWTWithContext
-// Retrieves the user for the given Id. This method does not use an API key, instead it uses a JSON Web Token (JWT) for authentication.
-//
-//	string encodedJWT The encoded JWT (access token).
-func (c *FusionAuthClient) RetrieveUserUsingJWTWithContext(ctx context.Context, encodedJWT string) (*UserResponse, *Errors, error) {
-	var resp UserResponse
-	var errors Errors
-
-	restClient := c.StartAnonymous(&resp, &errors)
-	err := restClient.WithUri("/api/user").
-		WithAuthorization("Bearer " + encodedJWT).
-		WithMethod(http.MethodGet).
-		Do(ctx)
-	if restClient.ErrorRef == nil {
-		return &resp, nil, err
-	}
-	return &resp, &errors, err
-}
-
 // RetrieveVersion
 // Retrieves the FusionAuth version string.
 func (c *FusionAuthClient) RetrieveVersion() (*VersionResponse, *Errors, error) {
