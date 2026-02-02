@@ -7029,7 +7029,8 @@ type TwoFactorTrust struct {
  * @author Lyle Schemmerling
  */
 type UniversalApplicationConfiguration struct {
-	Universal bool `json:"universal"`
+	AllowTenantManagerIdentityProviders bool `json:"allowTenantManagerIdentityProviders"`
+	Universal                           bool `json:"universal"`
 }
 
 /**
