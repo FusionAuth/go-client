@@ -336,6 +336,13 @@ func Test_KeyAlgorithmImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_KeySourceImplementsStringer(t *testing.T) {
+	var enum interface{} = KeySource("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("KeySource does not implement stringer interface\n")
+	}
+}
+
 func Test_KeyTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = KeyType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
