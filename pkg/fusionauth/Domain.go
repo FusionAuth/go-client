@@ -3787,6 +3787,7 @@ type Key struct {
 	PrivateKey             string                 `json:"privateKey,omitempty"`
 	PublicKey              string                 `json:"publicKey,omitempty"`
 	Secret                 string                 `json:"secret,omitempty"`
+	Source                 KeySource              `json:"source,omitempty"`
 	Type                   KeyType                `json:"type,omitempty"`
 }
 
@@ -3820,6 +3821,20 @@ const (
 	KeyAlgorithm_RS384   KeyAlgorithm = "RS384"
 	KeyAlgorithm_RS512   KeyAlgorithm = "RS512"
 	KeyAlgorithm_Ed25519 KeyAlgorithm = "Ed25519"
+)
+
+/**
+ * The source of a key.
+ */
+type KeySource string
+
+func (e KeySource) String() string {
+	return string(e)
+}
+
+const (
+	KeySource_System        KeySource = "System"
+	KeySource_TenantManager KeySource = "TenantManager"
 )
 
 type KeyType string
@@ -3868,6 +3883,7 @@ type KeySearchCriteria struct {
 	BaseSearchCriteria
 	Algorithm KeyAlgorithm `json:"algorithm,omitempty"`
 	Name      string       `json:"name,omitempty"`
+	Source    KeySource    `json:"source,omitempty"`
 	Type      KeyType      `json:"type,omitempty"`
 }
 
