@@ -6167,7 +6167,6 @@ type SupportsPostBindings struct {
  */
 type SystemConfiguration struct {
 	AuditLogConfiguration        AuditLogConfiguration           `json:"auditLogConfiguration,omitempty"`
-	BrandName                    string                          `json:"brandName,omitempty"`
 	CorsConfiguration            CORSConfiguration               `json:"corsConfiguration,omitempty"`
 	Data                         map[string]interface{}          `json:"data,omitempty"`
 	EventLogConfiguration        EventLogConfiguration           `json:"eventLogConfiguration,omitempty"`
@@ -6175,7 +6174,7 @@ type SystemConfiguration struct {
 	LastUpdateInstant            int64                           `json:"lastUpdateInstant,omitempty"`
 	LoginRecordConfiguration     LoginRecordConfiguration        `json:"loginRecordConfiguration,omitempty"`
 	ReportTimezone               string                          `json:"reportTimezone,omitempty"`
-	TenantManagerAttributeFormId string                          `json:"tenantManagerAttributeFormId,omitempty"`
+	TenantManagerConfiguration   TenantManagerConfiguration      `json:"tenantManagerConfiguration,omitempty"`
 	TrustedProxyConfiguration    SystemTrustedProxyConfiguration `json:"trustedProxyConfiguration,omitempty"`
 	UiConfiguration              UIConfiguration                 `json:"uiConfiguration,omitempty"`
 	UsageDataConfiguration       UsageDataConfiguration          `json:"usageDataConfiguration,omitempty"`
@@ -6197,6 +6196,11 @@ type EventLogConfiguration struct {
 
 type LoginRecordConfiguration struct {
 	Delete DeleteConfiguration `json:"delete,omitempty"`
+}
+
+type TenantManagerConfiguration struct {
+	AttributeFormId string `json:"attributeFormId,omitempty"`
+	BrandName       string `json:"brandName,omitempty"`
 }
 
 type UIConfiguration struct {
