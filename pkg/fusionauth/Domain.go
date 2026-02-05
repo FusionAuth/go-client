@@ -295,17 +295,18 @@ type PasswordlessConfiguration struct {
 
 type RegistrationConfiguration struct {
 	Enableable
-	BirthDate          Requirable       `json:"birthDate,omitempty"`
-	ConfirmPassword    bool             `json:"confirmPassword"`
-	FirstName          Requirable       `json:"firstName,omitempty"`
-	FormId             string           `json:"formId,omitempty"`
-	FullName           Requirable       `json:"fullName,omitempty"`
-	LastName           Requirable       `json:"lastName,omitempty"`
-	LoginIdType        LoginIdType      `json:"loginIdType,omitempty"`
-	MiddleName         Requirable       `json:"middleName,omitempty"`
-	MobilePhone        Requirable       `json:"mobilePhone,omitempty"`
-	PreferredLanguages Requirable       `json:"preferredLanguages,omitempty"`
-	Type               RegistrationType `json:"type,omitempty"`
+	BirthDate            Requirable       `json:"birthDate,omitempty"`
+	CompleteRegistration bool             `json:"completeRegistration"`
+	ConfirmPassword      bool             `json:"confirmPassword"`
+	FirstName            Requirable       `json:"firstName,omitempty"`
+	FormId               string           `json:"formId,omitempty"`
+	FullName             Requirable       `json:"fullName,omitempty"`
+	LastName             Requirable       `json:"lastName,omitempty"`
+	LoginIdType          LoginIdType      `json:"loginIdType,omitempty"`
+	MiddleName           Requirable       `json:"middleName,omitempty"`
+	MobilePhone          Requirable       `json:"mobilePhone,omitempty"`
+	PreferredLanguages   Requirable       `json:"preferredLanguages,omitempty"`
+	Type                 RegistrationType `json:"type,omitempty"`
 }
 
 // This is separate from IdentityType.
@@ -7050,7 +7051,8 @@ type TwoFactorTrust struct {
  * @author Lyle Schemmerling
  */
 type UniversalApplicationConfiguration struct {
-	Universal bool `json:"universal"`
+	AllowTenantManagerIdentityProviders bool `json:"allowTenantManagerIdentityProviders"`
+	Universal                           bool `json:"universal"`
 }
 
 /**
