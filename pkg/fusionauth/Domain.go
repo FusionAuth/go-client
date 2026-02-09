@@ -6368,6 +6368,18 @@ type TenantLoginConfiguration struct {
 }
 
 /**
+ * Configuration object for identity provider types allowed in Tenant Manager
+ */
+type TenantManagerIdentityProviderTypeConfiguration struct {
+	Enableable
+	DefaultAttributeMappings map[string]string               `json:"defaultAttributeMappings,omitempty"`
+	InsertInstant            int64                           `json:"insertInstant,omitempty"`
+	LastUpdateInstant        int64                           `json:"lastUpdateInstant,omitempty"`
+	LinkingStrategy          IdentityProviderLinkingStrategy `json:"linkingStrategy,omitempty"`
+	Type                     IdentityProviderType            `json:"type,omitempty"`
+}
+
+/**
  * @author Mikey Sleevi
  */
 type TenantMultiFactorConfiguration struct {
