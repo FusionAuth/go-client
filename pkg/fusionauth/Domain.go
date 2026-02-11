@@ -6381,6 +6381,25 @@ type TenantManagerIdentityProviderTypeConfiguration struct {
 }
 
 /**
+ * The Tenant Manager IdP type configuration request object
+ */
+type TenantManagerIdentityProviderTypeConfigurationRequest struct {
+	TypeConfiguration TenantManagerIdentityProviderTypeConfiguration `json:"typeConfiguration,omitempty"`
+}
+
+/**
+ * The Tenant Manager IdP type configuration request object
+ */
+type TenantManagerIdentityProviderTypeConfigurationResponse struct {
+	BaseHTTPResponse
+	TypeConfiguration TenantManagerIdentityProviderTypeConfiguration `json:"typeConfiguration,omitempty"`
+}
+
+func (b *TenantManagerIdentityProviderTypeConfigurationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
  * @author Mikey Sleevi
  */
 type TenantMultiFactorConfiguration struct {
