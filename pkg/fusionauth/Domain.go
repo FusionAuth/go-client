@@ -6200,9 +6200,9 @@ type LoginRecordConfiguration struct {
 }
 
 type TenantManagerConfiguration struct {
-	AttributeFormId                    string                                                                  `json:"attributeFormId,omitempty"`
-	BrandName                          string                                                                  `json:"brandName,omitempty"`
-	IdentityProviderTypeConfigurations map[IdentityProviderType]TenantManagerIdentityProviderTypeConfiguration `json:"identityProviderTypeConfigurations,omitempty"`
+	AttributeFormId                    string                                                    `json:"attributeFormId,omitempty"`
+	BrandName                          string                                                    `json:"brandName,omitempty"`
+	IdentityProviderTypeConfigurations map[string]TenantManagerIdentityProviderTypeConfiguration `json:"identityProviderTypeConfigurations,omitempty"`
 }
 
 type UIConfiguration struct {
