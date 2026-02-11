@@ -6388,7 +6388,7 @@ type TenantManagerIdentityProviderTypeConfigurationRequest struct {
 }
 
 /**
- * The Tenant Manager IdP type configuration request object
+ * The Tenant Manager IdP type configuration response object
  */
 type TenantManagerIdentityProviderTypeConfigurationResponse struct {
 	BaseHTTPResponse
