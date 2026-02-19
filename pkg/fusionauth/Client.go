@@ -3082,6 +3082,33 @@ func (c *FusionAuthClient) DeleteWebAuthnCredentialWithContext(ctx context.Conte
 	return &resp, &errors, err
 }
 
+// DeleteWebAuthnCredentialsForUser
+// Deletes all of the WebAuthn credentials for the given User Id.
+//
+//	string userId The unique Id of the User to delete WebAuthn passkeys for.
+func (c *FusionAuthClient) DeleteWebAuthnCredentialsForUser(userId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteWebAuthnCredentialsForUserWithContext(context.TODO(), userId)
+}
+
+// DeleteWebAuthnCredentialsForUserWithContext
+// Deletes all of the WebAuthn credentials for the given User Id.
+//
+//	string userId The unique Id of the User to delete WebAuthn passkeys for.
+func (c *FusionAuthClient) DeleteWebAuthnCredentialsForUserWithContext(ctx context.Context, userId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webauthn").
+		WithParameter("userId", userId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // DeleteWebhook
 // Deletes the webhook for the given Id.
 //
@@ -4196,7 +4223,7 @@ func (c *FusionAuthClient) LogoutWithRequestWithContext(ctx context.Context, req
 }
 
 // LookupIdentityProvider
-// Retrieves the identity provider for the given domain. A 200 response code indicates the domain is managed
+// Retrieves any global identity providers for the given domain. A 200 response code indicates the domain is managed
 // by a registered identity provider. A 404 indicates the domain is not managed.
 //
 //	string domain The domain or email address to lookup.
@@ -4205,7 +4232,7 @@ func (c *FusionAuthClient) LookupIdentityProvider(domain string) (*LookupRespons
 }
 
 // LookupIdentityProviderWithContext
-// Retrieves the identity provider for the given domain. A 200 response code indicates the domain is managed
+// Retrieves any global identity providers for the given domain. A 200 response code indicates the domain is managed
 // by a registered identity provider. A 404 indicates the domain is not managed.
 //
 //	string domain The domain or email address to lookup.
@@ -4215,6 +4242,36 @@ func (c *FusionAuthClient) LookupIdentityProviderWithContext(ctx context.Context
 	err := c.Start(&resp, nil).
 		WithUri("/api/identity-provider/lookup").
 		WithParameter("domain", domain).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	return &resp, err
+}
+
+// LookupIdentityProviderByTenantId
+// Retrieves the identity provider for the given domain and tenantId. A 200 response code indicates the domain is managed
+// by a registered identity provider. A 404 indicates the domain is not managed.
+//
+//	string domain The domain or email address to lookup.
+//	string tenantId If provided, the API searches for an identity provider scoped to the corresponding tenant that manages the requested domain.
+//	If no result is found, the API then searches for global identity providers.
+func (c *FusionAuthClient) LookupIdentityProviderByTenantId(domain string, tenantId string) (*LookupResponse, error) {
+	return c.LookupIdentityProviderByTenantIdWithContext(context.TODO(), domain, tenantId)
+}
+
+// LookupIdentityProviderByTenantIdWithContext
+// Retrieves the identity provider for the given domain and tenantId. A 200 response code indicates the domain is managed
+// by a registered identity provider. A 404 indicates the domain is not managed.
+//
+//	string domain The domain or email address to lookup.
+//	string tenantId If provided, the API searches for an identity provider scoped to the corresponding tenant that manages the requested domain.
+//	If no result is found, the API then searches for global identity providers.
+func (c *FusionAuthClient) LookupIdentityProviderByTenantIdWithContext(ctx context.Context, domain string, tenantId string) (*LookupResponse, error) {
+	var resp LookupResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/identity-provider/lookup").
+		WithParameter("domain", domain).
+		WithParameter("tenantId", tenantId).
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	return &resp, err
