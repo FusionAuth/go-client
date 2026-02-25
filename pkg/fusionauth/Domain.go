@@ -4952,6 +4952,7 @@ type PasswordEncryptionConfiguration struct {
  */
 type PasswordValidationRules struct {
 	BreachDetection           PasswordBreachDetection   `json:"breachDetection,omitempty"`
+	DisallowUserLoginId       bool                      `json:"disallowUserLoginId"`
 	MaxLength                 int                       `json:"maxLength,omitempty"`
 	MinLength                 int                       `json:"minLength,omitempty"`
 	RememberPreviousPasswords RememberPreviousPasswords `json:"rememberPreviousPasswords,omitempty"`
