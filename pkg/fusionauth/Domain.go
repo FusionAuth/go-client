@@ -1354,6 +1354,7 @@ type Context struct {
 	Action                MultiFactorAction       `json:"action,omitempty"`
 	Application           Application             `json:"application,omitempty"`
 	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
+	AuthenticationType    string                  `json:"authenticationType,omitempty"`
 	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
 	MfaTrust              Trust                   `json:"mfaTrust,omitempty"`
 	Policies              Policies                `json:"policies,omitempty"`
