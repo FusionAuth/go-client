@@ -8,7 +8,7 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      command:
+      command:  # be careful when editing these, fusionauth-app expects certain commands
         type: choice
         options:
           - test     # build & test only
