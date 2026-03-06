@@ -4860,6 +4860,7 @@ type OpenIdConfiguration struct {
 	AuthorizationEndpoint             string   `json:"authorization_endpoint,omitempty"`
 	BackchannelLogoutSupported        bool     `json:"backchannel_logout_supported"`
 	ClaimsSupported                   []string `json:"claims_supported,omitempty"`
+	CodeChallengeMethodsSupported     []string `json:"code_challenge_methods_supported,omitempty"`
 	DeviceAuthorizationEndpoint       string   `json:"device_authorization_endpoint,omitempty"`
 	DpopSigningAlgValuesSupported     []string `json:"dpop_signing_alg_values_supported,omitempty"`
 	EndSessionEndpoint                string   `json:"end_session_endpoint,omitempty"`
