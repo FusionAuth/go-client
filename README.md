@@ -138,6 +138,10 @@ Then you can run it: `go run test.go # or go build`
 
 HT https://levelup.gitconnected.com/import-and-use-local-packages-in-your-go-application-885c35e5624 for these.
 
+## Upgrade policy
+
+Versions of this library track the FusionAuth API, except for patch versions, which include client-only updates like bugfixes and dependency upgrades. For more information, see the [FusionAuth Upgrade Guide](https://fusionauth.io/docs/operate/deploy/upgrade#upgrade-a-client-library).
+
 ## Questions and support
 
 If you have a question or support issue regarding this client library, we'd love to hear from you.
