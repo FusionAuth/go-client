@@ -3802,6 +3802,7 @@ const (
 	KeyAlgorithm_RS384   KeyAlgorithm = "RS384"
 	KeyAlgorithm_RS512   KeyAlgorithm = "RS512"
 	KeyAlgorithm_Ed25519 KeyAlgorithm = "Ed25519"
+	KeyAlgorithm_None    KeyAlgorithm = "None"
 )
 
 type KeyType string
@@ -3811,10 +3812,11 @@ func (e KeyType) String() string {
 }
 
 const (
-	KeyType_EC   KeyType = "EC"
-	KeyType_RSA  KeyType = "RSA"
-	KeyType_HMAC KeyType = "HMAC"
-	KeyType_OKP  KeyType = "OKP"
+	KeyType_EC     KeyType = "EC"
+	KeyType_RSA    KeyType = "RSA"
+	KeyType_HMAC   KeyType = "HMAC"
+	KeyType_OKP    KeyType = "OKP"
+	KeyType_Secret KeyType = "Secret"
 )
 
 /**
