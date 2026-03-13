@@ -5366,6 +5366,7 @@ type ReactorStatus struct {
 	DPoP                                      ReactorFeatureStatus `json:"dPoP,omitempty"`
 	EntityManagement                          ReactorFeatureStatus `json:"entityManagement,omitempty"`
 	Expiration                                string               `json:"expiration,omitempty"`
+	IpGeoLocation                             ReactorFeatureStatus `json:"ipGeoLocation,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
 	MultiFactorLambdas                        ReactorFeatureStatus `json:"multiFactorLambdas,omitempty"`
