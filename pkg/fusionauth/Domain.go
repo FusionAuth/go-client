@@ -291,6 +291,8 @@ type LoginConfiguration struct {
 
 type PasswordlessConfiguration struct {
 	Enableable
+	EmailLoginStrategy PasswordlessStrategy `json:"emailLoginStrategy,omitempty"`
+	PhoneLoginStrategy PasswordlessStrategy `json:"phoneLoginStrategy,omitempty"`
 }
 
 type RegistrationConfiguration struct {
