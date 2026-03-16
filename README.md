@@ -3,6 +3,7 @@
 
 Use this client to access the FusionAuth APIs in your Go application. For additional information and documentation on FusionAuth refer to [https://fusionauth.io](https://fusionauth.io).
 
+
 ## Credits
 - [@medhir](https://github.com/medhir) Thank you for the initial commit and initial implementation of the Go client!
 - [@markschmid](https://github.com/markschmid) Thank you for your PRs, feedback and suggestions! 
