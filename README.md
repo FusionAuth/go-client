@@ -1,12 +1,11 @@
 ## FusionAuth Go Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![Documentation](https://godoc.org/github.com/FusionAuth/go-client?status.svg)](http://godoc.org/github.com/FusionAuth/go-client/pkg/fusionauth)
 
-
 Use this client to access the FusionAuth APIs in your Go application. For additional information and documentation on FusionAuth refer to [https://fusionauth.io](https://fusionauth.io).
 
-
 ## Credits
+
 - [@medhir](https://github.com/medhir) Thank you for the initial commit and initial implementation of the Go client!
-- [@markschmid](https://github.com/markschmid) Thank you for your PRs, feedback and suggestions! 
+- [@markschmid](https://github.com/markschmid) Thank you for your PRs, feedback and suggestions!
 - [@MCBrandenburg](https://github.com/MCBrandenburg) Thank you for the feedback and PRs!
 - [@matthewhartstonge](https://github.com/matthewhartstonge) Thank you for the PR!
 - The FusionAuth team - couldn't have done it without you!
@@ -17,9 +16,20 @@ Use this client to access the FusionAuth APIs in your Go application. For additi
 go get github.com/FusionAuth/go-client/pkg/fusionauth
 ```
 
+## Client construction and configuration
+
+The client can be constructed with or without retry behavior.
+
+`fusionauth.NewClient(httpClient, baseURL, apiKey)` creates a client with no automatic retries.
+
+`fusionauth.NewClientWithRetryConfiguration(httpClient, baseURL, apiKey, retryConfiguration)` creates a client with the supplied retry behavior.
+
+If `httpClient` is `nil`, both constructors create a default `http.Client` with a `5 * time.Minute` timeout.
+
 ## Example Usage
 
-The following example uses the FusionAuth Go client to create a request handling function that logs in a user: 
+The following example uses the FusionAuth Go client to create a request handling function that logs in a user:
+
 ```go
 package example
 
@@ -28,7 +38,7 @@ import (
     "net/http"
     "net/url"
     "time"
-    
+
     "github.com/FusionAuth/go-client/pkg/fusionauth"
 )
 
@@ -36,7 +46,7 @@ const host = "http://localhost:9011"
 
 var apiKey = "YOUR_FUSIONAUTH_API_KEY"
 var httpClient = &http.Client{
-	Timeout: time.Second * 10,
+ Timeout: time.Second * 10,
 }
 
 var baseURL, _ = url.Parse(host)
@@ -85,7 +95,7 @@ import (
     "net/url"
     "time"
     "fmt"
-    
+
     "github.com/FusionAuth/go-client/pkg/fusionauth"
 )
 
@@ -101,12 +111,138 @@ func main() {
 
     // Construct a new FusionAuth Client
     var client = fusionauth.NewClient(httpClient, baseURL, apiKey)
-    
+
     // for production code, don't ignore the error!
     tenantResponse, _ := client.RetrieveTenants()
-    
+
     fmt.Print(len(tenantResponse.Tenants))
 }
+```
+
+## Retry configuration
+
+Use `NewClientWithRetryConfiguration` when you want the client to automatically retry failed requests.
+
+### Basic retry configuration
+
+`NewBasicRetryConfiguration()` returns a sensible default configuration:
+
+- `MaxRetries`: `4`
+- `InitialDelay`: `100 * time.Millisecond`
+- `BackoffMultiplier`: `2.0`
+- `MaxDelay`: `30 * time.Second`
+- `Jitter`: `0.20`
+- `RetryOnNetworkError`: `true`
+- `AllowNonIdempotentRetries`: `false`
+- `RetryableStatusCodes`: `429`, `500`, `502`, `503`, `504`
+- `RetryFunction`: retries `409 Conflict` responses containing the code `[retryableConflict]`
+
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "net/url"
+    "time"
+
+    "github.com/FusionAuth/go-client/pkg/fusionauth"
+)
+
+const host = "http://localhost:9011"
+
+var apiKey = "API KEY"
+var httpClient = &http.Client{
+    Timeout: 10 * time.Second,
+}
+
+func main() {
+    baseURL, _ := url.Parse(host)
+
+    retryConfiguration := fusionauth.NewBasicRetryConfiguration()
+    client := fusionauth.NewClientWithRetryConfiguration(httpClient, baseURL, apiKey, retryConfiguration)
+
+    tenantResponse, _, err := client.RetrieveTenants()
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println(len(tenantResponse.Tenants))
+}
+```
+
+### Custom retry configuration
+
+```go
+package main
+
+import (
+    "bytes"
+    "net/http"
+    "net/url"
+    "time"
+
+    "github.com/FusionAuth/go-client/pkg/fusionauth"
+)
+
+const host = "http://localhost:9011"
+
+func main() {
+    baseURL, _ := url.Parse(host)
+
+    retryConfiguration := &fusionauth.RetryConfiguration{
+        MaxRetries:          6,
+        InitialDelay:        250 * time.Millisecond,
+        BackoffMultiplier:   2.0,
+        MaxDelay:            10 * time.Second,
+        Jitter:              0.10,
+        RetryOnNetworkError: true,
+        RetryableStatusCodes: map[int]struct{}{
+            429: {},
+            500: {},
+            502: {},
+            503: {},
+            504: {},
+        },
+        RetryFunction: func(statusCode int, body []byte) bool {
+            return statusCode == http.StatusConflict && bytes.Contains(body, []byte("[retryableConflict]"))
+        },
+    }
+
+    client := fusionauth.NewClientWithRetryConfiguration(nil, baseURL, "API KEY", retryConfiguration)
+    _ = client
+}
+```
+
+### Retry behavior
+
+- Retries are disabled when `RetryConfiguration` is `nil`.
+- `MaxRetries` is the number of additional attempts after the initial request.
+- By default, only idempotent methods are retried: `GET`, `PUT`, `DELETE`, `PATCH`, and `HEAD`.
+- `POST` requests are not retried unless `AllowNonIdempotentRetries` is set to `true`.
+- Request bodies are buffered once and replayed across retries.
+- Invalid retry configuration values return an error before the request is sent.
+- If the request context is cancelled during backoff, the request stops and returns the context error.
+
+### RetryConfiguration fields
+
+- `AllowNonIdempotentRetries`: retries all HTTP methods, including `POST`, when set to `true`.
+- `BackoffMultiplier`: exponential backoff multiplier applied after each retry.
+- `InitialDelay`: delay before the first retry attempt.
+- `Jitter`: random delay multiplier in the range `0.0` to `1.0` added to each retry delay.
+- `MaxDelay`: maximum delay between retry attempts.
+- `MaxRetries`: number of retries after the initial request.
+- `RetryFunction`: optional function that can inspect the response status code and body to decide whether to retry.
+- `RetryOnNetworkError`: retries transport or network failures when set to `true`.
+- `RetryableStatusCodes`: set of HTTP status codes that trigger retries.
+
+### Enabling retry from the environment
+
+`fusionauth.RetryConfigurationFromEnv()` returns `fusionauth.NewBasicRetryConfiguration()` when `FUSIONAUTH_ENABLE_RETRY=true`. For any other value, or if the environment variable is unset, it returns `nil`.
+
+```go
+retryConfiguration := fusionauth.RetryConfigurationFromEnv()
+client := fusionauth.NewClientWithRetryConfiguration(httpClient, baseURL, apiKey, retryConfiguration)
 ```
 
 ## Testing source builds
@@ -137,7 +273,7 @@ replace (
 
 Then you can run it: `go run test.go # or go build`
 
-HT https://levelup.gitconnected.com/import-and-use-local-packages-in-your-go-application-885c35e5624 for these.
+HT <https://levelup.gitconnected.com/import-and-use-local-packages-in-your-go-application-885c35e5624> for these.
 
 ## Questions and support
 
@@ -149,9 +285,10 @@ Otherwise, please [post your question in the community forum](https://fusionauth
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/FusionAuth/go-client.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/FusionAuth/go-client>.
 
 If you find an issue with syntax, etc - this is likely a bug in the template. Feel free to submit a PR against the Client Builder project.
+
 - [Client Builder](https://github.com/FusionAuth/fusionauth-client-builder)
 - [go.client.ftl](https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/go.client.ftl)
 - [go.domain.ftl](https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/go.domain.ftl)
