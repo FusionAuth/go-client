@@ -106,6 +106,12 @@ type RetryConfiguration struct {
 	// RetryOnNetworkError when true, requests that fail due to network errors will be retried.
 	// NewBasicRetryConfiguration sets this to true.
 	RetryOnNetworkError bool
+	// MaxBodyBufferSize is the maximum number of bytes buffered from the request body to
+	// enable replay on retry. Bodies larger than this limit disable retries for that request
+	// and the body is left intact for a single attempt. A zero value uses the default of
+	// 1 MiB. Set to -1 to disable buffering (and therefore retries) for all non-empty bodies.
+	// NewBasicRetryConfiguration sets this to 1 MiB (1 << 20).
+	MaxBodyBufferSize int64
 	// RetryableStatusCodes is the set of HTTP status codes that trigger a retry.
 	// NewBasicRetryConfiguration sets this to {429, 500, 502, 503, 504}.
 	RetryableStatusCodes map[int]struct{}
@@ -119,6 +125,7 @@ func NewBasicRetryConfiguration() *RetryConfiguration {
 		BackoffMultiplier:   2.0,
 		InitialDelay:        100 * time.Millisecond,
 		Jitter:              0.20,
+		MaxBodyBufferSize:   1 << 20, // 1 MiB
 		MaxDelay:            30 * time.Second,
 		MaxRetries:          4,
 		RetryOnNetworkError: true,
@@ -167,11 +174,26 @@ func (cfg *RetryConfiguration) validate() error {
 
 func (cfg *RetryConfiguration) calculateDelay(attempt int) time.Duration {
 	backoff := float64(cfg.InitialDelay) * math.Pow(cfg.BackoffMultiplier, float64(attempt-1))
-	if float64(cfg.MaxDelay) > 0 && backoff > float64(cfg.MaxDelay) {
-		backoff = float64(cfg.MaxDelay)
+
+	// Establish an explicit ceiling before clamping to guard against float64
+	// overflow to +Inf and the undefined time.Duration conversion for values
+	// outside int64 range. When MaxDelay is unset (0), fall back to half of
+	// int64 max (~146 years) which is safely representable as both float64 and
+	// time.Duration. +Inf is handled implicitly: +Inf > any finite ceiling.
+	ceiling := float64(math.MaxInt64 / 2)
+	if cfg.MaxDelay > 0 {
+		ceiling = float64(cfg.MaxDelay)
 	}
+	if backoff > ceiling {
+		backoff = ceiling
+	}
+
 	if cfg.Jitter > 0 {
 		backoff *= 1.0 + rand.Float64()*cfg.Jitter
+		// Re-clamp after jitter: the multiplication can push backoff above ceiling.
+		if backoff > ceiling {
+			backoff = ceiling
+		}
 	}
 	return time.Duration(backoff)
 }
@@ -231,13 +253,32 @@ func (rc *restClient) Do(ctx context.Context) error {
 	canRetryRequest := rc.RetryConfiguration != nil && rc.RetryConfiguration.MaxRetries > 0 && rc.isMethodRetryable()
 
 	// Buffer the request body only when retries may need to replay it.
+	// Bodies exceeding MaxBodyBufferSize cannot be safely buffered; in that case the
+	// stream is left intact and retries are disabled for this request.
 	if canRetryRequest && rc.Body != nil {
-		b, err := io.ReadAll(rc.Body)
-		if err != nil {
-			return err
+		maxBuffer := rc.RetryConfiguration.MaxBodyBufferSize
+		if maxBuffer == 0 {
+			maxBuffer = 1 << 20 // 1 MiB default
 		}
-		rc.bodyBytes = b
-		rc.Body = nil
+		if maxBuffer < 0 {
+			// Caller opted out of body buffering; disable retries for this request.
+			canRetryRequest = false
+		} else {
+			// Read up to maxBuffer+1 bytes so we can detect an oversized body.
+			lr := io.LimitReader(rc.Body, maxBuffer+1)
+			b, err := io.ReadAll(lr)
+			if err != nil {
+				return err
+			}
+			if int64(len(b)) > maxBuffer {
+				// Body exceeds the buffer limit; reconstruct the stream and skip retries.
+				rc.Body = io.MultiReader(bytes.NewReader(b), rc.Body)
+				canRetryRequest = false
+			} else {
+				rc.bodyBytes = b
+				rc.Body = nil
+			}
+		}
 	}
 
 	maxAttempts := 1
@@ -249,10 +290,12 @@ func (rc *restClient) Do(ctx context.Context) error {
 		if attempt > 0 {
 			delay := rc.RetryConfiguration.calculateDelay(attempt)
 			if delay > 0 {
+				timer := time.NewTimer(delay)
 				select {
 				case <-ctx.Done():
+					timer.Stop()
 					return ctx.Err()
-				case <-time.After(delay):
+				case <-timer.C:
 				}
 			}
 		}
@@ -284,6 +327,16 @@ func (rc *restClient) Do(ctx context.Context) error {
 			return err
 		}
 		if rc.Debug || attempt < maxAttempts-1 {
+			// Fast path: if the status code alone warrants a retry and no RetryFunction
+			// needs to inspect the body, drain and discard it to avoid buffering.
+			if !rc.Debug && attempt < maxAttempts-1 {
+				if _, ok := rc.RetryConfiguration.RetryableStatusCodes[resp.StatusCode]; ok && rc.RetryConfiguration.RetryFunction == nil {
+					io.Copy(io.Discard, resp.Body)
+					resp.Body.Close()
+					continue
+				}
+			}
+
 			respBody, readErr := io.ReadAll(resp.Body)
 			resp.Body.Close()
 			if readErr != nil {

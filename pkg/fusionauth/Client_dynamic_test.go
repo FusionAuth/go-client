@@ -760,7 +760,8 @@ func TestNilRetryConfigurationNoRetries(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestRetryConfigurationFromEnvNotSet(t *testing.T) {
-	os.Unsetenv("FUSIONAUTH_ENABLE_RETRY")
+	t.Setenv("FUSIONAUTH_ENABLE_RETRY", "") // registers cleanup to restore original state
+	os.Unsetenv("FUSIONAUTH_ENABLE_RETRY")  // force-unset so the test body sees no value
 	cfg := RetryConfigurationFromEnv()
 	if cfg != nil {
 		t.Errorf("expected nil when FUSIONAUTH_ENABLE_RETRY not set, got %+v", cfg)
@@ -768,8 +769,7 @@ func TestRetryConfigurationFromEnvNotSet(t *testing.T) {
 }
 
 func TestRetryConfigurationFromEnvWrongValue(t *testing.T) {
-	os.Setenv("FUSIONAUTH_ENABLE_RETRY", "1")
-	defer os.Unsetenv("FUSIONAUTH_ENABLE_RETRY")
+	t.Setenv("FUSIONAUTH_ENABLE_RETRY", "1")
 	cfg := RetryConfigurationFromEnv()
 	if cfg != nil {
 		t.Errorf("expected nil when FUSIONAUTH_ENABLE_RETRY=%q (not 'true'), got non-nil", "1")
@@ -777,8 +777,7 @@ func TestRetryConfigurationFromEnvWrongValue(t *testing.T) {
 }
 
 func TestRetryConfigurationFromEnvEnabled(t *testing.T) {
-	os.Setenv("FUSIONAUTH_ENABLE_RETRY", "true")
-	defer os.Unsetenv("FUSIONAUTH_ENABLE_RETRY")
+	t.Setenv("FUSIONAUTH_ENABLE_RETRY", "true")
 	cfg := RetryConfigurationFromEnv()
 	if cfg == nil {
 		t.Fatal("expected non-nil RetryConfiguration when FUSIONAUTH_ENABLE_RETRY=true")
