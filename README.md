@@ -162,7 +162,7 @@ func main() {
     retryConfiguration := fusionauth.NewBasicRetryConfiguration()
     client := fusionauth.NewClientWithRetryConfiguration(httpClient, baseURL, apiKey, retryConfiguration)
 
-    tenantResponse, _, err := client.RetrieveTenants()
+    tenantResponse, err := client.RetrieveTenants()
     if err != nil {
         panic(err)
     }

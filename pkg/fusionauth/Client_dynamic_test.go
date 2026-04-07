@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -35,6 +36,45 @@ type roundTripFunc func(*http.Request) (*http.Response, error)
 
 func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 	return f(r)
+}
+
+type readTrackingReader struct {
+	data []byte
+	read atomic.Bool
+}
+
+func (r *readTrackingReader) Read(p []byte) (int, error) {
+	r.read.Store(true)
+	if len(r.data) == 0 {
+		return 0, io.EOF
+	}
+	n := copy(p, r.data)
+	r.data = r.data[n:]
+	return n, nil
+}
+
+type responseBodyTrackingResponse struct {
+	BaseHTTPResponse
+	Value string `json:"value"`
+}
+
+type failOnDrainReadCloser struct {
+	payload []byte
+	closed  atomic.Bool
+}
+
+func (r *failOnDrainReadCloser) Read(p []byte) (int, error) {
+	if len(r.payload) == 0 {
+		return 0, fmt.Errorf("unexpected response body drain")
+	}
+	n := copy(p, r.payload)
+	r.payload = r.payload[n:]
+	return n, nil
+}
+
+func (r *failOnDrainReadCloser) Close() error {
+	r.closed.Store(true)
+	return nil
 }
 
 // newTestRC creates a restClient pointed at serverURL using the given RetryConfiguration and method.
@@ -570,6 +610,118 @@ func TestRetryBodyReplayedOnRetry(t *testing.T) {
 		if body != "hello" {
 			t.Errorf("attempt %d: body key = %q, want %q", i+1, body, "hello")
 		}
+	}
+}
+
+func TestRequestBodyNotBufferedWhenRetriesDisabled(t *testing.T) {
+	reader := &readTrackingReader{data: []byte(`{"key":"hello"}`)}
+	roundTripper := roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		if reader.read.Load() {
+			t.Fatal("expected request body to remain unread before RoundTrip")
+		}
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("reading request body: %v", err)
+		}
+		if string(body) != `{"key":"hello"}` {
+			t.Fatalf("request body = %q, want %q", string(body), `{"key":"hello"}`)
+		}
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Body:       io.NopCloser(http.NoBody),
+			Header:     make(http.Header),
+		}, nil
+	})
+
+	rc := &restClient{
+		HTTPClient:  &http.Client{Transport: roundTripper},
+		Headers:     make(map[string]string),
+		ResponseRef: &BaseHTTPResponse{},
+		ErrorRef:    &BaseHTTPResponse{},
+		Method:      http.MethodPost,
+		Uri:         &url.URL{Scheme: "http", Host: "example.com", Path: "/test"},
+		Body:        reader,
+	}
+
+	if err := rc.Do(context.Background()); err != nil {
+		t.Fatalf("Do() unexpected error: %v", err)
+	}
+	if !reader.read.Load() {
+		t.Fatal("expected request body to be consumed during request execution")
+	}
+}
+
+func TestRequestBodyNotBufferedWhenMethodIsNotRetryable(t *testing.T) {
+	reader := &readTrackingReader{data: []byte(`{"key":"hello"}`)}
+	roundTripper := roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		if reader.read.Load() {
+			t.Fatal("expected non-retryable method body to remain unread before RoundTrip")
+		}
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("reading request body: %v", err)
+		}
+		if string(body) != `{"key":"hello"}` {
+			t.Fatalf("request body = %q, want %q", string(body), `{"key":"hello"}`)
+		}
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Body:       io.NopCloser(http.NoBody),
+			Header:     make(http.Header),
+		}, nil
+	})
+
+	rc := &restClient{
+		HTTPClient: &http.Client{Transport: roundTripper},
+		Headers:    make(map[string]string),
+		RetryConfiguration: &RetryConfiguration{
+			MaxRetries:           2,
+			RetryOnNetworkError:  true,
+			RetryableStatusCodes: map[int]struct{}{503: {}},
+		},
+		ResponseRef: &BaseHTTPResponse{},
+		ErrorRef:    &BaseHTTPResponse{},
+		Method:      http.MethodPost,
+		Uri:         &url.URL{Scheme: "http", Host: "example.com", Path: "/test"},
+		Body:        reader,
+	}
+
+	if err := rc.Do(context.Background()); err != nil {
+		t.Fatalf("Do() unexpected error: %v", err)
+	}
+	if !reader.read.Load() {
+		t.Fatal("expected request body to be consumed during request execution")
+	}
+}
+
+func TestResponseBodyNotBufferedWhenRetriesAndDebugDisabled(t *testing.T) {
+	body := &failOnDrainReadCloser{payload: []byte(`{"value":"ok"} `)}
+	roundTripper := roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Body:       body,
+			Header:     make(http.Header),
+		}, nil
+	})
+
+	response := &responseBodyTrackingResponse{}
+	rc := &restClient{
+		HTTPClient:  &http.Client{Transport: roundTripper},
+		Headers:     make(map[string]string),
+		ResponseRef: response,
+		ErrorRef:    &BaseHTTPResponse{},
+		Method:      http.MethodGet,
+		Uri:         &url.URL{Scheme: "http", Host: "example.com", Path: "/test"},
+	}
+
+	if err := rc.Do(context.Background()); err != nil {
+		t.Fatalf("Do() unexpected error: %v", err)
+	}
+	if response.Value != "ok" {
+		t.Fatalf("response value = %q, want %q", response.Value, "ok")
+	}
+	if !body.closed.Load() {
+		t.Fatal("expected response body to be closed")
 	}
 }
 

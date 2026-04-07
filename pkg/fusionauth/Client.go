@@ -23,7 +23,7 @@ import (
 	"fmt"
 	"io"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -77,30 +77,37 @@ func (c *FusionAuthClient) SetTenantId(tenantId string) {
 
 // RetryConfiguration configures automatic retry of failed HTTP requests.
 // A nil RetryConfiguration (the default) means no retries are performed.
-// Use NewBasicRetryConfiguration for sensible retry defaults.
+// The zero value of RetryConfiguration does not apply non-zero retry defaults automatically;
+// use NewBasicRetryConfiguration for sensible retry defaults.
 type RetryConfiguration struct {
 	// AllowNonIdempotentRetries when true, all HTTP methods including POST will be retried.
-	// Defaults to false, meaning only idempotent methods (GET, PUT, DELETE, PATCH, HEAD) are retried.
+	// NewBasicRetryConfiguration leaves this false, meaning only idempotent methods
+	// (GET, PUT, DELETE, PATCH, HEAD) are retried by default.
 	AllowNonIdempotentRetries bool
-	// BackoffMultiplier is the multiplier applied to the delay between each retry attempt. Defaults to 2.0.
+	// BackoffMultiplier is the multiplier applied to the delay between each retry attempt.
+	// NewBasicRetryConfiguration sets this to 2.0.
 	BackoffMultiplier float64
-	// InitialDelay is the initial delay before the first retry. Defaults to 100ms.
+	// InitialDelay is the initial delay before the first retry.
+	// NewBasicRetryConfiguration sets this to 100ms.
 	InitialDelay time.Duration
 	// Jitter is the maximum random jitter multiplier added to every delay, in the range [0.0, 1.0].
-	// Actual jitter is randomly chosen between 0.0 and this value. Defaults to 0.20.
+	// Actual jitter is randomly chosen between 0.0 and this value.
+	// NewBasicRetryConfiguration sets this to 0.20.
 	Jitter float64
-	// MaxDelay is the maximum delay between retry attempts. Defaults to 30s.
+	// MaxDelay is the maximum delay between retry attempts.
+	// NewBasicRetryConfiguration sets this to 30s.
 	MaxDelay time.Duration
 	// MaxRetries is the number of additional attempts after the initial request.
-	// 0 effectively disables retries. Defaults to 4.
+	// A zero value effectively disables retries. NewBasicRetryConfiguration sets this to 4.
 	MaxRetries int
 	// RetryFunction is an optional function called to determine if a response warrants a retry,
 	// in addition to the built-in retryable status code checks. Return true to retry.
 	RetryFunction func(statusCode int, body []byte) bool
-	// RetryOnNetworkError when true, requests that fail due to network errors will be retried. Defaults to true.
+	// RetryOnNetworkError when true, requests that fail due to network errors will be retried.
+	// NewBasicRetryConfiguration sets this to true.
 	RetryOnNetworkError bool
 	// RetryableStatusCodes is the set of HTTP status codes that trigger a retry.
-	// Defaults to {429, 500, 502, 503, 504}.
+	// NewBasicRetryConfiguration sets this to {429, 500, 502, 503, 504}.
 	RetryableStatusCodes map[int]struct{}
 }
 
@@ -221,8 +228,10 @@ func (rc *restClient) Do(ctx context.Context) error {
 		}
 	}
 
-	// Buffer the request body once so it can be replayed on retries.
-	if rc.Body != nil {
+	canRetryRequest := rc.RetryConfiguration != nil && rc.RetryConfiguration.MaxRetries > 0 && rc.isMethodRetryable()
+
+	// Buffer the request body only when retries may need to replay it.
+	if canRetryRequest && rc.Body != nil {
 		b, err := io.ReadAll(rc.Body)
 		if err != nil {
 			return err
@@ -232,7 +241,7 @@ func (rc *restClient) Do(ctx context.Context) error {
 	}
 
 	maxAttempts := 1
-	if rc.RetryConfiguration != nil && rc.RetryConfiguration.MaxRetries > 0 {
+	if canRetryRequest {
 		maxAttempts = 1 + rc.RetryConfiguration.MaxRetries
 	}
 
@@ -251,6 +260,8 @@ func (rc *restClient) Do(ctx context.Context) error {
 		var body io.Reader
 		if rc.bodyBytes != nil {
 			body = bytes.NewReader(rc.bodyBytes)
+		} else {
+			body = rc.Body
 		}
 		req, err := http.NewRequestWithContext(ctx, rc.Method, rc.Uri.String(), body)
 		if err != nil {
@@ -262,40 +273,57 @@ func (rc *restClient) Do(ctx context.Context) error {
 
 		resp, err := rc.HTTPClient.Do(req)
 		if err != nil {
+			if ctxErr := ctx.Err(); ctxErr != nil {
+				return ctxErr
+			}
+
 			// Retry on network error if configured and method is retryable.
-			if attempt < maxAttempts-1 && rc.RetryConfiguration != nil &&
-				rc.RetryConfiguration.RetryOnNetworkError && rc.isMethodRetryable() {
+			if attempt < maxAttempts-1 && rc.RetryConfiguration.RetryOnNetworkError {
 				continue
 			}
 			return err
 		}
-		respBody, readErr := io.ReadAll(resp.Body)
-		resp.Body.Close()
-		if readErr != nil {
-			return readErr
-		}
-
-		if rc.Debug {
-			resp.Body = io.NopCloser(bytes.NewReader(respBody))
-			responseDump, _ := httputil.DumpResponse(resp, true)
-			fmt.Println(string(responseDump))
-		}
-
-		// Check whether this response should trigger a retry.
-		if attempt < maxAttempts-1 && rc.RetryConfiguration != nil && rc.isMethodRetryable() {
-			if rc.shouldRetry(resp.StatusCode, respBody) {
-				continue
+		if rc.Debug || attempt < maxAttempts-1 {
+			respBody, readErr := io.ReadAll(resp.Body)
+			resp.Body.Close()
+			if readErr != nil {
+				return readErr
 			}
-		}
 
-		if resp.StatusCode < 200 || resp.StatusCode > 299 {
-			if err = json.NewDecoder(bytes.NewReader(respBody)).Decode(rc.ErrorRef); err == io.EOF {
-				err = nil
+			if rc.Debug {
+				resp.Body = io.NopCloser(bytes.NewReader(respBody))
+				responseDump, _ := httputil.DumpResponse(resp, true)
+				fmt.Println(string(responseDump))
+			}
+
+			// Check whether this response should trigger a retry.
+			if attempt < maxAttempts-1 {
+				if rc.shouldRetry(resp.StatusCode, respBody) {
+					continue
+				}
+			}
+
+			if resp.StatusCode < 200 || resp.StatusCode > 299 {
+				if err = json.NewDecoder(bytes.NewReader(respBody)).Decode(rc.ErrorRef); err == io.EOF {
+					err = nil
+				}
+			} else {
+				rc.ErrorRef = nil
+				if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
+					err = json.NewDecoder(bytes.NewReader(respBody)).Decode(rc.ResponseRef)
+				}
 			}
 		} else {
-			rc.ErrorRef = nil
-			if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
-				err = json.NewDecoder(bytes.NewReader(respBody)).Decode(rc.ResponseRef)
+			defer resp.Body.Close()
+			if resp.StatusCode < 200 || resp.StatusCode > 299 {
+				if err = json.NewDecoder(resp.Body).Decode(rc.ErrorRef); err == io.EOF {
+					err = nil
+				}
+			} else {
+				rc.ErrorRef = nil
+				if _, ok := rc.ResponseRef.(*BaseHTTPResponse); !ok {
+					err = json.NewDecoder(resp.Body).Decode(rc.ResponseRef)
+				}
 			}
 		}
 		rc.ResponseRef.(StatusAble).SetStatus(resp.StatusCode)
@@ -308,7 +336,7 @@ func (rc *restClient) Do(ctx context.Context) error {
 // Idempotent methods (GET, PUT, DELETE, PATCH, HEAD) are always retryable.
 // POST is retryable only when AllowNonIdempotentRetries is true.
 func (rc *restClient) isMethodRetryable() bool {
-	if rc.RetryConfiguration.AllowNonIdempotentRetries {
+	if rc.RetryConfiguration != nil && rc.RetryConfiguration.AllowNonIdempotentRetries {
 		return true
 	}
 	switch rc.Method {

@@ -117,10 +117,9 @@ func (b *AccessToken) SetStatus(status int) {
  * @author Lyle Schemmerling
  */
 type AccessTokenIntrospectRequest struct {
-	ClientId      string `json:"client_id,omitempty"`
-	TenantId      string `json:"tenantId,omitempty"`
-	Token         string `json:"token,omitempty"`
-	TokenTypeHint string `json:"token_type_hint,omitempty"`
+	ClientId string `json:"client_id,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+	Token    string `json:"token,omitempty"`
 }
 
 /**
