@@ -132,6 +132,7 @@ Use `NewClientWithRetryConfiguration` when you want the client to automatically 
 - `BackoffMultiplier`: `2.0`
 - `MaxDelay`: `30 * time.Second`
 - `Jitter`: `0.20`
+- `MaxBodyBufferSize` : `1 << 20 (1 MiB)`
 - `RetryOnNetworkError`: `true`
 - `AllowNonIdempotentRetries`: `false`
 - `RetryableStatusCodes`: `429`, `500`, `502`, `503`, `504`
@@ -196,6 +197,7 @@ func main() {
         BackoffMultiplier:   2.0,
         MaxDelay:            10 * time.Second,
         Jitter:              0.10,
+        MaxBodyBufferSize:   1 << 20, // 1 MiB
         RetryOnNetworkError: true,
         RetryableStatusCodes: map[int]struct{}{
             429: {},
@@ -230,6 +232,7 @@ func main() {
 - `BackoffMultiplier`: exponential backoff multiplier applied after each retry.
 - `InitialDelay`: delay before the first retry attempt.
 - `Jitter`: random delay multiplier in the range `0.0` to `1.0` added to each retry delay.
+- `MaxBodyBufferSize`: maximum size of request bodies to buffer for retries. Requests with larger bodies are not retried.
 - `MaxDelay`: maximum delay between retry attempts.
 - `MaxRetries`: number of retries after the initial request.
 - `RetryFunction`: optional function that can inspect the response status code and body to decide whether to retry.
