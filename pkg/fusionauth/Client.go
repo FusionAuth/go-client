@@ -221,6 +221,18 @@ type restClient struct {
 	Uri                *url.URL
 }
 
+type readerWithCloser struct {
+	io.Reader
+	closer io.Closer
+}
+
+func (r *readerWithCloser) Close() error {
+	if r.closer != nil {
+		return r.closer.Close()
+	}
+	return nil
+}
+
 func (c *FusionAuthClient) Start(responseRef interface{}, errorRef interface{}) *restClient {
 	return c.StartAnonymous(responseRef, errorRef).WithAuthorization(c.APIKey)
 }
@@ -256,6 +268,11 @@ func (rc *restClient) Do(ctx context.Context) error {
 	// Bodies exceeding MaxBodyBufferSize cannot be safely buffered; in that case the
 	// stream is left intact and retries are disabled for this request.
 	if canRetryRequest && rc.Body != nil {
+		var bodyCloser io.Closer
+		if closer, ok := rc.Body.(io.Closer); ok {
+			bodyCloser = closer
+		}
+
 		maxBuffer := rc.RetryConfiguration.MaxBodyBufferSize
 		if maxBuffer == 0 {
 			maxBuffer = 1 << 20 // 1 MiB default
@@ -272,9 +289,21 @@ func (rc *restClient) Do(ctx context.Context) error {
 			}
 			if int64(len(b)) > maxBuffer {
 				// Body exceeds the buffer limit; reconstruct the stream and skip retries.
-				rc.Body = io.MultiReader(bytes.NewReader(b), rc.Body)
+				body := io.Reader(io.MultiReader(bytes.NewReader(b), rc.Body))
+				if bodyCloser != nil {
+					body = &readerWithCloser{
+						Reader: body,
+						closer: bodyCloser,
+					}
+				}
+				rc.Body = body
 				canRetryRequest = false
 			} else {
+				if bodyCloser != nil {
+					if err := bodyCloser.Close(); err != nil {
+						return err
+					}
+				}
 				rc.bodyBytes = b
 				rc.Body = nil
 			}
@@ -327,10 +356,10 @@ func (rc *restClient) Do(ctx context.Context) error {
 			return err
 		}
 		if rc.Debug || attempt < maxAttempts-1 {
-			// Fast path: if the status code alone warrants a retry and no RetryFunction
-			// needs to inspect the body, drain and discard it to avoid buffering.
+			// Fast path: if the status code alone warrants a retry, drain and discard
+			// the body so high-volume retries do not buffer unused payloads.
 			if !rc.Debug && attempt < maxAttempts-1 {
-				if _, ok := rc.RetryConfiguration.RetryableStatusCodes[resp.StatusCode]; ok && rc.RetryConfiguration.RetryFunction == nil {
+				if rc.isRetryableStatusCode(resp.StatusCode) {
 					io.Copy(io.Discard, resp.Body)
 					resp.Body.Close()
 					continue
@@ -401,13 +430,18 @@ func (rc *restClient) isMethodRetryable() bool {
 
 // shouldRetry returns true if the status code or body indicates a retryable failure.
 func (rc *restClient) shouldRetry(statusCode int, body []byte) bool {
-	if _, ok := rc.RetryConfiguration.RetryableStatusCodes[statusCode]; ok {
+	if rc.isRetryableStatusCode(statusCode) {
 		return true
 	}
 	if rc.RetryConfiguration.RetryFunction != nil {
 		return rc.RetryConfiguration.RetryFunction(statusCode, body)
 	}
 	return false
+}
+
+func (rc *restClient) isRetryableStatusCode(statusCode int) bool {
+	_, ok := rc.RetryConfiguration.RetryableStatusCodes[statusCode]
+	return ok
 }
 
 func (rc *restClient) WithAuthorization(key string) *restClient {

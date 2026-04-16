@@ -433,6 +433,7 @@ type ApplicationMultiFactorConfiguration struct {
 	LoginPolicy MultiFactorLoginPolicy            `json:"loginPolicy,omitempty"`
 	Sms         MultiFactorSMSTemplate            `json:"sms,omitempty"`
 	TrustPolicy ApplicationMultiFactorTrustPolicy `json:"trustPolicy,omitempty"`
+	Voice       MultiFactorVoiceTemplate          `json:"voice,omitempty"`
 }
 
 type MultiFactorEmailTemplate struct {
@@ -440,6 +441,10 @@ type MultiFactorEmailTemplate struct {
 }
 
 type MultiFactorSMSTemplate struct {
+	TemplateId string `json:"templateId,omitempty"`
+}
+
+type MultiFactorVoiceTemplate struct {
 	TemplateId string `json:"templateId,omitempty"`
 }
 
@@ -961,6 +966,7 @@ type BaseMessengerConfiguration struct {
 	Id                string                 `json:"id,omitempty"`
 	InsertInstant     int64                  `json:"insertInstant,omitempty"`
 	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
+	MessageTypes      []MessageType          `json:"messageTypes,omitempty"`
 	Name              string                 `json:"name,omitempty"`
 	Transport         string                 `json:"transport,omitempty"`
 	Type              MessengerType          `json:"type,omitempty"`
@@ -4422,7 +4428,8 @@ func (e MessageType) String() string {
 }
 
 const (
-	MessageType_SMS MessageType = "SMS"
+	MessageType_SMS   MessageType = "SMS"
+	MessageType_Voice MessageType = "Voice"
 )
 
 /**
@@ -4447,6 +4454,7 @@ func (b *MessengerResponse) SetStatus(status int) {
 
 /**
  * @author Daniel DeGroff
+ * @deprecated since 1.65.0,  use {@code MessageType} instead
  */
 type MessengerTransport struct {
 }
@@ -5107,8 +5115,9 @@ type PreviewMessageTemplateRequest struct {
  */
 type PreviewMessageTemplateResponse struct {
 	BaseHTTPResponse
-	Errors  Errors     `json:"errors,omitempty"`
-	Message SMSMessage `json:"message,omitempty"`
+	Errors         Errors     `json:"errors,omitempty"`
+	Message        SMSMessage `json:"message,omitempty"`
+	PreviewMessage Message    `json:"previewMessage,omitempty"`
 }
 
 func (b *PreviewMessageTemplateResponse) SetStatus(status int) {
@@ -6346,6 +6355,7 @@ type TenantMultiFactorConfiguration struct {
 	Email         MultiFactorEmailMethod         `json:"email,omitempty"`
 	LoginPolicy   MultiFactorLoginPolicy         `json:"loginPolicy,omitempty"`
 	Sms           MultiFactorSMSMethod           `json:"sms,omitempty"`
+	Voice         MultiFactorVoiceMethod         `json:"voice,omitempty"`
 }
 
 type MultiFactorAuthenticatorMethod struct {
@@ -6361,6 +6371,12 @@ type MultiFactorEmailMethod struct {
 }
 
 type MultiFactorSMSMethod struct {
+	Enableable
+	MessengerId string `json:"messengerId,omitempty"`
+	TemplateId  string `json:"templateId,omitempty"`
+}
+
+type MultiFactorVoiceMethod struct {
 	Enableable
 	MessengerId string `json:"messengerId,omitempty"`
 	TemplateId  string `json:"templateId,omitempty"`
@@ -6954,12 +6970,13 @@ func (b *TwoFactorResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type TwoFactorSendRequest struct {
-	ApplicationId string `json:"applicationId,omitempty"`
-	Email         string `json:"email,omitempty"`
-	Method        string `json:"method,omitempty"`
-	MethodId      string `json:"methodId,omitempty"`
-	MobilePhone   string `json:"mobilePhone,omitempty"`
-	UserId        string `json:"userId,omitempty"`
+	ApplicationId string      `json:"applicationId,omitempty"`
+	Email         string      `json:"email,omitempty"`
+	MessageType   MessageType `json:"messageType,omitempty"`
+	Method        string      `json:"method,omitempty"`
+	MethodId      string      `json:"methodId,omitempty"`
+	MobilePhone   string      `json:"mobilePhone,omitempty"`
+	UserId        string      `json:"userId,omitempty"`
 }
 
 /**
@@ -8123,6 +8140,24 @@ type VersionResponse struct {
 
 func (b *VersionResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * @author Daniel King
+ */
+type VoiceMessage struct {
+	Locale      string `json:"locale,omitempty"`
+	Message     string `json:"message,omitempty"`
+	PhoneNumber string `json:"phoneNumber,omitempty"`
+}
+
+/**
+ * @author Daniel King
+ */
+type VoiceMessageTemplate struct {
+	MessageTemplate
+	DefaultTemplate    string            `json:"defaultTemplate,omitempty"`
+	LocalizedTemplates map[string]string `json:"localizedTemplates,omitempty"`
 }
 
 /**
