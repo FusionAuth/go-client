@@ -1996,6 +1996,36 @@ func (c *FusionAuthClient) CreateTenantWithContext(ctx context.Context, tenantId
 	return &resp, &errors, err
 }
 
+// CreateTenantManagerIdentityProviderTypeConfiguration
+// Creates a tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+//	TenantManagerIdentityProviderTypeConfigurationRequest request The request object that contains all the information used to create the tenant manager identity provider type configuration.
+func (c *FusionAuthClient) CreateTenantManagerIdentityProviderTypeConfiguration(_type IdentityProviderType, request TenantManagerIdentityProviderTypeConfigurationRequest) (*TenantManagerIdentityProviderTypeConfigurationResponse, *Errors, error) {
+	return c.CreateTenantManagerIdentityProviderTypeConfigurationWithContext(context.TODO(), _type, request)
+}
+
+// CreateTenantManagerIdentityProviderTypeConfigurationWithContext
+// Creates a tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+//	TenantManagerIdentityProviderTypeConfigurationRequest request The request object that contains all the information used to create the tenant manager identity provider type configuration.
+func (c *FusionAuthClient) CreateTenantManagerIdentityProviderTypeConfigurationWithContext(ctx context.Context, _type IdentityProviderType, request TenantManagerIdentityProviderTypeConfigurationRequest) (*TenantManagerIdentityProviderTypeConfigurationResponse, *Errors, error) {
+	var resp TenantManagerIdentityProviderTypeConfigurationResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant-manager/identity-provider").
+		WithUriSegment(string(_type)).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateTheme
 // Creates a Theme. You can optionally specify an Id for the theme, if not provided one will be generated.
 //
@@ -3081,6 +3111,33 @@ func (c *FusionAuthClient) DeleteTenantAsyncWithContext(ctx context.Context, ten
 	err := restClient.WithUri("/api/tenant").
 		WithUriSegment(tenantId).
 		WithParameter("async", strconv.FormatBool(true)).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteTenantManagerIdentityProviderTypeConfiguration
+// Deletes the tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+func (c *FusionAuthClient) DeleteTenantManagerIdentityProviderTypeConfiguration(_type IdentityProviderType) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteTenantManagerIdentityProviderTypeConfigurationWithContext(context.TODO(), _type)
+}
+
+// DeleteTenantManagerIdentityProviderTypeConfigurationWithContext
+// Deletes the tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+func (c *FusionAuthClient) DeleteTenantManagerIdentityProviderTypeConfigurationWithContext(ctx context.Context, _type IdentityProviderType) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant-manager/identity-provider").
+		WithUriSegment(string(_type)).
 		WithMethod(http.MethodDelete).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -5321,6 +5378,63 @@ func (c *FusionAuthClient) PatchTenantWithContext(ctx context.Context, tenantId 
 	return &resp, &errors, err
 }
 
+// PatchTenantManagerConfiguration
+// Updates, via PATCH, the Tenant Manager configuration.
+//
+//	TenantManagerConfigurationRequest request The request that contains just the new Tenant Manager configuration information.
+func (c *FusionAuthClient) PatchTenantManagerConfiguration(request map[string]interface{}) (*TenantManagerConfigurationResponse, *Errors, error) {
+	return c.PatchTenantManagerConfigurationWithContext(context.TODO(), request)
+}
+
+// PatchTenantManagerConfigurationWithContext
+// Updates, via PATCH, the Tenant Manager configuration.
+//
+//	TenantManagerConfigurationRequest request The request that contains just the new Tenant Manager configuration information.
+func (c *FusionAuthClient) PatchTenantManagerConfigurationWithContext(ctx context.Context, request map[string]interface{}) (*TenantManagerConfigurationResponse, *Errors, error) {
+	var resp TenantManagerConfigurationResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant-manager").
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchTenantManagerIdentityProviderTypeConfiguration
+// Patches the tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+//	TenantManagerIdentityProviderTypeConfigurationRequest request The request object that contains the new tenant manager identity provider type configuration information.
+func (c *FusionAuthClient) PatchTenantManagerIdentityProviderTypeConfiguration(_type IdentityProviderType, request map[string]interface{}) (*TenantManagerIdentityProviderTypeConfigurationResponse, *Errors, error) {
+	return c.PatchTenantManagerIdentityProviderTypeConfigurationWithContext(context.TODO(), _type, request)
+}
+
+// PatchTenantManagerIdentityProviderTypeConfigurationWithContext
+// Patches the tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+//	TenantManagerIdentityProviderTypeConfigurationRequest request The request object that contains the new tenant manager identity provider type configuration information.
+func (c *FusionAuthClient) PatchTenantManagerIdentityProviderTypeConfigurationWithContext(ctx context.Context, _type IdentityProviderType, request map[string]interface{}) (*TenantManagerIdentityProviderTypeConfigurationResponse, *Errors, error) {
+	var resp TenantManagerIdentityProviderTypeConfigurationResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant-manager/identity-provider").
+		WithUriSegment(string(_type)).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchTheme
 // Updates, via PATCH, the theme with the given Id.
 //
@@ -6636,6 +6750,33 @@ func (c *FusionAuthClient) RetrieveIdentityProviderByTypeWithContext(ctx context
 	return &resp, &errors, err
 }
 
+// RetrieveIdentityProviderConnectionTestResults
+// Retrieves the results for an identity provider connection test.
+//
+//	string connectionTestId The connection test id to retrieve results for.
+func (c *FusionAuthClient) RetrieveIdentityProviderConnectionTestResults(connectionTestId string) (*IdentityProviderConnectionTestResponse, *Errors, error) {
+	return c.RetrieveIdentityProviderConnectionTestResultsWithContext(context.TODO(), connectionTestId)
+}
+
+// RetrieveIdentityProviderConnectionTestResultsWithContext
+// Retrieves the results for an identity provider connection test.
+//
+//	string connectionTestId The connection test id to retrieve results for.
+func (c *FusionAuthClient) RetrieveIdentityProviderConnectionTestResultsWithContext(ctx context.Context, connectionTestId string) (*IdentityProviderConnectionTestResponse, *Errors, error) {
+	var resp IdentityProviderConnectionTestResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/test").
+		WithParameter("connectionTestId", connectionTestId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // RetrieveInactiveActions
 // Retrieves all the actions for the user with the given Id that are currently inactive.
 // An inactive action means one that is time based and has been canceled or has expired, or is not time based.
@@ -7587,6 +7728,24 @@ func (c *FusionAuthClient) RetrieveTenantWithContext(ctx context.Context, tenant
 		return &resp, nil, err
 	}
 	return &resp, &errors, err
+}
+
+// RetrieveTenantManagerConfiguration
+// Retrieves the Tenant Manager configuration.
+func (c *FusionAuthClient) RetrieveTenantManagerConfiguration() (*TenantManagerConfigurationResponse, error) {
+	return c.RetrieveTenantManagerConfigurationWithContext(context.TODO())
+}
+
+// RetrieveTenantManagerConfigurationWithContext
+// Retrieves the Tenant Manager configuration.
+func (c *FusionAuthClient) RetrieveTenantManagerConfigurationWithContext(ctx context.Context) (*TenantManagerConfigurationResponse, error) {
+	var resp TenantManagerConfigurationResponse
+
+	err := c.Start(&resp, nil).
+		WithUri("/api/tenant-manager").
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	return &resp, err
 }
 
 // RetrieveTenants
@@ -9857,6 +10016,33 @@ func (c *FusionAuthClient) SendVerifyIdentityWithContext(ctx context.Context, re
 	return &resp, &errors, err
 }
 
+// StartIdentityProviderConnectionTest
+// Begins an identity provider connection test.
+//
+//	IdentityProviderConnectionTestRequest request The request that contains information on the connection test.
+func (c *FusionAuthClient) StartIdentityProviderConnectionTest(request IdentityProviderConnectionTestRequest) (*IdentityProviderConnectionTestResponse, *Errors, error) {
+	return c.StartIdentityProviderConnectionTestWithContext(context.TODO(), request)
+}
+
+// StartIdentityProviderConnectionTestWithContext
+// Begins an identity provider connection test.
+//
+//	IdentityProviderConnectionTestRequest request The request that contains information on the connection test.
+func (c *FusionAuthClient) StartIdentityProviderConnectionTestWithContext(ctx context.Context, request IdentityProviderConnectionTestRequest) (*IdentityProviderConnectionTestResponse, *Errors, error) {
+	var resp IdentityProviderConnectionTestResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/test").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // StartIdentityProviderLogin
 // Begins a login request for a 3rd party login that requires user interaction such as HYPR.
 //
@@ -10776,6 +10962,63 @@ func (c *FusionAuthClient) UpdateTenantWithContext(ctx context.Context, tenantId
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/tenant").
 		WithUriSegment(tenantId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateTenantManagerConfiguration
+// Updates the Tenant Manager configuration.
+//
+//	TenantManagerConfigurationRequest request The request that contains all the new Tenant Manager configuration information.
+func (c *FusionAuthClient) UpdateTenantManagerConfiguration(request TenantManagerConfigurationRequest) (*TenantManagerConfigurationResponse, *Errors, error) {
+	return c.UpdateTenantManagerConfigurationWithContext(context.TODO(), request)
+}
+
+// UpdateTenantManagerConfigurationWithContext
+// Updates the Tenant Manager configuration.
+//
+//	TenantManagerConfigurationRequest request The request that contains all the new Tenant Manager configuration information.
+func (c *FusionAuthClient) UpdateTenantManagerConfigurationWithContext(ctx context.Context, request TenantManagerConfigurationRequest) (*TenantManagerConfigurationResponse, *Errors, error) {
+	var resp TenantManagerConfigurationResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant-manager").
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateTenantManagerIdentityProviderTypeConfiguration
+// Updates the tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+//	TenantManagerIdentityProviderTypeConfigurationRequest request The request object that contains the updated tenant manager identity provider type configuration.
+func (c *FusionAuthClient) UpdateTenantManagerIdentityProviderTypeConfiguration(_type IdentityProviderType, request TenantManagerIdentityProviderTypeConfigurationRequest) (*TenantManagerIdentityProviderTypeConfigurationResponse, *Errors, error) {
+	return c.UpdateTenantManagerIdentityProviderTypeConfigurationWithContext(context.TODO(), _type, request)
+}
+
+// UpdateTenantManagerIdentityProviderTypeConfigurationWithContext
+// Updates the tenant manager identity provider type configuration for the given identity provider type.
+//
+//	IdentityProviderType _type The type of the identity provider.
+//	TenantManagerIdentityProviderTypeConfigurationRequest request The request object that contains the updated tenant manager identity provider type configuration.
+func (c *FusionAuthClient) UpdateTenantManagerIdentityProviderTypeConfigurationWithContext(ctx context.Context, _type IdentityProviderType, request TenantManagerIdentityProviderTypeConfigurationRequest) (*TenantManagerIdentityProviderTypeConfigurationResponse, *Errors, error) {
+	var resp TenantManagerIdentityProviderTypeConfigurationResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/tenant-manager/identity-provider").
+		WithUriSegment(string(_type)).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do(ctx)

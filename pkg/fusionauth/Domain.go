@@ -298,17 +298,18 @@ type PasswordlessConfiguration struct {
 
 type RegistrationConfiguration struct {
 	Enableable
-	BirthDate          Requirable       `json:"birthDate,omitempty"`
-	ConfirmPassword    bool             `json:"confirmPassword"`
-	FirstName          Requirable       `json:"firstName,omitempty"`
-	FormId             string           `json:"formId,omitempty"`
-	FullName           Requirable       `json:"fullName,omitempty"`
-	LastName           Requirable       `json:"lastName,omitempty"`
-	LoginIdType        LoginIdType      `json:"loginIdType,omitempty"`
-	MiddleName         Requirable       `json:"middleName,omitempty"`
-	MobilePhone        Requirable       `json:"mobilePhone,omitempty"`
-	PreferredLanguages Requirable       `json:"preferredLanguages,omitempty"`
-	Type               RegistrationType `json:"type,omitempty"`
+	BirthDate            Requirable       `json:"birthDate,omitempty"`
+	CompleteRegistration bool             `json:"completeRegistration"`
+	ConfirmPassword      bool             `json:"confirmPassword"`
+	FirstName            Requirable       `json:"firstName,omitempty"`
+	FormId               string           `json:"formId,omitempty"`
+	FullName             Requirable       `json:"fullName,omitempty"`
+	LastName             Requirable       `json:"lastName,omitempty"`
+	LoginIdType          LoginIdType      `json:"loginIdType,omitempty"`
+	MiddleName           Requirable       `json:"middleName,omitempty"`
+	MobilePhone          Requirable       `json:"mobilePhone,omitempty"`
+	PreferredLanguages   Requirable       `json:"preferredLanguages,omitempty"`
+	Type                 RegistrationType `json:"type,omitempty"`
 }
 
 // This is separate from IdentityType.
@@ -583,9 +584,10 @@ type ApplicationRole struct {
  */
 type ApplicationSearchCriteria struct {
 	BaseSearchCriteria
-	Name     string      `json:"name,omitempty"`
-	State    ObjectState `json:"state,omitempty"`
-	TenantId string      `json:"tenantId,omitempty"`
+	Name      string      `json:"name,omitempty"`
+	State     ObjectState `json:"state,omitempty"`
+	TenantId  string      `json:"tenantId,omitempty"`
+	Universal bool        `json:"universal"`
 }
 
 /**
@@ -694,6 +696,7 @@ type AuditLog struct {
 	NewValue      interface{}            `json:"newValue,omitempty"`
 	OldValue      interface{}            `json:"oldValue,omitempty"`
 	Reason        string                 `json:"reason,omitempty"`
+	TenantId      string                 `json:"tenantId,omitempty"`
 }
 
 /**
@@ -747,6 +750,7 @@ type AuditLogSearchCriteria struct {
 	OldValue string `json:"oldValue,omitempty"`
 	Reason   string `json:"reason,omitempty"`
 	Start    int64  `json:"start,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
 	User     string `json:"user,omitempty"`
 }
 
@@ -921,6 +925,7 @@ type BaseGroupEvent struct {
 type BaseIdentityProvider struct {
 	Enableable
 	ApplicationConfiguration map[string]interface{}                         `json:"applicationConfiguration,omitempty"`
+	AttributeMappings        map[string]string                              `json:"attributeMappings,omitempty"`
 	Data                     map[string]interface{}                         `json:"data,omitempty"`
 	Debug                    bool                                           `json:"debug"`
 	Id                       string                                         `json:"id,omitempty"`
@@ -929,6 +934,7 @@ type BaseIdentityProvider struct {
 	LastUpdateInstant        int64                                          `json:"lastUpdateInstant,omitempty"`
 	LinkingStrategy          IdentityProviderLinkingStrategy                `json:"linkingStrategy,omitempty"`
 	Name                     string                                         `json:"name,omitempty"`
+	Source                   string                                         `json:"source,omitempty"`
 	TenantConfiguration      map[string]IdentityProviderTenantConfiguration `json:"tenantConfiguration,omitempty"`
 	TenantId                 string                                         `json:"tenantId,omitempty"`
 	Type                     IdentityProviderType                           `json:"type,omitempty"`
@@ -2343,6 +2349,7 @@ type ExternalIdentifierConfiguration struct {
 	EmailVerificationIdTimeToLiveInSeconds             int                          `json:"emailVerificationIdTimeToLiveInSeconds,omitempty"`
 	EmailVerificationOneTimeCodeGenerator              SecureGeneratorConfiguration `json:"emailVerificationOneTimeCodeGenerator,omitempty"`
 	ExternalAuthenticationIdTimeToLiveInSeconds        int                          `json:"externalAuthenticationIdTimeToLiveInSeconds,omitempty"`
+	IdentityProviderConnectionTestTimeToLiveInSeconds  int                          `json:"identityProviderConnectionTestTimeToLiveInSeconds,omitempty"`
 	LoginIntentTimeToLiveInSeconds                     int                          `json:"loginIntentTimeToLiveInSeconds,omitempty"`
 	OneTimePasswordTimeToLiveInSeconds                 int                          `json:"oneTimePasswordTimeToLiveInSeconds,omitempty"`
 	PasswordlessLoginGenerator                         SecureGeneratorConfiguration `json:"passwordlessLoginGenerator,omitempty"`
@@ -2540,6 +2547,16 @@ type FamilyResponse struct {
 
 func (b *FamilyResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Components of a Favicon in an HTML {@code <head>} element.
+ */
+type Favicon struct {
+	Href  string `json:"href,omitempty"`
+	Rel   string `json:"rel,omitempty"`
+	Sizes string `json:"sizes,omitempty"`
+	Type  string `json:"type,omitempty"`
 }
 
 /**
@@ -3218,6 +3235,46 @@ func (b *IPAccessControlListSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * A request for interacting with the identity provider connection test API
+ */
+type IdentityProviderConnectionTestRequest struct {
+	IdentityProviderId string `json:"identityProviderId,omitempty"`
+	TenantId           string `json:"tenantId,omitempty"`
+}
+
+/**
+ * A response for the identity provider connection test API
+ */
+type IdentityProviderConnectionTestResponse struct {
+	BaseHTTPResponse
+	ConnectionTestId string                               `json:"connectionTestId,omitempty"`
+	Result           IdentityProviderConnectionTestResult `json:"result,omitempty"`
+}
+
+func (b *IdentityProviderConnectionTestResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * The results of an identity provider connection test.
+ */
+type IdentityProviderConnectionTestResult struct {
+	Email                  string                      `json:"email,omitempty"`
+	IdentityProviderId     string                      `json:"identityProviderId,omitempty"`
+	IdentityProviderUserId string                      `json:"identityProviderUserId,omitempty"`
+	StartInstant           int64                       `json:"startInstant,omitempty"`
+	Steps                  []IdentityProviderLoginStep `json:"steps,omitempty"`
+	Success                bool                        `json:"success"`
+	Username               string                      `json:"username,omitempty"`
+}
+
+type IdentityProviderLoginStep struct {
+	Detail  string `json:"detail,omitempty"`
+	Success bool   `json:"success"`
+	Title   string `json:"title,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type IdentityProviderLimitUserLinkingPolicy struct {
@@ -3308,6 +3365,7 @@ const (
  */
 type IdentityProviderLoginRequest struct {
 	BaseLoginRequest
+	ConnectionTestId   string            `json:"connectionTestId,omitempty"`
 	Data               map[string]string `json:"data,omitempty"`
 	EncodedJWT         string            `json:"encodedJWT,omitempty"`
 	IdentityProviderId string            `json:"identityProviderId,omitempty"`
@@ -3387,6 +3445,7 @@ type IdentityProviderSearchCriteria struct {
 	BaseSearchCriteria
 	ApplicationId string               `json:"applicationId,omitempty"`
 	Name          string               `json:"name,omitempty"`
+	Source        string               `json:"source,omitempty"`
 	TenantId      string               `json:"tenantId,omitempty"`
 	Type          IdentityProviderType `json:"type,omitempty"`
 }
@@ -3420,6 +3479,7 @@ func (b *IdentityProviderSearchResponse) SetStatus(status int) {
  */
 type IdentityProviderStartLoginRequest struct {
 	BaseLoginRequest
+	ConnectionTestId   string                 `json:"connectionTestId,omitempty"`
 	Data               map[string]string      `json:"data,omitempty"`
 	IdentityProviderId string                 `json:"identityProviderId,omitempty"`
 	LoginId            string                 `json:"loginId,omitempty"`
@@ -5117,7 +5177,7 @@ type PreviewMessageTemplateResponse struct {
 	BaseHTTPResponse
 	Errors         Errors     `json:"errors,omitempty"`
 	Message        SMSMessage `json:"message,omitempty"`
-	PreviewMessage Message    `json:"previewMessage,omitempty"`
+	PreviewMessage string     `json:"previewMessage,omitempty"`
 }
 
 func (b *PreviewMessageTemplateResponse) SetStatus(status int) {
@@ -6004,38 +6064,39 @@ const (
  * @author Lyle Schemmerling
  */
 type SimpleThemeVariables struct {
-	AlertBackgroundColor        string `json:"alertBackgroundColor,omitempty"`
-	AlertFontColor              string `json:"alertFontColor,omitempty"`
-	BackgroundImageURL          string `json:"backgroundImageURL,omitempty"`
-	BackgroundSize              string `json:"backgroundSize,omitempty"`
-	BorderRadius                string `json:"borderRadius,omitempty"`
-	DeleteButtonColor           string `json:"deleteButtonColor,omitempty"`
-	DeleteButtonFocusColor      string `json:"deleteButtonFocusColor,omitempty"`
-	DeleteButtonTextColor       string `json:"deleteButtonTextColor,omitempty"`
-	DeleteButtonTextFocusColor  string `json:"deleteButtonTextFocusColor,omitempty"`
-	ErrorFontColor              string `json:"errorFontColor,omitempty"`
-	ErrorIconColor              string `json:"errorIconColor,omitempty"`
-	FontColor                   string `json:"fontColor,omitempty"`
-	FontFamily                  string `json:"fontFamily,omitempty"`
-	FooterDisplay               bool   `json:"footerDisplay"`
-	IconBackgroundColor         string `json:"iconBackgroundColor,omitempty"`
-	IconColor                   string `json:"iconColor,omitempty"`
-	InfoIconColor               string `json:"infoIconColor,omitempty"`
-	InputBackgroundColor        string `json:"inputBackgroundColor,omitempty"`
-	InputIconColor              string `json:"inputIconColor,omitempty"`
-	InputTextColor              string `json:"inputTextColor,omitempty"`
-	LinkTextColor               string `json:"linkTextColor,omitempty"`
-	LinkTextFocusColor          string `json:"linkTextFocusColor,omitempty"`
-	LogoImageSize               string `json:"logoImageSize,omitempty"`
-	LogoImageURL                string `json:"logoImageURL,omitempty"`
-	MonoFontColor               string `json:"monoFontColor,omitempty"`
-	MonoFontFamily              string `json:"monoFontFamily,omitempty"`
-	PageBackgroundColor         string `json:"pageBackgroundColor,omitempty"`
-	PanelBackgroundColor        string `json:"panelBackgroundColor,omitempty"`
-	PrimaryButtonColor          string `json:"primaryButtonColor,omitempty"`
-	PrimaryButtonFocusColor     string `json:"primaryButtonFocusColor,omitempty"`
-	PrimaryButtonTextColor      string `json:"primaryButtonTextColor,omitempty"`
-	PrimaryButtonTextFocusColor string `json:"primaryButtonTextFocusColor,omitempty"`
+	AlertBackgroundColor        string    `json:"alertBackgroundColor,omitempty"`
+	AlertFontColor              string    `json:"alertFontColor,omitempty"`
+	BackgroundImageURL          string    `json:"backgroundImageURL,omitempty"`
+	BackgroundSize              string    `json:"backgroundSize,omitempty"`
+	BorderRadius                string    `json:"borderRadius,omitempty"`
+	DeleteButtonColor           string    `json:"deleteButtonColor,omitempty"`
+	DeleteButtonFocusColor      string    `json:"deleteButtonFocusColor,omitempty"`
+	DeleteButtonTextColor       string    `json:"deleteButtonTextColor,omitempty"`
+	DeleteButtonTextFocusColor  string    `json:"deleteButtonTextFocusColor,omitempty"`
+	ErrorFontColor              string    `json:"errorFontColor,omitempty"`
+	ErrorIconColor              string    `json:"errorIconColor,omitempty"`
+	Favicons                    []Favicon `json:"favicons,omitempty"`
+	FontColor                   string    `json:"fontColor,omitempty"`
+	FontFamily                  string    `json:"fontFamily,omitempty"`
+	FooterDisplay               bool      `json:"footerDisplay"`
+	IconBackgroundColor         string    `json:"iconBackgroundColor,omitempty"`
+	IconColor                   string    `json:"iconColor,omitempty"`
+	InfoIconColor               string    `json:"infoIconColor,omitempty"`
+	InputBackgroundColor        string    `json:"inputBackgroundColor,omitempty"`
+	InputIconColor              string    `json:"inputIconColor,omitempty"`
+	InputTextColor              string    `json:"inputTextColor,omitempty"`
+	LinkTextColor               string    `json:"linkTextColor,omitempty"`
+	LinkTextFocusColor          string    `json:"linkTextFocusColor,omitempty"`
+	LogoImageSize               string    `json:"logoImageSize,omitempty"`
+	LogoImageURL                string    `json:"logoImageURL,omitempty"`
+	MonoFontColor               string    `json:"monoFontColor,omitempty"`
+	MonoFontFamily              string    `json:"monoFontFamily,omitempty"`
+	PageBackgroundColor         string    `json:"pageBackgroundColor,omitempty"`
+	PanelBackgroundColor        string    `json:"panelBackgroundColor,omitempty"`
+	PrimaryButtonColor          string    `json:"primaryButtonColor,omitempty"`
+	PrimaryButtonFocusColor     string    `json:"primaryButtonFocusColor,omitempty"`
+	PrimaryButtonTextColor      string    `json:"primaryButtonTextColor,omitempty"`
+	PrimaryButtonTextFocusColor string    `json:"primaryButtonTextFocusColor,omitempty"`
 }
 
 /**
@@ -6345,6 +6406,75 @@ type TenantLambdaConfiguration struct {
  */
 type TenantLoginConfiguration struct {
 	RequireAuthentication bool `json:"requireAuthentication"`
+}
+
+/**
+ * Tenant Manager application configuration.
+ */
+type TenantManagerApplicationConfiguration struct {
+	ApplicationId string `json:"applicationId,omitempty"`
+}
+
+/**
+ * Configuration object for the Tenant Manager.
+ */
+type TenantManagerConfiguration struct {
+	ApplicationConfigurations          []TenantManagerApplicationConfiguration                   `json:"applicationConfigurations,omitempty"`
+	AttributeFormId                    string                                                    `json:"attributeFormId,omitempty"`
+	BrandName                          string                                                    `json:"brandName,omitempty"`
+	IdentityProviderTypeConfigurations map[string]TenantManagerIdentityProviderTypeConfiguration `json:"identityProviderTypeConfigurations,omitempty"`
+	InsertInstant                      int64                                                     `json:"insertInstant,omitempty"`
+	LastUpdateInstant                  int64                                                     `json:"lastUpdateInstant,omitempty"`
+}
+
+/**
+ * The Tenant Manager configuration request object
+ */
+type TenantManagerConfigurationRequest struct {
+	TenantManagerConfiguration TenantManagerConfiguration `json:"tenantManagerConfiguration,omitempty"`
+}
+
+/**
+ * The Tenant Manager configuration response object
+ */
+type TenantManagerConfigurationResponse struct {
+	BaseHTTPResponse
+	TenantManagerConfiguration TenantManagerConfiguration `json:"tenantManagerConfiguration,omitempty"`
+}
+
+func (b *TenantManagerConfigurationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Configuration object for identity provider types allowed in Tenant Manager
+ */
+type TenantManagerIdentityProviderTypeConfiguration struct {
+	Enableable
+	DefaultAttributeMappings map[string]string               `json:"defaultAttributeMappings,omitempty"`
+	InsertInstant            int64                           `json:"insertInstant,omitempty"`
+	LastUpdateInstant        int64                           `json:"lastUpdateInstant,omitempty"`
+	LinkingStrategy          IdentityProviderLinkingStrategy `json:"linkingStrategy,omitempty"`
+	Type                     IdentityProviderType            `json:"type,omitempty"`
+}
+
+/**
+ * The Tenant Manager IdP type configuration request object
+ */
+type TenantManagerIdentityProviderTypeConfigurationRequest struct {
+	TypeConfiguration TenantManagerIdentityProviderTypeConfiguration `json:"typeConfiguration,omitempty"`
+}
+
+/**
+ * The Tenant Manager IdP type configuration response object
+ */
+type TenantManagerIdentityProviderTypeConfigurationResponse struct {
+	BaseHTTPResponse
+	TypeConfiguration TenantManagerIdentityProviderTypeConfiguration `json:"typeConfiguration,omitempty"`
+}
+
+func (b *TenantManagerIdentityProviderTypeConfigurationResponse) SetStatus(status int) {
+	b.StatusCode = status
 }
 
 /**
