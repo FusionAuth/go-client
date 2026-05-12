@@ -5891,8 +5891,10 @@ type SAMLv2IdpInitiatedConfiguration struct {
  * @author Michael Sleevi
  */
 type SMSMessage struct {
+	Code        string `json:"code,omitempty"`
 	PhoneNumber string `json:"phoneNumber,omitempty"`
 	TextMessage string `json:"textMessage,omitempty"`
+	UserId      string `json:"userId,omitempty"`
 }
 
 /**
@@ -8276,9 +8278,11 @@ func (b *VersionResponse) SetStatus(status int) {
  * @author Daniel King
  */
 type VoiceMessage struct {
+	Code        string `json:"code,omitempty"`
 	Locale      string `json:"locale,omitempty"`
 	Message     string `json:"message,omitempty"`
 	PhoneNumber string `json:"phoneNumber,omitempty"`
+	UserId      string `json:"userId,omitempty"`
 }
 
 /**
