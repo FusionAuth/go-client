@@ -5439,6 +5439,7 @@ type ReactorStatus struct {
 	EntityManagement                          ReactorFeatureStatus `json:"entityManagement,omitempty"`
 	Expiration                                string               `json:"expiration,omitempty"`
 	IpGeoLocation                             ReactorFeatureStatus `json:"ipGeoLocation,omitempty"`
+	LegacyAdapter                             ReactorFeatureStatus `json:"legacyAdapter,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
 	MultiFactorLambdas                        ReactorFeatureStatus `json:"multiFactorLambdas,omitempty"`
@@ -7237,6 +7238,7 @@ type User struct {
 	InsertInstant      int64                      `json:"insertInstant,omitempty"`
 	LastName           string                     `json:"lastName,omitempty"`
 	LastUpdateInstant  int64                      `json:"lastUpdateInstant,omitempty"`
+	LegacyIdentifier   string                     `json:"legacyIdentifier,omitempty"`
 	Memberships        []GroupMember              `json:"memberships,omitempty"`
 	MiddleName         string                     `json:"middleName,omitempty"`
 	MobilePhone        string                     `json:"mobilePhone,omitempty"`
