@@ -4631,6 +4631,7 @@ type NonTransactionalEvent struct {
 type OAuth2Configuration struct {
 	AuthorizedOriginURLs          []string                            `json:"authorizedOriginURLs,omitempty"`
 	AuthorizedRedirectURLs        []string                            `json:"authorizedRedirectURLs,omitempty"`
+	AuthorizedResourceUris        []string                            `json:"authorizedResourceUris,omitempty"`
 	AuthorizedURLValidationPolicy Oauth2AuthorizedURLValidationPolicy `json:"authorizedURLValidationPolicy,omitempty"`
 	ClientAuthenticationPolicy    ClientAuthenticationPolicy          `json:"clientAuthenticationPolicy,omitempty"`
 	ClientId                      string                              `json:"clientId,omitempty"`
@@ -4837,6 +4838,7 @@ const (
 	OAuthErrorType_ExpiredToken            OAuthErrorType = "expired_token"
 	OAuthErrorType_UnsupportedTokenType    OAuthErrorType = "unsupported_token_type"
 	OAuthErrorType_InvalidDpopProof        OAuthErrorType = "invalid_dpop_proof"
+	OAuthErrorType_InvalidTarget           OAuthErrorType = "invalid_target"
 )
 
 /**
@@ -5505,9 +5507,10 @@ type RefreshToken struct {
 }
 
 type MetaData struct {
-	Data   map[string]interface{} `json:"data,omitempty"`
-	Device DeviceInfo             `json:"device,omitempty"`
-	Scopes []string               `json:"scopes,omitempty"`
+	Data      map[string]interface{} `json:"data,omitempty"`
+	Device    DeviceInfo             `json:"device,omitempty"`
+	Resources []string               `json:"resources,omitempty"`
+	Scopes    []string               `json:"scopes,omitempty"`
 }
 
 /**
