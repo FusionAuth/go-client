@@ -6741,6 +6741,7 @@ type Templates struct {
 	AccountEdit                               string `json:"accountEdit,omitempty"`
 	AccountIndex                              string `json:"accountIndex,omitempty"`
 	AccountTwoFactorDisable                   string `json:"accountTwoFactorDisable,omitempty"`
+	AccountTwoFactorEdit                      string `json:"accountTwoFactorEdit,omitempty"`
 	AccountTwoFactorEnable                    string `json:"accountTwoFactorEnable,omitempty"`
 	AccountTwoFactorIndex                     string `json:"accountTwoFactorIndex,omitempty"`
 	AccountWebAuthnAdd                        string `json:"accountWebAuthnAdd,omitempty"`
@@ -7058,6 +7059,7 @@ type TwoFactorMethod struct {
 	LastUsed      bool                       `json:"lastUsed"`
 	Method        string                     `json:"method,omitempty"`
 	MobilePhone   string                     `json:"mobilePhone,omitempty"`
+	Name          string                     `json:"name,omitempty"`
 	Secret        string                     `json:"secret,omitempty"`
 }
 
@@ -7084,6 +7086,7 @@ type TwoFactorRequest struct {
 	Email               string `json:"email,omitempty"`
 	Method              string `json:"method,omitempty"`
 	MobilePhone         string `json:"mobilePhone,omitempty"`
+	Name                string `json:"name,omitempty"`
 	Secret              string `json:"secret,omitempty"`
 	SecretBase32Encoded string `json:"secretBase32Encoded,omitempty"`
 	TwoFactorId         string `json:"twoFactorId,omitempty"`
@@ -7171,6 +7174,15 @@ type TwoFactorTrust struct {
 	ApplicationId string `json:"applicationId,omitempty"`
 	Expiration    int64  `json:"expiration,omitempty"`
 	StartInstant  int64  `json:"startInstant,omitempty"`
+}
+
+/**
+ * Request to update an existing two-factor method for a user.
+ */
+type TwoFactorUpdateRequest struct {
+	BaseEventRequest
+	MethodId string `json:"methodId,omitempty"`
+	Name     string `json:"name,omitempty"`
 }
 
 /**

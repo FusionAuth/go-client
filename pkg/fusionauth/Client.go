@@ -11058,6 +11058,36 @@ func (c *FusionAuthClient) UpdateThemeWithContext(ctx context.Context, themeId s
 	return &resp, &errors, err
 }
 
+// UpdateTwoFactor
+// Updates the two-factor method for the given user using a JSON body.
+//
+//	string userId The Id of the user to update.
+//	TwoFactorUpdateRequest request The request information that contains the name and methodId along with any event information.
+func (c *FusionAuthClient) UpdateTwoFactor(userId string, request TwoFactorUpdateRequest) (*BaseHTTPResponse, *Errors, error) {
+	return c.UpdateTwoFactorWithContext(context.TODO(), userId, request)
+}
+
+// UpdateTwoFactorWithContext
+// Updates the two-factor method for the given user using a JSON body.
+//
+//	string userId The Id of the user to update.
+//	TwoFactorUpdateRequest request The request information that contains the name and methodId along with any event information.
+func (c *FusionAuthClient) UpdateTwoFactorWithContext(ctx context.Context, userId string, request TwoFactorUpdateRequest) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/user/two-factor").
+		WithUriSegment(userId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // UpdateUser
 // Updates the user with the given Id.
 //
