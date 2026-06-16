@@ -222,6 +222,7 @@ type Application struct {
 	AccessControlConfiguration       ApplicationAccessControlConfiguration      `json:"accessControlConfiguration,omitempty"`
 	Active                           bool                                       `json:"active"`
 	AuthenticationTokenConfiguration AuthenticationTokenConfiguration           `json:"authenticationTokenConfiguration,omitempty"`
+	BaseURL                          string                                     `json:"baseURL,omitempty"`
 	CleanSpeakConfiguration          CleanSpeakConfiguration                    `json:"cleanSpeakConfiguration,omitempty"`
 	Data                             map[string]interface{}                     `json:"data,omitempty"`
 	EmailConfiguration               ApplicationEmailConfiguration              `json:"emailConfiguration,omitempty"`
@@ -6317,6 +6318,7 @@ const (
  */
 type Tenant struct {
 	AccessControlConfiguration        TenantAccessControlConfiguration  `json:"accessControlConfiguration,omitempty"`
+	BaseURL                           string                            `json:"baseURL,omitempty"`
 	CaptchaConfiguration              TenantCaptchaConfiguration        `json:"captchaConfiguration,omitempty"`
 	Configured                        bool                              `json:"configured"`
 	ConnectorPolicies                 []ConnectorPolicy                 `json:"connectorPolicies,omitempty"`
