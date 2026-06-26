@@ -787,7 +787,16 @@ func (e AuthenticationThreats) String() string {
 }
 
 const (
-	AuthenticationThreats_ImpossibleTravel AuthenticationThreats = "ImpossibleTravel"
+	AuthenticationThreats_BotDetected          AuthenticationThreats = "BotDetected"
+	AuthenticationThreats_BlocklistedIp        AuthenticationThreats = "BlocklistedIp"
+	AuthenticationThreats_DormantAccount       AuthenticationThreats = "DormantAccount"
+	AuthenticationThreats_DormantPassword      AuthenticationThreats = "DormantPassword"
+	AuthenticationThreats_ImpossibleTravel     AuthenticationThreats = "ImpossibleTravel"
+	AuthenticationThreats_RecentIdentityChange AuthenticationThreats = "RecentIdentityChange"
+	AuthenticationThreats_RecentPasswordChange AuthenticationThreats = "RecentPasswordChange"
+	AuthenticationThreats_SuspiciousUserAgent  AuthenticationThreats = "SuspiciousUserAgent"
+	AuthenticationThreats_UnrecognizedDevice   AuthenticationThreats = "UnrecognizedDevice"
+	AuthenticationThreats_UntrustedDevice      AuthenticationThreats = "UntrustedDevice"
 )
 
 /**
@@ -959,11 +968,12 @@ type BaseIdentityProviderApplicationConfiguration struct {
  */
 type BaseLoginRequest struct {
 	BaseEventRequest
-	ApplicationId string   `json:"applicationId,omitempty"`
-	IpAddress     string   `json:"ipAddress,omitempty"`
-	MetaData      MetaData `json:"metaData,omitempty"`
-	NewDevice     bool     `json:"newDevice"`
-	NoJWT         bool     `json:"noJWT"`
+	ApplicationId     string   `json:"applicationId,omitempty"`
+	BotDetectionScore float64  `json:"botDetectionScore,omitempty"`
+	IpAddress         string   `json:"ipAddress,omitempty"`
+	MetaData          MetaData `json:"metaData,omitempty"`
+	NewDevice         bool     `json:"newDevice"`
+	NoJWT             bool     `json:"noJWT"`
 }
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
@@ -1199,6 +1209,30 @@ type ClientCredentialsGrantRequest struct {
 }
 
 /**
+ * Represents the inbound lambda parameter 'clientRisk' inside the 'context' parameter for MFA Required lambdas.
+ */
+type ClientRisk struct {
+	Status string `json:"status,omitempty"`
+}
+
+/**
+ * Flags to enable or disable specific risk signals that contribute to the composite client risk calculation.
+ */
+type ClientRiskConfiguration struct {
+	Enableable
+	BlocklistedIp        bool `json:"blocklistedIp"`
+	BotDetected          bool `json:"botDetected"`
+	DormantAccount       bool `json:"dormantAccount"`
+	DormantPassword      bool `json:"dormantPassword"`
+	ImpossibleTravel     bool `json:"impossibleTravel"`
+	RecentIdentityChange bool `json:"recentIdentityChange"`
+	RecentPasswordChange bool `json:"recentPasswordChange"`
+	SuspiciousUserAgent  bool `json:"suspiciousUserAgent"`
+	UnrecognizedDevice   bool `json:"unrecognizedDevice"`
+	UntrustedDevice      bool `json:"untrustedDevice"`
+}
+
+/**
  * @author Trevor Smith
  */
 type ConnectorPolicy struct {
@@ -1371,6 +1405,7 @@ type Context struct {
 	Application           Application             `json:"application,omitempty"`
 	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
 	AuthenticationType    string                  `json:"authenticationType,omitempty"`
+	ClientRisk            ClientRisk              `json:"clientRisk,omitempty"`
 	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
 	MfaTrust              Trust                   `json:"mfaTrust,omitempty"`
 	Policies              Policies                `json:"policies,omitempty"`
@@ -2261,6 +2296,7 @@ const (
 	EventType_UserLoginNewDevice             EventType = "user.login.new-device"
 	EventType_UserLoginSuccess               EventType = "user.login.success"
 	EventType_UserLoginSuspicious            EventType = "user.login.suspicious"
+	EventType_UserTwoFactorChallenge         EventType = "user.two-factor.challenge"
 	EventType_UserPasswordBreach             EventType = "user.password.breach"
 	EventType_UserPasswordResetSend          EventType = "user.password.reset.send"
 	EventType_UserPasswordResetStart         EventType = "user.password.reset.start"
@@ -2281,6 +2317,8 @@ const (
 	EventType_Test                           EventType = "test"
 	EventType_UserIdentityVerified           EventType = "user.identity.verified"
 	EventType_UserIdentityUpdate             EventType = "user.identity.update"
+	EventType_UserTwoFactorFailedAttempt     EventType = "user.two-factor.failed-attempt"
+	EventType_UserTwoFactorSuccess           EventType = "user.two-factor.success"
 )
 
 /**
@@ -4387,6 +4425,15 @@ type IdentityProviderDetails struct {
 }
 
 /**
+ * Reactor metric with counts of MFA challenges, successes, and failures for a tenant.
+ */
+type MFATenantMetric struct {
+	ChallengeCount     int64 `json:"challengeCount,omitempty"`
+	FailedAttemptCount int64 `json:"failedAttemptCount,omitempty"`
+	SuccessCount       int64 `json:"successCount,omitempty"`
+}
+
+/**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
  * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
@@ -4584,9 +4631,11 @@ func (e MultiFactorLoginPolicy) String() string {
 }
 
 const (
-	MultiFactorLoginPolicy_Disabled MultiFactorLoginPolicy = "Disabled"
-	MultiFactorLoginPolicy_Enabled  MultiFactorLoginPolicy = "Enabled"
-	MultiFactorLoginPolicy_Required MultiFactorLoginPolicy = "Required"
+	MultiFactorLoginPolicy_ChallengeOnHighRisk   MultiFactorLoginPolicy = "ChallengeOnHighRisk"
+	MultiFactorLoginPolicy_ChallengeOnMediumRisk MultiFactorLoginPolicy = "ChallengeOnMediumRisk"
+	MultiFactorLoginPolicy_Disabled              MultiFactorLoginPolicy = "Disabled"
+	MultiFactorLoginPolicy_Enabled               MultiFactorLoginPolicy = "Enabled"
+	MultiFactorLoginPolicy_Required              MultiFactorLoginPolicy = "Required"
 )
 
 /**
@@ -5388,6 +5437,7 @@ const (
  */
 type ReactorMetrics struct {
 	BreachedPasswordMetrics map[string]BreachedPasswordTenantMetric `json:"breachedPasswordMetrics,omitempty"`
+	MfaMetrics              map[string]MFATenantMetric              `json:"mfaMetrics,omitempty"`
 }
 
 /**
@@ -5438,11 +5488,15 @@ type ReactorStatus struct {
 	ApplicationMultiFactorAuthentication      ReactorFeatureStatus `json:"applicationMultiFactorAuthentication,omitempty"`
 	ApplicationThemes                         ReactorFeatureStatus `json:"applicationThemes,omitempty"`
 	BreachedPasswordDetection                 ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
+	ClientRiskConfiguration                   ReactorFeatureStatus `json:"clientRiskConfiguration,omitempty"`
 	Connectors                                ReactorFeatureStatus `json:"connectors,omitempty"`
 	DPoP                                      ReactorFeatureStatus `json:"dPoP,omitempty"`
 	EntityManagement                          ReactorFeatureStatus `json:"entityManagement,omitempty"`
 	Expiration                                string               `json:"expiration,omitempty"`
+	ImfaWebhooks                              ReactorFeatureStatus `json:"imfaWebhooks,omitempty"`
+	IntelligentMFA                            ReactorFeatureStatus `json:"intelligentMFA,omitempty"`
 	IpGeoLocation                             ReactorFeatureStatus `json:"ipGeoLocation,omitempty"`
+	IpReputation                              ReactorFeatureStatus `json:"ipReputation,omitempty"`
 	LegacyAdapter                             ReactorFeatureStatus `json:"legacyAdapter,omitempty"`
 	LicenseAttributes                         map[string]string    `json:"licenseAttributes,omitempty"`
 	Licensed                                  bool                 `json:"licensed"`
@@ -5451,6 +5505,7 @@ type ReactorStatus struct {
 	TenantManagerApplication                  ReactorFeatureStatus `json:"tenantManagerApplication,omitempty"`
 	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
 	UniversalApplication                      ReactorFeatureStatus `json:"universalApplication,omitempty"`
+	UserAgentReputation                       ReactorFeatureStatus `json:"userAgentReputation,omitempty"`
 	WebAuthn                                  ReactorFeatureStatus `json:"webAuthn,omitempty"`
 	WebAuthnPlatformAuthenticators            ReactorFeatureStatus `json:"webAuthnPlatformAuthenticators,omitempty"`
 	WebAuthnRoamingAuthenticators             ReactorFeatureStatus `json:"webAuthnRoamingAuthenticators,omitempty"`
@@ -6320,6 +6375,7 @@ type Tenant struct {
 	AccessControlConfiguration        TenantAccessControlConfiguration  `json:"accessControlConfiguration,omitempty"`
 	BaseURL                           string                            `json:"baseURL,omitempty"`
 	CaptchaConfiguration              TenantCaptchaConfiguration        `json:"captchaConfiguration,omitempty"`
+	ClientRiskConfiguration           ClientRiskConfiguration           `json:"clientRiskConfiguration,omitempty"`
 	Configured                        bool                              `json:"configured"`
 	ConnectorPolicies                 []ConnectorPolicy                 `json:"connectorPolicies,omitempty"`
 	Data                              map[string]interface{}            `json:"data,omitempty"`
@@ -6491,6 +6547,7 @@ func (b *TenantManagerIdentityProviderTypeConfigurationResponse) SetStatus(statu
  */
 type TenantMultiFactorConfiguration struct {
 	Authenticator MultiFactorAuthenticatorMethod `json:"authenticator,omitempty"`
+	Debug         bool                           `json:"debug"`
 	Email         MultiFactorEmailMethod         `json:"email,omitempty"`
 	LoginPolicy   MultiFactorLoginPolicy         `json:"loginPolicy,omitempty"`
 	Sms           MultiFactorSMSMethod           `json:"sms,omitempty"`
@@ -8074,11 +8131,31 @@ const (
 )
 
 /**
+ * Models the User Two Factor Challenge Event. Fired when a two-factor challenge is started (before the user submits a code).
+ */
+type UserTwoFactorChallengeEvent struct {
+	BaseUserEvent
+	ApplicationId string `json:"applicationId,omitempty"`
+	ClientRisk    string `json:"clientRisk,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type UserTwoFactorConfiguration struct {
 	Methods       []TwoFactorMethod `json:"methods,omitempty"`
 	RecoveryCodes []string          `json:"recoveryCodes,omitempty"`
+}
+
+/**
+ * Models the User Two Factor Failed Attempt Event. Fired when a user fails a two-factor challenge.
+ */
+type UserTwoFactorFailedAttemptEvent struct {
+	BaseUserEvent
+	ApplicationId string `json:"applicationId,omitempty"`
+	ClientRisk    string `json:"clientRisk,omitempty"`
+	MessageType   string `json:"messageType,omitempty"`
+	Method        string `json:"method,omitempty"`
 }
 
 /**
@@ -8099,6 +8176,17 @@ type UserTwoFactorMethodAddEvent struct {
 type UserTwoFactorMethodRemoveEvent struct {
 	BaseUserEvent
 	Method TwoFactorMethod `json:"method,omitempty"`
+}
+
+/**
+ * Models the User Two Factor Success Event. Fired when a user successfully completes a two-factor challenge.
+ */
+type UserTwoFactorSuccessEvent struct {
+	BaseUserEvent
+	ApplicationId string `json:"applicationId,omitempty"`
+	ClientRisk    string `json:"clientRisk,omitempty"`
+	MessageType   string `json:"messageType,omitempty"`
+	Method        string `json:"method,omitempty"`
 }
 
 /**
