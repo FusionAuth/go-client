@@ -8237,74 +8237,6 @@ func (c *FusionAuthClient) RetrieveUserByVerificationIdWithContext(ctx context.C
 	return &resp, &errors, err
 }
 
-// RetrieveUserCode
-// Retrieve a user_code that is part of an in-progress Device Authorization Grant.
-//
-// This API is useful if you want to build your own login workflow to complete a device grant.
-//
-//	string clientId The client Id.
-//	string clientSecret The client Id.
-//	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCode(clientId string, clientSecret string, userCode string) (*BaseHTTPResponse, error) {
-	return c.RetrieveUserCodeWithContext(context.TODO(), clientId, clientSecret, userCode)
-}
-
-// RetrieveUserCodeWithContext
-// Retrieve a user_code that is part of an in-progress Device Authorization Grant.
-//
-// This API is useful if you want to build your own login workflow to complete a device grant.
-//
-//	string clientId The client Id.
-//	string clientSecret The client Id.
-//	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeWithContext(ctx context.Context, clientId string, clientSecret string, userCode string) (*BaseHTTPResponse, error) {
-	var resp BaseHTTPResponse
-	formBody := url.Values{}
-	formBody.Set("client_id", clientId)
-	formBody.Set("client_secret", clientSecret)
-	formBody.Set("user_code", userCode)
-
-	err := c.StartAnonymous(&resp, nil).
-		WithUri("/oauth2/device/user-code").
-		WithFormData(formBody).
-		WithMethod(http.MethodGet).
-		Do(ctx)
-	return &resp, err
-}
-
-// RetrieveUserCodeUsingAPIKey
-// Retrieve a user_code that is part of an in-progress Device Authorization Grant.
-//
-// This API is useful if you want to build your own login workflow to complete a device grant.
-//
-// This request will require an API key.
-//
-//	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKey(userCode string) (*BaseHTTPResponse, error) {
-	return c.RetrieveUserCodeUsingAPIKeyWithContext(context.TODO(), userCode)
-}
-
-// RetrieveUserCodeUsingAPIKeyWithContext
-// Retrieve a user_code that is part of an in-progress Device Authorization Grant.
-//
-// This API is useful if you want to build your own login workflow to complete a device grant.
-//
-// This request will require an API key.
-//
-//	string userCode The end-user verification code.
-func (c *FusionAuthClient) RetrieveUserCodeUsingAPIKeyWithContext(ctx context.Context, userCode string) (*BaseHTTPResponse, error) {
-	var resp BaseHTTPResponse
-	formBody := url.Values{}
-	formBody.Set("user_code", userCode)
-
-	err := c.StartAnonymous(&resp, nil).
-		WithUri("/oauth2/device/user-code").
-		WithFormData(formBody).
-		WithMethod(http.MethodGet).
-		Do(ctx)
-	return &resp, err
-}
-
 // RetrieveUserCodeUsingAPIKeyWithRequest
 // Retrieve a user_code that is part of an in-progress Device Authorization Grant.
 //
@@ -9178,6 +9110,42 @@ func (c *FusionAuthClient) SearchConsentsWithContext(ctx context.Context, reques
 	return &resp, &errors, err
 }
 
+// SearchConsentsByParameters
+// Searches consents with the specified criteria and pagination.
+//
+//	string name (Optional) The name of the consent to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: id, insertInstant, name.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchConsentsByParameters(name string, numberOfResults int, orderBy string, startRow int) (*ConsentSearchResponse, *Errors, error) {
+	return c.SearchConsentsByParametersWithContext(context.TODO(), name, numberOfResults, orderBy, startRow)
+}
+
+// SearchConsentsByParametersWithContext
+// Searches consents with the specified criteria and pagination.
+//
+//	string name (Optional) The name of the consent to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: id, insertInstant, name.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchConsentsByParametersWithContext(ctx context.Context, name string, numberOfResults int, orderBy string, startRow int) (*ConsentSearchResponse, *Errors, error) {
+	var resp ConsentSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/consent/search").
+		WithParameter("name", name).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchEmailTemplates
 // Searches email templates with the specified criteria and pagination.
 //
@@ -9286,6 +9254,48 @@ func (c *FusionAuthClient) SearchEntityGrantsWithContext(ctx context.Context, re
 	return &resp, &errors, err
 }
 
+// SearchEntityGrantsByParameters
+// Searches entity grants with the specified criteria and pagination.
+//
+//	string entityId (Optional) The entity Id to search for grants on.
+//	string name (Optional) The name of the entity grant to search for. Supports wildcard search using *.
+//	string userId (Optional) The user Id to search for grants on.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchEntityGrantsByParameters(entityId string, name string, userId string, numberOfResults int, orderBy string, startRow int) (*EntityGrantSearchResponse, *Errors, error) {
+	return c.SearchEntityGrantsByParametersWithContext(context.TODO(), entityId, name, userId, numberOfResults, orderBy, startRow)
+}
+
+// SearchEntityGrantsByParametersWithContext
+// Searches entity grants with the specified criteria and pagination.
+//
+//	string entityId (Optional) The entity Id to search for grants on.
+//	string name (Optional) The name of the entity grant to search for. Supports wildcard search using *.
+//	string userId (Optional) The user Id to search for grants on.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchEntityGrantsByParametersWithContext(ctx context.Context, entityId string, name string, userId string, numberOfResults int, orderBy string, startRow int) (*EntityGrantSearchResponse, *Errors, error) {
+	var resp EntityGrantSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/grant/search").
+		WithParameter("entityId", entityId).
+		WithParameter("name", name).
+		WithParameter("userId", userId).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchEntityTypes
 // Searches the entity types with the specified criteria and pagination.
 //
@@ -9306,6 +9316,42 @@ func (c *FusionAuthClient) SearchEntityTypesWithContext(ctx context.Context, req
 	err := restClient.WithUri("/api/entity/type/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchEntityTypesByParameters
+// Searches entity types with the specified criteria and pagination.
+//
+//	string name The name of the entity type to search for. Use * to return all entity types.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: insertInstant, lastUpdateInstant, name.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchEntityTypesByParameters(name string, numberOfResults int, orderBy string, startRow int) (*EntityTypeSearchResponse, *Errors, error) {
+	return c.SearchEntityTypesByParametersWithContext(context.TODO(), name, numberOfResults, orderBy, startRow)
+}
+
+// SearchEntityTypesByParametersWithContext
+// Searches entity types with the specified criteria and pagination.
+//
+//	string name The name of the entity type to search for. Use * to return all entity types.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: insertInstant, lastUpdateInstant, name.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchEntityTypesByParametersWithContext(ctx context.Context, name string, numberOfResults int, orderBy string, startRow int) (*EntityTypeSearchResponse, *Errors, error) {
+	var resp EntityTypeSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/entity/type/search").
+		WithParameter("name", name).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
@@ -9421,6 +9467,42 @@ func (c *FusionAuthClient) SearchIPAccessControlListsWithContext(ctx context.Con
 	return &resp, &errors, err
 }
 
+// SearchIPAccessControlListsByParameters
+// Searches IP access control lists with the specified criteria and pagination.
+//
+//	string name (Optional) The name of the IP access control list to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: id, insertInstant, lastUpdateInstant, name.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchIPAccessControlListsByParameters(name string, numberOfResults int, orderBy string, startRow int) (*IPAccessControlListSearchResponse, *Errors, error) {
+	return c.SearchIPAccessControlListsByParametersWithContext(context.TODO(), name, numberOfResults, orderBy, startRow)
+}
+
+// SearchIPAccessControlListsByParametersWithContext
+// Searches IP access control lists with the specified criteria and pagination.
+//
+//	string name (Optional) The name of the IP access control list to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: id, insertInstant, lastUpdateInstant, name.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+func (c *FusionAuthClient) SearchIPAccessControlListsByParametersWithContext(ctx context.Context, name string, numberOfResults int, orderBy string, startRow int) (*IPAccessControlListSearchResponse, *Errors, error) {
+	var resp IPAccessControlListSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/ip-acl/search").
+		WithParameter("name", name).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchIdentityProviders
 // Searches identity providers with the specified criteria and pagination.
 //
@@ -9448,6 +9530,51 @@ func (c *FusionAuthClient) SearchIdentityProvidersWithContext(ctx context.Contex
 	return &resp, &errors, err
 }
 
+// SearchIdentityProvidersByParameters
+// Searches identity providers with the specified criteria and pagination.
+//
+//	string applicationId (Optional) The application Id to search for identity providers.
+//	string name (Optional) The name of the identity provider to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: enabled, id, insertInstant, name, type.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+//	string tenantId (Optional) The tenant Id to restrict the results to.
+//	string _type (Optional) The type of identity provider to search for.
+func (c *FusionAuthClient) SearchIdentityProvidersByParameters(applicationId string, name string, numberOfResults int, orderBy string, startRow int, tenantId string, _type string) (*IdentityProviderSearchResponse, *Errors, error) {
+	return c.SearchIdentityProvidersByParametersWithContext(context.TODO(), applicationId, name, numberOfResults, orderBy, startRow, tenantId, _type)
+}
+
+// SearchIdentityProvidersByParametersWithContext
+// Searches identity providers with the specified criteria and pagination.
+//
+//	string applicationId (Optional) The application Id to search for identity providers.
+//	string name (Optional) The name of the identity provider to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: enabled, id, insertInstant, name, type.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+//	string tenantId (Optional) The tenant Id to restrict the results to.
+//	string _type (Optional) The type of identity provider to search for.
+func (c *FusionAuthClient) SearchIdentityProvidersByParametersWithContext(ctx context.Context, applicationId string, name string, numberOfResults int, orderBy string, startRow int, tenantId string, _type string) (*IdentityProviderSearchResponse, *Errors, error) {
+	var resp IdentityProviderSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/identity-provider/search").
+		WithParameter("applicationId", applicationId).
+		WithParameter("name", name).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithParameter("tenantId", tenantId).
+		WithParameter("type", _type).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchKeys
 // Searches keys with the specified criteria and pagination.
 //
@@ -9468,6 +9595,48 @@ func (c *FusionAuthClient) SearchKeysWithContext(ctx context.Context, request Ke
 	err := restClient.WithUri("/api/key/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchKeysByParameters
+// Searches keys with the specified criteria and pagination.
+//
+//	string algorithm (Optional) The algorithm of the key to search for.
+//	string name (Optional) The name of the key to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: algorithm, expiration, id, insertInstant, name, type.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+//	string _type (Optional) The type of key to search for. Supported values: EC, HMAC, OKP, RSA.
+func (c *FusionAuthClient) SearchKeysByParameters(algorithm string, name string, numberOfResults int, orderBy string, startRow int, _type string) (*KeySearchResponse, *Errors, error) {
+	return c.SearchKeysByParametersWithContext(context.TODO(), algorithm, name, numberOfResults, orderBy, startRow, _type)
+}
+
+// SearchKeysByParametersWithContext
+// Searches keys with the specified criteria and pagination.
+//
+//	string algorithm (Optional) The algorithm of the key to search for.
+//	string name (Optional) The name of the key to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: algorithm, expiration, id, insertInstant, name, type.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+//	string _type (Optional) The type of key to search for. Supported values: EC, HMAC, OKP, RSA.
+func (c *FusionAuthClient) SearchKeysByParametersWithContext(ctx context.Context, algorithm string, name string, numberOfResults int, orderBy string, startRow int, _type string) (*KeySearchResponse, *Errors, error) {
+	var resp KeySearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/key/search").
+		WithParameter("algorithm", algorithm).
+		WithParameter("name", name).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithParameter("type", _type).
+		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
@@ -9777,6 +9946,48 @@ func (c *FusionAuthClient) SearchWebhooksWithContext(ctx context.Context, reques
 	err := restClient.WithUri("/api/webhook/search").
 		WithJSONBody(request).
 		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchWebhooksByParameters
+// Searches webhooks with the specified criteria and pagination.
+//
+//	string description (Optional) The description of the webhook to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: description, id, insertInstant, url.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+//	string tenantId (Optional) The tenant Id to restrict the results to.
+//	string url (Optional) The URL of the webhook to search for. Supports wildcard search using *.
+func (c *FusionAuthClient) SearchWebhooksByParameters(description string, numberOfResults int, orderBy string, startRow int, tenantId string, url string) (*WebhookSearchResponse, *Errors, error) {
+	return c.SearchWebhooksByParametersWithContext(context.TODO(), description, numberOfResults, orderBy, startRow, tenantId, url)
+}
+
+// SearchWebhooksByParametersWithContext
+// Searches webhooks with the specified criteria and pagination.
+//
+//	string description (Optional) The description of the webhook to search for. Supports wildcard search using *.
+//	int numberOfResults (Optional) The number of results to return. Defaults to 25.
+//	string orderBy (Optional) The field to order the results by. Supported values: description, id, insertInstant, url.
+//	int startRow (Optional) The offset into the total results. Defaults to 0.
+//	string tenantId (Optional) The tenant Id to restrict the results to.
+//	string url (Optional) The URL of the webhook to search for. Supports wildcard search using *.
+func (c *FusionAuthClient) SearchWebhooksByParametersWithContext(ctx context.Context, description string, numberOfResults int, orderBy string, startRow int, tenantId string, url string) (*WebhookSearchResponse, *Errors, error) {
+	var resp WebhookSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/webhook/search").
+		WithParameter("description", description).
+		WithParameter("numberOfResults", strconv.Itoa(numberOfResults)).
+		WithParameter("orderBy", orderBy).
+		WithParameter("startRow", strconv.Itoa(startRow)).
+		WithParameter("tenantId", tenantId).
+		WithParameter("url", url).
+		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
 		return &resp, nil, err
