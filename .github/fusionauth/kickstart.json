@@ -112,15 +112,6 @@
     },
     {
       "method": "PATCH",
-      "url": "/api/theme/#{newThemeId}",
-      "body": {
-        "theme": {
-          "stylesheet": "@{css/styles.css}"
-        }
-      }
-    },
-    {
-      "method": "PATCH",
       "url": "/api/tenant/#{defaultTenantId}",
       "body": {
         "tenant": {

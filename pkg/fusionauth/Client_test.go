@@ -38,7 +38,14 @@ var (
 	baseURL, _ = url.Parse(host)
 )
 
-var faClient = NewClient(httpClient, baseURL, "af69486b-4733-4470-a592-f1bfce7af580")
+var faClient = NewClient(httpClient, baseURL, getEnvOrDefault("FUSIONAUTH_API_KEY", "bf69486b-4733-4470-a592-f1bfce7af580"))
+
+func getEnvOrDefault(key, defaultValue string) string {
+	if value, ok := os.LookupEnv(key); ok && value != "" {
+		return value
+	}
+	return defaultValue
+}
 
 func TestRetrieveUserFail(t *testing.T) {
 	userResponse, errors, _ := faClient.RetrieveUserByEmail("missing@example.com")
