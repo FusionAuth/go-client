@@ -5050,26 +5050,27 @@ const (
  */
 type OpenIdConfiguration struct {
 	BaseHTTPResponse
-	AuthorizationEndpoint             string   `json:"authorization_endpoint,omitempty"`
-	BackchannelLogoutSupported        bool     `json:"backchannel_logout_supported"`
-	ClaimsSupported                   []string `json:"claims_supported,omitempty"`
-	CodeChallengeMethodsSupported     []string `json:"code_challenge_methods_supported,omitempty"`
-	DeviceAuthorizationEndpoint       string   `json:"device_authorization_endpoint,omitempty"`
-	DpopSigningAlgValuesSupported     []string `json:"dpop_signing_alg_values_supported,omitempty"`
-	EndSessionEndpoint                string   `json:"end_session_endpoint,omitempty"`
-	FrontchannelLogoutSupported       bool     `json:"frontchannel_logout_supported"`
-	GrantTypesSupported               []string `json:"grant_types_supported,omitempty"`
-	IdTokenSigningAlgValuesSupported  []string `json:"id_token_signing_alg_values_supported,omitempty"`
-	Issuer                            string   `json:"issuer,omitempty"`
-	JwksUri                           string   `json:"jwks_uri,omitempty"`
-	ResponseModesSupported            []string `json:"response_modes_supported,omitempty"`
-	ResponseTypesSupported            []string `json:"response_types_supported,omitempty"`
-	ScopesSupported                   []string `json:"scopes_supported,omitempty"`
-	SubjectTypesSupported             []string `json:"subject_types_supported,omitempty"`
-	TokenEndpoint                     string   `json:"token_endpoint,omitempty"`
-	TokenEndpointAuthMethodsSupported []string `json:"token_endpoint_auth_methods_supported,omitempty"`
-	UserinfoEndpoint                  string   `json:"userinfo_endpoint,omitempty"`
-	UserinfoSigningAlgValuesSupported []string `json:"userinfo_signing_alg_values_supported,omitempty"`
+	AuthorizationEndpoint                      string   `json:"authorization_endpoint,omitempty"`
+	AuthorizationResponseIssParameterSupported bool     `json:"authorization_response_iss_parameter_supported"`
+	BackchannelLogoutSupported                 bool     `json:"backchannel_logout_supported"`
+	ClaimsSupported                            []string `json:"claims_supported,omitempty"`
+	CodeChallengeMethodsSupported              []string `json:"code_challenge_methods_supported,omitempty"`
+	DeviceAuthorizationEndpoint                string   `json:"device_authorization_endpoint,omitempty"`
+	DpopSigningAlgValuesSupported              []string `json:"dpop_signing_alg_values_supported,omitempty"`
+	EndSessionEndpoint                         string   `json:"end_session_endpoint,omitempty"`
+	FrontchannelLogoutSupported                bool     `json:"frontchannel_logout_supported"`
+	GrantTypesSupported                        []string `json:"grant_types_supported,omitempty"`
+	IdTokenSigningAlgValuesSupported           []string `json:"id_token_signing_alg_values_supported,omitempty"`
+	Issuer                                     string   `json:"issuer,omitempty"`
+	JwksUri                                    string   `json:"jwks_uri,omitempty"`
+	ResponseModesSupported                     []string `json:"response_modes_supported,omitempty"`
+	ResponseTypesSupported                     []string `json:"response_types_supported,omitempty"`
+	ScopesSupported                            []string `json:"scopes_supported,omitempty"`
+	SubjectTypesSupported                      []string `json:"subject_types_supported,omitempty"`
+	TokenEndpoint                              string   `json:"token_endpoint,omitempty"`
+	TokenEndpointAuthMethodsSupported          []string `json:"token_endpoint_auth_methods_supported,omitempty"`
+	UserinfoEndpoint                           string   `json:"userinfo_endpoint,omitempty"`
+	UserinfoSigningAlgValuesSupported          []string `json:"userinfo_signing_alg_values_supported,omitempty"`
 }
 
 func (b *OpenIdConfiguration) SetStatus(status int) {
