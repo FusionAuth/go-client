@@ -891,6 +891,14 @@ type BaseElasticSearchCriteria struct {
 }
 
 /**
+ * Base class for all {@link Entity}-related events.
+ */
+type BaseEntityEvent struct {
+	BaseEvent
+	Entity Entity `json:"entity,omitempty"`
+}
+
+/**
  * Base class for all FusionAuth events.
  *
  * @author Brian Pontarelli
@@ -1829,6 +1837,40 @@ type Entity struct {
 }
 
 /**
+ * Models the Entity Create Complete Event.
+ * <p>
+ * This is different than the entity.create event in that it will be sent after the entity has been created. This event cannot be made
+ * transactional.
+ */
+type EntityCreateCompleteEvent struct {
+	BaseEntityEvent
+}
+
+/**
+ * Models the Entity Create Event.
+ */
+type EntityCreateEvent struct {
+	BaseEntityEvent
+}
+
+/**
+ * Models the Entity Delete Complete Event.
+ * <p>
+ * This is different than the entity.delete event in that it will be sent after the entity has been deleted. This event cannot be made
+ * transactional.
+ */
+type EntityDeleteCompleteEvent struct {
+	BaseEntityEvent
+}
+
+/**
+ * Models the Entity Delete Event.
+ */
+type EntityDeleteEvent struct {
+	BaseEntityEvent
+}
+
+/**
  * A grant for an entity to a user or another entity.
  *
  * @author Brian Pontarelli
@@ -2058,6 +2100,25 @@ type EntityTypeSearchResponse struct {
 
 func (b *EntityTypeSearchResponse) SetStatus(status int) {
 	b.StatusCode = status
+}
+
+/**
+ * Models the Entity Update Complete Event.
+ * <p>
+ * This is different than the entity.update event in that it will be sent after the entity has been updated. This event cannot be made
+ * transactional.
+ */
+type EntityUpdateCompleteEvent struct {
+	BaseEntityEvent
+	Original Entity `json:"original,omitempty"`
+}
+
+/**
+ * Models the Entity Update Event.
+ */
+type EntityUpdateEvent struct {
+	BaseEntityEvent
+	Original Entity `json:"original,omitempty"`
 }
 
 /**
@@ -2319,6 +2380,12 @@ const (
 	EventType_UserIdentityUpdate             EventType = "user.identity.update"
 	EventType_UserTwoFactorFailedAttempt     EventType = "user.two-factor.failed-attempt"
 	EventType_UserTwoFactorSuccess           EventType = "user.two-factor.success"
+	EventType_EntityCreate                   EventType = "entity.create"
+	EventType_EntityCreateComplete           EventType = "entity.create.complete"
+	EventType_EntityDelete                   EventType = "entity.delete"
+	EventType_EntityDeleteComplete           EventType = "entity.delete.complete"
+	EventType_EntityUpdate                   EventType = "entity.update"
+	EventType_EntityUpdateComplete           EventType = "entity.update.complete"
 )
 
 /**
