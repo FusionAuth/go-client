@@ -462,6 +462,13 @@ func Test_BreachMatchModeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_PasswordTypeImplementsStringer(t *testing.T) {
+	var enum interface{} = PasswordType("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("PasswordType does not implement stringer interface\n")
+	}
+}
+
 func Test_PasswordlessStrategyImplementsStringer(t *testing.T) {
 	var enum interface{} = PasswordlessStrategy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {

@@ -5146,6 +5146,20 @@ type PasswordEncryptionConfiguration struct {
 }
 
 /**
+ * Indicates whether a password is plaintext or hashed
+ */
+type PasswordType string
+
+func (e PasswordType) String() string {
+	return string(e)
+}
+
+const (
+	PasswordType_PLAINTEXT PasswordType = "PLAINTEXT"
+	PasswordType_HASHED    PasswordType = "HASHED"
+)
+
+/**
  * @author Derek Klatt
  */
 type PasswordValidationRules struct {
@@ -8138,6 +8152,7 @@ type UserRequest struct {
 	ApplicationId               string                      `json:"applicationId,omitempty"`
 	CurrentPassword             string                      `json:"currentPassword,omitempty"`
 	DisableDomainBlock          bool                        `json:"disableDomainBlock"`
+	PasswordFieldType           PasswordType                `json:"passwordFieldType,omitempty"`
 	SendSetPasswordEmail        bool                        `json:"sendSetPasswordEmail"`
 	SendSetPasswordIdentityType SendSetPasswordIdentityType `json:"sendSetPasswordIdentityType,omitempty"`
 	SkipVerification            bool                        `json:"skipVerification"`
