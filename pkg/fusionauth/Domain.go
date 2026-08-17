@@ -352,6 +352,7 @@ type SAMLv2Configuration struct {
 	Logout                           SAMLv2Logout                           `json:"logout,omitempty"`
 	LogoutURL                        string                                 `json:"logoutURL,omitempty"`
 	RequireSignedRequests            bool                                   `json:"requireSignedRequests"`
+	VerificationKeyIds               []string                               `json:"verificationKeyIds,omitempty"`
 	XmlSignatureC14nMethod           CanonicalizationMethod                 `json:"xmlSignatureC14nMethod,omitempty"`
 	XmlSignatureLocation             XMLSignatureLocation                   `json:"xmlSignatureLocation,omitempty"`
 }
@@ -383,6 +384,7 @@ type SAMLv2Logout struct {
 	KeyId                    string                 `json:"keyId,omitempty"`
 	RequireSignedRequests    bool                   `json:"requireSignedRequests"`
 	SingleLogout             SAMLv2SingleLogout     `json:"singleLogout,omitempty"`
+	VerificationKeyIds       []string               `json:"verificationKeyIds,omitempty"`
 	XmlSignatureC14nMethod   CanonicalizationMethod `json:"xmlSignatureC14nMethod,omitempty"`
 }
 
@@ -1008,6 +1010,7 @@ type BaseSAMLv2IdentityProvider struct {
 	UniqueIdClaim                    string                                 `json:"uniqueIdClaim,omitempty"`
 	UseNameIdForEmail                bool                                   `json:"useNameIdForEmail"`
 	UsernameClaim                    string                                 `json:"usernameClaim,omitempty"`
+	VerificationKeyIds               []string                               `json:"verificationKeyIds,omitempty"`
 }
 
 /**
@@ -2023,8 +2026,9 @@ type EntityType struct {
  */
 type EntityJWTConfiguration struct {
 	Enableable
-	AccessTokenKeyId    string `json:"accessTokenKeyId,omitempty"`
-	TimeToLiveInSeconds int    `json:"timeToLiveInSeconds,omitempty"`
+	AccessTokenKeyId              string   `json:"accessTokenKeyId,omitempty"`
+	AccessTokenVerificationKeyIds []string `json:"accessTokenVerificationKeyIds,omitempty"`
+	TimeToLiveInSeconds           int      `json:"timeToLiveInSeconds,omitempty"`
 }
 
 /**
@@ -2502,6 +2506,7 @@ type ExternalJWTIdentityProvider struct {
 	HeaderKeyParameter  string                              `json:"headerKeyParameter,omitempty"`
 	Oauth2              IdentityProviderOauth2Configuration `json:"oauth2,omitempty"`
 	UniqueIdentityClaim string                              `json:"uniqueIdentityClaim,omitempty"`
+	VerificationKeyIds  []string                            `json:"verificationKeyIds,omitempty"`
 }
 
 /**
@@ -3816,7 +3821,9 @@ type JWT struct {
 type JWTConfiguration struct {
 	Enableable
 	AccessTokenKeyId                       string                                 `json:"accessTokenKeyId,omitempty"`
+	AccessTokenVerificationKeyIds          []string                               `json:"accessTokenVerificationKeyIds,omitempty"`
 	IdTokenKeyId                           string                                 `json:"idTokenKeyId,omitempty"`
+	IdTokenVerificationKeyIds              []string                               `json:"idTokenVerificationKeyIds,omitempty"`
 	RefreshTokenExpirationPolicy           RefreshTokenExpirationPolicy           `json:"refreshTokenExpirationPolicy,omitempty"`
 	RefreshTokenOneTimeUseConfiguration    RefreshTokenOneTimeUseConfiguration    `json:"refreshTokenOneTimeUseConfiguration,omitempty"`
 	RefreshTokenRevocationPolicy           RefreshTokenRevocationPolicy           `json:"refreshTokenRevocationPolicy,omitempty"`
@@ -4070,6 +4077,7 @@ const (
 	KeyUse_SignOnly      KeyUse = "SignOnly"
 	KeyUse_SignAndVerify KeyUse = "SignAndVerify"
 	KeyUse_VerifyOnly    KeyUse = "VerifyOnly"
+	KeyUse_None          KeyUse = "None"
 )
 
 /**
