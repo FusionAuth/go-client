@@ -553,6 +553,13 @@ func Test_SteamAPIModeImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_SubjectTokenValidationStatusImplementsStringer(t *testing.T) {
+	var enum interface{} = SubjectTokenValidationStatus("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("SubjectTokenValidationStatus does not implement stringer interface\n")
+	}
+}
+
 func Test_SystemTrustedProxyConfigurationPolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = SystemTrustedProxyConfigurationPolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
@@ -571,6 +578,34 @@ func Test_ThemeTypeImplementsStringer(t *testing.T) {
 	var enum interface{} = ThemeType("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
 		t.Errorf("ThemeType does not implement stringer interface\n")
+	}
+}
+
+func Test_TokenExchangeDelegationSemanticsImplementsStringer(t *testing.T) {
+	var enum interface{} = TokenExchangeDelegationSemantics("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("TokenExchangeDelegationSemantics does not implement stringer interface\n")
+	}
+}
+
+func Test_TokenExchangeOutcomeImplementsStringer(t *testing.T) {
+	var enum interface{} = TokenExchangeOutcome("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("TokenExchangeOutcome does not implement stringer interface\n")
+	}
+}
+
+func Test_TokenExchangePolicyDecisionImplementsStringer(t *testing.T) {
+	var enum interface{} = TokenExchangePolicyDecision("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("TokenExchangePolicyDecision does not implement stringer interface\n")
+	}
+}
+
+func Test_TokenExchangePolicyEngineImplementsStringer(t *testing.T) {
+	var enum interface{} = TokenExchangePolicyEngine("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("TokenExchangePolicyEngine does not implement stringer interface\n")
 	}
 }
 

@@ -97,14 +97,15 @@ func (b *APIKeyResponse) SetStatus(status int) {
  */
 type AccessToken struct {
 	BaseHTTPResponse
-	AccessToken    string    `json:"access_token,omitempty"`
-	ExpiresIn      int       `json:"expires_in,omitempty"`
-	IdToken        string    `json:"id_token,omitempty"`
-	RefreshToken   string    `json:"refresh_token,omitempty"`
-	RefreshTokenId string    `json:"refresh_token_id,omitempty"`
-	Scope          string    `json:"scope,omitempty"`
-	TokenType      TokenType `json:"token_type,omitempty"`
-	UserId         string    `json:"userId,omitempty"`
+	AccessToken     string    `json:"access_token,omitempty"`
+	ExpiresIn       int       `json:"expires_in,omitempty"`
+	IdToken         string    `json:"id_token,omitempty"`
+	IssuedTokenType string    `json:"issued_token_type,omitempty"`
+	RefreshToken    string    `json:"refresh_token,omitempty"`
+	RefreshTokenId  string    `json:"refresh_token_id,omitempty"`
+	Scope           string    `json:"scope,omitempty"`
+	TokenType       TokenType `json:"token_type,omitempty"`
+	UserId          string    `json:"userId,omitempty"`
 }
 
 func (b *AccessToken) SetStatus(status int) {
@@ -1827,16 +1828,17 @@ type Enableable struct {
  * @author Brian Pontarelli
  */
 type Entity struct {
-	ClientId          string                 `json:"clientId,omitempty"`
-	ClientSecret      string                 `json:"clientSecret,omitempty"`
-	Data              map[string]interface{} `json:"data,omitempty"`
-	Id                string                 `json:"id,omitempty"`
-	InsertInstant     int64                  `json:"insertInstant,omitempty"`
-	LastUpdateInstant int64                  `json:"lastUpdateInstant,omitempty"`
-	Name              string                 `json:"name,omitempty"`
-	ParentId          string                 `json:"parentId,omitempty"`
-	TenantId          string                 `json:"tenantId,omitempty"`
-	Type              EntityType             `json:"type,omitempty"`
+	ActAsTokenExchangeClient bool                   `json:"actAsTokenExchangeClient"`
+	ClientId                 string                 `json:"clientId,omitempty"`
+	ClientSecret             string                 `json:"clientSecret,omitempty"`
+	Data                     map[string]interface{} `json:"data,omitempty"`
+	Id                       string                 `json:"id,omitempty"`
+	InsertInstant            int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant        int64                  `json:"lastUpdateInstant,omitempty"`
+	Name                     string                 `json:"name,omitempty"`
+	ParentId                 string                 `json:"parentId,omitempty"`
+	TenantId                 string                 `json:"tenantId,omitempty"`
+	Type                     EntityType             `json:"type,omitempty"`
 }
 
 /**
@@ -2390,6 +2392,8 @@ const (
 	EventType_EntityDeleteComplete           EventType = "entity.delete.complete"
 	EventType_EntityUpdate                   EventType = "entity.update"
 	EventType_EntityUpdateComplete           EventType = "entity.update.complete"
+	EventType_TokenExchange                  EventType = "token.exchange"
+	EventType_TokenExchangeComplete          EventType = "token.exchange.complete"
 )
 
 /**
@@ -2981,6 +2985,7 @@ const (
 	GrantType_Implicit          GrantType = "implicit"
 	GrantType_Password          GrantType = "password"
 	GrantType_ClientCredentials GrantType = "client_credentials"
+	GrantType_TokenExchange     GrantType = "urn:ietf:params:oauth:grant-type:token-exchange"
 	GrantType_RefreshToken      GrantType = "refresh_token"
 	GrantType_Unknown           GrantType = "unknown"
 	GrantType_DeviceCode        GrantType = "urn:ietf:params:oauth:grant-type:device_code"
@@ -4255,6 +4260,8 @@ const (
 	LambdaType_UserInfoPopulate                  LambdaType = "UserInfoPopulate"
 	LambdaType_LoginValidation                   LambdaType = "LoginValidation"
 	LambdaType_MFARequirement                    LambdaType = "MFARequirement"
+	LambdaType_TokenExchangePolicy               LambdaType = "TokenExchangePolicy"
+	LambdaType_TokenExchangePopulate             LambdaType = "TokenExchangePopulate"
 )
 
 /**
@@ -4899,6 +4906,7 @@ const (
 	OAuthErrorReason_InvalidEntityPermissionScope        OAuthErrorReason = "invalid_entity_permission_scope"
 	OAuthErrorReason_InvalidUserId                       OAuthErrorReason = "invalid_user_id"
 	OAuthErrorReason_InvalidTenantId                     OAuthErrorReason = "invalid_tenant_id"
+	OAuthErrorReason_ResourceParameterNotSupported       OAuthErrorReason = "resource_parameter_not_supported"
 	OAuthErrorReason_GrantTypeDisabled                   OAuthErrorReason = "grant_type_disabled"
 	OAuthErrorReason_MissingClientId                     OAuthErrorReason = "missing_client_id"
 	OAuthErrorReason_MissingClientSecret                 OAuthErrorReason = "missing_client_secret"
@@ -4941,6 +4949,14 @@ const (
 	OAuthErrorReason_RegistrationRequired                OAuthErrorReason = "registration_required"
 	OAuthErrorReason_RegistrationVerificationRequired    OAuthErrorReason = "registration_verification_required"
 	OAuthErrorReason_ConsentRequired                     OAuthErrorReason = "consent_required"
+	OAuthErrorReason_AudienceRequired                    OAuthErrorReason = "audience_required"
+	OAuthErrorReason_InvalidAudience                     OAuthErrorReason = "invalid_audience"
+	OAuthErrorReason_InvalidIntent                       OAuthErrorReason = "invalid_intent"
+	OAuthErrorReason_InvalidJwt                          OAuthErrorReason = "invalid_jwt"
+	OAuthErrorReason_InvalidScope                        OAuthErrorReason = "invalid_scope"
+	OAuthErrorReason_InvalidState                        OAuthErrorReason = "invalid_state"
+	OAuthErrorReason_InvalidResource                     OAuthErrorReason = "invalid_resource"
+	OAuthErrorReason_LambdaDenied                        OAuthErrorReason = "lambda_denied"
 )
 
 type OAuthErrorType string
@@ -5600,6 +5616,7 @@ type ReactorStatus struct {
 	ScimServer                                ReactorFeatureStatus `json:"scimServer,omitempty"`
 	TenantManagerApplication                  ReactorFeatureStatus `json:"tenantManagerApplication,omitempty"`
 	ThreatDetection                           ReactorFeatureStatus `json:"threatDetection,omitempty"`
+	TokenExchange                             ReactorFeatureStatus `json:"tokenExchange,omitempty"`
 	UniversalApplication                      ReactorFeatureStatus `json:"universalApplication,omitempty"`
 	UserAgentReputation                       ReactorFeatureStatus `json:"userAgentReputation,omitempty"`
 	WebAuthn                                  ReactorFeatureStatus `json:"webAuthn,omitempty"`
@@ -6362,6 +6379,22 @@ type SteamIdentityProvider struct {
 }
 
 /**
+ * How much confidence we have in the validation of the subject token that was presented. These values are specified by the ARC and are
+ * stored by name, so they may not be renamed without a migration.
+ */
+type SubjectTokenValidationStatus string
+
+func (e SubjectTokenValidationStatus) String() string {
+	return string(e)
+}
+
+const (
+	SubjectTokenValidationStatus_AUTHORITATIVE SubjectTokenValidationStatus = "AUTHORITATIVE"
+	SubjectTokenValidationStatus_BESTEFFORT    SubjectTokenValidationStatus = "BEST_EFFORT"
+	SubjectTokenValidationStatus_FAILED        SubjectTokenValidationStatus = "FAILED"
+)
+
+/**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
  * @author Brian Pontarelli
@@ -6373,18 +6406,19 @@ type SupportsPostBindings struct {
  * @author Brian Pontarelli
  */
 type SystemConfiguration struct {
-	AuditLogConfiguration        AuditLogConfiguration           `json:"auditLogConfiguration,omitempty"`
-	CorsConfiguration            CORSConfiguration               `json:"corsConfiguration,omitempty"`
-	Data                         map[string]interface{}          `json:"data,omitempty"`
-	EventLogConfiguration        EventLogConfiguration           `json:"eventLogConfiguration,omitempty"`
-	InsertInstant                int64                           `json:"insertInstant,omitempty"`
-	LastUpdateInstant            int64                           `json:"lastUpdateInstant,omitempty"`
-	LoginRecordConfiguration     LoginRecordConfiguration        `json:"loginRecordConfiguration,omitempty"`
-	ReportTimezone               string                          `json:"reportTimezone,omitempty"`
-	TrustedProxyConfiguration    SystemTrustedProxyConfiguration `json:"trustedProxyConfiguration,omitempty"`
-	UiConfiguration              UIConfiguration                 `json:"uiConfiguration,omitempty"`
-	UsageDataConfiguration       UsageDataConfiguration          `json:"usageDataConfiguration,omitempty"`
-	WebhookEventLogConfiguration WebhookEventLogConfiguration    `json:"webhookEventLogConfiguration,omitempty"`
+	AuditLogConfiguration              AuditLogConfiguration              `json:"auditLogConfiguration,omitempty"`
+	CorsConfiguration                  CORSConfiguration                  `json:"corsConfiguration,omitempty"`
+	Data                               map[string]interface{}             `json:"data,omitempty"`
+	EventLogConfiguration              EventLogConfiguration              `json:"eventLogConfiguration,omitempty"`
+	InsertInstant                      int64                              `json:"insertInstant,omitempty"`
+	LastUpdateInstant                  int64                              `json:"lastUpdateInstant,omitempty"`
+	LoginRecordConfiguration           LoginRecordConfiguration           `json:"loginRecordConfiguration,omitempty"`
+	ReportTimezone                     string                             `json:"reportTimezone,omitempty"`
+	TokenExchangeAuditLogConfiguration TokenExchangeAuditLogConfiguration `json:"tokenExchangeAuditLogConfiguration,omitempty"`
+	TrustedProxyConfiguration          SystemTrustedProxyConfiguration    `json:"trustedProxyConfiguration,omitempty"`
+	UiConfiguration                    UIConfiguration                    `json:"uiConfiguration,omitempty"`
+	UsageDataConfiguration             UsageDataConfiguration             `json:"usageDataConfiguration,omitempty"`
+	WebhookEventLogConfiguration       WebhookEventLogConfiguration       `json:"webhookEventLogConfiguration,omitempty"`
 }
 
 type AuditLogConfiguration struct {
@@ -6504,6 +6538,7 @@ type Tenant struct {
 	SsoConfiguration                  TenantSSOConfiguration            `json:"ssoConfiguration,omitempty"`
 	State                             ObjectState                       `json:"state,omitempty"`
 	ThemeId                           string                            `json:"themeId,omitempty"`
+	TokenExchangeConfiguration        TenantTokenExchangeConfiguration  `json:"tokenExchangeConfiguration,omitempty"`
 	UserDeletePolicy                  TenantUserDeletePolicy            `json:"userDeletePolicy,omitempty"`
 	UsernameConfiguration             TenantUsernameConfiguration       `json:"usernameConfiguration,omitempty"`
 	WebAuthnConfiguration             TenantWebAuthnConfiguration       `json:"webAuthnConfiguration,omitempty"`
@@ -6799,6 +6834,19 @@ func (b *TenantSearchResponse) SetStatus(status int) {
 }
 
 /**
+ * Tenant level configuration for RFC 8693 token exchange.
+ */
+type TenantTokenExchangeConfiguration struct {
+	Enableable
+	AllowedIssuers       []string                  `json:"allowedIssuers,omitempty"`
+	Debug                bool                      `json:"debug"`
+	MaxClaimDepth        int                       `json:"maxClaimDepth,omitempty"`
+	PolicyEngine         TokenExchangePolicyEngine `json:"policyEngine,omitempty"`
+	PolicyEngineLambdaId string                    `json:"policyEngineLambdaId,omitempty"`
+	PopulateLambdaId     string                    `json:"populateLambdaId,omitempty"`
+}
+
+/**
  * @author Daniel DeGroff
  */
 type TenantUnverifiedConfiguration struct {
@@ -7031,6 +7079,212 @@ type TimeBasedDeletePolicy struct {
 	EnabledInstant       int64 `json:"enabledInstant,omitempty"`
 	NumberOfDaysToRetain int   `json:"numberOfDaysToRetain,omitempty"`
 }
+
+/**
+ * An audit record for a single token exchange attempt. Exactly one of these is written for every attempt, whether it succeeded or failed,
+ * so this is the authoritative record of who exchanged what for what.
+ */
+type TokenExchangeAuditLog struct {
+	ActChain                     string                           `json:"actChain,omitempty"`
+	DelegationSemantics          TokenExchangeDelegationSemantics `json:"delegationSemantics,omitempty"`
+	EventId                      string                           `json:"eventId,omitempty"`
+	ExchangerClientId            string                           `json:"exchangerClientId,omitempty"`
+	GrantedAudience              string                           `json:"grantedAudience,omitempty"`
+	GrantedScope                 string                           `json:"grantedScope,omitempty"`
+	InsertInstant                int64                            `json:"insertInstant,omitempty"`
+	Intent                       string                           `json:"intent,omitempty"`
+	IssuedTokenJti               string                           `json:"issuedTokenJti,omitempty"`
+	Outcome                      TokenExchangeOutcome             `json:"outcome,omitempty"`
+	PolicyDecision               TokenExchangePolicyDecision      `json:"policyDecision,omitempty"`
+	PolicyDecisionDurationMs     int                              `json:"policyDecisionDurationMs,omitempty"`
+	PolicyEngine                 TokenExchangePolicyEngine        `json:"policyEngine,omitempty"`
+	RequestedAudience            string                           `json:"requestedAudience,omitempty"`
+	SubjectTokenIss              string                           `json:"subjectTokenIss,omitempty"`
+	SubjectTokenJti              string                           `json:"subjectTokenJti,omitempty"`
+	SubjectTokenSub              string                           `json:"subjectTokenSub,omitempty"`
+	SubjectTokenType             string                           `json:"subjectTokenType,omitempty"`
+	SubjectTokenValidationStatus SubjectTokenValidationStatus     `json:"subjectTokenValidationStatus,omitempty"`
+	TenantId                     string                           `json:"tenantId,omitempty"`
+}
+
+/**
+ * Token exchange audit log chain response.
+ */
+type TokenExchangeAuditLogChainResponse struct {
+	BaseHTTPResponse
+	TokenExchangeAuditLogs []TokenExchangeAuditLog `json:"tokenExchangeAuditLogs,omitempty"`
+}
+
+func (b *TokenExchangeAuditLogChainResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * The system configuration for token exchange audit log data.
+ * <p>
+ * Deleting these entries is mandatory, so this configuration intentionally has no enabled flag. Token exchange volume can be high enough
+ * that retaining entries indefinitely would grow the database without bound. Longer retention is served by ingesting the token exchange
+ * webhooks into external storage.
+ */
+type TokenExchangeAuditLogConfiguration struct {
+	NumberOfDaysToRetain int `json:"numberOfDaysToRetain,omitempty"`
+}
+
+/**
+ * Search criteria for the token exchange audit log. Filterable on exactly {@code tenantId}, {@code exchangerClientId}, {@code outcome},
+ * and an exchange instant range — no other fields, per the ARC decision to limit the index count on this table.
+ */
+type TokenExchangeAuditLogSearchCriteria struct {
+	BaseSearchCriteria
+	End               int64                `json:"end,omitempty"`
+	ExchangerClientId string               `json:"exchangerClientId,omitempty"`
+	Outcome           TokenExchangeOutcome `json:"outcome,omitempty"`
+	Start             int64                `json:"start,omitempty"`
+	TenantId          string               `json:"tenantId,omitempty"`
+}
+
+/**
+ * Token exchange audit log search request.
+ */
+type TokenExchangeAuditLogSearchRequest struct {
+	Search TokenExchangeAuditLogSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * Token exchange audit log search response.
+ */
+type TokenExchangeAuditLogSearchResponse struct {
+	BaseHTTPResponse
+	TokenExchangeAuditLogs []TokenExchangeAuditLog `json:"tokenExchangeAuditLogs,omitempty"`
+	Total                  int64                   `json:"total,omitempty"`
+}
+
+func (b *TokenExchangeAuditLogSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Models the Token Exchange Complete event. This is a non-transactional variant of the token.exchange event.
+ * Delivery failure does not block or fail the token exchange request.
+ */
+type TokenExchangeCompleteEvent struct {
+	TokenExchangeEvent
+}
+
+/**
+ * The delegation semantics applied to the issued token. These are RFC 8693 terms.
+ * FusionAuth does not support token exchange impersonation.
+ */
+type TokenExchangeDelegationSemantics string
+
+func (e TokenExchangeDelegationSemantics) String() string {
+	return string(e)
+}
+
+const (
+	TokenExchangeDelegationSemantics_DELEGATION    TokenExchangeDelegationSemantics = "DELEGATION"
+	TokenExchangeDelegationSemantics_IMPERSONATION TokenExchangeDelegationSemantics = "IMPERSONATION"
+)
+
+/**
+ * Models the Token Exchange event. This event fires for every token exchange attempt (success and failure).
+ *
+ * @author FusionAuth
+ */
+type TokenExchangeEvent struct {
+	BaseEvent
+	ActChain          interface{}          `json:"actChain,omitempty"`
+	ExchangerClientId string               `json:"exchangerClientId,omitempty"`
+	Intent            string               `json:"intent,omitempty"`
+	IssuedToken       IssuedTokenInfo      `json:"issuedToken,omitempty"`
+	Outcome           TokenExchangeOutcome `json:"outcome,omitempty"`
+	Policy            PolicyInfo           `json:"policy,omitempty"`
+	RequestedAudience []string             `json:"requestedAudience,omitempty"`
+	SubjectToken      SubjectTokenInfo     `json:"subjectToken,omitempty"`
+}
+
+/**
+ * Nested structure for issued token information in the webhook payload.
+ */
+type IssuedTokenInfo struct {
+	DelegationSemantics TokenExchangeDelegationSemantics `json:"delegationSemantics,omitempty"`
+	GrantedAudience     []string                         `json:"grantedAudience,omitempty"`
+	GrantedScope        string                           `json:"grantedScope,omitempty"`
+	Jti                 string                           `json:"jti,omitempty"`
+}
+
+/**
+ * Nested structure for policy evaluation information in the webhook payload.
+ */
+type PolicyInfo struct {
+	Decision           TokenExchangePolicyDecision `json:"decision,omitempty"`
+	DecisionDurationMs int                         `json:"decisionDurationMs,omitempty"`
+	Engine             TokenExchangePolicyEngine   `json:"engine,omitempty"`
+}
+
+/**
+ * Nested structure for subject token information in the webhook payload.
+ */
+type SubjectTokenInfo struct {
+	Iss              string                       `json:"iss,omitempty"`
+	Jti              string                       `json:"jti,omitempty"`
+	Sub              string                       `json:"sub,omitempty"`
+	Type             string                       `json:"type,omitempty"`
+	ValidationStatus SubjectTokenValidationStatus `json:"validationStatus,omitempty"`
+}
+
+/**
+ * The terminal outcome of a token exchange attempt. Every failure stage gets a distinct value so a denial can be attributed to the stage
+ * that rejected it.
+ */
+type TokenExchangeOutcome string
+
+func (e TokenExchangeOutcome) String() string {
+	return string(e)
+}
+
+const (
+	TokenExchangeOutcome_CLIENTAUTHENTICATIONFAILED TokenExchangeOutcome = "CLIENT_AUTHENTICATION_FAILED"
+	TokenExchangeOutcome_CLIENTDISALLOWED           TokenExchangeOutcome = "CLIENT_DISALLOWED"
+	TokenExchangeOutcome_CLIENTREQUESTFAILURE       TokenExchangeOutcome = "CLIENT_REQUEST_FAILURE"
+	TokenExchangeOutcome_DEPTHEXCEEDED              TokenExchangeOutcome = "DEPTH_EXCEEDED"
+	TokenExchangeOutcome_POLICYDENIED               TokenExchangeOutcome = "POLICY_DENIED"
+	TokenExchangeOutcome_POLICYLAMBDAERROR          TokenExchangeOutcome = "POLICY_LAMBDA_ERROR"
+	TokenExchangeOutcome_POPULATELAMBDAERROR        TokenExchangeOutcome = "POPULATE_LAMBDA_ERROR"
+	TokenExchangeOutcome_SUBJECTTOKENINVALID        TokenExchangeOutcome = "SUBJECT_TOKEN_INVALID"
+	TokenExchangeOutcome_SUCCESS                    TokenExchangeOutcome = "SUCCESS"
+	TokenExchangeOutcome_TENANTDISALLOWED           TokenExchangeOutcome = "TENANT_DISALLOWED"
+	TokenExchangeOutcome_WEBHOOKFAILURE             TokenExchangeOutcome = "WEBHOOK_FAILURE"
+)
+
+/**
+ * The decision returned by the policy engine.
+ */
+type TokenExchangePolicyDecision string
+
+func (e TokenExchangePolicyDecision) String() string {
+	return string(e)
+}
+
+const (
+	TokenExchangePolicyDecision_ALLOW TokenExchangePolicyDecision = "ALLOW"
+	TokenExchangePolicyDecision_DENY  TokenExchangePolicyDecision = "DENY"
+	TokenExchangePolicyDecision_ERROR TokenExchangePolicyDecision = "ERROR"
+)
+
+/**
+ * The policy engine used to authorize an RFC 8693 token exchange request.
+ */
+type TokenExchangePolicyEngine string
+
+func (e TokenExchangePolicyEngine) String() string {
+	return string(e)
+}
+
+const (
+	TokenExchangePolicyEngine_ENTITY TokenExchangePolicyEngine = "ENTITY"
+	TokenExchangePolicyEngine_LAMBDA TokenExchangePolicyEngine = "LAMBDA"
+)
 
 /**
  * <ul>
