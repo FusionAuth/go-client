@@ -5600,6 +5600,7 @@ type ReactorStatus struct {
 	ApplicationMultiFactorAuthentication      ReactorFeatureStatus `json:"applicationMultiFactorAuthentication,omitempty"`
 	ApplicationThemes                         ReactorFeatureStatus `json:"applicationThemes,omitempty"`
 	BreachedPasswordDetection                 ReactorFeatureStatus `json:"breachedPasswordDetection,omitempty"`
+	Cimd                                      ReactorFeatureStatus `json:"cimd,omitempty"`
 	ClientRiskConfiguration                   ReactorFeatureStatus `json:"clientRiskConfiguration,omitempty"`
 	Connectors                                ReactorFeatureStatus `json:"connectors,omitempty"`
 	DPoP                                      ReactorFeatureStatus `json:"dPoP,omitempty"`
