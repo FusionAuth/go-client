@@ -1475,6 +1475,72 @@ func (c *FusionAuthClient) CreateAuditLogWithContext(ctx context.Context, reques
 	return &resp, &errors, err
 }
 
+// CreateCimdDomain
+// Creates a CIMD domain. You can optionally provide an Id for the CIMD domain, if not provided one will be generated.
+//
+//	string domainId (Optional) The Id to use for the CIMD domain. If not provided a secure random UUID will be generated.
+//	CimdDomainRequest request The request object that contains all the information used to create the CIMD domain.
+func (c *FusionAuthClient) CreateCimdDomain(domainId string, request CimdDomainRequest) (*CimdDomainResponse, *Errors, error) {
+	return c.CreateCimdDomainWithContext(context.TODO(), domainId, request)
+}
+
+// CreateCimdDomainWithContext
+// Creates a CIMD domain. You can optionally provide an Id for the CIMD domain, if not provided one will be generated.
+//
+//	string domainId (Optional) The Id to use for the CIMD domain. If not provided a secure random UUID will be generated.
+//	CimdDomainRequest request The request object that contains all the information used to create the CIMD domain.
+func (c *FusionAuthClient) CreateCimdDomainWithContext(ctx context.Context, domainId string, request CimdDomainRequest) (*CimdDomainResponse, *Errors, error) {
+	var resp CimdDomainResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// CreateCimdDomainOAuthScope
+// Creates a new custom OAuth scope for a CIMD Domain. You must specify the Id of the CIMD domain you are creating the scope for.
+// You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+//
+//	string domainId The Id of the CIMD domain to create the OAuth scope on.
+//	string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+//	CimdDomainOAuthScopeRequest request The request object that contains all the information used to create the OAuth scope.
+func (c *FusionAuthClient) CreateCimdDomainOAuthScope(domainId string, scopeId string, request CimdDomainOAuthScopeRequest) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	return c.CreateCimdDomainOAuthScopeWithContext(context.TODO(), domainId, scopeId, request)
+}
+
+// CreateCimdDomainOAuthScopeWithContext
+// Creates a new custom OAuth scope for a CIMD Domain. You must specify the Id of the CIMD domain you are creating the scope for.
+// You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+//
+//	string domainId The Id of the CIMD domain to create the OAuth scope on.
+//	string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+//	CimdDomainOAuthScopeRequest request The request object that contains all the information used to create the OAuth scope.
+func (c *FusionAuthClient) CreateCimdDomainOAuthScopeWithContext(ctx context.Context, domainId string, scopeId string, request CimdDomainOAuthScopeRequest) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	var resp CimdDomainOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // CreateConnector
 // Creates a connector.  You can optionally specify an Id for the connector, if not provided one will be generated.
 //
@@ -1936,7 +2002,7 @@ func (c *FusionAuthClient) CreateMessengerWithContext(ctx context.Context, messe
 //
 //	string applicationId The Id of the application to create the OAuth scope on.
 //	string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
-//	ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth OAuth scope.
+//	ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth scope.
 func (c *FusionAuthClient) CreateOAuthScope(applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
 	return c.CreateOAuthScopeWithContext(context.TODO(), applicationId, scopeId, request)
 }
@@ -1947,7 +2013,7 @@ func (c *FusionAuthClient) CreateOAuthScope(applicationId string, scopeId string
 //
 //	string applicationId The Id of the application to create the OAuth scope on.
 //	string scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
-//	ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth OAuth scope.
+//	ApplicationOAuthScopeRequest request The request object that contains all the information used to create the OAuth scope.
 func (c *FusionAuthClient) CreateOAuthScopeWithContext(ctx context.Context, applicationId string, scopeId string, request ApplicationOAuthScopeRequest) (*ApplicationOAuthScopeResponse, *Errors, error) {
 	var resp ApplicationOAuthScopeResponse
 	var errors Errors
@@ -2484,6 +2550,93 @@ func (c *FusionAuthClient) DeleteApplicationRoleWithContext(ctx context.Context,
 		WithUriSegment(applicationId).
 		WithUriSegment("role").
 		WithUriSegment(roleId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteCimdClientRegistration
+// Deletes the CIMD client registration for the given Id, along with its refresh tokens.
+//
+//	string registrationId The Id of the CIMD client registration to delete.
+func (c *FusionAuthClient) DeleteCimdClientRegistration(registrationId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteCimdClientRegistrationWithContext(context.TODO(), registrationId)
+}
+
+// DeleteCimdClientRegistrationWithContext
+// Deletes the CIMD client registration for the given Id, along with its refresh tokens.
+//
+//	string registrationId The Id of the CIMD client registration to delete.
+func (c *FusionAuthClient) DeleteCimdClientRegistrationWithContext(ctx context.Context, registrationId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/registration").
+		WithUriSegment(registrationId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteCimdDomain
+// Deletes the CIMD domain for the given Id.
+//
+//	string domainId The Id of the CIMD domain to delete.
+func (c *FusionAuthClient) DeleteCimdDomain(domainId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteCimdDomainWithContext(context.TODO(), domainId)
+}
+
+// DeleteCimdDomainWithContext
+// Deletes the CIMD domain for the given Id.
+//
+//	string domainId The Id of the CIMD domain to delete.
+func (c *FusionAuthClient) DeleteCimdDomainWithContext(ctx context.Context, domainId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithMethod(http.MethodDelete).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// DeleteCimdDomainOAuthScope
+// Hard deletes a custom OAuth scope for a CIMD Domain.
+// OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the CIMD domain's unknown scope policy.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to delete.
+func (c *FusionAuthClient) DeleteCimdDomainOAuthScope(domainId string, scopeId string) (*BaseHTTPResponse, *Errors, error) {
+	return c.DeleteCimdDomainOAuthScopeWithContext(context.TODO(), domainId, scopeId)
+}
+
+// DeleteCimdDomainOAuthScopeWithContext
+// Hard deletes a custom OAuth scope for a CIMD Domain.
+// OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the CIMD domain's unknown scope policy.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to delete.
+func (c *FusionAuthClient) DeleteCimdDomainOAuthScopeWithContext(ctx context.Context, domainId string, scopeId string) (*BaseHTTPResponse, *Errors, error) {
+	var resp BaseHTTPResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithMethod(http.MethodDelete).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -4806,6 +4959,70 @@ func (c *FusionAuthClient) PatchApplicationRoleWithContext(ctx context.Context, 
 	return &resp, &errors, err
 }
 
+// PatchCimdDomain
+// Updates, via PATCH, the CIMD domain with the given Id.
+//
+//	string domainId The Id of the CIMD domain to update.
+//	CimdDomainRequest request The request that contains just the new CIMD domain information.
+func (c *FusionAuthClient) PatchCimdDomain(domainId string, request map[string]interface{}) (*CimdDomainResponse, *Errors, error) {
+	return c.PatchCimdDomainWithContext(context.TODO(), domainId, request)
+}
+
+// PatchCimdDomainWithContext
+// Updates, via PATCH, the CIMD domain with the given Id.
+//
+//	string domainId The Id of the CIMD domain to update.
+//	CimdDomainRequest request The request that contains just the new CIMD domain information.
+func (c *FusionAuthClient) PatchCimdDomainWithContext(ctx context.Context, domainId string, request map[string]interface{}) (*CimdDomainResponse, *Errors, error) {
+	var resp CimdDomainResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// PatchCimdDomainOAuthScope
+// Updates, via PATCH, the custom OAuth scope with the given Id for the CIMD domain.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	CimdDomainOAuthScopeRequest request The request that contains just the new OAuth scope information.
+func (c *FusionAuthClient) PatchCimdDomainOAuthScope(domainId string, scopeId string, request map[string]interface{}) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	return c.PatchCimdDomainOAuthScopeWithContext(context.TODO(), domainId, scopeId, request)
+}
+
+// PatchCimdDomainOAuthScopeWithContext
+// Updates, via PATCH, the custom OAuth scope with the given Id for the CIMD domain.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	CimdDomainOAuthScopeRequest request The request that contains just the new OAuth scope information.
+func (c *FusionAuthClient) PatchCimdDomainOAuthScopeWithContext(ctx context.Context, domainId string, scopeId string, request map[string]interface{}) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	var resp CimdDomainOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPatch).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // PatchConnector
 // Updates, via PATCH, the connector with the given Id.
 //
@@ -6189,6 +6406,113 @@ func (c *FusionAuthClient) RetrieveAuditLogWithContext(ctx context.Context, audi
 	restClient := c.Start(&resp, &errors)
 	err := restClient.WithUri("/api/system/audit-log").
 		WithUriSegment(strconv.Itoa(auditLogId)).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveCimdClientRegistration
+// Retrieves the CIMD client registration for the given Id.
+//
+//	string registrationId The Id of the CIMD client registration.
+func (c *FusionAuthClient) RetrieveCimdClientRegistration(registrationId string) (*CimdClientRegistrationResponse, *Errors, error) {
+	return c.RetrieveCimdClientRegistrationWithContext(context.TODO(), registrationId)
+}
+
+// RetrieveCimdClientRegistrationWithContext
+// Retrieves the CIMD client registration for the given Id.
+//
+//	string registrationId The Id of the CIMD client registration.
+func (c *FusionAuthClient) RetrieveCimdClientRegistrationWithContext(ctx context.Context, registrationId string) (*CimdClientRegistrationResponse, *Errors, error) {
+	var resp CimdClientRegistrationResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/registration").
+		WithUriSegment(registrationId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveCimdDomain
+// Retrieves the CIMD domain for the given Id.
+//
+//	string domainId The Id of the CIMD domain.
+func (c *FusionAuthClient) RetrieveCimdDomain(domainId string) (*CimdDomainResponse, *Errors, error) {
+	return c.RetrieveCimdDomainWithContext(context.TODO(), domainId)
+}
+
+// RetrieveCimdDomainWithContext
+// Retrieves the CIMD domain for the given Id.
+//
+//	string domainId The Id of the CIMD domain.
+func (c *FusionAuthClient) RetrieveCimdDomainWithContext(ctx context.Context, domainId string) (*CimdDomainResponse, *Errors, error) {
+	var resp CimdDomainResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveCimdDomainOAuthScope
+// Retrieves a custom OAuth scope for a CIMD Domain.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to retrieve.
+func (c *FusionAuthClient) RetrieveCimdDomainOAuthScope(domainId string, scopeId string) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	return c.RetrieveCimdDomainOAuthScopeWithContext(context.TODO(), domainId, scopeId)
+}
+
+// RetrieveCimdDomainOAuthScopeWithContext
+// Retrieves a custom OAuth scope for a CIMD Domain.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to retrieve.
+func (c *FusionAuthClient) RetrieveCimdDomainOAuthScopeWithContext(ctx context.Context, domainId string, scopeId string) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	var resp CimdDomainOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
+		WithMethod(http.MethodGet).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// RetrieveCimdDomains
+// Retrieves all the CIMD domains for the tenant in context.
+func (c *FusionAuthClient) RetrieveCimdDomains() (*CimdDomainResponse, *Errors, error) {
+	return c.RetrieveCimdDomainsWithContext(context.TODO())
+}
+
+// RetrieveCimdDomainsWithContext
+// Retrieves all the CIMD domains for the tenant in context.
+func (c *FusionAuthClient) RetrieveCimdDomainsWithContext(ctx context.Context) (*CimdDomainResponse, *Errors, error) {
+	var resp CimdDomainResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
 		WithMethod(http.MethodGet).
 		Do(ctx)
 	if restClient.ErrorRef == nil {
@@ -9083,6 +9407,60 @@ func (c *FusionAuthClient) SearchAuditLogsWithContext(ctx context.Context, reque
 	return &resp, &errors, err
 }
 
+// SearchCimdClientRegistrations
+// Searches the CIMD client registrations with the specified criteria and pagination.
+//
+//	CimdClientRegistrationSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchCimdClientRegistrations(request CimdClientRegistrationSearchRequest) (*CimdClientRegistrationSearchResponse, *Errors, error) {
+	return c.SearchCimdClientRegistrationsWithContext(context.TODO(), request)
+}
+
+// SearchCimdClientRegistrationsWithContext
+// Searches the CIMD client registrations with the specified criteria and pagination.
+//
+//	CimdClientRegistrationSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchCimdClientRegistrationsWithContext(ctx context.Context, request CimdClientRegistrationSearchRequest) (*CimdClientRegistrationSearchResponse, *Errors, error) {
+	var resp CimdClientRegistrationSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/registration/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// SearchCimdDomains
+// Searches the CIMD domains with the specified criteria and pagination.
+//
+//	CimdDomainSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchCimdDomains(request CimdDomainSearchRequest) (*CimdDomainSearchResponse, *Errors, error) {
+	return c.SearchCimdDomainsWithContext(context.TODO(), request)
+}
+
+// SearchCimdDomainsWithContext
+// Searches the CIMD domains with the specified criteria and pagination.
+//
+//	CimdDomainSearchRequest request The search criteria and pagination information.
+func (c *FusionAuthClient) SearchCimdDomainsWithContext(ctx context.Context, request CimdDomainSearchRequest) (*CimdDomainSearchResponse, *Errors, error) {
+	var resp CimdDomainSearchResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain/search").
+		WithJSONBody(request).
+		WithMethod(http.MethodPost).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
 // SearchConsents
 // Searches consents with the specified criteria and pagination.
 //
@@ -10544,6 +10922,70 @@ func (c *FusionAuthClient) UpdateApplicationRoleWithContext(ctx context.Context,
 		WithUriSegment(applicationId).
 		WithUriSegment("role").
 		WithUriSegment(roleId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateCimdDomain
+// Updates the CIMD domain with the given Id.
+//
+//	string domainId The Id of the CIMD domain to update.
+//	CimdDomainRequest request The request that contains all the new CIMD domain information.
+func (c *FusionAuthClient) UpdateCimdDomain(domainId string, request CimdDomainRequest) (*CimdDomainResponse, *Errors, error) {
+	return c.UpdateCimdDomainWithContext(context.TODO(), domainId, request)
+}
+
+// UpdateCimdDomainWithContext
+// Updates the CIMD domain with the given Id.
+//
+//	string domainId The Id of the CIMD domain to update.
+//	CimdDomainRequest request The request that contains all the new CIMD domain information.
+func (c *FusionAuthClient) UpdateCimdDomainWithContext(ctx context.Context, domainId string, request CimdDomainRequest) (*CimdDomainResponse, *Errors, error) {
+	var resp CimdDomainResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithJSONBody(request).
+		WithMethod(http.MethodPut).
+		Do(ctx)
+	if restClient.ErrorRef == nil {
+		return &resp, nil, err
+	}
+	return &resp, &errors, err
+}
+
+// UpdateCimdDomainOAuthScope
+// Updates the OAuth scope with the given Id for the CIMD domain.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	CimdDomainOAuthScopeRequest request The request that contains all the new OAuth scope information.
+func (c *FusionAuthClient) UpdateCimdDomainOAuthScope(domainId string, scopeId string, request CimdDomainOAuthScopeRequest) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	return c.UpdateCimdDomainOAuthScopeWithContext(context.TODO(), domainId, scopeId, request)
+}
+
+// UpdateCimdDomainOAuthScopeWithContext
+// Updates the OAuth scope with the given Id for the CIMD domain.
+//
+//	string domainId The Id of the CIMD domain that the OAuth scope belongs to.
+//	string scopeId The Id of the OAuth scope to update.
+//	CimdDomainOAuthScopeRequest request The request that contains all the new OAuth scope information.
+func (c *FusionAuthClient) UpdateCimdDomainOAuthScopeWithContext(ctx context.Context, domainId string, scopeId string, request CimdDomainOAuthScopeRequest) (*CimdDomainOAuthScopeResponse, *Errors, error) {
+	var resp CimdDomainOAuthScopeResponse
+	var errors Errors
+
+	restClient := c.Start(&resp, &errors)
+	err := restClient.WithUri("/api/cimd/domain").
+		WithUriSegment(domainId).
+		WithUriSegment("scope").
+		WithUriSegment(scopeId).
 		WithJSONBody(request).
 		WithMethod(http.MethodPut).
 		Do(ctx)

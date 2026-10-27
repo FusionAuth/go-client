@@ -1165,6 +1165,258 @@ func (b *ChangePasswordResponse) SetStatus(status int) {
 }
 
 /**
+ * A CIMD (Client ID Metadata Document) client registration. Represents one concrete, fetched {@code client_id} URL registered against
+ * a {@link CimdDomain}.
+ */
+type CimdClientRegistration struct {
+	CacheExpirationInstant int64                                             `json:"cacheExpirationInstant,omitempty"`
+	CimdDomainId           string                                            `json:"cimdDomainId,omitempty"`
+	ClientIdUrl            string                                            `json:"clientIdUrl,omitempty"`
+	ClientName             string                                            `json:"clientName,omitempty"`
+	ClientUri              string                                            `json:"clientUri,omitempty"`
+	Data                   map[string]interface{}                            `json:"data,omitempty"`
+	GraceExpirationInstant int64                                             `json:"graceExpirationInstant,omitempty"`
+	Id                     string                                            `json:"id,omitempty"`
+	InsertInstant          int64                                             `json:"insertInstant,omitempty"`
+	JwtPopulateLambdaId    string                                            `json:"jwtPopulateLambdaId,omitempty"`
+	LastUpdateInstant      int64                                             `json:"lastUpdateInstant,omitempty"`
+	OverridesByResource    map[string]CimdClientRegistrationResourceOverride `json:"overridesByResource,omitempty"`
+	RedirectUris           []string                                          `json:"redirectUris,omitempty"`
+	State                  CimdClientRegistrationState                       `json:"state,omitempty"`
+	TenantId               string                                            `json:"tenantId,omitempty"`
+}
+
+/**
+ * The decision returned by a CIMD Client Registration lambda.
+ */
+type CimdClientRegistrationDecision string
+
+func (e CimdClientRegistrationDecision) String() string {
+	return string(e)
+}
+
+const (
+	CimdClientRegistrationDecision_ALLOW  CimdClientRegistrationDecision = "ALLOW"
+	CimdClientRegistrationDecision_DENY   CimdClientRegistrationDecision = "DENY"
+	CimdClientRegistrationDecision_REVOKE CimdClientRegistrationDecision = "REVOKE"
+)
+
+/**
+ * Application configuration overrides for one OAuth resource requested by a CIMD client registration.
+ */
+type CimdClientRegistrationResourceOverride struct {
+	ProvidedScopePolicy ProvidedScopePolicy     `json:"providedScopePolicy,omitempty"`
+	Scopes              []ApplicationOAuthScope `json:"scopes,omitempty"`
+}
+
+/**
+ * CIMD client registration API response object.
+ */
+type CimdClientRegistrationResponse struct {
+	BaseHTTPResponse
+	Registration CimdClientRegistration `json:"registration,omitempty"`
+}
+
+func (b *CimdClientRegistrationResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for CIMD client registrations.
+ */
+type CimdClientRegistrationSearchCriteria struct {
+	BaseSearchCriteria
+	CimdDomainId string `json:"cimdDomainId,omitempty"`
+	ClientId     string `json:"clientId,omitempty"`
+	TenantId     string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Search request for CIMD client registrations.
+ */
+type CimdClientRegistrationSearchRequest struct {
+	Search CimdClientRegistrationSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * CIMD client registration search response.
+ */
+type CimdClientRegistrationSearchResponse struct {
+	BaseHTTPResponse
+	Registrations []CimdClientRegistration `json:"registrations,omitempty"`
+	Total         int64                    `json:"total,omitempty"`
+}
+
+func (b *CimdClientRegistrationSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * The computed lifecycle state of a {@link CimdClientRegistration}. Never persisted; derived at read time from
+ * {@code cacheExpirationInstant} and {@code graceExpirationInstant}.
+ */
+type CimdClientRegistrationState string
+
+func (e CimdClientRegistrationState) String() string {
+	return string(e)
+}
+
+const (
+	CimdClientRegistrationState_Active  CimdClientRegistrationState = "Active"
+	CimdClientRegistrationState_Grace   CimdClientRegistrationState = "Grace"
+	CimdClientRegistrationState_Expired CimdClientRegistrationState = "Expired"
+)
+
+/**
+ * A CIMD (Client ID Metadata Document) domain. Represents one trusted {@code client_id} domain (or the wildcard {@code *} for open mode)
+ * within a tenant.
+ */
+type CimdDomain struct {
+	AllowLocalhostRedirectUris bool                   `json:"allowLocalhostRedirectUris"`
+	AuthorizedResourceUris     []string               `json:"authorizedResourceUris,omitempty"`
+	ConsentMode                OAuthScopeConsentMode  `json:"consentMode,omitempty"`
+	Data                       map[string]interface{} `json:"data,omitempty"`
+	Debug                      bool                   `json:"debug"`
+	Domain                     string                 `json:"domain,omitempty"`
+	GracePeriodInSeconds       int                    `json:"gracePeriodInSeconds,omitempty"`
+	Id                         string                 `json:"id,omitempty"`
+	InsertInstant              int64                  `json:"insertInstant,omitempty"`
+	JwtPopulateLambdaId        string                 `json:"jwtPopulateLambdaId,omitempty"`
+	LastUpdateInstant          int64                  `json:"lastUpdateInstant,omitempty"`
+	MaxCacheTtlInSeconds       int                    `json:"maxCacheTtlInSeconds,omitempty"`
+	Name                       string                 `json:"name,omitempty"`
+	ProvidedScopePolicy        ProvidedScopePolicy    `json:"providedScopePolicy,omitempty"`
+	RegistrationLambdaId       string                 `json:"registrationLambdaId,omitempty"`
+	Scopes                     []CimdDomainOAuthScope `json:"scopes,omitempty"`
+	TenantId                   string                 `json:"tenantId,omitempty"`
+}
+
+/**
+ * A custom OAuth scope for a CIMD domain.
+ */
+type CimdDomainOAuthScope struct {
+	Data                  map[string]interface{} `json:"data,omitempty"`
+	DefaultConsentDetail  string                 `json:"defaultConsentDetail,omitempty"`
+	DefaultConsentMessage string                 `json:"defaultConsentMessage,omitempty"`
+	Description           string                 `json:"description,omitempty"`
+	DomainId              string                 `json:"domainId,omitempty"`
+	Id                    string                 `json:"id,omitempty"`
+	InsertInstant         int64                  `json:"insertInstant,omitempty"`
+	LastUpdateInstant     int64                  `json:"lastUpdateInstant,omitempty"`
+	Name                  string                 `json:"name,omitempty"`
+	Required              bool                   `json:"required"`
+}
+
+/**
+ * The CIMD domain OAuth scope API request object.
+ */
+type CimdDomainOAuthScopeRequest struct {
+	Scope CimdDomainOAuthScope `json:"scope,omitempty"`
+}
+
+/**
+ * The CIMD domain OAuth scope API response object.
+ */
+type CimdDomainOAuthScopeResponse struct {
+	BaseHTTPResponse
+	Scope CimdDomainOAuthScope `json:"scope,omitempty"`
+}
+
+func (b *CimdDomainOAuthScopeResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * CIMD domain API request object.
+ */
+type CimdDomainRequest struct {
+	Domain CimdDomain `json:"domain,omitempty"`
+}
+
+/**
+ * CIMD domain API response object.
+ */
+type CimdDomainResponse struct {
+	BaseHTTPResponse
+	Domain  CimdDomain   `json:"domain,omitempty"`
+	Domains []CimdDomain `json:"domains,omitempty"`
+}
+
+func (b *CimdDomainResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Search criteria for CIMD domains.
+ */
+type CimdDomainSearchCriteria struct {
+	BaseSearchCriteria
+	Domain   string `json:"domain,omitempty"`
+	Name     string `json:"name,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Search request for CIMD domains.
+ */
+type CimdDomainSearchRequest struct {
+	Search CimdDomainSearchCriteria `json:"search,omitempty"`
+}
+
+/**
+ * CIMD domain search response.
+ */
+type CimdDomainSearchResponse struct {
+	BaseHTTPResponse
+	Domains []CimdDomain `json:"domains,omitempty"`
+	Total   int64        `json:"total,omitempty"`
+}
+
+func (b *CimdDomainSearchResponse) SetStatus(status int) {
+	b.StatusCode = status
+}
+
+/**
+ * Models the CIMD Registration Failed Event.
+ * <p>
+ * This event is fired when a CIMD client registration fails. This event cannot be made transactional.
+ */
+type CimdRegistrationFailedEvent struct {
+	BaseEvent
+	CimdDomainId string                       `json:"cimdDomainId,omitempty"`
+	ClientId     string                       `json:"clientId,omitempty"`
+	Reason       CimdRegistrationFailedReason `json:"reason,omitempty"`
+	Resource     string                       `json:"resource,omitempty"`
+}
+
+/**
+ * Information about why a CIMD client registration failed.
+ */
+type CimdRegistrationFailedReason struct {
+	Code string `json:"code,omitempty"`
+}
+
+/**
+ * Reasons why a CIMD client registration failed.
+ */
+type CimdRegistrationFailedReasonCode struct {
+}
+
+/**
+ * Models the CIMD Registration Success Event.
+ * <p>
+ * This event is fired when a CIMD client registration succeeds. This event cannot be made transactional.
+ */
+type CimdRegistrationSuccessEvent struct {
+	BaseEvent
+	CimdClientRegistrationId string `json:"cimdClientRegistrationId,omitempty"`
+	CimdDomainId             string `json:"cimdDomainId,omitempty"`
+	ClientId                 string `json:"clientId,omitempty"`
+	ClientName               string `json:"clientName,omitempty"`
+	Resource                 string `json:"resource,omitempty"`
+}
+
+/**
  * CleanSpeak configuration at the system and application level.
  *
  * @author Brian Pontarelli
@@ -1218,6 +1470,41 @@ type ClientCredentialsGrantRequest struct {
 	GrantType    string `json:"grant_type,omitempty"`
 	Scope        string `json:"scope,omitempty"`
 	TenantId     string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Represents the inbound lambda parameter 'clientMetadata' for CIMD Client Registration lambdas.
+ */
+type ClientMetadata struct {
+	ClientId      string   `json:"clientId,omitempty"`
+	ClientIdHost  string   `json:"clientIdHost,omitempty"`
+	ClientIdPath  string   `json:"clientIdPath,omitempty"`
+	ClientName    string   `json:"clientName,omitempty"`
+	ClientUri     string   `json:"clientUri,omitempty"`
+	ClientUriHost string   `json:"clientUriHost,omitempty"`
+	ClientUriPath string   `json:"clientUriPath,omitempty"`
+	RedirectUris  []string `json:"redirectUris,omitempty"`
+}
+
+/**
+ * Represents the inbound lambda parameter 'context' for CIMD Client Registration lambdas.
+ */
+type ClientRegistrationContext struct {
+	AuthenticationThreats []AuthenticationThreats `json:"authenticationThreats,omitempty"`
+	EventInfo             EventInfo               `json:"eventInfo,omitempty"`
+	Resource              string                  `json:"resource,omitempty"`
+}
+
+/**
+ * Represents the outbound parameter 'result' for CIMD Client Registration lambdas. The parameter is pre-populated with defaults from the CIMD Domain
+ * configuration
+ */
+type ClientRegistrationLambdaResult struct {
+	Decision            CimdClientRegistrationDecision `json:"decision,omitempty"`
+	JwtPopulateLambdaId string                         `json:"jwtPopulateLambdaId,omitempty"`
+	ProvidedScopePolicy ProvidedScopePolicy            `json:"providedScopePolicy,omitempty"`
+	Scopes              []CimdDomainOAuthScope         `json:"scopes,omitempty"`
+	TtlInSeconds        int                            `json:"ttlInSeconds,omitempty"`
 }
 
 /**
@@ -2394,6 +2681,8 @@ const (
 	EventType_EntityUpdateComplete           EventType = "entity.update.complete"
 	EventType_TokenExchange                  EventType = "token.exchange"
 	EventType_TokenExchangeComplete          EventType = "token.exchange.complete"
+	EventType_CimdRegistrationSuccess        EventType = "cimd.registration.success"
+	EventType_CimdRegistrationFailed         EventType = "cimd.registration.failed"
 )
 
 /**
@@ -3856,11 +4145,13 @@ type JWTPublicKeyUpdateEvent struct {
  */
 type JWTRefreshEvent struct {
 	BaseEvent
-	ApplicationId string `json:"applicationId,omitempty"`
-	Original      string `json:"original,omitempty"`
-	RefreshToken  string `json:"refreshToken,omitempty"`
-	Token         string `json:"token,omitempty"`
-	UserId        string `json:"userId,omitempty"`
+	ApplicationId string   `json:"applicationId,omitempty"`
+	CimdDomainId  string   `json:"cimdDomainId,omitempty"`
+	Original      string   `json:"original,omitempty"`
+	RefreshToken  string   `json:"refreshToken,omitempty"`
+	Resources     []string `json:"resources,omitempty"`
+	Token         string   `json:"token,omitempty"`
+	UserId        string   `json:"userId,omitempty"`
 }
 
 /**
@@ -3892,7 +4183,9 @@ type JWTRefreshTokenRevokeEvent struct {
 	BaseEvent
 	ApplicationId                  string         `json:"applicationId,omitempty"`
 	ApplicationTimeToLiveInSeconds map[string]int `json:"applicationTimeToLiveInSeconds,omitempty"`
+	CimdDomainId                   string         `json:"cimdDomainId,omitempty"`
 	RefreshToken                   RefreshToken   `json:"refreshToken,omitempty"`
+	Resources                      []string       `json:"resources,omitempty"`
 	User                           User           `json:"user,omitempty"`
 	UserId                         string         `json:"userId,omitempty"`
 }
@@ -4262,6 +4555,7 @@ const (
 	LambdaType_MFARequirement                    LambdaType = "MFARequirement"
 	LambdaType_TokenExchangePolicy               LambdaType = "TokenExchangePolicy"
 	LambdaType_TokenExchangePopulate             LambdaType = "TokenExchangePopulate"
+	LambdaType_CimdClientRegistration            LambdaType = "CimdClientRegistration"
 )
 
 /**
@@ -4895,6 +5189,7 @@ const (
 	OAuthErrorReason_InvalidPkceCodeChallengeMethod      OAuthErrorReason = "invalid_pkce_code_challenge_method"
 	OAuthErrorReason_InvalidPrompt                       OAuthErrorReason = "invalid_prompt"
 	OAuthErrorReason_InvalidRedirectUri                  OAuthErrorReason = "invalid_redirect_uri"
+	OAuthErrorReason_InvalidResourceCardinality          OAuthErrorReason = "invalid_resource_cardinality"
 	OAuthErrorReason_InvalidResponseMode                 OAuthErrorReason = "invalid_response_mode"
 	OAuthErrorReason_InvalidResponseType                 OAuthErrorReason = "invalid_response_type"
 	OAuthErrorReason_InvalidIdTokenHint                  OAuthErrorReason = "invalid_id_token_hint"
@@ -5084,6 +5379,7 @@ type OpenIdConfiguration struct {
 	AuthorizationResponseIssParameterSupported bool     `json:"authorization_response_iss_parameter_supported"`
 	BackchannelLogoutSupported                 bool     `json:"backchannel_logout_supported"`
 	ClaimsSupported                            []string `json:"claims_supported,omitempty"`
+	ClientIdMetadataDocumentSupported          bool     `json:"client_id_metadata_document_supported"`
 	CodeChallengeMethodsSupported              []string `json:"code_challenge_methods_supported,omitempty"`
 	DeviceAuthorizationEndpoint                string   `json:"device_authorization_endpoint,omitempty"`
 	DpopSigningAlgValuesSupported              []string `json:"dpop_signing_alg_values_supported,omitempty"`
@@ -5325,6 +5621,44 @@ type Policies struct {
 	ApplicationLoginPolicy            MultiFactorLoginPolicy            `json:"applicationLoginPolicy,omitempty"`
 	ApplicationMultiFactorTrustPolicy ApplicationMultiFactorTrustPolicy `json:"applicationMultiFactorTrustPolicy,omitempty"`
 	TenantLoginPolicy                 MultiFactorLoginPolicy            `json:"tenantLoginPolicy,omitempty"`
+}
+
+/**
+ * Immutable context provided to a Token Exchange Policy Lambda.
+ */
+type PolicyLambdaContext struct {
+	TenantId string `json:"tenantId,omitempty"`
+}
+
+/**
+ * Immutable request data provided to a Token Exchange Policy Lambda.
+ */
+type PolicyLambdaExchange struct {
+	ClientId                       string                       `json:"clientId,omitempty"`
+	RequestedAudiencesAndResources []string                     `json:"requestedAudiencesAndResources,omitempty"`
+	RequestedScopes                []string                     `json:"requestedScopes,omitempty"`
+	SubjectTokenClaims             map[string]interface{}       `json:"subjectTokenClaims,omitempty"`
+	SubjectTokenValidationStatus   SubjectTokenValidationStatus `json:"subjectTokenValidationStatus,omitempty"`
+}
+
+/**
+ * Mutable decision written by a Token Exchange Policy Lambda.
+ */
+type PolicyLambdaResult struct {
+	Decision TokenExchangePolicyDecision `json:"decision,omitempty"`
+	Denial   Denial                      `json:"denial,omitempty"`
+	Granted  Granted                     `json:"granted,omitempty"`
+}
+
+type Denial struct {
+	ErrorCode        string `json:"error_code,omitempty"`
+	ErrorDescription string `json:"error_description,omitempty"`
+}
+
+type Granted struct {
+	Aud       []string `json:"aud,omitempty"`
+	ExpiresIn int      `json:"expires_in,omitempty"`
+	Scope     []string `json:"scope,omitempty"`
 }
 
 /**
@@ -5666,15 +6000,16 @@ func (b *RefreshResponse) SetStatus(status int) {
  * @author Daniel DeGroff
  */
 type RefreshToken struct {
-	ApplicationId string                 `json:"applicationId,omitempty"`
-	Data          map[string]interface{} `json:"data,omitempty"`
-	Id            string                 `json:"id,omitempty"`
-	InsertInstant int64                  `json:"insertInstant,omitempty"`
-	MetaData      MetaData               `json:"metaData,omitempty"`
-	StartInstant  int64                  `json:"startInstant,omitempty"`
-	TenantId      string                 `json:"tenantId,omitempty"`
-	Token         string                 `json:"token,omitempty"`
-	UserId        string                 `json:"userId,omitempty"`
+	ApplicationId            string                 `json:"applicationId,omitempty"`
+	CimdClientRegistrationId string                 `json:"cimdClientRegistrationId,omitempty"`
+	Data                     map[string]interface{} `json:"data,omitempty"`
+	Id                       string                 `json:"id,omitempty"`
+	InsertInstant            int64                  `json:"insertInstant,omitempty"`
+	MetaData                 MetaData               `json:"metaData,omitempty"`
+	StartInstant             int64                  `json:"startInstant,omitempty"`
+	TenantId                 string                 `json:"tenantId,omitempty"`
+	Token                    string                 `json:"token,omitempty"`
+	UserId                   string                 `json:"userId,omitempty"`
 }
 
 type MetaData struct {
@@ -6742,6 +7077,7 @@ type TenantPhoneConfiguration struct {
  * @author Daniel DeGroff
  */
 type TenantRateLimitConfiguration struct {
+	CimdClientRegistration       RateLimitedRequestConfiguration `json:"cimdClientRegistration,omitempty"`
 	FailedLogin                  RateLimitedRequestConfiguration `json:"failedLogin,omitempty"`
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
@@ -8169,6 +8505,7 @@ type UserLoginFailedEvent struct {
 	BaseUserEvent
 	ApplicationId      string                `json:"applicationId,omitempty"`
 	AuthenticationType string                `json:"authenticationType,omitempty"`
+	CimdDomainId       string                `json:"cimdDomainId,omitempty"`
 	IpAddress          string                `json:"ipAddress,omitempty"`
 	Reason             UserLoginFailedReason `json:"reason,omitempty"`
 }
@@ -8231,6 +8568,7 @@ type UserLoginSuccessEvent struct {
 	BaseUserEvent
 	ApplicationId        string `json:"applicationId,omitempty"`
 	AuthenticationType   string `json:"authenticationType,omitempty"`
+	CimdDomainId         string `json:"cimdDomainId,omitempty"`
 	ConnectorId          string `json:"connectorId,omitempty"`
 	IdentityProviderId   string `json:"identityProviderId,omitempty"`
 	IdentityProviderName string `json:"identityProviderName,omitempty"`

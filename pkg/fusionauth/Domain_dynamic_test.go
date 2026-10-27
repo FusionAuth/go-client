@@ -133,6 +133,20 @@ func Test_ChangePasswordReasonImplementsStringer(t *testing.T) {
 	}
 }
 
+func Test_CimdClientRegistrationDecisionImplementsStringer(t *testing.T) {
+	var enum interface{} = CimdClientRegistrationDecision("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CimdClientRegistrationDecision does not implement stringer interface\n")
+	}
+}
+
+func Test_CimdClientRegistrationStateImplementsStringer(t *testing.T) {
+	var enum interface{} = CimdClientRegistrationState("Test")
+	if _, ok := enum.(fmt.Stringer); !ok {
+		t.Errorf("CimdClientRegistrationState does not implement stringer interface\n")
+	}
+}
+
 func Test_ClientAuthenticationPolicyImplementsStringer(t *testing.T) {
 	var enum interface{} = ClientAuthenticationPolicy("Test")
 	if _, ok := enum.(fmt.Stringer); !ok {
