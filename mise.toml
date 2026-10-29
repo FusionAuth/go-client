@@ -1,0 +1,6 @@
+[tools]
+go = "1.24"
+
+[tasks.install]
+description="Installs dependencies"
+run = "go mod download"
