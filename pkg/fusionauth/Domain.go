@@ -7080,6 +7080,7 @@ type TenantRateLimitConfiguration struct {
 	CimdClientRegistration       RateLimitedRequestConfiguration `json:"cimdClientRegistration,omitempty"`
 	FailedLogin                  RateLimitedRequestConfiguration `json:"failedLogin,omitempty"`
 	ForgotPassword               RateLimitedRequestConfiguration `json:"forgotPassword,omitempty"`
+	PasswordlessLogin            RateLimitedRequestConfiguration `json:"passwordlessLogin,omitempty"`
 	SendEmailVerification        RateLimitedRequestConfiguration `json:"sendEmailVerification,omitempty"`
 	SendPasswordless             RateLimitedRequestConfiguration `json:"sendPasswordless,omitempty"`
 	SendPasswordlessPhone        RateLimitedRequestConfiguration `json:"sendPasswordlessPhone,omitempty"`
