@@ -7233,6 +7233,7 @@ const (
  */
 type TenantWebAuthnConfiguration struct {
 	Enableable
+	AllowedOrigins           []string                            `json:"allowedOrigins,omitempty"`
 	BootstrapWorkflow        TenantWebAuthnWorkflowConfiguration `json:"bootstrapWorkflow,omitempty"`
 	Debug                    bool                                `json:"debug"`
 	ReauthenticationWorkflow TenantWebAuthnWorkflowConfiguration `json:"reauthenticationWorkflow,omitempty"`
